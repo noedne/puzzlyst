@@ -31,7 +31,7 @@ if (os.platform() === 'win32' || os.platform() === 'linux' || os.platform() === 
 }
 
 gutil.log(`${gutil.colors.red(`GULP :: env: ${env} :: version: ${version}`)}`);
-// gutil.log(`${gutil.colors.yellow(`GULP :: watch = ${opts.watch}`)}`);
+gutil.log(`${gutil.colors.yellow(`GULP :: watch = ${opts.watch}`)}`);
 gutil.log(`${gutil.colors.yellow(`GULP :: minification = ${opts.minify}`)}`);
 
 // Define main tasks

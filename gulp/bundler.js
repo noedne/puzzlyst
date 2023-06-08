@@ -31,12 +31,13 @@ const minify = composer(uglify, console);
 // if env == 'production' || env == 'staging' then false else true,
 const bundlerOpts = {
   paths: [path.join(__dirname, '..')],
-  debug: development,
+  debug: false, // development,
   cache: {},
   packageCache: {},
   extensions: ['.coffee', '.js'],
-  // ignoreMissing: true,
-  // detectGlobals: false
+  ignoreMissing: true,
+  // detectGlobals: false,
+  insertGlobals: true,
 };
 
 const entries = ['./app/index'];
@@ -49,7 +50,9 @@ if (config.get('datGuiEditorEnabled')) {
 // Initialize bundler
 let bundler = browserify(entries, bundlerOpts);
 if (opts.watch) {
-  bundler = watchify(bundler);
+  bundler = watchify(bundler, {
+    delay: 0,
+  });
 }
 
 // Apply bundler transforms
