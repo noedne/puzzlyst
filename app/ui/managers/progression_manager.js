@@ -49,7 +49,7 @@ var ProgressionManager = Manager.extend({
 
   _factionProgressionStats: null,
 
-  challengeProgressionCollection: null,
+  challengeProgressionCollection: new DuelystBackbone.Collection(),
   unreadChallengeProgressionRewards: null,
 
   /* region CONNECT */

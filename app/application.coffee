@@ -143,6 +143,8 @@ ReplayEngine = require 'app/replay/replayEngine'
 
 AnalyticsTracker = require 'app/common/analyticsTracker'
 
+AdvancedVetruvianChallenge1 = require './sdk/challenges/vetruvian/AdvancedVetruvianChallenge1'
+
 # require the Handlebars Template Helpers extension here since it modifies core Marionette code
 require 'app/ui/extensions/handlebars_template_helpers'
 
@@ -541,90 +543,10 @@ App.main = ->
       # always restore user triggered navigation
       NavigationManager.getInstance().requestUserTriggeredNavigationUnlocked(App._userNavLockId)
 
-      if App._queryStringParams["replayId"]?
-        Logger.module("APPLICATION").log("jumping straight into replay...")
-        App.setCallbackWhenCancel(()-> alert('all done!'))
-        return PackageManager.getInstance().loadAndActivateMajorPackage("nongame", null, null, () ->
-          EventBus.getInstance().trigger(EVENTS.start_replay, {
-            replayId: App._queryStringParams["replayId"]
-          })
-          return Promise.resolve()
-        )
-      else
-        if !App.getIsLoggedIn()
-          return App._showLoginMenu()
-        else
-          # all good, show main menu
-          return App.managersReadyDeferred.promise.then(() ->
-            # set user as loading
-            ChatManager.getInstance().setStatus(ChatManager.STATUS_LOADING)
-
-            # # EULA ACCEPTANCE CHECK HERE SO IT FIRES FOR ALREADY LOGGED IN PLAYERS
-
-            # # strings used for session storage and profile storage
-            # sessionAcceptedEula = Storage.namespace() + '.hasAcceptedEula'
-            # storageAcceptedEula = 'hasAcceptedEula'
-            # storageSentAcceptedEulaNotify = 'hasSentAcceptedEulaNotify'
-
-            # # the user has accepted terms in the local session, ensure we are set in profile storage
-            # if window.sessionStorage.getItem(sessionAcceptedEula)
-            #   ProfileManager.getInstance().set(storageAcceptedEula, true)
-
-            # # check in profile storage if the user has accepted terms
-            # if !ProfileManager.getInstance().get(storageAcceptedEula)
-            #   # TODO - This is not actually good, but we need to make a new terms and conditions page
-            #   return App._showTerms()
-            # # user has accepted, check if they have sent notification
-            # else
-            #   if !ProfileManager.getInstance().get(storageSentAcceptedEulaNotify)
-            #     ProfileManager.getInstance().set(storageSentAcceptedEulaNotify, true)
-
-            # check for an active game
-            lastGameModel = null
-            if GamesManager.getInstance().playerGames.length > 0
-              lastGameModel = GamesManager.getInstance().playerGames.first()
-
-            # calculate minutes since last game
-            msSinceLastGame = moment().utc().valueOf() - (lastGameModel?.get("created_at") || 0)
-            minutesSinceLastGame = moment.duration(msSinceLastGame).asMinutes()
-
-            # if the last game is an active multiplayer game within last 45 minutes, show the continue game screen
-            if lastGameModel? and lastGameModel.get("cancel_reconnect") != true and (lastGameModel.get("status") == "active" || lastGameModel.get("status") == "new") and lastGameModel.get("created_at") and minutesSinceLastGame < CONFIG.MINUTES_ALLOWED_TO_CONTINUE_GAME and SDK.GameType.isMultiplayerGameType(lastGameModel.get("game_type"))
-              # has active game, prompt user to resume
-              Logger.module("UI").log("Last active game was on ", new Date(lastGameModel.get("created_at")), "with data", lastGameModel)
-              return App._resumeGame(lastGameModel)
-            else if not NewPlayerManager.getInstance().isDoneWithTutorial()
-              # show tutorial layout
-              return App._showTutorialLessons()
-            else if QuestsManager.getInstance().hasUnreadQuests()
-              # show main menu
-              return App._showMainMenu()
-            else
-              # try to return to selection for previous game type
-              if wasSpectate
-                return App._showMainMenu()
-              else if wasDailyChallenge
-                QuestsManager.getInstance().markDailyChallengeCompletionAsUnread()
-                return App._showMainMenu()
-              else if lastGameType == SDK.GameType.Ranked and !NewPlayerManager.getInstance().getEmphasizeBoosterUnlock()
-                return App.showPlay(SDK.PlayModes.Ranked, true)
-              else if lastGameType == SDK.GameType.Casual and !NewPlayerManager.getInstance().getEmphasizeBoosterUnlock()
-                return App.showPlay(SDK.PlayModes.Casual, true)
-              else if lastGameType == SDK.GameType.Gauntlet
-                return App.showPlay(SDK.PlayModes.Gauntlet, true)
-              else if lastGameType == SDK.GameType.Challenge and !wasTutorial
-                return App.showPlay(SDK.PlayModes.Challenges, true)
-              else if lastGameType == SDK.GameType.SinglePlayer
-                return App.showPlay(SDK.PlayModes.Practice, true)
-              else if lastGameType == SDK.GameType.BossBattle
-                return App.showPlay(SDK.PlayModes.BossBattle, true)
-              else if lastGameType == SDK.GameType.Sandbox and !wasDeveloper
-                return App.showPlay(SDK.PlayModes.Sandbox, true)
-              else if lastGameType == SDK.GameType.Rift
-                return App.showPlay(SDK.PlayModes.Rift, true)
-              else
-                return App._showMainMenu()
-          )
+      NavigationManager.getInstance().connect()
+      $('#app-preloading').addClass('out')
+      App._startGameWithChallenge(new AdvancedVetruvianChallenge1())
+      return Promise.resolve()
     ).finally () ->
       App._mainPromise = null
       return Promise.resolve()
@@ -2102,7 +2024,7 @@ App._startGameWithChallenge = (challenge) ->
 
   # challenge handles setting up game session
   SDK.GameSession.reset()
-  SDK.GameSession.getInstance().setUserId(ProfileManager.getInstance().get('id'))
+  SDK.GameSession.getInstance().setUserId('You')
   challenge.setupSession(SDK.GameSession.getInstance())
 
   # get ui promise
