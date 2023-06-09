@@ -235,7 +235,7 @@ var TutorialLayout = GameLayout.extend({
 
         // listen to challenge events
         this.listenTo(this._lesson.getEventBus(), EVENTS.instruction_triggered, this.onInstructionTriggered);
-        this.listenTo(this._lesson.getEventBus(), EVENTS.challenge_reset, this.onChallengeReset);
+        this.listenTo(this._lesson.getEventBus(), EVENTS.challenge_reset, this.onChallengeRetry);
         this.listenTo(this._lesson.getEventBus(), EVENTS.challenge_start, this._showChallengeStart);
 
         this._startTutorial();
@@ -1215,7 +1215,6 @@ var TutorialLayout = GameLayout.extend({
 
     // Behind the scenes perform the sdk rollback
     this._lesson.challengeRollback();
-    this._lesson.getOpponentAgent().currentTurnIndex = 0;
   },
 
   _showChallengeStart: function () {

@@ -36,6 +36,7 @@ var ServerStatusManager = require('./server_status_manager');
 var ChatManager = require('./chat_manager');
 var NotificationsManager = require('./notifications_manager');
 var Manager = require('./manager');
+var SDK = require('app/sdk')
 
 var NavigationManager = Manager.extend({
 
@@ -142,6 +143,8 @@ var NavigationManager = Manager.extend({
           // request user triggered action
           this.requestUserTriggeredConfirm();
         }
+      } else if (keyCode == cc.KEY.r) {
+        SDK.GameSession.getInstance().getChallenge().challengeReset();
       }
     }.bind(this));
 

@@ -1,18 +1,7 @@
 Challenge = require("app/sdk/challenges/challenge")
-Instruction   = require 'app/sdk/challenges/instruction'
-MoveAction     = require 'app/sdk/actions/moveAction'
-AttackAction   = require 'app/sdk/actions/attackAction'
-PlayCardFromHandAction = require 'app/sdk/actions/playCardFromHandAction'
-EndTurnAction   = require 'app/sdk/actions/endTurnAction'
 Cards       = require 'app/sdk/cards/cardsLookupComplete'
-Deck       = require 'app/sdk/cards/deck'
-GameSession       = require 'app/sdk/gameSession'
-AgentActions = require 'app/sdk/agents/agentActions'
-CONFIG = require 'app/common/config'
 RSX = require('app/data/resources')
 ChallengeCategory = require('app/sdk/challenges/challengeCategory')
-ModifierDeathWatchBuffSelf = require('app/sdk/modifiers/modifierDeathWatchBuffSelf')
-i18next = require('i18next')
 
 class Puzzle extends Challenge
 
@@ -81,22 +70,6 @@ class Puzzle extends Challenge
     @applyCardToBoard({id: Cards.Artifact.ArclyteRegalia}, 0, 0, opponentPlayerId)
     general2.getArtifactModifiersGroupedByArtifactCard().at(-1).forEach((modifier) => modifier.setDurability(2))
 
-  setupOpponentAgent: (gameSession) ->
-    super(gameSession)
-
-    # Due to time maelstrom we don't know which turn the enemy general gets to finally act,
-    # this will go away when we switch to resetting the otk on failure rather than ending turn and having a finisher
-    for i in [0..5]
-      @_opponentAgent.addActionForTurn(i,AgentActions.createAgentSoftActionShowInstructionLabels([
-        label:i18next.t("challenges.advanced_vetruvian_1_taunt")
-        isSpeech:true
-        yPosition:.7
-        isPersistent: true
-        isOpponent: true
-      ]))
-      @_opponentAgent.addActionForTurn(i,AgentActions.createAgentActionPlayCardFindPosition(0,(() ->
-        return [GameSession.getInstance().getGeneralForPlayer1().getPosition()]
-      ).bind(this)))
-
+  setupOpponentAgent: ->
 
 module.exports = Puzzle

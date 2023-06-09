@@ -98,7 +98,6 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
 
   onShow: function () {
     // game events
-    this.listenTo(SDK.GameSession.getInstance().getEventBus(), EVENTS.end_turn, this._setSubmitTurnButtonToEnemyState);
     var scene = Scene.getInstance();
     var gameLayer = scene && scene.getGameLayer();
     if (gameLayer != null) {
@@ -143,13 +142,11 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     var gameLayer = Scene.getInstance().getGameLayer();
     var gameSession = SDK.GameSession.getInstance();
 
-    if (gameSession.isChallenge() && gameSession.getChallenge() != null && gameSession.getChallenge().usesResetTurn && !gameSession.isOver()) {
-      audio_engine.current().play_effect_for_interaction(RSX.sfx_ui_confirm.audio, CONFIG.CONFIRM_SFX_PRIORITY);
-      gameSession.getChallenge().challengeReset();
-    } else if (gameLayer && gameLayer.getIsMyTurn() && !gameLayer.getPlayerSelectionLocked()) {
+    if (gameLayer && gameLayer.getIsMyTurn() && !gameSession.getChallenge().usesResetTurn) {
       gameSession.submitExplicitAction(gameSession.actionEndTurn());
     } else {
-      audio_engine.current().play_effect_for_interaction(RSX.sfx_ui_error.audio, CONFIG.ERROR_SFX_PRIORITY);
+      audio_engine.current().play_effect_for_interaction(RSX.sfx_ui_confirm.audio, CONFIG.CONFIRM_SFX_PRIORITY);
+      gameSession.getChallenge().challengeReset();
     }
   },
 
@@ -237,13 +234,10 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       var gameLayer = Scene.getInstance().getGameLayer();
       var gameSession = SDK.GameSession.getInstance();
 
-      // If in a challenge with reset turn, show reset turn, else if it's my turn show my turn, else show enemy turn
-      if (gameSession.isChallenge() && gameSession.getChallenge() != null && gameSession.getChallenge().usesResetTurn) {
-        this._setSubmitTurnButtonToResetOTKState();
-      } else if (!(gameLayer && gameLayer.getIsMyTurn()) || gameSession.getCurrentTurn().getEnded()) {
-        this._setSubmitTurnButtonToEnemyState();
-      } else {
+      if (gameLayer && gameLayer.getIsMyTurn() && !gameSession.getChallenge().usesResetTurn) {
         this._setSubmitTurnButtonToMyState();
+      } else {
+        this._setSubmitTurnButtonToResetOTKState();
       }
     }
   },
@@ -311,13 +305,6 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     }
 
     return !canUseCard && Scene.getInstance().getGameLayer().getReadyEntityNodes().length === 0;
-  },
-
-  _setSubmitTurnButtonToEnemyState: function () {
-    this.ui.$submitTurnType.text(i18next.t('battle.turn_button_label_enemy_turn'));
-    this.ui.$submitTurn.addClass('enemy-turn');
-    this.ui.$submitTurn.removeClass('my-turn');
-    this.ui.$submitTurn.removeClass('finished');
   },
 
   /* endregion TURN */

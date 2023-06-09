@@ -325,9 +325,6 @@ class Challenge
   challengeRollback: () ->
     gameSession = GameSession.current()
     gameSession._rollbackToSnapshot(@_snapShotData)
-    # Reset opponent agents action sequence
-    this._opponentAgent.currentTurnIndex = undefined
-    this._opponentAgent.currentActionIndexInTurn = 0
     @isChallengeLost = false
 
   applyCardToBoard: (cardOrCardData, boardX, boardY, ownerId) ->
