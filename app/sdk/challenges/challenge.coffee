@@ -70,9 +70,7 @@ class Challenge
    * SDK event handler. Do not call this method manually.
    ###
   onEvent: (event) ->
-    if event.type == EVENTS.validate_game_over
-      @_onValidateGameOver(event)
-    else if event.type == EVENTS.start_turn
+    if event.type == EVENTS.start_turn
       @_onStartTurn(event)
 
     if @_currentInstruction?
@@ -308,17 +306,6 @@ class Challenge
         gameSession = GameSession.current()
         @_snapShotData = gameSession.serializeToJSON(gameSession)
         @_eventBus.trigger(EVENTS.challenge_start, {type: EVENTS.challenge_start})
-
-  _onValidateGameOver:()->
-    gameSession = GameSession.current()
-    myGeneral = gameSession.getGeneralForPlayerId(gameSession.getMyPlayerId())
-
-    if @snapShotOnPlayerTurn? and myGeneral.getIsRemoved()
-      # set general as not removed so that game does not end
-      myGeneral.setIsRemoved(false)
-
-      # trigger challenge loss
-      @onChallengeLost()
 
   onChallengeLost: () ->
     # record loss

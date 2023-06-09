@@ -143,7 +143,7 @@ ReplayEngine = require 'app/replay/replayEngine'
 
 AnalyticsTracker = require 'app/common/analyticsTracker'
 
-AdvancedVetruvianChallenge1 = require './sdk/challenges/vetruvian/AdvancedVetruvianChallenge1'
+Puzzle = require './sdk/challenges/puzzle'
 
 # require the Handlebars Template Helpers extension here since it modifies core Marionette code
 require 'app/ui/extensions/handlebars_template_helpers'
@@ -545,7 +545,7 @@ App.main = ->
 
       NavigationManager.getInstance().connect()
       $('#app-preloading').addClass('out')
-      App._startGameWithChallenge(new AdvancedVetruvianChallenge1())
+      App._startGameWithChallenge(new Puzzle())
       return Promise.resolve()
     ).finally () ->
       App._mainPromise = null

@@ -226,7 +226,7 @@ var TutorialLayout = GameLayout.extend({
 
         this.listenTo(gameLayer.getEventBus(), EVENTS.game_selection_changed, this.onSelectionChanged);
         this.listenTo(gameLayer.getEventBus(), EVENTS.game_hover_changed, this.onHoverChanged);
-        this.listenTo(gameLayer.getEventBus(), EVENTS.after_show_action, this.onAfterShowAction);
+        this.listenTo(gameLayer.getEventBus(), EVENTS.challenge_reset, this.onChallengeReset);
         this.listenTo(gameLayer.getEventBus(), EVENTS.mulligan_card_selected, this.onMulliganCardSelected);
         this.listenTo(gameLayer.getEventBus(), EVENTS.mulligan_card_deselected, this.onMulliganCardDeselected);
         this.listenTo(gameLayer.getEventBus(), EVENTS.instruction_node_pressed, this.onInstructionNodePressed);
@@ -279,16 +279,6 @@ var TutorialLayout = GameLayout.extend({
       if (!gameLayer.getMyPlayer().isCurrentPlayer && opponentAgent) {
         opponentAgent.gatherAgentActionSequenceAfterStep(e.step);
         this.executeAgentActions();
-      }
-    }
-  },
-
-  onAfterShowAction: function (event) {
-    var action = event.action;
-    if (action instanceof SDK.RemoveAction) {
-      var actionTarget = action.getTarget();
-      if (actionTarget != null && actionTarget.getIsGeneral() && actionTarget.getOwnerId() == SDK.GameSession.current().getMyPlayerId()) {
-        this._showChallengeLost();
       }
     }
   },

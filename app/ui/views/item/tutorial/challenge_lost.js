@@ -1,5 +1,6 @@
 'use strict';
 
+var SDK = require('app/sdk');
 // pragma PKGS: tutorial_support
 var Template = require('app/ui/templates/item/tutorial/challenge_lost.hbs');
 var TutorialSupportView = require('./tutorial_support');
@@ -17,15 +18,16 @@ var TutorialChallengeLostView = TutorialSupportView.extend({
   initialize: function () {
     TutorialSupportView.prototype.initialize.call(this);
 
-    var challenge = this.model.get('challenge');
-    if (challenge != null) {
-      var challengeHint = '';
-      if (challenge.otkChallengeFailureMessages && challenge.otkChallengeFailureMessages.length) {
-        var hintIndex = Math.min(challenge.otkChallengeFailureCount - 1, challenge.otkChallengeFailureMessages.length - 1);
-        challengeHint = challenge.otkChallengeFailureMessages[hintIndex];
-      }
-      this.model.set('challenge_hint', challengeHint);
+    var result;
+    if (SDK.GameSession.current().getMyPlayer().getIsWinner()) {
+      result = 'Victory';
+    } else if (SDK.GameSession.current().getOpponentPlayer().getIsWinner()) {
+      result = 'Defeat';
+    } else {
+      result = 'Draw'
     }
+
+    this.model.set('challenge_hint', result);
   },
 
   onRetry: function () {

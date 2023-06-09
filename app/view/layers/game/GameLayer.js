@@ -1571,9 +1571,6 @@ var GameLayer = FXCompositeLayer.extend({
       this.stopShowingTooltip();
     }
 
-    // change status
-    this.setStatus(GameLayer.STATUS.SHOW_GAME_OVER);
-
     // get winning player for showing victory fx
     if (winningSdkPlayer == null) {
       // no winning player so match must have been a draw
@@ -1618,30 +1615,6 @@ var GameLayer = FXCompositeLayer.extend({
       });
       particles.setPosition(victorySprite.getPosition());
 
-      // add lights
-      const lights = [];
-      const winnerLight = Light.create();
-      winnerLight.setRadius(CONFIG.TILESIZE * 3.0);
-      winnerLight.setFadeInDuration(0.5);
-      winnerLight.setIntensity(CONFIG.LIGHT_HIGH_INTENSITY);
-      const winnerLightScreenPosition = UtilsEngine.transformBoardToTileMap(winningGeneral.getPosition());
-      winnerLightScreenPosition.y += -CONFIG.TILESIZE * 0.35;
-      winnerLight.setPosition(winnerLightScreenPosition);
-      lights.push(winnerLight);
-
-      if (losingGeneral != null) {
-        const loserLight = Light.create();
-        loserLight.setRadius(CONFIG.TILESIZE * 3.0);
-        loserLight.setFadeInDuration(0.5);
-        loserLight.setIntensity(CONFIG.LIGHT_HIGH_INTENSITY);
-        const loserLightScreenPosition = UtilsEngine.transformBoardToTileMap(losingGeneral.getPosition());
-        loserLightScreenPosition.y += -CONFIG.TILESIZE * 0.35;
-        loserLight.setPosition(loserLightScreenPosition);
-        lights.push(loserLight);
-      }
-
-      this.addNodes(lights);
-
       // show victory fx animation
       victorySprite.runAction(
         cc.sequence(
@@ -1674,11 +1647,9 @@ var GameLayer = FXCompositeLayer.extend({
 
   _showGameOverComplete() {
     Logger.module('ENGINE').log('GameLayer._showGameOverComplete');
-    // prep for terminate
-    this._prepareForTerminate();
 
     // notify
-    this.getEventBus().trigger(EVENTS.show_game_over, { type: EVENTS.show_game_over });
+    this.getEventBus().trigger(EVENTS.challenge_reset, { type: EVENTS.challenge_reset });
   },
 
   getIsShowingEndTurn() {

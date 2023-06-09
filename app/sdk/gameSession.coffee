@@ -414,6 +414,7 @@ class _GameSession extends SDKObject
     p.blockActionExecution = false
     p.cardStack = [] # stack of cards actively applying to board during action execution loop (top is most recent)
     p.depthFirstActions = [] # list of depth first actions that have been executed for the currently executing action
+    p.gameEndingStep = null
     p.gameOverRequested = false
     p.hasDrawnCardsForTurn = false
     p.hasActivatedSignatureCardForTurn = false
@@ -975,10 +976,8 @@ class _GameSession extends SDKObject
           @getPlayerById(winningPlayerId).setIsWinner(true)
 
         # set game as over
-        @setStatus(GameStatus.over)
+        @_private.gameEndingStep = @getExecutingStep()
 
-        # emit game over
-        @pushEvent({type: EVENTS.game_over, winner: @getWinner(), gameSession: @}, {blockActionExecution: true})
         Logger.module("SDK").debug "[G:#{@.gameId}]", "GS._validateGameOverRequest -> GAME OVER.".red
 
   # endregion status
@@ -2416,11 +2415,7 @@ class _GameSession extends SDKObject
    * @returns {Step}
    ###
   getGameEndingStep: () ->
-    if @isOver()
-      if @_private.step?
-        return @_private.step
-      else if @_private.lastStep?
-        return @_private.lastStep
+    return @_private.gameEndingStep
 
   ###*
    * Returns a random integer from a range action execution and flags the currently executing action and step as including randomness.
