@@ -1055,7 +1055,7 @@
 	"faction_6_artifact_coldbiter_name":"Coldbiter",
 	"faction_6_artifact_coldbiter_description":"At the end of your turn, your General deals 2 damage to each enemy minion around them.",
 	"faction_6_artifact_winterblade_name":"Winterblade",
-	"faction_6_artifact_winterblade_description":"Your General gains +2 Attack. Enemy minions damaged by your General are Stunned.",
+	"faction_6_artifact_winterblade_description":"Your General has +1/+0.\nWhen this is destroyed, give your General \"This takes no damage\" until your next turn.",
 	"faction_6_artifact_white_asp_name":"White Asp",
 	"faction_6_artifact_white_asp_description":"Your General gains +3 Attack. Whenever your General destroys a minion, summon a 3/3 Blazing Spine Wall on that space.",
 	"faction_6_artifact_iceshatter_gauntlet_name":"Iceshatter Gauntlet",

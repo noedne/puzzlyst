@@ -671,6 +671,7 @@ ModifierQuestStatusVetruvian = require './modifierQuestStatusVetruvian'
 ModifierQuestStatusMagmar = require './modifierQuestStatusMagmar'
 ModifierQuestStatusVanar = require './modifierQuestStatusVanar'
 ModifierQuestStatusNeutral = require './modifierQuestStatusNeutral'
+ModifierOnRemoveBuffGeneral = require './modifierOnRemoveBuffGeneral'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -2076,6 +2077,8 @@ class ModifierFactory
       return ModifierQuestStatusVanar
     if (modifierType == ModifierQuestStatusNeutral.type)
       return ModifierQuestStatusNeutral
+    if (modifierType == ModifierOnRemoveBuffGeneral.type)
+      return ModifierOnRemoveBuffGeneral;
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier

@@ -57,6 +57,7 @@ class Modifier extends SDKObject
   durationEndTurn: 0 # how many end of turns can elapse before this modifier is removed
   durationStartTurn: 0 # how many start of turns can elapse before this modifier is removed
   durationRespectsBonusTurns: true # whether duration will be extended with bonus turns
+  durationIsUntilYourNextTurn: false
   durability: 0 # damage unit can take before this is destroyed
   numEndTurnsElapsed: 0 # how many end of turns have elapsed since this modifier was added
   numStartTurnsElapsed: 0 # how many start of turns have elapsed since this modifier was added
@@ -2147,6 +2148,9 @@ class Modifier extends SDKObject
         if @numStartTurnsElapsed >= @durationStartTurn
           @onExpire(event)
           @getGameSession().removeModifier(@)
+      else if @durationIsUntilYourNextTurn && @getCard().isOwnersTurn()
+        @onExpire(event);
+        @getGameSession().removeModifier(@);
       @getGameSession().popTriggeringModifierFromStack()
     else # if inactive, modifier may still run out of duration but cannot respond
       if @durationStartTurn > 0

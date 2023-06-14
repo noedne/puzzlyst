@@ -48,7 +48,6 @@ ModifierOpeningGambit = require 'app/sdk/modifiers/modifierOpeningGambit'
 ModifierFlying = require 'app/sdk/modifiers/modifierFlying'
 ModifierDyingWishSpawnEntity = require 'app/sdk/modifiers/modifierDyingWishSpawnEntity'
 ModifierTranscendance = require 'app/sdk/modifiers/modifierTranscendance'
-ModifierDealDamageWatchModifyTarget = require 'app/sdk/modifiers/modifierDealDamageWatchModifyTarget'
 ModifierOpeningGambitApplyModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiers'
 ModifierStunned = require 'app/sdk/modifiers/modifierStunned'
 ModifierStunnedVanar = require 'app/sdk/modifiers/modifierStunnedVanar'
@@ -65,10 +64,13 @@ ModifierSummonWatchFromActionBarSpawnEntity = require 'app/sdk/modifiers/modifie
 ModifierDyingWishPutCardInHandClean = require 'app/sdk/modifiers/modifierDyingWishPutCardInHandClean'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierTokenCreator = require 'app/sdk/modifiers/modifierTokenCreator'
+ModifierOnRemoveBuffGeneral = require('app/sdk/modifiers/modifierOnRemoveBuffGeneral');
 
 PlayerModifierSummonWatchApplyModifiers = require 'app/sdk/playerModifiers/playerModifierSummonWatchApplyModifiers'
 
 WartechGeneralFaction6Achievement = require 'app/sdk/achievements/wartechAchievements/wartechGeneralFaction6Achievement'
+
+getContextObjectData = require('app/sdk/challenges/getContextObjectData');
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -83,8 +85,10 @@ class CardFactory_CoreSet_Faction6
    * @param {GameSession} gameSession
    * @returns {Card}
    ###
-  @cardForIdentifier: (identifier,gameSession) ->
+  @cardForIdentifier: (identifier,gameSession, version = 0) ->
     card = null
+    contextObjects = getContextObjectData(identifier, version).map (data) ->
+      data.contextObject
 
     if (identifier == Cards.Faction6.General)
       card = new Unit(gameSession)
@@ -1522,19 +1526,18 @@ class CardFactory_CoreSet_Faction6
       card.id = Cards.Artifact.Winterblade
       card.name = i18next.t("cards.faction_6_artifact_winterblade_name")
       card.setDescription(i18next.t("cards.faction_6_artifact_winterblade_description"))
-      card.addKeywordClassToInclude(ModifierStunned)
-      card.manaCost = 4
+      card.manaCost = 1
       card.rarityId = Rarity.Epic
       card.durability = 3
+      immunityContextObject = ModifierImmuneToDamage.createContextObject({
+        durationIsUntilYourNextTurn: true,
+      });
       card.setTargetModifiersContextObjects([
-        Modifier.createContextObjectWithAttributeBuffs(2,0,{
+        Modifier.createContextObjectWithAttributeBuffs(1,0,{
           name: i18next.t("cards.faction_6_artifact_winterblade_name")
-          description: i18next.t("modifiers.plus_attack_key",{amount:2})
+          description: i18next.t("modifiers.plus_attack_key",{amount:1})
         }),
-        ModifierDealDamageWatchModifyTarget.createContextObject([ModifierStunnedVanar.createContextObject()], i18next.t("modifiers.faction_6_artifact_winterblade_2"),{
-          name: i18next.t("cards.faction_6_artifact_winterblade_name")
-          description: i18next.t("modifiers.faction_6_artifact_winterblade_1")
-        })
+        ModifierOnRemoveBuffGeneral.createContextObject(contextObjects)
       ])
       card.setFXResource(["FX.Cards.Artifact.Winterblade"])
       card.setBaseAnimResource(
