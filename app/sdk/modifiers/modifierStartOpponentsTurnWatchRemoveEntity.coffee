@@ -1,10 +1,13 @@
-ModifierStartOpponentsTurnWatch = require './modifierStartOpponentsTurnWatch'
+ModifierStartTurnWatch = require './modifierStartTurnWatch'
 RemoveAction = require 'app/sdk/actions/removeAction'
 
-class ModifierStartOpponentsTurnWatchRemoveEntity extends ModifierStartOpponentsTurnWatch
+class ModifierStartOpponentsTurnWatchRemoveEntity extends ModifierStartTurnWatch
 
   type:"ModifierStartOpponentsTurnWatchRemoveEntity"
   @type:"ModifierStartOpponentsTurnWatchRemoveEntity"
+
+  activatesOnOwnersTurn: false
+  activatesOnOpponentsTurn: true
 
   onTurnWatch: (action) ->
     if @getCard()?.getIsActive()

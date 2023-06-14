@@ -85,6 +85,7 @@ ModifierOpeningGambitHealBothGenerals = require 'app/sdk/modifiers/modifierOpeni
 ModifierForcefield = require 'app/sdk/modifiers/modifierForcefield'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierTokenCreator = require 'app/sdk/modifiers/modifierTokenCreator'
+ModifierStartTurnWatchDamageGenerals = require('app/sdk/modifiers/modifierStartTurnWatchDamageGenerals')
 
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
 PlayerModifierMechazorBuildProgress = require 'app/sdk/playerModifiers/playerModifierMechazorBuildProgress'
@@ -680,11 +681,15 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralDarkHarbingerHit.name
         death : RSX.neutralDarkHarbingerDeath.name
       )
-      card.atk = 5
+      card.atk = 4
       card.maxHP = 5
-      card.manaCost = 5
+      card.manaCost = 4
       card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([ModifierProvoke.createContextObject()])
+      card.setInherentModifiersContextObjects([
+        ModifierStartTurnWatchDamageGenerals.createContextObject(1, 1, {
+          activatesOnOpponentsTurn: true,
+        }),
+      ])
 
     if (identifier == Cards.Neutral.WhistlingBlade)
       card = new Unit(gameSession)

@@ -1,7 +1,4 @@
 Modifier = require './modifier'
-DieAction = require 'app/sdk/actions/dieAction'
-CardType = require 'app/sdk/cards/cardType'
-Stringifiers = require 'app/sdk/helpers/stringifiers'
 
 class ModifierStartTurnWatch extends Modifier
 
@@ -16,12 +13,20 @@ class ModifierStartTurnWatch extends Modifier
   activeInSignatureCards: false
   activeOnBoard: true
 
+  activatesOnOwnersTurn: true
+  activatesOnOpponentsTurn: false
+
   fxResource: ["FX.Modifiers.ModifierStartTurnWatch"]
 
   onStartTurn: (e) ->
     super(e)
 
-    if @getCard().isOwnersTurn()
+    activatesOnThisTurn =
+      if @getCard().isOwnersTurn()
+      then @activatesOnOwnersTurn
+      else @activatesOnOpponentsTurn
+
+    if activatesOnThisTurn
       action = @getGameSession().getExecutingAction()
       @onTurnWatch(action)
 

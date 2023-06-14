@@ -59,7 +59,7 @@ ModifierDispelOnAttack = require './modifierDispelOnAttack'
 ModifierSummonWatchHealSelf = require './modifierSummonWatchHealSelf'
 ModifierDamageGeneralOnAttack = require './modifierDamageGeneralOnAttack'
 ModifierStartTurnWatchSpawnEntity = require './modifierStartTurnWatchSpawnEntity'
-ModifierStartTurnWatchDamageMyGeneral = require './modifierStartTurnWatchDamageMyGeneral'
+ModifierStartTurnWatchDamageGenerals = require './modifierStartTurnWatchDamageGenerals'
 ModifierBlastAttack = require './modifierBlastAttack'
 ModifierBlastAttackStrong = require './modifierBlastAttackStrong'
 ModifierBackstab = require './modifierBackstab'
@@ -595,7 +595,6 @@ ModifierImmuneToDamageByWeakerEnemies = require './modifierImmuneToDamageByWeake
 ModifierMyOtherMinionsDamagedWatch = require './modifierMyOtherMinionsDamagedWatch'
 ModifierMyOtherMinionsDamagedWatchDamagedMinionGrows = require './modifierMyOtherMinionsDamagedWatchDamagedMinionGrows'
 ModifierBackstabWatchSummonBackstabMinion = require './modifierBackstabWatchSummonBackstabMinion'
-ModifierStartOpponentsTurnWatch = require './modifierStartOpponentsTurnWatch'
 ModifierStartOpponentsTurnWatchRemoveEntity = require './modifierStartOpponentsTurnWatchRemoveEntity'
 ModifierMyAttackWatchApplyModifiers = require './modifierMyAttackWatchApplyModifiers'
 ModifierAlwaysBackstabbed = require './modifierAlwaysBackstabbed'
@@ -831,8 +830,8 @@ class ModifierFactory
       return ModifierDyingWishSpawnEntity
     if (modifierType == ModifierStartTurnWatchSpawnEntity.type)
       return ModifierStartTurnWatchSpawnEntity
-    if (modifierType == ModifierStartTurnWatchDamageMyGeneral.type)
-      return ModifierStartTurnWatchDamageMyGeneral
+    if (modifierType == ModifierStartTurnWatchDamageGenerals.type)
+      return ModifierStartTurnWatchDamageGenerals
     if (modifierType == ModifierBlastAttack.type)
       return ModifierBlastAttack
     if (modifierType == ModifierBlastAttackStrong.type)
@@ -1927,8 +1926,6 @@ class ModifierFactory
       return ModifierMyOtherMinionsDamagedWatchDamagedMinionGrows
     if (modifierType == ModifierBackstabWatchSummonBackstabMinion.type)
       return ModifierBackstabWatchSummonBackstabMinion
-    if (modifierType == ModifierStartOpponentsTurnWatch.type)
-      return ModifierStartOpponentsTurnWatch
     if (modifierType == ModifierStartOpponentsTurnWatchRemoveEntity.type)
       return ModifierStartOpponentsTurnWatchRemoveEntity
     if (modifierType == ModifierMyAttackWatchApplyModifiers.type)

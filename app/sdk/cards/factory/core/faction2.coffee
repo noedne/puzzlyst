@@ -48,7 +48,7 @@ ModifierFirstBlood = require 'app/sdk/modifiers/modifierFirstBlood'
 ModifierFlying = require 'app/sdk/modifiers/modifierFlying'
 ModifierSpellWatchApplyModifiers = require 'app/sdk/modifiers/modifierSpellWatchApplyModifiers'
 ModifierSpellWatchDamageGeneral = require 'app/sdk/modifiers/modifierSpellWatchDamageGeneral'
-ModifierStartTurnWatchDamageMyGeneral = require 'app/sdk/modifiers/modifierStartTurnWatchDamageMyGeneral'
+ModifierStartTurnWatchDamageGenerals = require 'app/sdk/modifiers/modifierStartTurnWatchDamageGenerals'
 ModifierBackstab = require 'app/sdk/modifiers/modifierBackstab'
 ModifierMyAttackWatchBuffSelf = require 'app/sdk/modifiers/modifierMyAttackWatchBuffSelf'
 ModifierDealDamageWatchKillTarget = require 'app/sdk/modifiers/modifierDealDamageWatchKillTarget'
@@ -673,7 +673,7 @@ class CardFactory_CoreSet_Faction2
       card.maxHP = 8
       card.atk = 8
       card.manaCost = 5
-      card.setInherentModifiersContextObjects([ModifierStartTurnWatchDamageMyGeneral.createContextObject(2)])
+      card.setInherentModifiersContextObjects([ModifierStartTurnWatchDamageGenerals.createContextObject(2)])
       card.rarityId = Rarity.Epic
       card.setDescription(i18next.t("cards.faction_2_unit_hamon_bladeseeker_desc"))
 

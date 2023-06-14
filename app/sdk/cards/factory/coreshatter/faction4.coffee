@@ -22,7 +22,7 @@ Artifact = require 'app/sdk/artifacts/artifact'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierDyingWishApplyModifiersToGenerals = require 'app/sdk/modifiers/modifierDyingWishApplyModifiersToGenerals'
-ModifierStartTurnWatchDamageMyGeneral = require 'app/sdk/modifiers/modifierStartTurnWatchDamageMyGeneral'
+ModifierStartTurnWatchDamageGenerals = require 'app/sdk/modifiers/modifierStartTurnWatchDamageGenerals'
 ModifierOpeningGambit = require 'app/sdk/modifiers/modifierOpeningGambit'
 ModifierDyingWishReduceManaCostOfDyingWish = require 'app/sdk/modifiers/modifierDyingWishReduceManaCostOfDyingWish'
 ModifierStackingShadows = require 'app/sdk/modifiers/modifierStackingShadows'
@@ -126,7 +126,7 @@ class CardFactory_CoreshatterSet_Faction4
       card.maxHP = 2
       card.manaCost = 5
       card.rarityId = Rarity.Legendary
-      damageSelf = ModifierStartTurnWatchDamageMyGeneral.createContextObject(1)
+      damageSelf = ModifierStartTurnWatchDamageGenerals.createContextObject(1)
       damageSelf.appliedName = "Curse"
       damageSelf.appliedDescription = "At the start of your turn, your General takes 1 damage."
       card.setInherentModifiersContextObjects([ModifierDyingWishApplyModifiersToGenerals.createContextObject([damageSelf],false,true)])
