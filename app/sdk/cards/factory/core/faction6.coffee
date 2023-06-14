@@ -1176,7 +1176,7 @@ class CardFactory_CoreSet_Faction6
       card.setDescription(i18next.t("cards.faction_6_spell_chromatic_cold_description"))
       card.manaCost = 2
       card.rarityId = Rarity.Fixed
-      card.damageAmount = 1
+      card.damageAmount = 2
       card.canTargetGeneral = true
       card.setFXResource(["FX.Cards.Spell.ChromaticCold"])
       card.setBaseSoundResource(

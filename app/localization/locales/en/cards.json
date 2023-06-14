@@ -976,7 +976,7 @@
 	"faction_6_spell_blazing_spines_name":"Blazing Spines",
 	"faction_6_spell_blazing_spines_description":"Summon two joined 3/3 Walls that can attack.",
 	"faction_6_spell_chromatic_cold_name":"Chromatic Cold",
-	"faction_6_spell_chromatic_cold_description":"Dispel a space. If there is an enemy on that space, deal it 1 damage.",
+	"faction_6_spell_chromatic_cold_description":"Dispel a space. If there is an enemy on that space, deal 2 damage to it.",
 	"faction_6_spell_flash_freeze_name":"Flash Freeze",
 	"faction_6_spell_flash_freeze_description":"Deal 1 damage to a minion and Stun it.",
 	"faction_6_spell_frostfire_name":"Frostfire",
