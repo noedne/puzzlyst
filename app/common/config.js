@@ -1328,7 +1328,7 @@ CONFIG.reset = function () {
 
   // whether tips are shown in game
   // set dynamically by user profile
-  CONFIG.showInGameTips = true;
+  CONFIG.showInGameTips = false;
 
   // quality of lighting in game
   // set dynamically by user profile
