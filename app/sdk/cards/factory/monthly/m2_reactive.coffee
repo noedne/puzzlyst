@@ -80,7 +80,6 @@ class CardFactory_Monthly_M2_Reactive
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.raceId = Races.Arcanyst
-      card.setAvailableAt(1448928000000)
       card.name = i18next.t("cards.neutral_firestarter_name")
       card.setDescription(i18next.t("cards.neutral_firestarter_desc"))
       card.setFXResource(["FX.Cards.Neutral.Firestarter"])
@@ -105,9 +104,9 @@ class CardFactory_Monthly_M2_Reactive
         death : RSX.neutralFirestarterDeath.name
       )
       card.atk = 3
-      card.maxHP = 5
+      card.maxHP = 6
       card.manaCost = 5
-      card.rarityId = Rarity.Rare
+      card.rarityId = Rarity.Epic
       card.addKeywordClassToInclude(ModifierFirstBlood)
       card.setInherentModifiersContextObjects([ModifierSpellWatchSpawnEntity.createContextObject({id: Cards.Neutral.Spellspark}, "1/1 Spellspark with Rush")])
       card.addKeywordClassToInclude(ModifierTokenCreator)
