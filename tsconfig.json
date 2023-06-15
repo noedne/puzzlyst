@@ -23,6 +23,8 @@
     "noUnusedParameters": true
   },
   "exclude": [
-    "./packages/chroma-js/"
-  ]
+    "./packages/chroma-js/",
+    "dist/**/*",
+    "types/**/*",
+  ],
 }

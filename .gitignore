@@ -7,6 +7,7 @@ serviceAccountKey.json
 /app/data/packages.js
 /app/localization/locales/en/index.json
 /dist
+/types
 node_modules
 .awspublish*
 
