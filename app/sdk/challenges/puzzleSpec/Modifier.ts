@@ -1,7 +1,7 @@
 import BaseCard from "./BaseCard";
 import type SpecString from "./SpecString";
 
-const getContextObjectData = require('app/sdk/challenges/getContextObjectData');
+const getContextObjectData = require('./getContextObjectData');
 
 export default class Modifier {
   baseCard;

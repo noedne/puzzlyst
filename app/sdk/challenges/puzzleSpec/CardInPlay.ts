@@ -6,7 +6,7 @@ import Modifier from './Modifier';
 import { extractPosition, type Position } from "./Position";
 import type SpecString from "./SpecString";
 
-const getCustomModifiers = require('app/sdk/challenges/getCustomModifiers');
+const getCustomModifiers = require('./getCustomModifiers');
 
 export default class CardInPlay {
   baseCard;
@@ -14,7 +14,12 @@ export default class CardInPlay {
   properties;
   customModifiers;
 
-  constructor(baseCard: BaseCard, owner: Owner, properties: CardInPlayProperties, customModifiers: CustomModifier[]) {
+  constructor(
+    baseCard: BaseCard,
+    owner: Owner,
+    properties: CardInPlayProperties,
+    customModifiers: any,
+  ) {
     this.baseCard = baseCard;
     this.owner = owner;
     this.properties = properties;
@@ -41,7 +46,7 @@ export default class CardInPlay {
     const customModifiers =
       getCustomModifiers(baseCard.getCardId(), baseCard.version)
         .forEach(({ modifier }: {
-          modifier: (specString: SpecString) => CustomModifier,
+          modifier: (specString: SpecString) => any,
         }) => modifier(specString));
     return new CardInPlay(baseCard, owner, properties, customModifiers);
   }
@@ -65,7 +70,6 @@ function extractOwner(specString: SpecString): Owner | null {
 }
 
 type CardInPlayProperties = MinionProperties | ArtifactProperties;
-type CustomModifier = (card: any) => void;
 
 class MinionProperties {
   position;
