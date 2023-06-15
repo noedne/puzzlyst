@@ -19,5 +19,6 @@ getCustomModifiers = (cardId, version = 0) ->
                   modifier.type == ModifierAbsorbDamage.type
                 ?.canAbsorb = false
       ]
+    else return []
 
 module.exports = getCustomModifiers

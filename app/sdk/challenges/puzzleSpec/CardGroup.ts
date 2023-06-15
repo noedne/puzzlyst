@@ -46,7 +46,7 @@ export function getIdOffset(group: Group): number {
     case Group.Faction6:
       return Cards.Faction6.General;
     case Group.Neutral:
-      return Cards.Neutral.SpottedDragonLark;
+      return Cards.Neutral.SpottedDragonlark;
     case Group.Spell:
       return Cards.Spell.SundropElixir;
     case Group.Artifact:

@@ -7,7 +7,7 @@ export default class SpecString {
   }
 
   matchRegex(regex: RegExp): string | null {
-    const res = regex.exec(this.str);
+    const res = regex.exec(this.str.slice(this.index));
     if (res === null) {
       return null;
     }
@@ -46,11 +46,11 @@ export default class SpecString {
   
   extractList<T>(
     fromSpecString: (specString: SpecString) => T | null,
-    listSizeMinBitLength: number | null = null,
+    listSizeBitLength: number | null = null,
   ): T[] | null {
-    const count = listSizeMinBitLength === null
+    const count = listSizeBitLength === null
       ? this.countZeroes()
-      : this.countZeroesAndReadNPlusBits(listSizeMinBitLength);
+      : this.readNBits(listSizeBitLength);
     if (count === null) {
       return null;
     }

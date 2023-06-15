@@ -3,7 +3,6 @@ import GeneralCard from './GeneralCard';
 import type SpecString from './SpecString';
 
 export default class Player {
-  static handSizeMinBitLength = 3;
   generalCard;
   hand;
   deck;
@@ -19,10 +18,7 @@ export default class Player {
     if (generalCard === null) {
       return null;
     }
-    const hand = specString.extractList(
-      DeckCard.fromSpecString,
-      this.handSizeMinBitLength,
-    );
+    const hand = specString.extractList(DeckCard.fromSpecString, 3);
     if (hand === null) {
       return null;
     }

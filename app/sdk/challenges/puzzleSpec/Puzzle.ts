@@ -2,7 +2,7 @@ import CardInPlay from './CardInPlay';
 import Player from './Player';
 import type SpecString from './SpecString';
 
-const getPlayerModifiers = require('./getPlayerModifiers');
+const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModifiers');
 
 export default class Puzzle {
   version;
@@ -39,7 +39,7 @@ export default class Puzzle {
     }
     const mana = manaIndex + 2;
     const playerModifiers =
-      getPlayerModifiers(version).forEach(({ modifier }: {
+      getPlayerModifiers(version).map(({ modifier }: {
         modifier: (specString: SpecString) => any,
       }) => modifier(specString));
     const you = Player.fromSpecString(specString);

@@ -6,7 +6,7 @@ import Modifier from './Modifier';
 import { extractPosition, type Position } from "./Position";
 import type SpecString from "./SpecString";
 
-const getCustomModifiers = require('./getCustomModifiers');
+const getCustomModifiers = require('app/sdk/challenges/puzzleSpec/getCustomModifiers');
 
 export default class CardInPlay {
   baseCard;
@@ -39,13 +39,13 @@ export default class CardInPlay {
     if (owner === null) {
       return null;
     }
-    const properties = this.extractProperties(specString, card.getType());
+    const properties = CardInPlay.extractProperties(specString, card.getType());
     if (properties === null) {
       return null;
     }
     const customModifiers =
       getCustomModifiers(baseCard.getCardId(), baseCard.version)
-        .forEach(({ modifier }: {
+        .map(({ modifier }: {
           modifier: (specString: SpecString) => any,
         }) => modifier(specString));
     return new CardInPlay(baseCard, owner, properties, customModifiers);
