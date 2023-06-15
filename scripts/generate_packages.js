@@ -1259,13 +1259,7 @@
     // once all lines are read and data extracted, parse the extracted data
     return helpers.recursivelyReadDirectoryAndFilesByLine(`${dir}/../app/sdk/cards/factory`, parseCardFactoryLine);
   }).then(() => parseCardFactoryData())
-    .then(() =>
-    // parse cosmetic factory after card factory
-    // that way all card resources have been gathered
-    // and card skin packages can be correctly generated
-      helpers.readFile(`${dir}/../app/sdk/cosmetics/cosmeticsFactory.coffee`, parseCosmeticsFactory))
     .then(() => {
-      console.log(' [GP] Resources packed for CARD FACTORY!');
       console.log(' [GP] Wrapping packages...');
 
       // add some additional fx resources to the game package

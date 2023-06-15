@@ -37,55 +37,7 @@ CardFactory_Monthly_M11_PennyArcade = require './factory/monthly/m11_penny_arcad
 CardFactory_Monthly_M12_OctoberMonthlies = require './factory/monthly/m12_october_monthlies.coffee'
 CardFactory_Monthly_M13_NovemberMonthlies = require './factory/monthly/m13_november_monthlies.coffee'
 
-CardFactory_ShimzarSet_Faction1 = require './factory/shimzar/faction1.coffee'
-CardFactory_ShimzarSet_Faction2 = require './factory/shimzar/faction2.coffee'
-CardFactory_ShimzarSet_Faction3 = require './factory/shimzar/faction3.coffee'
-CardFactory_ShimzarSet_Faction4 = require './factory/shimzar/faction4.coffee'
-CardFactory_ShimzarSet_Faction5 = require './factory/shimzar/faction5.coffee'
-CardFactory_ShimzarSet_Faction6 = require './factory/shimzar/faction6.coffee'
-CardFactory_ShimzarSet_Neutral = require './factory/shimzar/neutral.coffee'
-
-CardFactory_BloodstormSet_Faction1 = require './factory/bloodstorm/faction1.coffee'
-CardFactory_BloodstormSet_Faction2 = require './factory/bloodstorm/faction2.coffee'
-CardFactory_BloodstormSet_Faction3 = require './factory/bloodstorm/faction3.coffee'
-CardFactory_BloodstormSet_Faction4 = require './factory/bloodstorm/faction4.coffee'
-CardFactory_BloodstormSet_Faction5 = require './factory/bloodstorm/faction5.coffee'
-CardFactory_BloodstormSet_Faction6 = require './factory/bloodstorm/faction6.coffee'
-CardFactory_BloodstormSet_Neutral = require './factory/bloodstorm/neutral.coffee'
-
-CardFactory_UnitySet_Faction1 = require './factory/unity/faction1.coffee'
-CardFactory_UnitySet_Faction2 = require './factory/unity/faction2.coffee'
-CardFactory_UnitySet_Faction3 = require './factory/unity/faction3.coffee'
-CardFactory_UnitySet_Faction4 = require './factory/unity/faction4.coffee'
-CardFactory_UnitySet_Faction5 = require './factory/unity/faction5.coffee'
-CardFactory_UnitySet_Faction6 = require './factory/unity/faction6.coffee'
-CardFactory_UnitySet_Neutral = require './factory/unity/neutral.coffee'
-
 CardFactory_Gauntlet_Specials = require './factory/misc/gauntlet_specials.coffee'
-
-CardFactory_FirstWatchSet_Faction1 = require './factory/firstwatch/faction1.coffee'
-CardFactory_FirstWatchSet_Faction2 = require './factory/firstwatch/faction2.coffee'
-CardFactory_FirstWatchSet_Faction3 = require './factory/firstwatch/faction3.coffee'
-CardFactory_FirstWatchSet_Faction4 = require './factory/firstwatch/faction4.coffee'
-CardFactory_FirstWatchSet_Faction5 = require './factory/firstwatch/faction5.coffee'
-CardFactory_FirstWatchSet_Faction6 = require './factory/firstwatch/faction6.coffee'
-CardFactory_FirstWatchSet_Neutral = require './factory/firstwatch/neutral.coffee'
-
-CardFactory_WartechSet_Faction1 = require './factory/wartech/faction1.coffee'
-CardFactory_WartechSet_Faction2 = require './factory/wartech/faction2.coffee'
-CardFactory_WartechSet_Faction3 = require './factory/wartech/faction3.coffee'
-CardFactory_WartechSet_Faction4 = require './factory/wartech/faction4.coffee'
-CardFactory_WartechSet_Faction5 = require './factory/wartech/faction5.coffee'
-CardFactory_WartechSet_Faction6 = require './factory/wartech/faction6.coffee'
-CardFactory_WartechSet_Neutral = require './factory/wartech/neutral.coffee'
-
-CardFactory_CoreshatterSet_Faction1 = require './factory/coreshatter/faction1.coffee'
-CardFactory_CoreshatterSet_Faction2 = require './factory/coreshatter/faction2.coffee'
-CardFactory_CoreshatterSet_Faction3 = require './factory/coreshatter/faction3.coffee'
-CardFactory_CoreshatterSet_Faction4 = require './factory/coreshatter/faction4.coffee'
-CardFactory_CoreshatterSet_Faction5 = require './factory/coreshatter/faction5.coffee'
-CardFactory_CoreshatterSet_Faction6 = require './factory/coreshatter/faction6.coffee'
-CardFactory_CoreshatterSet_Neutral = require './factory/coreshatter/neutral.coffee'
 
 class CardFactory
 
@@ -117,26 +69,6 @@ class CardFactory
     if !card? then card = CardFactory_CoreSet_Faction6.cardForIdentifier(identifier, gameSession)
     if !card? then card = CardFactory_CoreSet_Neutral.cardForIdentifier(identifier, gameSession)
 
-    # shimzar set
-
-    if !card? then card = CardFactory_ShimzarSet_Faction1.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_ShimzarSet_Faction2.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_ShimzarSet_Faction3.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_ShimzarSet_Faction4.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_ShimzarSet_Faction5.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_ShimzarSet_Faction6.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_ShimzarSet_Neutral.cardForIdentifier(identifier, gameSession)
-
-    # first watch set
-
-    if !card? then card = CardFactory_FirstWatchSet_Faction1.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_FirstWatchSet_Faction2.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_FirstWatchSet_Faction3.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_FirstWatchSet_Faction4.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_FirstWatchSet_Faction5.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_FirstWatchSet_Faction6.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_FirstWatchSet_Neutral.cardForIdentifier(identifier, gameSession)
-
     # monthly
 
     if !card? then card = CardFactory_Monthly_Sisters.cardForIdentifier(identifier, gameSession)
@@ -161,42 +93,6 @@ class CardFactory
     if !card? then card = CardFactory_Bosses.cardForIdentifier(identifier, gameSession)
     if !card? then card = CardFactory_Tutorial.cardForIdentifier(identifier, gameSession)
     if !card? then card = CardFactory_Gauntlet_Specials.cardForIdentifier(identifier, gameSession)
-
-    # bloodstorm
-    if !card? then card = CardFactory_BloodstormSet_Faction1.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_BloodstormSet_Faction2.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_BloodstormSet_Faction3.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_BloodstormSet_Faction4.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_BloodstormSet_Faction5.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_BloodstormSet_Faction6.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_BloodstormSet_Neutral.cardForIdentifier(identifier, gameSession)
-
-    # unity
-    if !card? then card = CardFactory_UnitySet_Faction1.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_UnitySet_Faction2.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_UnitySet_Faction3.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_UnitySet_Faction4.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_UnitySet_Faction5.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_UnitySet_Faction6.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_UnitySet_Neutral.cardForIdentifier(identifier, gameSession)
-
-    # wartech
-    if !card? then card = CardFactory_WartechSet_Faction1.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_WartechSet_Faction2.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_WartechSet_Faction3.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_WartechSet_Faction4.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_WartechSet_Faction5.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_WartechSet_Faction6.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_WartechSet_Neutral.cardForIdentifier(identifier, gameSession)
-
-    # coreshatter
-    if !card? then card = CardFactory_CoreshatterSet_Faction1.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreshatterSet_Faction2.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreshatterSet_Faction3.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreshatterSet_Faction4.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreshatterSet_Faction5.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreshatterSet_Faction6.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreshatterSet_Neutral.cardForIdentifier(identifier, gameSession)
 
     if card?
       # set the card id to what was passed in
