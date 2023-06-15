@@ -11,8 +11,9 @@ export default class SpecString {
     if (res === null) {
       return null;
     }
-    this.index += res[0].length;
-    return res[0];
+    const match = res[0];
+    this.index += match.length;
+    return match;
   }
 
   countZeroes(): number | null {
