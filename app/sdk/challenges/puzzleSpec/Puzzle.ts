@@ -6,7 +6,11 @@ const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModif
 
 export default class Puzzle {
   version;
+  playerNum;
   mana;
+  hasBottomManaTile;
+  hasCenterManaTile;
+  hasTopManaTile;
   playerModifiers;
   you;
   opponent;
@@ -14,14 +18,22 @@ export default class Puzzle {
 
   constructor(
     version: number,
+    playerNum: 0 | 1,
     mana: number,
+    hasBottomManaTile: boolean,
+    hasCenterManaTile: boolean,
+    hasTopManaTile: boolean,
     playerModifiers: any,
     you: Player,
     opponent: Player,
     cards: CardInPlay[],
   ) {
     this.version = version;
+    this.playerNum = playerNum;
     this.mana = mana;
+    this.hasBottomManaTile = hasBottomManaTile;
+    this.hasCenterManaTile = hasCenterManaTile;
+    this.hasTopManaTile = hasTopManaTile;
     this.playerModifiers = playerModifiers;
     this.you = you;
     this.opponent = opponent;
@@ -33,11 +45,18 @@ export default class Puzzle {
     if (version === null) {
       return null;
     }
+    const playerNum = specString.readNBits(1) as 0 | 1;
+    if (playerNum === null) {
+      return null;
+    }
     const manaIndex = specString.readNBits(3);
     if (manaIndex === null) {
       return null;
     }
     const mana = manaIndex + 2;
+    const hasBottomManaTile = specString.readNBits(1) === 1;
+    const hasCenterManaTile = specString.readNBits(1) === 1;
+    const hasTopManaTile = specString.readNBits(1) === 1;
     const playerModifiers =
       getPlayerModifiers(version).map(({ modifier }: {
         modifier: (specString: SpecString) => any,
@@ -54,6 +73,17 @@ export default class Puzzle {
     if (cards === null) {
       return null;
     }
-    return new Puzzle(version, mana, playerModifiers, you, opponent, cards);
+    return new Puzzle(
+      version,
+      playerNum,
+      mana,
+      hasBottomManaTile,
+      hasCenterManaTile,
+      hasTopManaTile,
+      playerModifiers,
+      you,
+      opponent,
+      cards,
+    );
   }
 }
