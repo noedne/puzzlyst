@@ -6,20 +6,14 @@ const Card = require('app/sdk/cards/cardsLookup');
 
 export default class GeneralCard {
   static damageMinBitLength = 5;
-  version;
-  faction;
-  general;
-  position;
-  damage;
-  modifiers;
 
   constructor(
-    version: number,
-    faction: Faction,
-    general: General,
-    position: Position,
-    damage: number,
-    modifiers: Modifier[],
+    public version: number,
+    public faction: Faction,
+    public general: General,
+    public position: Position,
+    public damage: number,
+    public modifiers: Modifier[],
   ) {
     this.version = version;
     this.faction = faction;
@@ -95,7 +89,7 @@ export default class GeneralCard {
   }
 }
 
-enum Faction {
+const enum Faction {
   Faction1 = '000',
   Faction2 = '001',
   Faction3 = '010',
@@ -104,7 +98,7 @@ enum Faction {
   Faction6 = '101',
 }
 
-enum General {
+const enum General {
   General = '00',
   AltGeneral = '01',
   ThirdGeneral = '10',

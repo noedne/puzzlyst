@@ -7,12 +7,13 @@ import type { Group } from './CardGroup';
 import { getIdMinBitLength, getIdOffset } from './CardGroup';
 
 export default class BaseCard {
-  version: number;
-  group: Group;
-  id: number;
   card: typeof Card | null = null;
 
-  constructor(version: number, group: Group, id: number) {
+  constructor(
+    public version: number,
+    public group: Group,
+    public id: number,
+  ) {
     this.version = version;
     this.group = group;
     this.id = id;

@@ -1,8 +1,7 @@
 export default class SpecString {
-  str: string;
   index: number = 0;
 
-  constructor(str: string) {
+  constructor(public str: string) {
     this.str = str;
   }
 

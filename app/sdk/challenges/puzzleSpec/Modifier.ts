@@ -4,14 +4,10 @@ import type SpecString from "./SpecString";
 const getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData');
 
 export default class Modifier {
-  baseCard;
-  indexOfContextObject;
-  multiplicity;
-
   constructor(
-    baseCard: BaseCard,
-    indexOfContextObject: number,
-    multiplicity: number,
+    public baseCard: BaseCard,
+    public indexOfContextObject: number,
+    public multiplicity: number,
   ) {
     this.baseCard = baseCard;
     this.indexOfContextObject = indexOfContextObject;

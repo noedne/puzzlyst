@@ -3,11 +3,11 @@ import GeneralCard from './GeneralCard';
 import type SpecString from './SpecString';
 
 export default class Player {
-  generalCard;
-  hand;
-  deck;
-
-  constructor(generalCard: GeneralCard, hand: DeckCard[], deck: DeckCard[]) {
+  constructor(
+    public generalCard: GeneralCard,
+    public hand: DeckCard[],
+    public deck: DeckCard[],
+  ) {
     this.generalCard = generalCard;
     this.hand = hand;
     this.deck = deck;

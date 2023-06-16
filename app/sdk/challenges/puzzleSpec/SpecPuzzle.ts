@@ -4,29 +4,18 @@ import type SpecString from './SpecString';
 
 const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModifiers');
 
-export default class Puzzle {
-  version;
-  playerNum;
-  mana;
-  hasBottomManaTile;
-  hasCenterManaTile;
-  hasTopManaTile;
-  playerModifiers;
-  you;
-  opponent;
-  cards;
-
+export default class SpecPuzzle {
   constructor(
-    version: number,
-    playerNum: 0 | 1,
-    mana: number,
-    hasBottomManaTile: boolean,
-    hasCenterManaTile: boolean,
-    hasTopManaTile: boolean,
-    playerModifiers: any,
-    you: Player,
-    opponent: Player,
-    cards: CardInPlay[],
+    public version: number,
+    public playerNum: 0 | 1,
+    public mana: number,
+    public hasBottomManaTile: boolean,
+    public hasCenterManaTile: boolean,
+    public hasTopManaTile: boolean,
+    public playerModifiers: any,
+    public you: Player,
+    public opponent: Player,
+    public cardsInPlay: CardInPlay[],
   ) {
     this.version = version;
     this.playerNum = playerNum;
@@ -37,10 +26,10 @@ export default class Puzzle {
     this.playerModifiers = playerModifiers;
     this.you = you;
     this.opponent = opponent;
-    this.cards = cards;
+    this.cardsInPlay = cardsInPlay;
   }
 
-  static fromSpecString(specString: SpecString): Puzzle | null {
+  static fromSpecString(specString: SpecString): SpecPuzzle | null {
     const version = specString.countZeroes();
     if (version === null) {
       return null;
@@ -69,11 +58,11 @@ export default class Puzzle {
     if (opponent === null) {
       return null;
     }
-    const cards = specString.extractList(CardInPlay.fromSpecString);
-    if (cards === null) {
+    const cardsInPlay = specString.extractList(CardInPlay.fromSpecString);
+    if (cardsInPlay === null) {
       return null;
     }
-    return new Puzzle(
+    return new SpecPuzzle(
       version,
       playerNum,
       mana,
@@ -83,7 +72,7 @@ export default class Puzzle {
       playerModifiers,
       you,
       opponent,
-      cards,
+      cardsInPlay,
     );
   }
 }
