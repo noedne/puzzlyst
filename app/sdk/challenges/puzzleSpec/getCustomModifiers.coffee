@@ -1,6 +1,5 @@
 Cards = require('app/sdk/cards/cardsLookupComplete')
 ModifierAbsorbDamage = require('app/sdk/modifiers/modifierAbsorbDamage')
-SDK = require('app/sdk')
 
 getCustomModifiers = (cardId, version = 0) ->
   switch cardId
@@ -11,8 +10,8 @@ getCustomModifiers = (cardId, version = 0) ->
           isDamaged = specString.readNBits(1)
           return (card) ->
             if isDamaged
-              SDK.GameSession
-                .current()
+              card
+                .getGameSession()
                 .getGeneralForPlayerId(card.getOwnerId())
                 .getArtifactModifiers()
                 .find (modifier) ->
