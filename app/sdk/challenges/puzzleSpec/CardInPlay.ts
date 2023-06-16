@@ -55,6 +55,8 @@ export default class CardInPlay {
     switch (cardType) {
       case CardType.Artifact:
         return ArtifactProperties.fromSpecString(specString);
+      case CardType.Tile:
+        return TileProperties.fromSpecString(specString);
       case CardType.Unit:
         return MinionProperties.fromSpecString(specString);
       default:
@@ -69,26 +71,40 @@ function extractOwner(specString: SpecString): Owner | null {
   return specString.readNBits(1) as Owner | null;
 }
 
-type CardInPlayProperties = MinionProperties | ArtifactProperties;
+type CardInPlayProperties =
+  | ArtifactProperties
+  | MinionProperties
+  | TileProperties;
+
+class ArtifactProperties {
+  durability;
+
+  constructor(durability: number) {
+    this.durability = durability;
+  }
+
+  static fromSpecString(specString: SpecString): ArtifactProperties | null {
+    const damage = specString.countZeroes();
+    if (damage === null) {
+      return null;
+    }
+    const durability = CONFIG.MAX_ARTIFACT_DURABILITY - damage;
+    return new ArtifactProperties(durability);
+  }
+}
 
 class MinionProperties {
   position;
   damage;
   modifiers;
 
-  constructor(
-    position: Position,
-    damage: number,
-    modifiers: Modifier[],
-  ) {
+  constructor(position: Position, damage: number, modifiers: Modifier[]) {
     this.position = position;
     this.damage = damage;
     this.modifiers = modifiers;
   }
 
-  static fromSpecString(
-    specString: SpecString,
-  ): MinionProperties | null {
+  static fromSpecString(specString: SpecString): MinionProperties | null {
     const position = extractPosition(specString);
     if (position === null) {
       return null;
@@ -105,21 +121,8 @@ class MinionProperties {
   }
 }
 
-class ArtifactProperties {
-  durability;
-
-  constructor(durability: number) {
-    this.durability = durability;
-  }
-
-  static fromSpecString(
-    specString: SpecString,
-  ): ArtifactProperties | null {
-    const damage = specString.countZeroes();
-    if (damage === null) {
-      return null;
-    }
-    const durability = CONFIG.MAX_ARTIFACT_DURABILITY - damage;
-    return new ArtifactProperties(durability);
+class TileProperties {
+  static fromSpecString(_specString: SpecString): TileProperties | null {
+    return new TileProperties();
   }
 }
