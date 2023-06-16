@@ -2,27 +2,13 @@ import Modifier from "./Modifier";
 import { extractPosition, type Position } from "./Position";
 import type SpecString from "./SpecString";
 
-enum Faction {
-  Faction1 = '000',
-  Faction2 = '001',
-  Faction3 = '010',
-  Faction4 = '011',
-  Faction5 = '100',
-  Faction6 = '101',
-}
-
-enum Id {
-  General = '00',
-  AltGeneral = '01',
-  ThirdGeneral = '10',
-  GrandmasterZir = '11',
-}
+const Card = require('app/sdk/cards/cardsLookup');
 
 export default class GeneralCard {
   static damageMinBitLength = 5;
   version;
   faction;
-  id;
+  general;
   position;
   damage;
   modifiers;
@@ -30,14 +16,14 @@ export default class GeneralCard {
   constructor(
     version: number,
     faction: Faction,
-    id: Id,
+    general: General,
     position: Position,
     damage: number,
     modifiers: Modifier[],
   ) {
     this.version = version;
     this.faction = faction;
-    this.id = id;
+    this.general = general;
     this.position = position;
     this.damage = damage;
     this.modifiers = modifiers;
@@ -52,8 +38,8 @@ export default class GeneralCard {
     if (faction === null) {
       return null;
     }
-    const id = specString.matchRegex(/^[01][01]/) as Id | null;
-    if (id === null) {
+    const general = specString.matchRegex(/^[01][01]/) as General | null;
+    if (general === null) {
       return null;
     }
     const position = extractPosition(specString);
@@ -68,6 +54,59 @@ export default class GeneralCard {
     if (modifiers === null) {
       return null;
     }
-    return new GeneralCard(version, faction, id, position, damage, modifiers);
+    return new GeneralCard(version, faction, general, position, damage, modifiers);
   }
+
+  getCardId(): number {
+    return Card[this.getGroupName()][this.getGeneralName()];
+  }
+
+  getGroupName(): string {
+    if (this.general === General.GrandmasterZir) {
+      return 'Neutral';
+    }
+    switch (this.faction) {
+      case Faction.Faction1:
+        return 'Faction1';
+      case Faction.Faction2:
+        return 'Faction2';
+      case Faction.Faction3:
+        return 'Faction3';
+      case Faction.Faction4:
+        return 'Faction4';
+      case Faction.Faction5:
+        return 'Faction5';
+      case Faction.Faction6:
+        return 'Faction6';
+    }
+  }
+
+  getGeneralName(): string {
+    switch (this.general) {
+      case General.General:
+        return 'General';
+      case General.AltGeneral:
+        return 'AltGeneral';
+      case General.ThirdGeneral:
+        return 'ThirdGeneral';
+      case General.GrandmasterZir:
+        return 'GrandmasterZir';
+    }
+  }
+}
+
+enum Faction {
+  Faction1 = '000',
+  Faction2 = '001',
+  Faction3 = '010',
+  Faction4 = '011',
+  Faction5 = '100',
+  Faction6 = '101',
+}
+
+enum General {
+  General = '00',
+  AltGeneral = '01',
+  ThirdGeneral = '10',
+  GrandmasterZir = '11',
 }
