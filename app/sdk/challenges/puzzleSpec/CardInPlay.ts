@@ -8,17 +8,23 @@ import type SpecString from "./SpecString";
 
 const getCustomModifiers = require('app/sdk/challenges/puzzleSpec/getCustomModifiers');
 
-export default class CardInPlay {
-  baseCard;
-  owner;
-  properties;
-  customModifiers;
+export enum Owner {
+  You,
+  Opponent,
+}
 
+export enum CardInPlayType {
+  Artifact,
+  Minion,
+  Tile,
+}
+
+export default class CardInPlay {
   constructor(
-    baseCard: BaseCard,
-    owner: Owner,
-    properties: CardInPlayProperties,
-    customModifiers: any,
+    public baseCard: BaseCard,
+    public owner: Owner,
+    public properties: CardInPlayProperties,
+    public customModifiers: any,
   ) {
     this.baseCard = baseCard;
     this.owner = owner;
@@ -35,7 +41,7 @@ export default class CardInPlay {
     if (card == null) {
       return null;
     }
-    const owner = extractOwner(specString);
+    const owner = specString.readNBits(1) === 0 ? Owner.You : Owner.Opponent;
     if (owner === null) {
       return null;
     }
@@ -51,7 +57,10 @@ export default class CardInPlay {
     return new CardInPlay(baseCard, owner, properties, customModifiers);
   }
 
-  static extractProperties(specString: SpecString, cardType: typeof CardType): CardInPlayProperties | null {
+  static extractProperties(
+    specString: SpecString,
+    cardType: typeof CardType,
+  ): CardInPlayProperties | null {
     switch (cardType) {
       case CardType.Artifact:
         return ArtifactProperties.fromSpecString(specString);
@@ -65,21 +74,15 @@ export default class CardInPlay {
   }
 }
 
-type Owner = 0 | 1;
-
-function extractOwner(specString: SpecString): Owner | null {
-  return specString.readNBits(1) as Owner | null;
-}
-
 type CardInPlayProperties =
   | ArtifactProperties
   | MinionProperties
   | TileProperties;
 
 class ArtifactProperties {
-  durability;
+  type = CardInPlayType.Artifact as const;
 
-  constructor(durability: number) {
+  constructor(public durability: number) {
     this.durability = durability;
   }
 
@@ -94,11 +97,13 @@ class ArtifactProperties {
 }
 
 class MinionProperties {
-  position;
-  damage;
-  modifiers;
+  type = CardInPlayType.Minion as const;
 
-  constructor(position: Position, damage: number, modifiers: Modifier[]) {
+  constructor(
+    public position: Position,
+    public damage: number,
+    public modifiers: Modifier[],
+  ) {
     this.position = position;
     this.damage = damage;
     this.modifiers = modifiers;
@@ -122,7 +127,17 @@ class MinionProperties {
 }
 
 class TileProperties {
-  static fromSpecString(_specString: SpecString): TileProperties | null {
-    return new TileProperties();
+  type = CardInPlayType.Tile as const;
+
+  constructor(public position: Position) {
+    this.position = position;
+  }
+
+  static fromSpecString(specString: SpecString): TileProperties | null {
+    const position = extractPosition(specString);
+    if (position === null) {
+      return null;
+    }
+    return new TileProperties(position);
   }
 }
