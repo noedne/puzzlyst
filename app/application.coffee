@@ -143,7 +143,7 @@ ReplayEngine = require 'app/replay/replayEngine'
 
 AnalyticsTracker = require 'app/common/analyticsTracker'
 
-Puzzle = require './sdk/challenges/puzzle'
+Puzzle = require('dist/Puzzle').default
 
 # require the Handlebars Template Helpers extension here since it modifies core Marionette code
 require 'app/ui/extensions/handlebars_template_helpers'
@@ -545,7 +545,7 @@ App.main = ->
 
       NavigationManager.getInstance().connect()
       $('#app-preloading').addClass('out')
-      App._startGameWithChallenge(new Puzzle())
+      App._startGameWithChallenge()
       return Promise.resolve()
     ).finally () ->
       App._mainPromise = null
@@ -2006,7 +2006,7 @@ App._onGameServerShutdown = (errorData) ->
 # --- Game Setup ---- #
 #
 
-App._startGameWithChallenge = (challenge) ->
+App._startGameWithChallenge = () ->
   if ChatManager.getInstance().getStatusIsInBattle()
     Logger.module("APPLICATION").log("App._startGameWithChallenge -> cannot start game when already in a game!")
     return
@@ -2025,6 +2025,7 @@ App._startGameWithChallenge = (challenge) ->
   # challenge handles setting up game session
   SDK.GameSession.reset()
   SDK.GameSession.getInstance().setUserId('You')
+  challenge = new Puzzle(App._queryStringParams['p'])
   challenge.setupSession(SDK.GameSession.getInstance())
 
   # get ui promise
