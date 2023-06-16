@@ -9,137 +9,137 @@ class Cards
 
   @Faction1:{
     General:                  1
-    SilverguardSquire:        2
-    WindbladeAdept:           3
-    SunstoneTemplar:          4
-    SilverguardKnight:        5
-    ArclyteSentinel:          6
-    WindbladeCommander:       7
-    LysianBrawler:            8
-    Lightchaser:              9
-    SuntideMaiden:            10
-    IroncliffeGuardian:       11
-    ElyxStormblade:           12
-    GrandmasterZir:           13
-    AzuriteLion:              14
-    Sunriser:                 15
-    AltGeneral:               16
-    ThirdGeneral:             17
+    AltGeneral:               2
+    ThirdGeneral:             3
+    SilverguardSquire:        4
+    WindbladeAdept:           5
+    SunstoneTemplar:          6
+    SilverguardKnight:        7
+    ArclyteSentinel:          8
+    WindbladeCommander:       9
+    LysianBrawler:            10
+    Lightchaser:              11
+    SuntideMaiden:            12
+    IroncliffeGuardian:       13
+    ElyxStormblade:           14
+    GrandmasterZir:           15
+    AzuriteLion:              16
+    Sunriser:                 17
   }
 
   @Faction2:{
     General:             100
-    Heartseeker:         101
-    Widowmaker:          102
-    KaidoAssassin:       103
-    ScarletViper:        104
-    GoreHorn:            105
-    OnyxBear:            106
-    JadeOgre:            107
-    ChakriAvatar:        108
-    MageOfFourWinds:     109
-    CelestialPhantom:    110
-    StormKage:           111
-    HamonBlademaster:    112
-    KeshraiFanblade:     113
-    TuskBoar:            114
-    LanternFox:          115
-    AltGeneral:          116
-    ThirdGeneral:        117
+    AltGeneral:          101
+    ThirdGeneral:        102
+    Heartseeker:         103
+    Widowmaker:          104
+    KaidoAssassin:       105
+    ScarletViper:        106
+    GoreHorn:            107
+    OnyxBear:            108
+    JadeOgre:            109
+    ChakriAvatar:        110
+    MageOfFourWinds:     111
+    CelestialPhantom:    112
+    StormKage:           113
+    HamonBlademaster:    114
+    KeshraiFanblade:     115
+    TuskBoar:            116
+    LanternFox:          117
   }
 
   @Faction3:{
     General:             200
-    WindShrike:          201
-    StarfireScarab:      202
-    SandHowler:          203
-    Dunecaster:          204
-    OrbWeaver:           205
-    Pyromancer:          206
-    BrazierRedSand:      207
-    BrazierGoldenFlame:  208
-    BrazierDuskWind:     209
-    Dervish:             210
-    NightfallMechanyst:  211
-    MirrorMaster:        212
-    AymaraHealer:        213
-    PortalGuardian:      214
-    Oserix:              215
-    AltGeneral:          216
-    ThirdGeneral:        217
+    AltGeneral:          201
+    ThirdGeneral:        202
+    WindShrike:          203
+    StarfireScarab:      204
+    SandHowler:          205
+    Dunecaster:          206
+    OrbWeaver:           207
+    Pyromancer:          208
+    BrazierRedSand:      209
+    BrazierGoldenFlame:  210
+    BrazierDuskWind:     211
+    Dervish:             212
+    NightfallMechanyst:  213
+    MirrorMaster:        214
+    AymaraHealer:        215
+    PortalGuardian:      216
+    Oserix:              217
   }
 
   @Faction4:{
     General:              300
-    AbyssalCrawler:       301
-    AbyssalJuggernaut:    302
-    BloodmoonPriestess:   303
-    ShadowWatcher:        304
-    DeepfireDevourer:     305
-    DarkSiren:            306
-    VorpalReaver:         307
-    Wraithling:           308
-    DarkspineElemental:   309
-    GloomChaser:          310
-    SharianShadowdancer:  311
-    NightsorrowAssassin:  312
-    SpectralRevenant:     313
-    BlackSolus:           314
-    ReaperNineMoons:      315
-    AltGeneral:           316
-    ThirdGeneral:         317
+    AltGeneral:           301
+    ThirdGeneral:         302
+    AbyssalCrawler:       303
+    AbyssalJuggernaut:    304
+    BloodmoonPriestess:   305
+    ShadowWatcher:        306
+    DeepfireDevourer:     307
+    DarkSiren:            308
+    VorpalReaver:         309
+    Wraithling:           310
+    DarkspineElemental:   311
+    GloomChaser:          312
+    SharianShadowdancer:  313
+    NightsorrowAssassin:  314
+    SpectralRevenant:     315
+    BlackSolus:           316
+    ReaperNineMoons:      317
   }
 
   @Faction5:{
     General:           400
-    EarthWalker:       401
-    Grimrock:          402
-    Kolossus:          403
-    MakantorWarbeast:  404
-    Phalanxar:         405
-    Elucidator:        406
-    UnstableLeviathan: 407
-    Kujata:            408
-    PrimordialGazer:   409
-    Egg:               410
-    YoungSilithar:     411
-    VeteranSilithar:   412
-    SilitharElder:     413
-    SpiritHarvester:   414
-    MiniMagmar:        415
-    Vindicator:        416
-    AltGeneral:        417
-    ThirdGeneral:      418
+    AltGeneral:        401
+    ThirdGeneral:      402
+    EarthWalker:       403
+    Grimrock:          404
+    Kolossus:          405
+    MakantorWarbeast:  406
+    Phalanxar:         407
+    Elucidator:        408
+    UnstableLeviathan: 409
+    Kujata:            410
+    PrimordialGazer:   411
+    Egg:               412
+    YoungSilithar:     413
+    VeteranSilithar:   414
+    SilitharElder:     415
+    SpiritHarvester:   416
+    MiniMagmar:        417
+    Vindicator:        418
   }
 
   @Faction6:{
     General:          500
-    FenrirWarmaster:  501
-    GhostWolf:        502
-    CrystalCloaker:   503
-    CrystalWisp:      504
-    ArcticRhyno:      505
-    PrismaticGiant:   506
-    IceDrake:         507
-    WyrBeast:         508
-    WolfRaven:        509
-    BoreanBear:       510
-    Razorback:        511
-    AncientGrove:     512
-    VoiceoftheWind:   513
-    Treant:           514
-    HearthSister:     515
-    WaterBear:        516
-    SnowElemental:    517
-    WolfAspect:       518
-    AzureDrake:       519
-    SeismicElemental: 520
-    GravityWell:      521
-    BlazingSpines:    522
-    BonechillBarrier: 523
-    ArcticDisplacer:  524
-    AltGeneral:       525
-    ThirdGeneral:     526
+    AltGeneral:       501
+    ThirdGeneral:     502
+    FenrirWarmaster:  503
+    GhostWolf:        504
+    CrystalCloaker:   505
+    CrystalWisp:      506
+    ArcticRhyno:      507
+    PrismaticGiant:   508
+    IceDrake:         509
+    WyrBeast:         510
+    WolfRaven:        511
+    BoreanBear:       512
+    Razorback:        513
+    AncientGrove:     514
+    VoiceoftheWind:   515
+    Treant:           516
+    HearthSister:     517
+    WaterBear:        518
+    SnowElemental:    519
+    WolfAspect:       520
+    AzureDrake:       521
+    SeismicElemental: 522
+    GravityWell:      523
+    BlazingSpines:    524
+    BonechillBarrier: 525
+    ArcticDisplacer:  526
   }
 
   @Neutral:{

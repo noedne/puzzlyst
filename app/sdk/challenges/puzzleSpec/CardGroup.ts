@@ -15,36 +15,37 @@ export const enum Group {
 
 export function getIdMinBitLength(group: Group): number {
   switch (group) {
+    case Group.Tile:
+      return 0;
     case Group.Faction1:
     case Group.Faction2:
     case Group.Faction3:
     case Group.Faction4:
     case Group.Faction5:
-    case Group.Faction6:
     case Group.Artifact:
-      return 5;
+      return 3;
+    case Group.Faction6:
+      return 4;
     case Group.Neutral:
     case Group.Spell:
-      return 7;
-    case Group.Tile:
-      return 1;
+      return 6;
   }
 }
 
 export function getIdOffset(group: Group): number {
   switch (group) {
     case Group.Faction1:
-      return Cards.Faction1.General;
+      return Cards.Faction1.SilverguardSquire;
     case Group.Faction2:
-      return Cards.Faction2.General;
+      return Cards.Faction2.HeartSeeker;
     case Group.Faction3:
-      return Cards.Faction3.General;
+      return Cards.Faction3.WindShrike;
     case Group.Faction4:
-      return Cards.Faction4.General;
+      return Cards.Faction4.AbyssalCrawler;
     case Group.Faction5:
-      return Cards.Faction5.General;
+      return Cards.Faction5.EarthWalker;
     case Group.Faction6:
-      return Cards.Faction6.General;
+      return Cards.Faction6.FenrirWarmaster;
     case Group.Neutral:
       return Cards.Neutral.SpottedDragonlark;
     case Group.Spell:
