@@ -75,11 +75,17 @@ export default class Puzzle extends Challenge {
   setupOpponentAgent() {}
   
   static getPlayerDeckData(player: Player) {
+    const {
+      deck,
+      generalCard: { cardId, version },
+      hand,
+    } = player;
     return [
-      { id: player.generalCard.getCardId() },
-      ...player.hand.concat(player.deck).map(deckCard =>
-        ({ id: deckCard.baseCard.cardId }))
-      .reverse(),
+      { id: cardId, version },
+      ...hand
+        .concat(deck)
+        .map(({ baseCard: { cardId, version } }) => ({ id: cardId, version  }))
+        .reverse(),
     ];
   }
 

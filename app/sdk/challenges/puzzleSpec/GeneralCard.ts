@@ -1,19 +1,19 @@
+const Cards = require('app/sdk/cards/cardsLookupComplete');
+const Unit = require('app/sdk/entities/unit');
 import Modifier from "./Modifier";
 import {
+  fromCard as getPositionFromCard,
   fromSpecString as extractPositionFromSpecString,
   type Position,
 } from "./Position";
 import type SpecString from "./SpecString";
-
-const Card = require('app/sdk/cards/cardsLookup');
 
 export default class GeneralCard {
   static damageMinBitLength = 5;
 
   constructor(
     public version: number,
-    public faction: Faction,
-    public general: General,
+    public cardId: number,
     public position: Position,
     public damage: number,
     public modifiers: Modifier[],
@@ -47,23 +47,34 @@ export default class GeneralCard {
     }
     return new GeneralCard(
       version,
-      faction,
-      general,
+      GeneralCard.getCardId(faction, general),
       position,
       damage,
       modifiers,
     );
   }
 
-  getCardId(): number {
-    return Card[this.getGroupName()][this.getGeneralName()];
+  static fromUnit(unit: typeof Unit): GeneralCard {
+    return new GeneralCard(
+      unit.version,
+      unit.getId(),
+      getPositionFromCard(unit),
+      unit.getDamage(),
+      [],
+    );
   }
 
-  getGroupName(): string {
-    if (this.general === General.GrandmasterZir) {
+  private static getCardId(faction: Faction, general: General): number {
+    const groupName = GeneralCard.getGroupName(faction, general);
+    const generalName = GeneralCard.getGeneralName(general);
+    return Cards[groupName][generalName];
+  }
+
+  private static getGroupName(faction: Faction, general: General): string {
+    if (general === General.GrandmasterZir) {
       return 'Neutral';
     }
-    switch (this.faction) {
+    switch (faction) {
       case Faction.Faction1:
         return 'Faction1';
       case Faction.Faction2:
@@ -79,8 +90,8 @@ export default class GeneralCard {
     }
   }
 
-  getGeneralName(): string {
-    switch (this.general) {
+  private static getGeneralName(general: General): string {
+    switch (general) {
       case General.General:
         return 'General';
       case General.AltGeneral:

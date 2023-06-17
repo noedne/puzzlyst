@@ -2467,7 +2467,7 @@ class _GameSession extends SDKObject
    * @param {Object|Number|String} cardDataOrIndex plain object of card data with at least an "id" property or a card index
    * @returns {Card}
    ###
-  getExistingCardFromIndexOrCreateCardFromData: (cardDataOrIndex) ->
+  getExistingCardFromIndexOrCreateCardFromData: (cardDataOrIndex, version = 0) ->
     if cardDataOrIndex?
       if _.isObject(cardDataOrIndex)
         # attempt to find indexed card
@@ -2477,7 +2477,7 @@ class _GameSession extends SDKObject
 
         # create new card
         if !card? and cardDataOrIndex.id? and cardDataOrIndex.id != -1
-          card = @createCardForIdentifier(cardDataOrIndex.id)
+          card = @createCardForIdentifier(cardDataOrIndex.id, cardDataOrIndex.version)
       else
         # attempt to find indexed card
         card = @getCardByIndex(cardDataOrIndex)
