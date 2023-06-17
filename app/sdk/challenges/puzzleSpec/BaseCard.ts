@@ -28,6 +28,10 @@ export default class BaseCard {
     return new BaseCard(version, cardId);
   }
 
+  static fromCard(card: typeof Card): BaseCard {
+    return new BaseCard(card.version, card.getId(), card);
+  }
+
   get card(): typeof Card {
     this._card ??= SDK.GameSession.current().createCardForIdentifier(
       this.cardId,
