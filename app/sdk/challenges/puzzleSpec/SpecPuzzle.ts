@@ -16,18 +16,7 @@ export default class SpecPuzzle {
     public you: Player,
     public opponent: Player,
     public cardsInPlay: CardInPlay[],
-  ) {
-    this.version = version;
-    this.playerNum = playerNum;
-    this.mana = mana;
-    this.hasBottomManaTile = hasBottomManaTile;
-    this.hasCenterManaTile = hasCenterManaTile;
-    this.hasTopManaTile = hasTopManaTile;
-    this.playerModifiers = playerModifiers;
-    this.you = you;
-    this.opponent = opponent;
-    this.cardsInPlay = cardsInPlay;
-  }
+  ) {}
 
   static fromSpecString(specString: SpecString): SpecPuzzle | null {
     const version = specString.countZeroes();

@@ -8,11 +8,7 @@ export default class Modifier {
     public baseCard: BaseCard,
     public indexOfContextObject: number,
     public multiplicity: number,
-  ) {
-    this.baseCard = baseCard;
-    this.indexOfContextObject = indexOfContextObject;
-    this.multiplicity = multiplicity;
-  }
+  ) {}
 
   static fromSpecString(specString: SpecString): Modifier | null {
     const baseCard = BaseCard.fromSpecString(specString);

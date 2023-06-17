@@ -1,9 +1,7 @@
 export default class SpecString {
   index: number = 0;
 
-  constructor(public str: string) {
-    this.str = str;
-  }
+  constructor(public str: string) {}
 
   matchRegex(regex: RegExp): string | null {
     const res = regex.exec(this.str.slice(this.index));

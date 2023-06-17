@@ -9,15 +9,7 @@ import { getIdMinBitLength, getIdOffset } from './CardGroup';
 export default class BaseCard {
   card: typeof Card | null = null;
 
-  constructor(
-    public version: number,
-    public group: Group,
-    public id: number,
-  ) {
-    this.version = version;
-    this.group = group;
-    this.id = id;
-  }
+  constructor(public version: number, public group: Group, public id: number) {}
 
   static fromSpecString(specString: SpecString): BaseCard | null {
     const version = specString.countZeroes();

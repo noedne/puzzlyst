@@ -25,12 +25,7 @@ export default class CardInPlay {
     public owner: Owner,
     public properties: CardInPlayProperties,
     public customModifiers: any,
-  ) {
-    this.baseCard = baseCard;
-    this.owner = owner;
-    this.properties = properties;
-    this.customModifiers = customModifiers;
-  }
+  ) {}
 
   static fromSpecString(specString: SpecString): CardInPlay | null {
     const baseCard = BaseCard.fromSpecString(specString);
@@ -82,9 +77,7 @@ type CardInPlayProperties =
 class ArtifactProperties {
   type = CardInPlayType.Artifact as const;
 
-  constructor(public durability: number) {
-    this.durability = durability;
-  }
+  constructor(public durability: number) {}
 
   static fromSpecString(specString: SpecString): ArtifactProperties | null {
     const damage = specString.countZeroes();
@@ -103,11 +96,7 @@ class MinionProperties {
     public position: Position,
     public damage: number,
     public modifiers: Modifier[],
-  ) {
-    this.position = position;
-    this.damage = damage;
-    this.modifiers = modifiers;
-  }
+  ) {}
 
   static fromSpecString(specString: SpecString): MinionProperties | null {
     const position = extractPosition(specString);
@@ -129,9 +118,7 @@ class MinionProperties {
 class TileProperties {
   type = CardInPlayType.Tile as const;
 
-  constructor(public position: Position) {
-    this.position = position;
-  }
+  constructor(public position: Position) {}
 
   static fromSpecString(specString: SpecString): TileProperties | null {
     const position = extractPosition(specString);

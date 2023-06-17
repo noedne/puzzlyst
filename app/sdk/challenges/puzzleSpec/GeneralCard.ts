@@ -14,14 +14,7 @@ export default class GeneralCard {
     public position: Position,
     public damage: number,
     public modifiers: Modifier[],
-  ) {
-    this.version = version;
-    this.faction = faction;
-    this.general = general;
-    this.position = position;
-    this.damage = damage;
-    this.modifiers = modifiers;
-  }
+  ) {}
 
   static fromSpecString(specString: SpecString): GeneralCard | null {
     const version = specString.countZeroes();

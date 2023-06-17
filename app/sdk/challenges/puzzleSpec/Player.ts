@@ -7,11 +7,7 @@ export default class Player {
     public generalCard: GeneralCard,
     public hand: DeckCard[],
     public deck: DeckCard[],
-  ) {
-    this.generalCard = generalCard;
-    this.hand = hand;
-    this.deck = deck;
-  }
+  ) {}
 
   static fromSpecString(specString: SpecString): Player | null {
     const generalCard = GeneralCard.fromSpecString(specString);

@@ -3,10 +3,7 @@ import Modifier from "./Modifier";
 import type SpecString from "./SpecString";
 
 export default class DeckCard {
-  constructor(public baseCard: BaseCard, public modifiers: Modifier[]) {
-    this.baseCard = baseCard;
-    this.modifiers = modifiers;
-  }
+  constructor(public baseCard: BaseCard, public modifiers: Modifier[]) {}
 
   static fromSpecString(specString: SpecString): DeckCard | null {
     const baseCard = BaseCard.fromSpecString(specString);
