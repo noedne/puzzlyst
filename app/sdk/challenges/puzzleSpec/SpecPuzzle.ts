@@ -8,11 +8,12 @@ const Unit = require('app/sdk/entities/unit');
 import CardInPlay from './CardInPlay';
 import Player from './Player';
 import { areEqual as arePositionsEqual, fromCard as getPositionFromCard } from './Position';
-import type SpecString from './SpecString';
+import SpecString from './SpecString';
 
 const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModifiers');
 
 export default class SpecPuzzle {
+  static manaIndexLengthInBits = 3;
   constructor(
     public version: number,
     public isPlayer1: boolean,
@@ -35,7 +36,7 @@ export default class SpecPuzzle {
     if (isPlayer1 === null) {
       return null;
     }
-    const manaIndex = specString.readNBits(3);
+    const manaIndex = specString.readNBits(SpecPuzzle.manaIndexLengthInBits);
     if (manaIndex === null) {
       return null;
     }
@@ -121,6 +122,20 @@ export default class SpecPuzzle {
     )
   }
 
+  toString(): string {
+    const version = SpecString.writeNZeroes(this.version);
+    const isPlayer1 = boolToBit(!this.isPlayer1);
+    const manaIndex = SpecString.writeNumWithNBits(
+      this.mana - 2,
+      SpecPuzzle.manaIndexLengthInBits,
+    );
+    const hasBottomManaTile = boolToBit(this.hasBottomManaTile);
+    const hasCenterManaTile = boolToBit(this.hasCenterManaTile);
+    const hasTopManaTile = boolToBit(this.hasTopManaTile);
+    const cardsInPlay = SpecString.constructList(this.cardsInPlay);
+    return `${version}${isPlayer1}${manaIndex}${hasBottomManaTile}${hasCenterManaTile}${hasTopManaTile}${this.you}${this.opponent}${cardsInPlay}`;
+  }
+
   private static getArtifacts(gameSession: typeof GameSession):
     (typeof Artifact)[] {
     const artifactIndices =
@@ -163,4 +178,8 @@ export default class SpecPuzzle {
       });
     return { tiles, hasBottomManaTile, hasCenterManaTile, hasTopManaTile };
   }
+}
+
+function boolToBit(bool: boolean): string {
+  return bool ? '1' : '0';
 }
