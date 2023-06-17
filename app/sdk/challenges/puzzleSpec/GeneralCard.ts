@@ -1,12 +1,14 @@
 const Cards = require('app/sdk/cards/cardsLookupComplete');
+const Factions = require('app/sdk/cards/factionsLookup');
 const Unit = require('app/sdk/entities/unit');
 import Modifier from "./Modifier";
 import {
   fromCard as getPositionFromCard,
   fromSpecString as extractPositionFromSpecString,
   type Position,
+  toString as positionToString,
 } from "./Position";
-import type SpecString from "./SpecString";
+import SpecString from "./SpecString";
 
 export default class GeneralCard {
   static damageMinBitLength = 5;
@@ -17,6 +19,8 @@ export default class GeneralCard {
     public position: Position,
     public damage: number,
     public modifiers: Modifier[],
+    private faction: Faction,
+    private general: General,
   ) {}
 
   static fromSpecString(specString: SpecString): GeneralCard | null {
@@ -51,17 +55,30 @@ export default class GeneralCard {
       position,
       damage,
       modifiers,
+      faction,
+      general,
     );
   }
 
   static fromUnit(unit: typeof Unit): GeneralCard {
+    const faction = GeneralCard.getFaction(unit);
+    const general = GeneralCard.getGeneral(unit, faction);
     return new GeneralCard(
       unit.version,
       unit.getId(),
       getPositionFromCard(unit),
       unit.getDamage(),
       [],
+      faction ?? Faction.Faction1,
+      general,
     );
+  }
+
+  toString(): string {
+    const version = SpecString.writeNZeroes(this.version);
+    const position = positionToString(this.position);
+    const modifiers = SpecString.constructList(this.modifiers);
+    return `${version}${this.faction}${this.general}${position}${this.damage}${modifiers}`;
   }
 
   private static getCardId(faction: Faction, general: General): number {
@@ -70,7 +87,10 @@ export default class GeneralCard {
     return Cards[groupName][generalName];
   }
 
-  private static getGroupName(faction: Faction, general: General): string {
+  private static getGroupName(
+    faction: Faction,
+    general: General | null = null,
+  ): string {
     if (general === General.GrandmasterZir) {
       return 'Neutral';
     }
@@ -100,6 +120,48 @@ export default class GeneralCard {
         return 'ThirdGeneral';
       case General.GrandmasterZir:
         return 'GrandmasterZir';
+    }
+  }
+
+  private static getFaction(unit: typeof Unit): Faction | null {
+    const { factionId } = unit
+      .getGameSession()
+      .getPlayerSetupDataForPlayerId(unit.getOwnerId());
+    switch (factionId) {
+      case Factions.Faction1:
+        return Faction.Faction1;
+      case Factions.Faction2:
+        return Faction.Faction2;
+      case Factions.Faction3:
+        return Faction.Faction3;
+      case Factions.Faction4:
+        return Faction.Faction4;
+      case Factions.Faction5:
+        return Faction.Faction5;
+      case Factions.Faction6:
+        return Faction.Faction6;
+      default:
+        return null;
+    }
+  }
+
+  private static getGeneral(
+    unit: typeof Unit,
+    faction: Faction | null,
+  ): General {
+    if (faction === null) {
+      return General.GrandmasterZir;
+    }
+    const group = Cards[GeneralCard.getGroupName(faction)];
+    switch (unit.getId()) {
+      case group.General:
+        return General.General;
+      case group.AltGeneral:
+        return General.AltGeneral;
+      case group.ThirdGeneral:
+        return General.ThirdGeneral;
+      default:
+        return General.GrandmasterZir;
     }
   }
 }
