@@ -1,7 +1,7 @@
 const Card = require('app/sdk/cards/card');
 import BaseCard from "./BaseCard";
 import Modifier from "./Modifier";
-import type SpecString from "./SpecString";
+import SpecString from "./SpecString";
 
 export default class DeckCard {
   constructor(public baseCard: BaseCard, public modifiers: Modifier[]) {}
@@ -24,5 +24,9 @@ export default class DeckCard {
       return null;
     }
     return new DeckCard(baseCard, []);
+  }
+
+  toString(): string {
+    return `${this.baseCard}${SpecString.constructList(this.modifiers)}`;
   }
 }
