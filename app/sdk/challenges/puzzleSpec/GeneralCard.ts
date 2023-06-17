@@ -1,5 +1,8 @@
 import Modifier from "./Modifier";
-import { extractPosition, type Position } from "./Position";
+import {
+  fromSpecString as extractPositionFromSpecString,
+  type Position,
+} from "./Position";
 import type SpecString from "./SpecString";
 
 const Card = require('app/sdk/cards/cardsLookup');
@@ -29,11 +32,12 @@ export default class GeneralCard {
     if (general === null) {
       return null;
     }
-    const position = extractPosition(specString);
+    const position = extractPositionFromSpecString(specString);
     if (position === null) {
       return null;
     }
-    const damage = specString.countZeroesAndReadNPlusBits(this.damageMinBitLength);
+    const damage =
+      specString.countZeroesAndReadNPlusBits(this.damageMinBitLength);
     if (damage === null) {
       return null;
     }
@@ -41,7 +45,14 @@ export default class GeneralCard {
     if (modifiers === null) {
       return null;
     }
-    return new GeneralCard(version, faction, general, position, damage, modifiers);
+    return new GeneralCard(
+      version,
+      faction,
+      general,
+      position,
+      damage,
+      modifiers,
+    );
   }
 
   getCardId(): number {

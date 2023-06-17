@@ -1,9 +1,17 @@
+const Artifact = require('app/sdk/artifacts/artifact');
+const Card = require('app/sdk/cards/card');
 const CardType = require('app/sdk/cards/cardType');
 const CONFIG = require('app/common/config');
+const Tile = require('app/sdk/entities/tile');
+const Unit = require('app/sdk/entities/unit');
 
 import BaseCard from "./BaseCard";
 import Modifier from './Modifier';
-import { extractPosition, type Position } from "./Position";
+import {
+  fromCard as getPositionFromCard,
+  fromSpecString as extractPositionFromSpecString,
+  type Position,
+} from "./Position";
 import type SpecString from "./SpecString";
 
 const getCustomModifiers = require('app/sdk/challenges/puzzleSpec/getCustomModifiers');
@@ -37,7 +45,10 @@ export default class CardInPlay {
     if (owner === null) {
       return null;
     }
-    const properties = CardInPlay.extractProperties(specString, card.getType());
+    const properties = CardInPlay.extractPropertiesFromSpecString(
+      specString,
+      card.getType(),
+    );
     if (properties === null) {
       return null;
     }
@@ -47,7 +58,16 @@ export default class CardInPlay {
     return new CardInPlay(baseCard, owner, properties, customModifiers);
   }
 
-  static extractProperties(
+  static fromCard(card: typeof Card): CardInPlay | null {
+    const owner = card.isOwnedByMyPlayer() ? Owner.You : Owner.Opponent;
+    const properties = CardInPlay.extractPropertiesFromCard(card);
+    if (properties === null) {
+      return null;
+    }
+    return new CardInPlay(BaseCard.fromCard(card), owner, properties, []);
+  }
+
+  private static extractPropertiesFromSpecString(
     specString: SpecString,
     cardType: typeof CardType,
   ): CardInPlayProperties | null {
@@ -58,6 +78,21 @@ export default class CardInPlay {
         return TileProperties.fromSpecString(specString);
       case CardType.Unit:
         return MinionProperties.fromSpecString(specString);
+      default:
+        return null;
+    }
+  }
+
+  private static extractPropertiesFromCard(
+    card: typeof Card,
+  ): CardInPlayProperties | null {
+    switch (card.getType()) {
+      case CardType.Artifact:
+        return ArtifactProperties.fromArtifact(card);
+      case CardType.Tile:
+        return TileProperties.fromTile(card);
+      case CardType.Unit:
+        return MinionProperties.fromUnit(card);
       default:
         return null;
     }
@@ -82,6 +117,10 @@ class ArtifactProperties {
     const durability = CONFIG.MAX_ARTIFACT_DURABILITY - damage;
     return new ArtifactProperties(durability);
   }
+
+  static fromArtifact(artifact: typeof Artifact): ArtifactProperties {
+    return new ArtifactProperties(artifact.durability);
+  }
 }
 
 class MinionProperties {
@@ -94,7 +133,7 @@ class MinionProperties {
   ) {}
 
   static fromSpecString(specString: SpecString): MinionProperties | null {
-    const position = extractPosition(specString);
+    const position = extractPositionFromSpecString(specString);
     if (position === null) {
       return null;
     }
@@ -108,6 +147,14 @@ class MinionProperties {
     }
     return new MinionProperties(position, damage, modifiers);
   }
+
+  static fromUnit(unit: typeof Unit): MinionProperties {
+    return new MinionProperties(
+      getPositionFromCard(unit),
+      unit.getDamage(),
+      [],
+    );
+  }
 }
 
 class TileProperties {
@@ -116,10 +163,14 @@ class TileProperties {
   constructor(public position: Position) {}
 
   static fromSpecString(specString: SpecString): TileProperties | null {
-    const position = extractPosition(specString);
+    const position = extractPositionFromSpecString(specString);
     if (position === null) {
       return null;
     }
     return new TileProperties(position);
+  }
+
+  static fromTile(tile: typeof Tile): TileProperties {
+    return new TileProperties(getPositionFromCard(tile));
   }
 }
