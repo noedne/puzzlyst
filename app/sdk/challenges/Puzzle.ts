@@ -50,7 +50,7 @@ export default class Puzzle extends Challenge {
     if (puzzle === null) {
       throw Error('invalid');
     }
-    this.userIsPlayer1 = puzzle.playerNum == 0;
+    this.userIsPlayer1 = puzzle.isPlayer1;
     this.startingManaPlayer = puzzle.mana;
     this.startingHandSizePlayer = puzzle.you.hand.length;
     this.startingHandSizeOpponent = puzzle.opponent.hand.length;

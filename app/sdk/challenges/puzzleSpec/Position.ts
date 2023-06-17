@@ -20,3 +20,7 @@ export function fromCard(card: typeof Card): Position {
   const { x, y } = card.getPosition();
   return [x, y];
 }
+
+export function areEqual(position1: Position, position2: Position): boolean {
+  return position1[0] === position2[0] && position1[1] === position2[1];
+}
