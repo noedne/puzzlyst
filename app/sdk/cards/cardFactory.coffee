@@ -47,7 +47,7 @@ class CardFactory
    * @param {GameSession} gameSession
    * @returns {Card}
    ###
-  @cardForIdentifier: (cardId,gameSession) ->
+  @cardForIdentifier: (cardId,gameSession, version = 0) ->
 
     #Logger.module("SDK").debug("[G:#{gameSession.gameId}]", "CardFactory ::generate card with id: #{cardId}")
 
@@ -66,7 +66,7 @@ class CardFactory
     if !card? then card = CardFactory_CoreSet_Faction3.cardForIdentifier(identifier, gameSession)
     if !card? then card = CardFactory_CoreSet_Faction4.cardForIdentifier(identifier, gameSession)
     if !card? then card = CardFactory_CoreSet_Faction5.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreSet_Faction6.cardForIdentifier(identifier, gameSession)
+    if !card? then card = CardFactory_CoreSet_Faction6.cardForIdentifier(identifier, gameSession, version)
     if !card? then card = CardFactory_CoreSet_Neutral.cardForIdentifier(identifier, gameSession)
 
     # monthly

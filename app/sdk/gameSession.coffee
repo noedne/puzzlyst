@@ -2436,8 +2436,8 @@ class _GameSession extends SDKObject
   createActionForType:(actionType) ->
     return ActionFactory.actionForType(actionType, @)
 
-  createCardForIdentifier:(identifier) ->
-    return CardFactory.cardForIdentifier(identifier, @)
+  createCardForIdentifier:(identifier, version = 0) ->
+    return CardFactory.cardForIdentifier(identifier, @, version)
 
   ###*
    * Returns an existing card matching an index, or a cached card from card data by id.

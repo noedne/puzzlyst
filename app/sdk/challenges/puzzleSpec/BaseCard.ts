@@ -29,7 +29,10 @@ export default class BaseCard {
   }
 
   get card(): typeof Card {
-    this._card ??= SDK.GameSession.current().createCardForIdentifier(this.cardId);
+    this._card ??= SDK.GameSession.current().createCardForIdentifier(
+      this.cardId,
+      this.version,
+    );
     return this._card;
   }
 }
