@@ -57,11 +57,11 @@ export default class Puzzle extends Challenge {
     this.puzzle = puzzle;
   }
 
-  getMyPlayerDeckData(_gameSession: GameSession) {
+  getMyPlayerDeckData(_gameSession: GameSession): DeckData {
     return Puzzle.getPlayerDeckData(this.puzzle.you);
   }
 
-  getOpponentPlayerDeckData(_gameSession: GameSession) {
+  getOpponentPlayerDeckData(_gameSession: GameSession): DeckData {
     return Puzzle.getPlayerDeckData(this.puzzle.opponent);
   }
 
@@ -74,7 +74,7 @@ export default class Puzzle extends Challenge {
 
   setupOpponentAgent() {}
   
-  static getPlayerDeckData(player: Player) {
+  static getPlayerDeckData(player: Player): DeckData {
     const {
       deck,
       generalCard: { cardId, version },
@@ -164,4 +164,5 @@ export default class Puzzle extends Challenge {
 
 type Card = any;
 type CustomModifier = any;
+type DeckData = { id: number, version: number }[];
 type GameSession = any;
