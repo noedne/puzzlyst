@@ -5,9 +5,10 @@ export type Position = [number, number];
 
 const WIDTH = 9;
 const HEIGHT = 5;
+const LENGTH = 6;
 
 export function fromSpecString(specString: SpecString): Position | null {
-  const positionIndex = specString.readNBits(6);
+  const positionIndex = specString.readNBits(LENGTH);
   if (positionIndex === null || positionIndex >= WIDTH * HEIGHT) {
     return null;
   }
@@ -23,4 +24,8 @@ export function fromCard(card: typeof Card): Position {
 
 export function areEqual(position1: Position, position2: Position): boolean {
   return position1[0] === position2[0] && position1[1] === position2[1];
+}
+
+export function toString(position: Position): string {
+  return (position[1] * WIDTH + position[0]).toString(2).padStart(LENGTH, '0');
 }

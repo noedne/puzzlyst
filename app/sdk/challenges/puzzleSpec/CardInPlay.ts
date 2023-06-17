@@ -11,14 +11,15 @@ import {
   fromCard as getPositionFromCard,
   fromSpecString as extractPositionFromSpecString,
   type Position,
+  toString as positionToString,
 } from "./Position";
-import type SpecString from "./SpecString";
+import SpecString from "./SpecString";
 
 const getCustomModifiers = require('app/sdk/challenges/puzzleSpec/getCustomModifiers');
 
 export enum Owner {
-  You,
-  Opponent,
+  You = '0',
+  Opponent = '1',
 }
 
 export enum CardInPlayType {
@@ -69,6 +70,10 @@ export default class CardInPlay {
       return null;
     }
     return new CardInPlay(baseCard, owner, properties, []);
+  }
+
+  toString(): string {
+    return `${this.baseCard}${this.owner}${this.properties}`;
   }
 
   private static extractPropertiesFromSpecString(
@@ -125,6 +130,12 @@ class ArtifactProperties {
   static fromArtifact(artifact: typeof Artifact): ArtifactProperties {
     return new ArtifactProperties(artifact.durability);
   }
+
+  toString(): string {
+    return SpecString.writeNZeroes(
+      CONFIG.MAX_ARTIFACT_DURABILITY - this.durability,
+    );
+  }
 }
 
 class MinionProperties {
@@ -159,6 +170,13 @@ class MinionProperties {
       [],
     );
   }
+
+  toString(): string {
+    const position = positionToString(this.position);
+    const damage = SpecString.writeNZeroes(this.damage);
+    const modifiers = SpecString.constructList(this.modifiers);
+    return `${position}${damage}${modifiers}`;
+  }
 }
 
 class TileProperties {
@@ -176,5 +194,9 @@ class TileProperties {
 
   static fromTile(tile: typeof Tile): TileProperties {
     return new TileProperties(getPositionFromCard(tile));
+  }
+
+  toString(): string {
+    return positionToString(this.position);
   }
 }
