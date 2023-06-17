@@ -77,8 +77,12 @@ export default class GeneralCard {
   toString(): string {
     const version = SpecString.writeNZeroes(this.version);
     const position = positionToString(this.position);
+    const damage = SpecString.padNumWithZeroesForCountingPastNMinBits(
+      this.damage,
+      GeneralCard.damageMinBitLength,
+    );
     const modifiers = SpecString.constructList(this.modifiers);
-    return `${version}${this.faction}${this.general}${position}${this.damage}${modifiers}`;
+    return `${version}${this.faction}${this.general}${position}${damage}${modifiers}`;
   }
 
   private static getCardId(faction: Faction, general: General): number {
