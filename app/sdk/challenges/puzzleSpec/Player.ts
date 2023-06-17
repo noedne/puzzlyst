@@ -3,9 +3,10 @@ const SDKPlayer = require('app/sdk/player');
 const Unit = require('app/sdk/entities/unit');
 import DeckCard from './DeckCard';
 import GeneralCard from './GeneralCard';
-import type SpecString from './SpecString';
+import SpecString from './SpecString';
 
 export default class Player {
+  static handSizeInBits = 3;
   constructor(
     public generalCard: GeneralCard,
     public hand: DeckCard[],
@@ -17,7 +18,10 @@ export default class Player {
     if (generalCard === null) {
       return null;
     }
-    const hand = specString.extractList(DeckCard.fromSpecString, 3);
+    const hand = specString.extractList(
+      DeckCard.fromSpecString,
+      Player.handSizeInBits,
+    );
     if (hand === null) {
       return null;
     }
@@ -44,6 +48,12 @@ export default class Player {
       .getCardsInDrawPileExcludingMissing()
     const deck = Player.cardsToDeckCards(cardsInDeck);
     return new Player(generalCard, hand, deck);
+  }
+
+  toString(): string {
+    const hand = SpecString.constructList(this.hand, Player.handSizeInBits);
+    const deck = SpecString.constructList(this.deck);
+    return `${this.generalCard}${hand}${deck}`;
   }
 
   private static cardsToDeckCards(cards: (typeof Card)[]): DeckCard[] {
