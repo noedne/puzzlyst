@@ -1,5 +1,5 @@
 import BaseCard from "./BaseCard";
-import type SpecString from "./SpecString";
+import SpecString from "./SpecString";
 
 const getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData');
 
@@ -32,5 +32,20 @@ export default class Modifier {
       return null;
     }
     return new Modifier(baseCard, index, multiplicity);
+  }
+
+  toString(): string {
+    const array = getContextObjectData(
+      this.baseCard.cardId,
+      this.baseCard.version,
+    );    
+    const indexOfContextObject = array.length === 1
+      ? ''
+      : SpecString.writeNZeroes(this.indexOfContextObject);
+    const data = array[this.indexOfContextObject];
+    const multiplicity = data.allowMultiple
+      ? SpecString.writeNZeroes(this.multiplicity)
+      : '';
+    return `${this.baseCard}${indexOfContextObject}${multiplicity}`;
   }
 }
