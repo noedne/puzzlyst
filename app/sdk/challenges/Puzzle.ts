@@ -78,7 +78,7 @@ export default class Puzzle extends Challenge {
     return [
       { id: player.generalCard.getCardId() },
       ...player.hand.concat(player.deck).map(deckCard =>
-        ({ id: deckCard.baseCard.getCardId() }))
+        ({ id: deckCard.baseCard.cardId }))
       .reverse(),
     ];
   }
@@ -105,8 +105,12 @@ export default class Puzzle extends Challenge {
     const myPlayerId = gameSession.getMyPlayerId();
     const opponentPlayerId = gameSession.getOpponentPlayerId();
     this.puzzle.cardsInPlay.forEach(cardInPlay => {
-      const { baseCard, customModifiers, owner, properties } = cardInPlay;
-      const card = baseCard.getCard();
+      const {
+        baseCard: { card },
+        customModifiers,
+        owner,
+        properties,
+      } = cardInPlay;
       const playerId = owner == Owner.You ? myPlayerId : opponentPlayerId;
       switch (properties.type) {
         case CardInPlayType.Artifact:
@@ -139,11 +143,11 @@ export default class Puzzle extends Challenge {
   }
 
   applyModifiers(gameSession: GameSession, card: Card, modifiers: Modifier[]) {
-    modifiers.forEach(modifier => {
-      const cardId = modifier.baseCard.getCardId();
-      const index = modifier.indexOfContextObject;
-      const { contextObject } = getContextObjectData(cardId)[index];
-      gameSession.applyModifierContextObject(contextObject, card);
+    modifiers.forEach(({ baseCard: { cardId }, indexOfContextObject }) => {
+      gameSession.applyModifierContextObject(
+        getContextObjectData(cardId)[indexOfContextObject].contextObject,
+        card,
+      );
     });
   }
 

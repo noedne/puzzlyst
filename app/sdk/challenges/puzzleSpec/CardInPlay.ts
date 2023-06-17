@@ -32,10 +32,7 @@ export default class CardInPlay {
     if (baseCard === null) {
       return null;
     }
-    const card = baseCard.getCard();
-    if (card == null) {
-      return null;
-    }
+    const { card, cardId, version } = baseCard;
     const owner = specString.readNBits(1) === 0 ? Owner.You : Owner.Opponent;
     if (owner === null) {
       return null;
@@ -44,11 +41,9 @@ export default class CardInPlay {
     if (properties === null) {
       return null;
     }
-    const customModifiers =
-      getCustomModifiers(baseCard.getCardId(), baseCard.version)
-        .map(({ modifier }: {
-          modifier: (specString: SpecString) => any,
-        }) => modifier(specString));
+    const customModifiers = getCustomModifiers(cardId, version).map(
+      (customModifier: { modifier: (specString: SpecString) => any }) =>
+        customModifier.modifier(specString));
     return new CardInPlay(baseCard, owner, properties, customModifiers);
   }
 

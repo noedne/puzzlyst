@@ -15,8 +15,7 @@ export default class Modifier {
     if (baseCard === null) {
       return null;
     }
-    const cardId = baseCard.getCardId();
-    const array = getContextObjectData(cardId, baseCard.version);
+    const array = getContextObjectData(baseCard.cardId, baseCard.version);
     if (array.length === 0) {
       return null;
     }

@@ -7,9 +7,11 @@ import type { Group } from './CardGroup';
 import { getIdMinBitLength, getIdOffset } from './CardGroup';
 
 export default class BaseCard {
-  card: typeof Card | null = null;
-
-  constructor(public version: number, public group: Group, public id: number) {}
+  constructor(
+    public version: number,
+    public cardId: number,
+    private _card: typeof Card | null = null,
+  ) {}
 
   static fromSpecString(specString: SpecString): BaseCard | null {
     const version = specString.countZeroes();
@@ -24,19 +26,12 @@ export default class BaseCard {
     if (id === null) {
       return null;
     }
-    return new BaseCard(version, group, id);
+    const cardId = id + getIdOffset(group);
+    return new BaseCard(version, cardId);
   }
 
-  getCardId(): number {
-    return this.id + getIdOffset(this.group);
-  }
-
-  getCard() {
-    if (this.card === null) {
-      this.card = SDK.GameSession.current().createCardForIdentifier(
-        this.getCardId(),
-      );
-    }
-    return this.card;
+  get card(): typeof Card {
+    this._card ??= SDK.GameSession.current().createCardForIdentifier(this.cardId);
+    return this._card;
   }
 }
