@@ -18,7 +18,11 @@ export default class DeckCard {
     return new DeckCard(baseCard, modifiers);
   }
 
-  static fromCard(card: typeof Card): DeckCard {
-    return new DeckCard(BaseCard.fromCard(card), []);
+  static fromCard(card: typeof Card): DeckCard | null {
+    const baseCard = BaseCard.fromCard(card);
+    if (baseCard === null) {
+      return null;
+    }
+    return new DeckCard(baseCard, []);
   }
 }

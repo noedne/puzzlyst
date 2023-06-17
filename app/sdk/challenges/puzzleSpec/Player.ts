@@ -35,14 +35,23 @@ export default class Player {
       return null;
     }
     const generalCard = GeneralCard.fromUnit(general);
-    const hand = player
+    const cardsInHand = player
       .getDeck()
       .getCardsInHandExcludingMissing()
-      .map((card: typeof Card) => DeckCard.fromCard(card));
-    const deck = player
+    const hand = Player.cardsToDeckCards(cardsInHand);
+    const cardsInDeck = player
       .getDeck()
       .getCardsInDrawPileExcludingMissing()
-      .map((card: typeof Card) => DeckCard.fromCard(card));
+    const deck = Player.cardsToDeckCards(cardsInDeck);
     return new Player(generalCard, hand, deck);
+  }
+
+  private static cardsToDeckCards(cards: (typeof Card)[]): DeckCard[] {
+    return cards
+    .map(card => DeckCard.fromCard(card))
+    .reduce<DeckCard[]>(
+      (acc, val) => val === null ? acc : acc.concat([val]),
+      [],
+    );
   }
 }

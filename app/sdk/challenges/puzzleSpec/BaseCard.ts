@@ -1,13 +1,17 @@
 const Card = require('app/sdk/cards/card');
 const Cards = require('app/sdk/cards/cardsLookupComplete');
+const CardType = require('app/sdk/cards/cardType');
+const Factions = require('app/sdk/cards/factionsLookup');
 const SDK = require('app/sdk');
 
-import type SpecString from './SpecString';
+import SpecString from './SpecString';
 
 export default class BaseCard {
   constructor(
     public version: number,
     public cardId: number,
+    private group: Group,
+    private id: number,
     private _card: typeof Card | null = null,
   ) {}
 
@@ -25,11 +29,16 @@ export default class BaseCard {
       return null;
     }
     const cardId = id + getIdOffset(group);
-    return new BaseCard(version, cardId);
+    return new BaseCard(version, cardId, group, id);
   }
 
-  static fromCard(card: typeof Card): BaseCard {
-    return new BaseCard(card.version, card.getId(), card);
+  static fromCard(card: typeof Card): BaseCard | null {
+    const group = getGroup(card);
+    if (group === null) {
+      return null;
+    }
+    const id = card.getId() - getIdOffset(group);
+    return new BaseCard(card.version, card.getId(), group, id, card);
   }
 
   get card(): typeof Card {
@@ -38,6 +47,16 @@ export default class BaseCard {
       this.version,
     );
     return this._card;
+  }
+
+  toString(): string {
+    const version = SpecString.writeNZeroes(this.version);
+    const group = this.group;
+    const id = SpecString.padNumWithZeroesForCountingPastNMinBits(
+      this.id,
+      getIdMinBitLength(group),
+    )
+    return `${version}${group}${id}`;
   }
 }
 
@@ -95,5 +114,37 @@ function getIdOffset(group: Group): number {
       return Cards.Artifact.IndomitableWill;
     case Group.Tile:
       return Cards.Tile.BonusMana;
+  }
+}
+
+function getGroup(card: typeof Card): Group | null {
+  switch (card.getType()) {
+    case CardType.Unit:
+      switch (card.getFactionId()) {
+        case Factions.Faction1:
+          return Group.Faction1;
+        case Factions.Faction2:
+          return Group.Faction2;
+        case Factions.Faction3:
+          return Group.Faction3;
+        case Factions.Faction4:
+          return Group.Faction4;
+        case Factions.Faction5:
+          return Group.Faction5;
+        case Factions.Faction6:
+          return Group.Faction6;
+        case Factions.Neutral:
+          return Group.Neutral;
+        default:
+          return null;
+      }
+    case CardType.Spell:
+      return Group.Spell;
+    case CardType.Artifact:
+      return Group.Artifact;
+    case CardType.Tile:
+      return Group.Tile;
+    default:
+      return null;
   }
 }

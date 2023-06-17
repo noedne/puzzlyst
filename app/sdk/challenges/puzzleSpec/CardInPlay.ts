@@ -59,12 +59,16 @@ export default class CardInPlay {
   }
 
   static fromCard(card: typeof Card): CardInPlay | null {
+    const baseCard = BaseCard.fromCard(card);
+    if (baseCard === null) {
+      return null;
+    }
     const owner = card.isOwnedByMyPlayer() ? Owner.You : Owner.Opponent;
     const properties = CardInPlay.extractPropertiesFromCard(card);
     if (properties === null) {
       return null;
     }
-    return new CardInPlay(BaseCard.fromCard(card), owner, properties, []);
+    return new CardInPlay(baseCard, owner, properties, []);
   }
 
   private static extractPropertiesFromSpecString(
