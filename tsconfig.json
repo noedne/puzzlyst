@@ -25,6 +25,6 @@
   "exclude": [
     "./packages/chroma-js/",
     "dist/**/*",
-    "types/**/*",
-  ],
+    "types/**/*"
+  ]
 }

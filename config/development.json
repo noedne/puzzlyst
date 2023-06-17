@@ -9,7 +9,7 @@
 		"password": ""
 	},
 	"inviteCodesActive": false,
-	"datGuiEditorEnabled": true,
+	"datGuiEditorEnabled": false,
 	"aiToolsEnabled": true,
 	"allCardsAvailable": true,
 	"watchSectionMinCurrentVersionGameCount": 1,

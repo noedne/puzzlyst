@@ -143,7 +143,7 @@ ReplayEngine = require 'app/replay/replayEngine'
 
 AnalyticsTracker = require 'app/common/analyticsTracker'
 
-Puzzle = require('dist/Puzzle').default
+Puzzle = require('app/sdk/challenges/Puzzle').default
 
 # require the Handlebars Template Helpers extension here since it modifies core Marionette code
 require 'app/ui/extensions/handlebars_template_helpers'

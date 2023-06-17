@@ -13,6 +13,7 @@ import browserify from 'browserify';
 import watchify from 'watchify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
+import tsify from 'tsify';
 import coffeeify from 'coffeeify';
 import glslify from 'glslify';
 import hbsfy from 'hbsfy';
@@ -40,7 +41,7 @@ const bundlerOpts = {
   insertGlobals: true,
 };
 
-const entries = ['./app/index'];
+const entries = ['./app/index.ts'];
 if (config.get('datGuiEditorEnabled')) {
   entries.push('./app/tools/editor.coffee');
 }
@@ -48,7 +49,8 @@ if (config.get('datGuiEditorEnabled')) {
 // gutil.log(`bundler options: ${JSON.stringify(opts)}`)
 
 // Initialize bundler
-let bundler = browserify(entries, bundlerOpts);
+let bundler = browserify(entries, bundlerOpts)
+  .plugin(tsify, { declarationDir: null });
 if (opts.watch) {
   bundler = watchify(bundler, {
     delay: 0,
