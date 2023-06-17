@@ -178,7 +178,6 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
     }
 
     // listen to global events
-    this.listenTo(ProfileManager.getInstance().profile, 'change:showPlayerDetails', this.bindUser);
     this.listenTo(EventBus.getInstance(), EVENTS.resize, this.onResize);
     this.listenTo(SDK.NetworkManager.getInstance().getEventBus(), EVENTS.opponent_connection_status_changed, this.bindConnectionStatus);
 
@@ -560,9 +559,7 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
   },
 
   onGeneralPortraitEndHover: function (event) {
-    if (!ProfileManager.getInstance().profile.get('showPlayerDetails')) {
-      this.$el.removeClass('show-player-details');
-    }
+    this.$el.removeClass('show-player-details');
   },
 
 });
