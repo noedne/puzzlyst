@@ -42,6 +42,9 @@ export default class CardInPlay {
       return null;
     }
     const { card, cardId, version } = baseCard;
+    if (card == null) {
+      return null;
+    }
     const owner = specString.readNBits(1) === 0 ? Owner.You : Owner.Opponent;
     if (owner === null) {
       return null;
