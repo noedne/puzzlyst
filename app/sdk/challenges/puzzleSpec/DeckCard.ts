@@ -1,3 +1,4 @@
+const Card = require('app/sdk/cards/card');
 import BaseCard from "./BaseCard";
 import Modifier from "./Modifier";
 import type SpecString from "./SpecString";
@@ -15,5 +16,9 @@ export default class DeckCard {
       return null;
     }
     return new DeckCard(baseCard, modifiers);
+  }
+
+  static fromCard(card: typeof Card): DeckCard {
+    return new DeckCard(BaseCard.fromCard(card), []);
   }
 }
