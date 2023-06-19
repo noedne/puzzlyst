@@ -85,4 +85,8 @@ export default class SpecString {
         ? SpecString.writeNZeroes(list.length)
         : SpecString.writeNumWithNBits(list.length, listSizeBitLength));
   }
+
+  static boolToBit(bool: boolean): string {
+    return bool ? '1' : '0';
+  }
 }

@@ -102,7 +102,7 @@ export default class SpecPuzzle {
       hasCenterManaTile,
       hasTopManaTile,
     } = SpecPuzzle.getTileData(gameSession);
-    const cardsInPlay = [artifacts, minions, tiles].flat()
+    const cardsInPlay = [tiles, minions, artifacts].flat()
       .map((card: typeof Card) => CardInPlay.fromCard(card))
       .reduce<CardInPlay[]>(
         (acc, val) => val === null ? acc : acc.concat([val]),
@@ -124,16 +124,26 @@ export default class SpecPuzzle {
 
   toString(): string {
     const version = SpecString.writeNZeroes(this.version);
-    const isPlayer1 = boolToBit(!this.isPlayer1);
+    const isPlayer1 = SpecString.boolToBit(!this.isPlayer1);
     const manaIndex = SpecString.writeNumWithNBits(
       this.mana - 2,
       SpecPuzzle.manaIndexLengthInBits,
     );
-    const hasBottomManaTile = boolToBit(this.hasBottomManaTile);
-    const hasCenterManaTile = boolToBit(this.hasCenterManaTile);
-    const hasTopManaTile = boolToBit(this.hasTopManaTile);
+    const hasBottomManaTile = SpecString.boolToBit(this.hasBottomManaTile);
+    const hasCenterManaTile = SpecString.boolToBit(this.hasCenterManaTile);
+    const hasTopManaTile = SpecString.boolToBit(this.hasTopManaTile);
     const cardsInPlay = SpecString.constructList(this.cardsInPlay);
-    return `${version}${isPlayer1}${manaIndex}${hasBottomManaTile}${hasCenterManaTile}${hasTopManaTile}${this.you}${this.opponent}${cardsInPlay}`;
+    return `\
+${version}\
+${isPlayer1}\
+${manaIndex}\
+${hasBottomManaTile}\
+${hasCenterManaTile}\
+${hasTopManaTile}\
+${this.you}\
+${this.opponent}\
+${cardsInPlay}\
+`;
   }
 
   private static getArtifacts(gameSession: typeof GameSession):
@@ -178,8 +188,4 @@ export default class SpecPuzzle {
       });
     return { tiles, hasBottomManaTile, hasCenterManaTile, hasTopManaTile };
   }
-}
-
-function boolToBit(bool: boolean): string {
-  return bool ? '1' : '0';
 }

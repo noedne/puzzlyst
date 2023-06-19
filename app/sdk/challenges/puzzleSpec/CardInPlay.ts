@@ -14,8 +14,7 @@ import {
   toString as positionToString,
 } from "./Position";
 import SpecString from "./SpecString";
-
-const getCustomModifiers = require('app/sdk/challenges/puzzleSpec/getCustomModifiers');
+import getCustomModifiers from "./getCustomModifiers";
 
 export enum Owner {
   You = '0',
@@ -33,7 +32,7 @@ export default class CardInPlay {
     public baseCard: BaseCard,
     public owner: Owner,
     public properties: CardInPlayProperties,
-    public customModifiers: any,
+    public customModifiers: ((card: typeof Card) => void)[] = [],
   ) {}
 
   static fromSpecString(specString: SpecString): CardInPlay | null {
@@ -57,8 +56,7 @@ export default class CardInPlay {
       return null;
     }
     const customModifiers = getCustomModifiers(cardId, version).map(
-      (customModifier: { modifier: (specString: SpecString) => any }) =>
-        customModifier.modifier(specString));
+      ({ fromSpecString }) => fromSpecString(specString));
     return new CardInPlay(baseCard, owner, properties, customModifiers);
   }
 
@@ -72,11 +70,14 @@ export default class CardInPlay {
     if (properties === null) {
       return null;
     }
-    return new CardInPlay(baseCard, owner, properties, []);
+    return new CardInPlay(baseCard, owner, properties);
   }
 
   toString(): string {
-    return `${this.baseCard}${this.owner}${this.properties}`;
+    const { card, cardId, version } = this.baseCard;
+    const customModifiers = getCustomModifiers(cardId, version)
+      .map(({ toString }) => toString(card)).join('');
+    return `${this.baseCard}${this.owner}${this.properties}${customModifiers}`;
   }
 
   private static extractPropertiesFromSpecString(
