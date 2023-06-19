@@ -70,7 +70,7 @@ PlayerModifierSummonWatchApplyModifiers = require 'app/sdk/playerModifiers/playe
 
 WartechGeneralFaction6Achievement = require 'app/sdk/achievements/wartechAchievements/wartechGeneralFaction6Achievement'
 
-getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData');
+getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData').default;
 
 i18next = require 'i18next'
 if i18next.t() is undefined

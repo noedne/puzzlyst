@@ -170,7 +170,7 @@ class MinionProperties {
     return new MinionProperties(
       getPositionFromCard(unit),
       unit.getDamage(),
-      [],
+      Modifier.fromCard(unit),
     );
   }
 

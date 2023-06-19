@@ -41,11 +41,12 @@ export default class BaseCard {
     return new BaseCard(card.version, card.getId(), group, id, card);
   }
 
+  static fromCardId(cardId: number, version: number = 0): BaseCard | null {
+    return BaseCard.fromCard(BaseCard.getCard(cardId, version));
+  }
+
   get card(): typeof Card {
-    this._card ??= SDK.GameSession.current().createCardForIdentifier(
-      this.cardId,
-      this.version,
-    );
+    this._card ??= BaseCard.getCard(this.cardId, this.version);
     return this._card;
   }
 
@@ -57,6 +58,13 @@ export default class BaseCard {
       getIdMinBitLength(group),
     )
     return `${version}${group}${id}`;
+  }
+
+  private static getCard(cardId: number, version: number): typeof Card {
+    return SDK.GameSession.current().createCardForIdentifier(
+      cardId,
+      version,
+    )
   }
 }
 

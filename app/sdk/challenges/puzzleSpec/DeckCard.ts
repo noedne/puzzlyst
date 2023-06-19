@@ -23,7 +23,7 @@ export default class DeckCard {
     if (baseCard === null) {
       return null;
     }
-    return new DeckCard(baseCard, []);
+    return new DeckCard(baseCard, Modifier.fromCard(card));
   }
 
   toString(): string {

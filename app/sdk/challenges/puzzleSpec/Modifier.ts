@@ -1,7 +1,7 @@
+const Card = require('app/sdk/cards/card');
 import BaseCard from "./BaseCard";
 import SpecString from "./SpecString";
-
-const getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData');
+import getContextObjectData from "./getContextObjectData";
 
 export default class Modifier {
   constructor(
@@ -34,6 +34,28 @@ export default class Modifier {
     return new Modifier(baseCard, index, multiplicity);
   }
 
+  static fromCard(card: typeof Card): Modifier[] {
+    return card.getModifiers().reduce(
+      (acc: Modifier[], { contextObject }: any) => {
+        const last = acc.at(-1);
+        if (
+          last != null
+          && contextObject.cardId === last.baseCard.cardId
+          && contextObject.indexOfContextObject === last.indexOfContextObject
+        ) {
+          last.multiplicity++;
+          return acc;
+        }
+        const modifier = Modifier.fromContextObject(contextObject);
+        if (modifier === null) {
+          return acc;
+        }
+        return acc.concat([modifier]);
+      },
+      [],
+    );
+  }
+
   toString(): string {
     const array = getContextObjectData(
       this.baseCard.cardId,
@@ -43,9 +65,21 @@ export default class Modifier {
       ? ''
       : SpecString.writeNZeroes(this.indexOfContextObject);
     const data = array[this.indexOfContextObject];
-    const multiplicity = data.allowMultiple
+    const multiplicity = (data?.allowMultiple === true)
       ? SpecString.writeNZeroes(this.multiplicity)
       : '';
     return `${this.baseCard}${indexOfContextObject}${multiplicity}`;
+  }
+
+  private static fromContextObject(contextObject: any): Modifier | null { 
+    const { cardId, indexOfContextObject, version } = contextObject;
+    if (cardId == null || indexOfContextObject == null) {
+      return null;
+    }
+    const baseCard = BaseCard.fromCardId(cardId, version);
+    if (baseCard === null) {
+      return null;
+    }
+    return new Modifier(baseCard, indexOfContextObject, 1);
   }
 }

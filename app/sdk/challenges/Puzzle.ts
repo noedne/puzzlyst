@@ -2,13 +2,13 @@ const Cards = require('app/sdk/cards/cardsLookupComplete');
 const Challenge = require('app/sdk/challenges/challenge');
 const ChallengeCategory = require('app/sdk/challenges/challengeCategory');
 const RSX = require('app/data/resources');
-const getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData');
 import { CardInPlayType, Owner } from './puzzleSpec/CardInPlay';
 import type Modifier from './puzzleSpec/Modifier';
 import type Player from './puzzleSpec/Player';
 import SpecPuzzle from './puzzleSpec/SpecPuzzle';
 import SpecString from './puzzleSpec/SpecString';
-import { base64StringToBinary } from './puzzleSpec/base64';
+import { base64StringToBinary, binaryToBase64String } from './puzzleSpec/base64';
+import getContextObjectData from './puzzleSpec/getContextObjectData';
 
 export default class Puzzle extends Challenge {
 
@@ -150,10 +150,14 @@ export default class Puzzle extends Challenge {
 
   applyModifiers(gameSession: GameSession, card: Card, modifiers: Modifier[]) {
     modifiers.forEach(({ baseCard: { cardId }, indexOfContextObject }) => {
-      gameSession.applyModifierContextObject(
-        getContextObjectData(cardId)[indexOfContextObject].contextObject,
-        card,
-      );
+      const contextObject =
+        getContextObjectData(cardId)[indexOfContextObject]?.contextObject;
+      if (contextObject != null) {
+        gameSession.applyModifierContextObject(
+          contextObject,
+          card,
+        );
+      }
     });
   }
 
