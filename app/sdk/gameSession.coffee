@@ -444,6 +444,7 @@ class _GameSession extends SDKObject
     p.isRunningAsAuthoritative = false # whether game is authoritative
     p.isSpectateMode = false # whether game is a spectate game
     p.isReplay = false # whether a game is a replay
+    p.isEditing = false
     p.isSignatureCardAlwaysReady = false # override signature card to be ready every turn instead of based on timer
     p.turnTimeRemaining = CONFIG.TURN_DURATION + CONFIG.TURN_DURATION_LATENCY_BUFFER # remaining turn time
     p.userId = "" # id of user this game is the client for
@@ -1272,6 +1273,14 @@ class _GameSession extends SDKObject
 
   getIsReplay:(val)->
     return @_private.isReplay
+  
+  setIsEditing: (isEditing) ->
+    if (isEditing != @_private.isEditing)
+      @_private.isEditing = isEditing
+      @pushEvent({ type: EVENTS.toggle_editing, isEditing, gameSession: @ })
+  
+  getIsEditing: (isEditing) ->
+    return @_private.isEditing
 
   setIsSignatureCardAlwaysReady:(val)->
     @_private.isSignatureCardAlwaysReady = val

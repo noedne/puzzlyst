@@ -124,6 +124,7 @@ var NavigationManager = Manager.extend({
     $(document).on('keyup', function (event) {
       var keyCode = event.which;
       var $target = $(event.target);
+      const gameSession = SDK.GameSession.current();
       if (keyCode == cc.KEY.escape) {
         // play sound because key presses don't have auto sounds like buttons
         audio_engine.current().play_effect_for_interaction(RSX.sfx_ui_click.audio, CONFIG.CLICK_SFX_PRIORITY);
@@ -144,7 +145,9 @@ var NavigationManager = Manager.extend({
           this.requestUserTriggeredConfirm();
         }
       } else if (keyCode == cc.KEY.r) {
-        SDK.GameSession.getInstance().getChallenge().challengeReset();
+        gameSession.getChallenge().challengeReset();
+      } else if (keyCode == cc.KEY.e) {
+        gameSession.setIsEditing(!gameSession.getIsEditing());
       }
     }.bind(this));
 
