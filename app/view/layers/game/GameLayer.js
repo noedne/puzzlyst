@@ -6508,7 +6508,9 @@ var GameLayer = FXCompositeLayer.extend({
   _mouseSelectEntity(entityNode) {
     if (entityNode) {
       const sdkEntity = entityNode.getSdkCard();
-      if (sdkEntity.isOwnedByMyPlayer()) {
+      if (sdkEntity.getGameSession().getIsEditing()) {
+        this._mouseSelectEntityImpl(entityNode);
+      } else if (sdkEntity.isOwnedByMyPlayer()) {
         if (sdkEntity.hasActiveModifierClass(SDK.ModifierStunned)) {
           this.showInstructionForSdkNode(entityNode, i18next.t('game_ui.stunned_message'));
         } else if (sdkEntity.getIsUncontrollableBattlePet()) {
@@ -6516,20 +6518,24 @@ var GameLayer = FXCompositeLayer.extend({
         } else if (sdkEntity.getIsExhausted()) {
           this.showInstructionForSdkNode(entityNode, i18next.t('game_ui.exhausted_message'));
         } else if (sdkEntity.getCanAct()) {
-          // do not allow card and entity to be selected at same time
-          this._player.setSelectedCard(null);
-
-          // select entity
-          this._player.setSelectedEntityNode(entityNode);
-          const selectedSdkEntity = this._player.getSelectedSdkEntity();
-
-          this.displaySelectEntityParticles(selectedSdkEntity.position.x, selectedSdkEntity.position.y);
-
-          this.stopMouseOverButNotPlayer();
-          this._player.removeHover();
+          this._mouseSelectEntityImpl(entityNode);
         }
       }
     }
+  },
+
+  _mouseSelectEntityImpl(entityNode) {
+    // do not allow card and entity to be selected at same time
+    this._player.setSelectedCard(null);
+
+    // select entity
+    this._player.setSelectedEntityNode(entityNode);
+    const selectedSdkEntity = this._player.getSelectedSdkEntity();
+
+    this.displaySelectEntityParticles(selectedSdkEntity.position.x, selectedSdkEntity.position.y);
+
+    this.stopMouseOverButNotPlayer();
+    this._player.removeHover();
   },
 
   _actionSelectedFollowupCard(followupCard) {

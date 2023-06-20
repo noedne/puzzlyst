@@ -1577,6 +1577,27 @@ const Player = cc.Class.extend({
         const mouseOverReplaceNode = this.getSdkPlayer().getDeck().getCanReplaceCardThisTurn() && this.getMouseOverReplaceNode();
         const withinAttackRange = selectedSdkEntity && (!mouseOverSdkEntity || !mouseOverSdkEntity.isOwnedBy(sdkPlayer)) && selectedSdkEntity.getAttackRange().getIsPositionValid(SDK.GameSession.getInstance().getBoard(), selectedSdkEntity, mouseBoardPosition);
 
+        if (SDK.GameSession.current().getIsEditing() && selectedSdkEntity) {
+          if (
+            mouseIsOnBoard
+            && (
+              mouseOverSdkEntity == null
+              || !mouseOverSdkEntity.getObstructsEntity(selectedSdkEntity)
+            )
+            && !UtilsPosition.getPositionsAreEqual(
+              mouseBoardPosition,
+              selectedSdkEntity.getPosition(),
+            )
+          ) {
+            this.getSelectedEntityNode().setPosition(
+              UtilsEngine.transformBoardToTileMap(mouseBoardPosition),
+            );
+            selectedSdkEntity.setPosition(mouseBoardPosition);
+            selectedSdkEntity.updateCachedState();
+          }
+          return;
+        }
+
         // some tiles are generic and may use float positions
         // so we need to check them every time
         let path;
