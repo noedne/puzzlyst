@@ -11,11 +11,15 @@ x-base-service: &base
 services:
   redis:
     image: redis:6
+    profiles:
+      - donotstart
     ports:
       - 6379:6379
 
   db:
     image: postgres:13
+    profiles:
+      - donotstart
     restart: always
     environment:
       POSTGRES_USER: duelyst
@@ -54,6 +58,8 @@ services:
 
   game:
     <<: *base
+    profiles:
+      - donotstart
     ports:
       - 8001:8001
     environment:
@@ -66,6 +72,8 @@ services:
 
   sp:
     <<: *base
+    profiles:
+      - donotstart
     ports:
       - 8000:8000
     environment:
@@ -78,6 +86,8 @@ services:
 
   worker:
     <<: *base
+    profiles:
+      - donotstart
     environment:
       REDIS_HOST: redis
       POSTGRES_CONNECTION: "pg://duelyst:duelyst@db/duelyst"
