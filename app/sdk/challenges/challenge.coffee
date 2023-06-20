@@ -303,9 +303,12 @@ class Challenge
       playersTurnIndex = Math.floor(currentTurnIndex / 2) # represents the index of turn for this player
 
       if playersTurnIndex == @snapShotOnPlayerTurn and !@_snapShotData
-        gameSession = GameSession.current()
-        @_snapShotData = gameSession.serializeToJSON(gameSession)
+        @snapshotChallenge()
         @_eventBus.trigger(EVENTS.challenge_start, {type: EVENTS.challenge_start})
+  
+  snapshotChallenge: () ->
+    gameSession = GameSession.current()
+    @_snapShotData = gameSession.serializeToJSON(gameSession)
 
   onChallengeLost: () ->
     # record loss

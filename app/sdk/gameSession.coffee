@@ -1277,6 +1277,10 @@ class _GameSession extends SDKObject
   setIsEditing: (isEditing) ->
     if (isEditing != @_private.isEditing)
       @_private.isEditing = isEditing
+      if (isEditing)
+        @getChallenge().challengeReset()
+      else
+        @getChallenge().snapshotChallenge()
       @pushEvent({ type: EVENTS.toggle_editing, isEditing, gameSession: @ })
   
   getIsEditing: (isEditing) ->
