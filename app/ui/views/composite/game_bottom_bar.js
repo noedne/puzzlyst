@@ -127,6 +127,9 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
   /* region EVENT LISTENERS */
 
   onToggleEditing: function (event) {
+    if (!event.isEditing) {
+      Scene.current().getGameLayer().getBottomDeckLayer().bindHand();
+    }
     this._updateControls();
   },
 

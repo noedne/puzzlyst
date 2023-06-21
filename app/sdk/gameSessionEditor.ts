@@ -1,7 +1,23 @@
+const Card = require('app/sdk/cards/card');
 const EVENTS = require('app/common/event_types');
 const GameSession = require('./gameSession');
 
-export const isEditing: boolean = false;
+const editingBench: typeof Card[] = [];
+const isEditing: boolean = false;
+export const _private = {
+  editingBench,
+  isEditing,
+};
+
+export function getBottomDeckCardAtIndex(
+  this: typeof GameSession,
+  index: number
+): typeof Card | undefined {
+  if (this.getIsEditing()) {
+    return this._private.editingBench[index];
+  }
+  return this.getMyPlayer().getDeck().getCardInHandAtIndex(index);
+}
 
 export function getIsEditing(this: typeof GameSession): boolean {
   return this._private.isEditing;

@@ -342,12 +342,17 @@ ValidatorReplaceCardFromHand = require './validators/validatorReplaceCardFromHan
 ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemoval'
 
 {
-  isEditing,
+  _private,
+  getBottomDeckCardAtIndex,
   getIsEditing,
   setIsEditing,
 } = require('./gameSessionEditor')
 
 class _GameSession extends SDKObject
+  getBottomDeckCardAtIndex: getBottomDeckCardAtIndex
+  getIsEditing: getIsEditing  
+  setIsEditing: setIsEditing  
+
   aiDifficulty: null
   aiPlayerId:null
   board: null
@@ -397,12 +402,9 @@ class _GameSession extends SDKObject
 
     @board = new Board(this, CONFIG.BOARDCOL, CONFIG.BOARDROW )
 
-  getIsEditing: getIsEditing  
-  setIsEditing: setIsEditing  
-
   getPrivateDefaults: (gameSession) ->
     p = super(gameSession)
-    p.isEditing = isEditing
+    Object.assign(p, _private)
 
     # caches
     p.cachedGeneralsByPlayerId = {}

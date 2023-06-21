@@ -157,7 +157,9 @@ const BottomDeckCardNode = SdkNode.extend({
   setSdkCardFromHandIndex(handIndex, cardFadeDuration) {
     this.handIndex = handIndex;
     if (this.handIndex != null) {
-      const sdkCard = SDK.GameSession.getInstance().getMyPlayer().getDeck().getCardInHandAtIndex(this.handIndex);
+      const sdkCard = SDK.GameSession
+        .getInstance()
+        .getBottomDeckCardAtIndex(this.handIndex);
       this.setSdkCard(sdkCard, cardFadeDuration);
     } else {
       this.setSdkCard(null, cardFadeDuration);
