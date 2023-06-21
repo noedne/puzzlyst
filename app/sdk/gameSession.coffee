@@ -348,10 +348,6 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 } = require('./gameSessionEditor')
 
 class _GameSession extends SDKObject
-  isEditing: isEditing
-  setIsEditing: setIsEditing  
-  getIsEditing: getIsEditing  
-
   aiDifficulty: null
   aiPlayerId:null
   board: null
@@ -401,8 +397,12 @@ class _GameSession extends SDKObject
 
     @board = new Board(this, CONFIG.BOARDCOL, CONFIG.BOARDROW )
 
+  getIsEditing: getIsEditing  
+  setIsEditing: setIsEditing  
+
   getPrivateDefaults: (gameSession) ->
     p = super(gameSession)
+    p.isEditing = isEditing
 
     # caches
     p.cachedGeneralsByPlayerId = {}

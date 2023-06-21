@@ -4,14 +4,14 @@ const GameSession = require('./gameSession');
 export const isEditing: boolean = false;
 
 export function getIsEditing(this: typeof GameSession): boolean {
-  return this.isEditing;
+  return this._private.isEditing;
 }
 
 export function setIsEditing(this: typeof GameSession, isEditing: boolean) {
-  if (isEditing === this.isEditing) {
+  if (isEditing === this._private.isEditing) {
     return;
   }
-  this.isEditing = isEditing;
+  this._private.isEditing = isEditing;
   if (isEditing) {
     this.getChallenge().challengeReset();
   } else {
