@@ -36,7 +36,8 @@ var ServerStatusManager = require('./server_status_manager');
 var ChatManager = require('./chat_manager');
 var NotificationsManager = require('./notifications_manager');
 var Manager = require('./manager');
-var SDK = require('app/sdk')
+const SDK = require('app/sdk');
+const AddMinionModal = require('app/ui/views/item/add_minion_modal').default;
 
 var NavigationManager = Manager.extend({
 
@@ -144,10 +145,16 @@ var NavigationManager = Manager.extend({
           // request user triggered action
           this.requestUserTriggeredConfirm();
         }
-      } else if (keyCode == cc.KEY.r) {
-        gameSession.getChallenge().challengeReset();
-      } else if (keyCode == cc.KEY.e) {
-        gameSession.setIsEditing(!gameSession.getIsEditing());
+      } else if (!this.getIsShowingModalView()) {
+        if (keyCode === cc.KEY.r) {
+          gameSession.getChallenge().challengeReset();
+        } else if (keyCode === cc.KEY.e) {
+          gameSession.setIsEditing(!gameSession.getIsEditing());
+        } else if (keyCode === cc.KEY.a) {
+          if (gameSession.getIsEditing()) {
+            this.showModalView(new AddMinionModal());
+          }
+        }
       }
     }.bind(this));
 

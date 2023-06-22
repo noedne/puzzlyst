@@ -19,6 +19,10 @@ export function getBottomDeckCardAtIndex(
   return this.getMyPlayer().getDeck().getCardInHandAtIndex(index);
 }
 
+export function addCardToBench(this: typeof GameSession, card: typeof Card) {
+  this._private.editingBench = [card].concat(this._private.editingBench);
+}
+
 export function getIsEditing(this: typeof GameSession): boolean {
   return this._private.isEditing;
 }

@@ -344,12 +344,14 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 {
   _private,
   getBottomDeckCardAtIndex,
+  addCardToBench,
   getIsEditing,
   setIsEditing,
 } = require('./gameSessionEditor')
 
 class _GameSession extends SDKObject
   getBottomDeckCardAtIndex: getBottomDeckCardAtIndex
+  addCardToBench: addCardToBench
   getIsEditing: getIsEditing  
   setIsEditing: setIsEditing  
 
