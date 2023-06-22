@@ -21,6 +21,7 @@ export function getBottomDeckCardAtIndex(
 
 export function addCardToBench(this: typeof GameSession, card: typeof Card) {
   this._private.editingBench = [card].concat(this._private.editingBench);
+  pushEvent(this, { bindHand: true });
 }
 
 export function getIsEditing(this: typeof GameSession): boolean {
@@ -28,7 +29,7 @@ export function getIsEditing(this: typeof GameSession): boolean {
 }
 
 export function setIsEditing(this: typeof GameSession, isEditing: boolean) {
-  if (isEditing === this._private.isEditing) {
+  if (isEditing === this.getIsEditing()) {
     return;
   }
   this._private.isEditing = isEditing;
@@ -37,9 +38,23 @@ export function setIsEditing(this: typeof GameSession, isEditing: boolean) {
   } else {
     this.getChallenge().snapshotChallenge();
   }
-  this.pushEvent({
-    type: EVENTS.toggle_editing,
-    isEditing,
-    gameSession: this,
+  pushEvent(this, {
+    bindHand: !isEditing,
+    bindSubmitTurn: true,
+  });
+}
+
+function pushEvent(
+  gameSession: typeof GameSession,
+  options: {
+    bindHand?: boolean,
+    bindSubmitTurn?: boolean,
+  }) {
+  gameSession.pushEvent({
+    type: EVENTS.editing_event,
+    options: {
+      bindHand: options.bindHand ?? false,
+      bindSubmitTurn: options.bindSubmitTurn ?? false,
+    },
   });
 }

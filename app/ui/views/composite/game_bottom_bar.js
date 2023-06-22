@@ -98,7 +98,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
   },
 
   onShow: function () {
-    this.listenTo(SDK.GameSession.getInstance().getEventBus(), EVENTS.toggle_editing, this.onToggleEditing);
+    this.listenTo(SDK.GameSession.getInstance().getEventBus(), EVENTS.editing_event, this.onToggleEditing);
     // game events
     var scene = Scene.getInstance();
     var gameLayer = scene && scene.getGameLayer();
@@ -127,10 +127,13 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
   /* region EVENT LISTENERS */
 
   onToggleEditing: function (event) {
-    if (!event.isEditing) {
+    const { bindHand, bindSubmitTurn } = event.options;
+    if (bindHand) {
       Scene.current().getGameLayer().getBottomDeckLayer().bindHand();
     }
-    this._updateControls();
+    if (bindSubmitTurn) {
+      this._updateControls();
+    }
   },
 
   onBeforeShowStep: function (event) {

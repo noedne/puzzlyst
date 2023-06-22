@@ -259,7 +259,7 @@ const EVENTS = {
   start_turn: 'start_turn',
   game_over: 'game_over',
   validate_game_over: 'validate_game_over',
-  toggle_editing: 'toggle_editing',
+  editing_event: 'editing_event',
 
   // caching
   update_cache_action: 'update_cache_action',
