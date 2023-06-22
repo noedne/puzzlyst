@@ -344,6 +344,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 {
   _private,
   getBottomDeckCardAtIndex,
+  getMinionCards,
   addCardToBench,
   getIsEditing,
   setIsEditing,
@@ -351,6 +352,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 
 class _GameSession extends SDKObject
   getBottomDeckCardAtIndex: getBottomDeckCardAtIndex
+  getMinionCards: getMinionCards
   addCardToBench: addCardToBench
   getIsEditing: getIsEditing  
   setIsEditing: setIsEditing  

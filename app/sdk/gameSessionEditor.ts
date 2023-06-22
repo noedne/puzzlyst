@@ -1,13 +1,32 @@
 const Card = require('app/sdk/cards/card');
+const CardType = require('app/sdk/cards/cardType');
 const EVENTS = require('app/common/event_types');
 const GameSession = require('./gameSession');
 
+const cachedMinionCards: typeof Card[] | null = null;
 const editingBench: typeof Card[] = [];
 const isEditing: boolean = false;
 export const _private = {
+  cachedMinionCards,
   editingBench,
   isEditing,
 };
+
+export function getMinionCards(this: typeof GameSession): typeof Card[] {
+  if (this._private.cachedMinionCards === null) {
+    const minionCache = this
+      .getCardCaches()
+      .getIsPrismatic(false)
+      .getType(CardType.Unit)
+      .getIsGeneral(false);
+    const collectibleCards = minionCache
+      .getIsHiddenInCollection(false)
+      .getCards();
+    const tokenCards = minionCache.getIsToken(true).getCards();
+    this._private.cachedMinionCards = collectibleCards.concat(tokenCards);
+  }
+  return this._private.cachedMinionCards;
+}
 
 export function getBottomDeckCardAtIndex(
   this: typeof GameSession,
