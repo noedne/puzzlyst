@@ -39,8 +39,8 @@ export default FormPromptModalItemView.extend({
     this.ui.$results.html(
       $('<ul>').append(
         this.autocomplete(this.ui.$minionName.val())
-          .slice(0, 5)
-          .map((card: typeof Card) => $('<li>').text(card.getName())),
+          .slice(0, 3)
+          .map((card: typeof Card) => this.createResult(card)),
       )
     );
   },
@@ -53,4 +53,9 @@ export default FormPromptModalItemView.extend({
       { keys: [(card: typeof Card) => card.getName()] },
     );
   },
+
+  createResult: function (card: typeof Card): JQuery {
+    return $('<li>').text(card.getName());
+  }
+
 });

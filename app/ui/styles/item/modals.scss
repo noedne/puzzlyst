@@ -409,8 +409,37 @@
 		white-space: nowrap;
 		overflow: hidden;
 	}
-	.btn-clean-confirm {
+}
+
+#add-minion-modal {
+	.prompt-form {
+		min-height: 25rem;
 	}
-	.btn-clean-cancel {
+	.form-control {
+		margin-bottom: 0;
+	}
+	#results {
+		width: 100%;
+		ul {
+			border: 1px solid;
+			border-radius: 0 0 1rem 1rem;
+			margin: 0;
+			padding: 0;
+			:empty {
+				border: none;
+			}
+			li {
+				padding: 0.5rem 1rem;
+				&:hover {
+					background-color: darkslategray;
+				}
+				&:last-child {
+					border-radius: inherit;
+				}
+			}
+		}
+	}
+	.form-control-buttons {
+		margin-top: auto;
 	}
 }

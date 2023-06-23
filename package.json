@@ -182,6 +182,7 @@
     "cdn:copy": "gulp rsx:copy:cdn",
     "cdn:upload:all": "gulp cdn:upload:all",
     "cdn:upload:web": "gulp cdn:upload:web",
+    "css": "gulp css",
     "deploy:staging": "npm run push:master && npm run push:staging",
     "js": "gulp js",
     "lint:coffee": "coffeelint -f coffeelint.json -q",
