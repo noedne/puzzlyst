@@ -412,9 +412,6 @@
 }
 
 #add-minion-modal {
-	.prompt-form {
-		min-height: 25rem;
-	}
 	.form-control {
 		margin-bottom: 0;
 	}
@@ -425,12 +422,9 @@
 			border-radius: 0 0 1rem 1rem;
 			margin: 0;
 			padding: 0;
-			:empty {
-				border: none;
-			}
 			li {
 				padding: 0.5rem 1rem;
-				&:hover {
+				&.focused {
 					background-color: darkslategray;
 				}
 				&:last-child {
