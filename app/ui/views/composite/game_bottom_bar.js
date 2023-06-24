@@ -151,7 +151,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     }
     if (selectBenchIndex !== null) {
       if (selectBenchIndex === player.getSelectedCardIndexInHand()) {
-        player.setSelectedCard(null);
+        gameLayer.stopMouseDown();
       } else {
         player.setSelectedCard(
           deckLayer.getCardNodeByHandIndex(selectBenchIndex),
