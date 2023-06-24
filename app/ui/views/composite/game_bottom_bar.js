@@ -98,7 +98,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
   },
 
   onShow: function () {
-    this.listenTo(SDK.GameSession.getInstance().getEventBus(), EVENTS.editing_event, this.onToggleEditing);
+    this.listenTo(SDK.GameSession.getInstance().getEventBus(), EVENTS.editing_event, this.onEditingEvent);
     // game events
     var scene = Scene.getInstance();
     var gameLayer = scene && scene.getGameLayer();
@@ -126,13 +126,25 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
 
   /* region EVENT LISTENERS */
 
-  onToggleEditing: function (event) {
-    const { bindHand, bindSubmitTurn } = event.options;
+  onEditingEvent: function (event) {
+    const { bindHand, bindSubmitTurn, selectBenchIndex } = event.options;
+    const gameLayer = Scene.current().getGameLayer();
+    const deckLayer = gameLayer.getBottomDeckLayer();
     if (bindHand) {
-      Scene.current().getGameLayer().getBottomDeckLayer().bindHand();
+      deckLayer.bindHand();
     }
     if (bindSubmitTurn) {
       this._updateControls();
+    }
+    if (selectBenchIndex !== null) {
+      const player = gameLayer.getMyPlayer();
+      if (selectBenchIndex === player.getSelectedCardIndexInHand()) {
+        player.setSelectedCard(null);
+      } else {
+        player.setSelectedCard(
+          deckLayer.getCardNodeByHandIndex(selectBenchIndex),
+        );
+      }
     }
   },
 

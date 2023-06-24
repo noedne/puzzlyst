@@ -43,6 +43,12 @@ export function addCardToBench(this: typeof GameSession, card: typeof Card) {
   pushEvent(this, { bindHand: true });
 }
 
+export function setSelectedBenchIndex(this: typeof GameSession, index: number) {
+  if (this.getIsEditing() && index < this._private.editingBench.length) {
+    pushEvent(this, { selectBenchIndex: index });
+  }
+}
+
 export function getIsEditing(this: typeof GameSession): boolean {
   return this._private.isEditing;
 }
@@ -68,12 +74,14 @@ function pushEvent(
   options: {
     bindHand?: boolean,
     bindSubmitTurn?: boolean,
+    selectBenchIndex?: number,
   }) {
   gameSession.pushEvent({
     type: EVENTS.editing_event,
     options: {
       bindHand: options.bindHand ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
+      selectBenchIndex: options.selectBenchIndex ?? null,
     },
   });
 }

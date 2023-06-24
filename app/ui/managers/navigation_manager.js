@@ -146,14 +146,26 @@ var NavigationManager = Manager.extend({
           this.requestUserTriggeredConfirm();
         }
       } else if (!this.getIsShowingModalView()) {
-        if (keyCode === cc.KEY.r) {
-          gameSession.getChallenge().challengeReset();
-        } else if (keyCode === cc.KEY.e) {
-          gameSession.setIsEditing(!gameSession.getIsEditing());
-        } else if (keyCode === cc.KEY.a) {
-          if (gameSession.getIsEditing()) {
-            this.showModalView(new AddMinionModal());
-          }
+        switch (keyCode) {
+          case cc.KEY.r:
+            gameSession.getChallenge().challengeReset();
+            break;
+          case cc.KEY.e:
+            gameSession.setIsEditing(!gameSession.getIsEditing());
+            break;
+          case cc.KEY.a:
+            if (gameSession.getIsEditing()) {
+              this.showModalView(new AddMinionModal());
+            }
+            break;
+          case cc.KEY['1']:
+          case cc.KEY['2']:
+          case cc.KEY['3']:
+          case cc.KEY['4']:
+          case cc.KEY['5']:
+          case cc.KEY['6']:
+            gameSession.setSelectedBenchIndex(keyCode - cc.KEY['1']);
+            break;
         }
       }
     }.bind(this));
