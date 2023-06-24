@@ -127,9 +127,15 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
   /* region EVENT LISTENERS */
 
   onEditingEvent: function (event) {
-    const { bindHand, bindSubmitTurn, selectBenchIndex } = event.options;
+    const {
+      bindHand,
+      bindSubmitTurn,
+      selectBenchIndex,
+      setInitialBenchSelected,
+    } = event.options;
     const gameLayer = Scene.current().getGameLayer();
     const deckLayer = gameLayer.getBottomDeckLayer();
+      const player = gameLayer.getMyPlayer();
     if (bindHand) {
       deckLayer.bindHand();
     }
@@ -137,7 +143,6 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       this._updateControls();
     }
     if (selectBenchIndex !== null) {
-      const player = gameLayer.getMyPlayer();
       if (selectBenchIndex === player.getSelectedCardIndexInHand()) {
         player.setSelectedCard(null);
       } else {
@@ -145,6 +150,9 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
           deckLayer.getCardNodeByHandIndex(selectBenchIndex),
         );
       }
+    }
+    if (setInitialBenchSelected) {
+      player.setSelectedCard(deckLayer.getCardNodeByHandIndex(0));
     }
   },
 

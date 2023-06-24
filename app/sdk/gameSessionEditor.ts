@@ -39,8 +39,20 @@ export function getBottomDeckCardAtIndex(
 }
 
 export function addCardToBench(this: typeof GameSession, card: typeof Card) {
-  this._private.editingBench = [card].concat(this._private.editingBench);
-  pushEvent(this, { bindHand: true });
+  const existingIndex = this._private.editingBench.findIndex(
+    (existingCard: typeof Card) => existingCard.getId() === card.getId(),
+  );
+  let bench = this._private.editingBench;
+  if (existingIndex !== -1) {
+    const leftBench = bench.slice(0, existingIndex)
+    const rightBench = bench.slice(
+      existingIndex + 1,
+      this._private.editingBench.length,
+    );
+    bench = leftBench.concat(rightBench);
+  }
+  this._private.editingBench = [card].concat(bench).slice(0, 6);
+  pushEvent(this, { bindHand: true, setInitialBenchSelected: true });
 }
 
 export function setSelectedBenchIndex(this: typeof GameSession, index: number) {
@@ -75,6 +87,7 @@ function pushEvent(
     bindHand?: boolean,
     bindSubmitTurn?: boolean,
     selectBenchIndex?: number,
+    setInitialBenchSelected?: boolean,
   }) {
   gameSession.pushEvent({
     type: EVENTS.editing_event,
@@ -82,6 +95,7 @@ function pushEvent(
       bindHand: options.bindHand ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
       selectBenchIndex: options.selectBenchIndex ?? null,
+      setInitialBenchSelected: options.setInitialBenchSelected ?? false,
     },
   });
 }
