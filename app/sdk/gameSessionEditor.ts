@@ -39,6 +39,7 @@ export function getBottomDeckCardAtIndex(
 }
 
 export function addCardToBench(this: typeof GameSession, card: typeof Card) {
+  card.canBeAppliedAnywhere = true;
   const existingIndex = this._private.editingBench.findIndex(
     (existingCard: typeof Card) => existingCard.getId() === card.getId(),
   );
