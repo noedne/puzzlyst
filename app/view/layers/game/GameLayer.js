@@ -6354,12 +6354,12 @@ var GameLayer = FXCompositeLayer.extend({
           }
 
           // player currently has something selected and is clicking to perform an action with it
-          let actionToExecute;
+          let actionToExecute, edited = false;
           if (sdkPlayer != null) {
             if (followupCard != null) {
               actionToExecute = this._actionSelectedFollowupCard(followupCard);
             } else if (selectedHandIndex != null) {
-              actionToExecute = this._actionSelectedCardFromHand(selectedHandIndex);
+              [actionToExecute, edited] = this._actionSelectedCardFromHand(selectedHandIndex);
             } else if (selectedSdkCard != null && selectedSdkCard.isSignatureCard()) {
               actionToExecute = this._actionSelectedSignatureCard(sdkPlayer.getCurrentSignatureCard());
             } else if (selectedEntityNode != null) {
@@ -6392,7 +6392,7 @@ var GameLayer = FXCompositeLayer.extend({
             // set player hover as not dirty
             // this way the player won't immediately re-hover the same space
             this._player.setHoverDirty(false);
-          } else if (!mouseDragging) {
+          } else if (!edited && !mouseDragging) {
             // select a new thing at this position
             // check against entity/card node currently under mouse
             // node hovering may be blocked when the selected node is the same as the node being hovered
@@ -6578,9 +6578,19 @@ var GameLayer = FXCompositeLayer.extend({
 
     if (selectedHandIndex != null) {
       const mouseBoardPosition = this._player.getMouseBoardPosition();
-      if (SDK.GameSession.getInstance().getBoard().isOnBoard(mouseBoardPosition)) {
-        // create play card action
-        actionToExecute = this._player.getSdkPlayer().actionPlayCardFromHand(selectedHandIndex, mouseBoardPosition.x, mouseBoardPosition.y);
+      const gameSession = SDK.GameSession.current();
+      if (gameSession.getBoard().isOnBoard(mouseBoardPosition)) {
+        if (gameSession.getIsEditing()) {
+          gameSession.applyBenchCardToBoard(
+            selectedHandIndex,
+            mouseBoardPosition.x,
+            mouseBoardPosition.y,
+          );
+          return [null, true];
+        } else {
+          // create play card action
+          actionToExecute = this._player.getSdkPlayer().actionPlayCardFromHand(selectedHandIndex, mouseBoardPosition.x, mouseBoardPosition.y);
+        }
       } else {
         const mouseScreenPosition = this._player.getMouseScreenPosition();
         const replaceNode = this.getNodeUnderMouse(this.bottomDeckLayer.getReplaceNode(), mouseScreenPosition.x, mouseScreenPosition.y);
@@ -6591,7 +6601,7 @@ var GameLayer = FXCompositeLayer.extend({
       }
     }
 
-    return actionToExecute;
+    return [actionToExecute, false];
   },
 
   _actionSelectedCardOnBoard(selectedEntityNode, mouseOverEntityNode) {

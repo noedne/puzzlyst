@@ -128,6 +128,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
 
   onEditingEvent: function (event) {
     const {
+      addNodeForSdkCard,
       bindHand,
       bindSubmitTurn,
       selectBenchIndex,
@@ -135,7 +136,13 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     } = event.options;
     const gameLayer = Scene.current().getGameLayer();
     const deckLayer = gameLayer.getBottomDeckLayer();
-      const player = gameLayer.getMyPlayer();
+    const player = gameLayer.getMyPlayer();
+    if (addNodeForSdkCard !== null) {
+      const { card, position } = addNodeForSdkCard;
+      const entityNode = gameLayer.addNodeForSdkCard(card, position);
+      entityNode.showSpawned();
+      entityNode.getStatsNode().showStatsAsOfAction();
+    }
     if (bindHand) {
       deckLayer.bindHand();
     }

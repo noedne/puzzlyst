@@ -61,6 +61,21 @@ export function setSelectedBenchIndex(this: typeof GameSession, index: number) {
   }
 }
 
+export function applyBenchCardToBoard(
+  this: typeof GameSession,
+  selectedBenchIndex: number,
+  boardX: number,
+  boardY: number,
+) {
+  const card = this.getChallenge().applyCardToBoard(
+    { id: this._private.editingBench[selectedBenchIndex].getId() },
+    boardX,
+    boardY,
+    this.getMyPlayerId(),
+  );
+  pushEvent(this, { addNodeForSdkCard: { card, position: card.getPosition() }});
+}
+
 export function getIsEditing(this: typeof GameSession): boolean {
   return this._private.isEditing;
 }
@@ -84,6 +99,10 @@ export function setIsEditing(this: typeof GameSession, isEditing: boolean) {
 function pushEvent(
   gameSession: typeof GameSession,
   options: {
+    addNodeForSdkCard?: {
+      card: typeof Card,
+      position: { x: number, y: number },
+    },
     bindHand?: boolean,
     bindSubmitTurn?: boolean,
     selectBenchIndex?: number,
@@ -92,6 +111,7 @@ function pushEvent(
   gameSession.pushEvent({
     type: EVENTS.editing_event,
     options: {
+      addNodeForSdkCard: options.addNodeForSdkCard ?? null,
       bindHand: options.bindHand ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
       selectBenchIndex: options.selectBenchIndex ?? null,
