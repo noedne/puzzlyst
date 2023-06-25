@@ -1567,6 +1567,7 @@ const Player = cc.Class.extend({
       } else {
         let needsPassiveHover = true;
         const mouseBoardPosition = this.getMouseBoardPosition();
+        const selectedEntityNode = this.getSelectedEntityNode();
         const selectedSdkEntity = this.getSelectedSdkEntity();
         const mouseOverSdkEntity = this.getMouseOverSdkEntity();
         const followupCard = this.getFollowupCard();
@@ -1624,15 +1625,19 @@ const Player = cc.Class.extend({
 
           var { mouseScreenBoardPosition } = this;
 
-          if (SDK.GameSession.current().getIsEditing() && selectedSdkEntity) {
+          const gameSession = SDK.GameSession.current();
+          if (gameSession.getIsEditing() && selectedSdkEntity !== null) {
+            if (!mouseIsOnBoard) {
+              gameSession._removeCardFromCurrentLocation(selectedSdkEntity);
+              selectedEntityNode.destroy();
+              gameLayer.stopMouseDown();
+              return;
+            }
             if (
-              mouseIsOnBoard
-              && (
-                mouseOverSdkEntity == null
-                || !mouseOverSdkEntity.getObstructsEntity(selectedSdkEntity)
-              )
+              mouseOverSdkEntity == null
+              || !mouseOverSdkEntity.getObstructsEntity(selectedSdkEntity)
             ) {
-              this.getSelectedEntityNode().setPosition(
+              selectedEntityNode.setPosition(
                 UtilsEngine.transformBoardToTileMap(mouseBoardPosition),
               );
               selectedSdkEntity.setPosition(mouseBoardPosition);
