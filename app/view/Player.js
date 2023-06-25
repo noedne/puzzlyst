@@ -1637,6 +1637,7 @@ const Player = cc.Class.extend({
               );
               selectedSdkEntity.setPosition(mouseBoardPosition);
               selectedSdkEntity.updateCachedState();
+              gameLayer.stopParticles();
             }
             return;
           }
