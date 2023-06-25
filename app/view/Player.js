@@ -1301,7 +1301,7 @@ const Player = cc.Class.extend({
   showEntityTiles(opacity, fadeDuration, preview) {
     const scene = this.getScene();
     const gameLayer = scene && scene.getGameLayer();
-    if (gameLayer) {
+    if (gameLayer && !SDK.GameSession.current().getIsEditing()) {
       let entityNode;
       let sdkEntity;
       let showTiles;
