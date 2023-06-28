@@ -10,7 +10,7 @@ userAgent = uaparser.getResult()
 App = new Backbone.Marionette.Application()
 
 # require Firebase via browserify but temporarily alias it global scope
-Firebase = window.Firebase = require 'firebase'
+window.Firebase = require 'firebase'
 Promise = require 'bluebird'
 moment = require 'moment'
 querystring = require 'query-string'
@@ -3701,81 +3701,6 @@ App.on "start", (options) ->
   # goto main screen
   App.main()
 
-# get minimum browsers from Firebase
-App.getMinBrowserVersions = () ->
-  if Storage.get("skipBrowserCheck") then return Promise.resolve()
-  return new Promise (resolve, reject) ->
-    minBrowserVersionRef = new Firebase(process.env.FIREBASE_URL).child("system-status").child('browsers')
-
-    defaults = {
-      "Chrome": 50,
-      "Safari": 10,
-      "Firefox": 57,
-      "Edge": 15,
-      "Mobile Safari": 10,
-    }
-
-    # create a timeout to skip check in case Firebase lags (so atleast user does not get stuck on black screen)
-    minBrowserVersionTimeout = setTimeout(() ->
-      minBrowserVersionRef.off()
-      resolve(defaults)
-    , 5000)
-
-    minBrowserVersionRef.once 'value', (snapshot) ->
-      clearTimeout(minBrowserVersionTimeout)
-      if !snapshot.val()
-        resolve(defaults)
-      else
-        resolve(snapshot.val())
-
-# check if given browser is valid when compared against list of allowed browsers
-App.isBrowserValid = (browserName, browserMajor, supportedBrowsers) ->
-  if Storage.get("skipBrowserCheck") then return true
-  if browserName == 'Electron' then return true
-
-  if Object.keys(supportedBrowsers).includes(browserName)
-    return parseInt(browserMajor, 10) >= supportedBrowsers[browserName]
-  else
-    return false
-
-App.generateBrowserHtml = (browser, version) ->
-  if browser == 'Chrome'
-    return """
-      <p><a href='http://google.com/chrome'><strong>Google Chrome</strong> #{version} or newer.</a></p>
-    """
-  else if browser == 'Safari'
-    return """
-      <p><a href='https://www.apple.com/safari/'><strong>Apple Safari</strong> #{version} or newer.</a></p>
-    """
-  else if browser == 'Firefox'
-    return """
-      <p><a href='https://www.mozilla.org/firefox/'><strong>Mozilla Firefox</strong> #{version} or newer.</a></p>
-    """
-  else if browser == 'Edge'
-    return """
-      <p><a href='https://www.microsoft.com/en-us/windows/microsoft-edge'><strong>Microsoft Edge</strong> #{version} or newer.</a></p>
-    """
-
-# show some HTML saying the current browser is not supported if browser detection fails
-App.browserTestFailed = (browserName, browserVersion, supportedBrowsers) ->
-  html = """
-    <div style="margin:auto; position:absolute; height:50%; width:100%; top: 0px; bottom: 0px; font-size: 20px; color: white; text-align: center;">
-      <p>Looks like your current browser is not supported.</p>
-      <p>Your browser was detected as: #{browserName} version #{browserVersion}.</p>
-      <p>Visit <a href='https://support.duelyst.com' style="color: gray;">our support page</a> to submit a request for assistance.</p>
-      <br>
-  """
-
-  # dynamically create html containing list of support browsers
-  Object.keys(supportedBrowsers).forEach (browser) ->
-    version = supportedBrowsers[browser]
-    html += App.generateBrowserHtml(browser, version)
-
-  html += "</div>"
-  $("#app-preloading").css({display:"none"})
-  $("#app-content-region").css({margin:"auto", height:"50%", width: "50%"})
-  $("#app-content-region").html(html)
-
 # ensure webgl is correctly running
 App.glTest = () ->
   try
@@ -3830,14 +3755,9 @@ App.setup = () ->
 #
 # ---- Application Start Sequence ---- #
 #
-App.getMinBrowserVersions()
-.then (supportedBrowsers) ->
-  if !App.isBrowserValid(userAgent.browser.name, userAgent.browser.major, supportedBrowsers)
-    return App.browserTestFailed(userAgent.browser.name, userAgent.browser.major, supportedBrowsers)
-
-  if !App.glTest()
-    return App.glTestFailed()
-
+if !App.glTest()
+  App.glTestFailed()
+else
   # wrap App.setup() in _.once() just to be safe from double calling
   App.setupOnce = _.once(App.setup)
   App.setupOnce()
