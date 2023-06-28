@@ -13,7 +13,6 @@ App = new Backbone.Marionette.Application()
 Firebase = window.Firebase = require 'firebase'
 Promise = require 'bluebird'
 moment = require 'moment'
-semver = require 'semver'
 querystring = require 'query-string'
 
 # core
@@ -3814,41 +3813,6 @@ App.glTestFailed = () ->
     e.stopPropagation()
     e.preventDefault()
 
-# show some HTML saying they are on an old client version
-App.versionTestFailed = () ->
-  if window.isDesktop
-    html = """
-      <div style="margin:auto; position:absolute; height:50%;  width:100%; top: 0px; bottom: 0px; font-size: 20px; color: white; text-align: center;">
-        <p>Looks like you are running an old version of DUELYST.</p>
-        <p>Exit and restart DUELYST to update to the latest version.</p>
-        <p>Click <a id='reload-link' href='' style="color: gray;">here</a> to exit.</p>
-      </div>
-    """
-  else
-    html = """
-      <div style="margin:auto; position:absolute; height:50%;  width:100%; top: 0px; bottom: 0px; font-size: 20px; color: white; text-align: center;">
-        <p>Looks like you are running an old version of DUELYST.</p>
-        <p>Click <a id='reload-link' href='' style="color: gray;">here</a> to refresh your browser to the latest version.</p>
-      </div>
-    """
-  $("#app-preloading").css({display:"none"})
-  $("#app-content-region").css({margin:"auto", height:"50%", width: "50%"})
-  $("#app-content-region").html(html)
-  $("#reload-link").click (e) ->
-    if window.isDesktop then window.quitDesktop() else location.reload()
-
-# compare if process.env.VERSION is gte >= than provided minimum version
-# if minimumVersion is undefined or null, we set to '0.0.0'
-App.isVersionValid = (minimumVersion) ->
-  Logger.module("APPLICATION").log "#{process.env.VERSION} >= #{minimumVersion || '0.0.0'}"
-  if App._queryStringParams["replayId"]
-    return true
-  else
-    try
-      return semver.gte(process.env.VERSION, minimumVersion || '0.0.0')
-    catch e
-      return true
-
 # App.setup is the main entry function into Marionette app
 # grabs configuration from server we're running on and call App.start()
 App.setup = () ->
@@ -3874,23 +3838,6 @@ App.getMinBrowserVersions()
   if !App.glTest()
     return App.glTestFailed()
 
-  App.minVersionRef = new Firebase(process.env.FIREBASE_URL).child("system-status").child('minimum_version')
-
   # wrap App.setup() in _.once() just to be safe from double calling
   App.setupOnce = _.once(App.setup)
-
-  # create a timeout to skip version check in case Firebase lags (so atleast user does not get stuck on black screen)
-  App.versionCheckTimeout = setTimeout(() ->
-    App.minVersionRef.off()
-    App.setupOnce()
-  , 5000)
-
-  # read minimum version from Firebase and perform check, if fails, show error html
-  # otherwise start application as normal
-  App.minVersionRef.once('value', (snapshot) ->
-    clearTimeout(App.versionCheckTimeout)
-    if !App.isVersionValid(snapshot.val())
-      App.versionTestFailed()
-    else
-      App.setupOnce()
-  )
+  App.setupOnce()
