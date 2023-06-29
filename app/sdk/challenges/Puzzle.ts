@@ -7,7 +7,7 @@ import type Modifier from './puzzleSpec/Modifier';
 import type Player from './puzzleSpec/Player';
 import SpecPuzzle from './puzzleSpec/SpecPuzzle';
 import SpecString from './puzzleSpec/SpecString';
-import { base64StringToBinary, binaryToBase64String } from './puzzleSpec/base64';
+import { base64StringToBinary } from './puzzleSpec/base64';
 import getContextObjectData from './puzzleSpec/getContextObjectData';
 
 export default class Puzzle extends Challenge {
