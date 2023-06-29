@@ -28,8 +28,8 @@ var GameLayout = require('./game');
 
 var TutorialLayout = GameLayout.extend({
 
-  _playerIntroduced: false,
-  _playerReady: false,
+  _playerIntroduced: true,
+  _playerReady: true,
 
   _lesson: null,
   _currentHighlightedTiles: null,
