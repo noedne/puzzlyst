@@ -161,8 +161,8 @@ export default class Puzzle extends Challenge {
     });
   }
 
-  applyCardToBoard(...args: any[]) {
-    super.applyCardToBoard(...args);
+  applyCardToBoard(...args: any[]): Card {
+    return super.applyCardToBoard(...args);
   }
 }
 
