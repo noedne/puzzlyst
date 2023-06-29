@@ -328,6 +328,9 @@ const EVENTS = {
   followup_card_start: 'followup_card_start',
   followup_card_stop: 'followup_card_stop',
 
+  edit_card_start: 'edit_card_start',
+  edit_card_stop: 'edit_card_stop',
+
   // game state
   show_active_game: 'show_active_game',
   show_rollback: 'show_rollback',

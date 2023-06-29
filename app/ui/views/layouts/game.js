@@ -37,6 +37,7 @@ var i18next = require('i18next');
 const Chroma = require('app/common/chroma');
 var GamePlayer2Layout = require('./game_player2');
 var GamePlayer1Layout = require('./game_player1');
+const EditCardContextMenu = require('app/ui/views/item/edit_card_context_menu').default;
 
 var GameLayout = Backbone.Marionette.LayoutView.extend({
 
@@ -152,6 +153,8 @@ var GameLayout = Backbone.Marionette.LayoutView.extend({
       this.listenTo(gameLayer.getEventBus(), EVENTS.followup_card_stop, this.onGameFollowupCardStop);
       this.listenTo(gameLayer.getEventBus(), EVENTS.inspect_card_start, this.onInspectCardStart);
       this.listenTo(gameLayer.getEventBus(), EVENTS.inspect_card_stop, this.onInspectCardStop);
+      this.listenTo(gameLayer.getEventBus(), EVENTS.edit_card_start, this.onEditCardStart);
+      this.listenTo(gameLayer.getEventBus(), EVENTS.edit_card_stop, this.onEditCardStop);
     }
 
     // listen to global events
@@ -224,6 +227,14 @@ var GameLayout = Backbone.Marionette.LayoutView.extend({
         Animations.fadeIn.call(utilityView);
       }
     }
+  },
+
+  onEditCardStart: function () {
+    this.customOverlayRegion.show(new EditCardContextMenu());
+  },
+
+  onEditCardStop: function () {
+    this.customOverlayRegion.empty();
   },
 
   onShowActiveGame: function () {

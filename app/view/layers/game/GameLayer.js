@@ -102,6 +102,7 @@ var GameLayer = FXCompositeLayer.extend({
   _entityNodes: null,
   _handlingMouseMove: false,
   _inspectCardNode: null,
+  _isEditingCard: false,
   _lastCardWithAutomaticAction: null,
   _lastMouseOverEntityNodesForAction: null,
   _lastPlayedCardBoardPositions: null,
@@ -5360,6 +5361,46 @@ var GameLayer = FXCompositeLayer.extend({
     }
   },
 
+  showEditCard() {
+    this.getEventBus().trigger(EVENTS.edit_card_start);
+    this._isEditingCard = true;
+    EventBus.current().on(
+      EVENTS.pointer_down,
+      this.stopShowingEditCard,
+      this,
+    );
+    NavigationManager.current().on(
+      EVENTS.user_triggered_cancel,
+      this.stopShowingEditCard,
+      this,
+    );
+  },
+
+  stopShowingEditCard() {
+    this.getEventBus().trigger(EVENTS.edit_card_stop);
+    this._isEditingCard = false;
+    EventBus.current().off(
+      EVENTS.pointer_down,
+      this.stopShowingEditCard,
+      this,
+    );
+    NavigationManager.current().off(
+      EVENTS.user_triggered_cancel,
+      this.stopShowingEditCard,
+      this,
+    );
+  },
+
+  getIsEditingCard() {
+    return this._isEditingCard;
+  },
+
+  getIsEscActive() {
+    return this.getMyPlayer().getIsTakingSelectionAction()
+      || this.getIsShowingActionCardSequence()
+      || this.getIsEditingCard();
+  },
+
   /**
    * Starts showing a played card
    * @param {SDK.Action} action action that played card to show
@@ -6280,6 +6321,12 @@ var GameLayer = FXCompositeLayer.extend({
       // Trigger a cancel if performing a cancellable followup or have a selection
       if (SDK.GameSession.getInstance().getIsMyFollowupActiveAndCancellable() || !!(this._player.getSelectedCard() || this._player.getSelectedEntityNode())) {
         NavigationManager.getInstance().requestUserTriggeredCancel();
+      }
+      if (
+        SDK.GameSession.current().getIsEditing()
+        && this._player.getMouseOverEntityNode() != null
+      ) {
+        this.showEditCard();
       }
     } else if (this.getIsChooseHand()) {
       // toggle cards to be mulliganed from starting hand

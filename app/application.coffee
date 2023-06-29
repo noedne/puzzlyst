@@ -3224,8 +3224,7 @@ App.onUserTriggeredCancel = () ->
         audio_engine.current().play_effect_for_interaction(RSX.sfx_ui_cancel.audio, CONFIG.CANCEL_SFX_PRIORITY)
         gameSession.submitExplicitAction(gameSession.actionRollbackSnapshot())
       else
-        if !gameLayer.getMyPlayer().getIsTakingSelectionAction() and !gameLayer.getIsShowingActionCardSequence()
-          # show esc game menu if we are not selecting something in game and not showing an action sequence
+        if !gameLayer.getIsEscActive()
           cancelPromises.push(NavigationManager.getInstance().showModalView(new EscGameMenuItemView()))
 
         # always reset game active state

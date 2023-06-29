@@ -60,6 +60,12 @@ $major-size: 100% - $minor-size * 2;
 		@include fillParent();
 	}
 
+	#app-edit-card-context-menu {
+		.dropdown-menu {
+			pointer-events: auto;
+		}
+	}
+
 	#spectator_notification {
 		position: absolute;
 		display:none;
