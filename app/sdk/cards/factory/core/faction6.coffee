@@ -1529,15 +1529,13 @@ class CardFactory_CoreSet_Faction6
       card.manaCost = 1
       card.rarityId = Rarity.Epic
       card.durability = 3
-      immunityContextObject = ModifierImmuneToDamage.createContextObject({
-        durationIsUntilYourNextTurn: true,
-      });
+      immunityContextObject = contextObjects[0]
       card.setTargetModifiersContextObjects([
         Modifier.createContextObjectWithAttributeBuffs(1,0,{
           name: i18next.t("cards.faction_6_artifact_winterblade_name")
           description: i18next.t("modifiers.plus_attack_key",{amount:1})
         }),
-        ModifierOnRemoveBuffGeneral.createContextObject(contextObjects)
+        ModifierOnRemoveBuffGeneral.createContextObject([immunityContextObject])
       ])
       card.setFXResource(["FX.Cards.Artifact.Winterblade"])
       card.setBaseAnimResource(
