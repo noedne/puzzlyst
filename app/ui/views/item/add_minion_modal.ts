@@ -10,12 +10,7 @@ export default TypeaheadModal.extend({
   template: Template,
 
   onSubmit: function () {
-    const minionName = this.getResult();
-    const card =
-      SDK.GameSession.current().getCardCaches().getCards().find(
-        (card: typeof Card) => card.getName() === minionName,
-      );
-    SDK.GameSession.current().addCardToBench(card);
+    SDK.GameSession.current().addCardToBench(this.getResult());
     NavigationManager.getInstance().destroyModalView();
   },
 

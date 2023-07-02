@@ -18,6 +18,8 @@ export default FormPromptModalItemView.extend({
   },
 
   focusedResult: null,
+  results: [],
+  focusedIndex: 0,
 
   onShow: function () {
     FormPromptModalItemView.prototype.onShow.apply(this);
@@ -26,7 +28,7 @@ export default FormPromptModalItemView.extend({
   },
 
   getResult: function () {
-    return this.focusedResult.text();
+    return this.results[this.focusedIndex];
   },
 
   onKeyDown: function (event: JQuery.TriggeredEvent) {
@@ -63,12 +65,14 @@ export default FormPromptModalItemView.extend({
       this.clearResults();
       return;
     }
-    const results = this.autocomplete(val).slice(0, 3);
-    if (results.length === 0) {
+    this.results = this.autocomplete(val).slice(0, 3);
+    if (this.results.length === 0) {
       this.clearResults();
       return;
     }
-    this.ui.$results.html($('<ul>').append(results.map(this.createResult)));
+    this.ui.$results.html(
+      $('<ul>').append(this.results.map(this.createResult)),
+    );
     this.updateFocusedResult(this.$result().first());
   },
 
@@ -91,6 +95,7 @@ export default FormPromptModalItemView.extend({
     this.focusedResult?.removeClass('focused');
     this.focusedResult = newFocus.addClass('focused');
     this.ui.$submit.prop('disabled', false);
+    this.focusedIndex = this.$result().index(newFocus);
   },
 
   clearResults: function () {
