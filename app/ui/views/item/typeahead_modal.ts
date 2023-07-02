@@ -30,11 +30,14 @@ export default FormPromptModalItemView.extend({
   },
 
   onKeyDown: function (event: JQuery.TriggeredEvent) {
-    if (this.focusedResult === null) {
+    if (!this.ui.$typeahead.is(':focus') || this.focusedResult === null) {
       return;
     }
     let newFocus = null;
     switch (event.which) {
+      case 9:
+        this.ui.$typeahead.val(this.getResult());
+        return;
       case 38:
         newFocus = this.focusedResult.prev();
         if (newFocus.length === 0) {
