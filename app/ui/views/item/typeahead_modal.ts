@@ -3,7 +3,7 @@ const FormPromptModalItemView = require('./form_prompt_modal');
 export default FormPromptModalItemView.extend({
   ui: {
     $form: '.prompt-form',
-    $formControl: '.form-control',
+    $typeahead: '.typeahead',
     $results: '#results',
     $submit: '.prompt-submit',
   },
@@ -12,7 +12,7 @@ export default FormPromptModalItemView.extend({
     'click @ui.$submit': 'onClickSubmit',
     'click .prompt-cancel': 'onCancel',
     'keydown .modal-dialog': 'onKeyDown',
-    'input @ui.$formControl': 'onInputChange',
+    'input @ui.$typeahead': 'onInputChange',
     'mousemove li': 'onHoverResult',
     'click li': 'onClickResult',
   },
@@ -21,7 +21,7 @@ export default FormPromptModalItemView.extend({
 
   onShow: function () {
     FormPromptModalItemView.prototype.onShow.apply(this);
-    this.ui.$formControl.focus();
+    this.ui.$typeahead.focus();
     this.ui.$submit.prop('disabled', true);
   },
 
@@ -55,7 +55,7 @@ export default FormPromptModalItemView.extend({
   },
 
   onInputChange: function () {
-    const val = this.ui.$formControl.val();
+    const val = this.ui.$typeahead.val();
     if (val === '') {
       this.clearResults();
       return;
@@ -75,9 +75,9 @@ export default FormPromptModalItemView.extend({
 
   onClickResult: function (event: JQuery.TriggeredEvent) {
     const result = $(event.currentTarget);
-    this.ui.$formControl.val(result.text());
+    this.ui.$typeahead.val(result.text());
     this.ui.$results.html($('<ul>').append(result));
-    this.ui.$formControl.focus();
+    this.ui.$typeahead.focus();
   },
 
   updateValidState: function () {
