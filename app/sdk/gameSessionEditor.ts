@@ -94,6 +94,7 @@ export function setIsEditing(this: typeof GameSession, isEditing: boolean) {
   pushEvent(this, {
     bindHand: !isEditing,
     bindSubmitTurn: true,
+    setMouseOver: isEditing,
   });
 }
 
@@ -108,6 +109,7 @@ function pushEvent(
     bindSubmitTurn?: boolean,
     selectBenchIndex?: number,
     setInitialBenchSelected?: boolean,
+    setMouseOver?: boolean,
   }) {
   gameSession.pushEvent({
     type: EVENTS.editing_event,
@@ -117,6 +119,7 @@ function pushEvent(
       bindSubmitTurn: options.bindSubmitTurn ?? false,
       selectBenchIndex: options.selectBenchIndex ?? null,
       setInitialBenchSelected: options.setInitialBenchSelected ?? false,
+      setMouseOver: options.setMouseOver ?? false,
     },
   });
 }

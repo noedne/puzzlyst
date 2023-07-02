@@ -133,6 +133,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       bindSubmitTurn,
       selectBenchIndex,
       setInitialBenchSelected,
+      setMouseOver,
     } = event.options;
     const gameLayer = Scene.current().getGameLayer();
     const deckLayer = gameLayer.getBottomDeckLayer();
@@ -160,6 +161,16 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     }
     if (setInitialBenchSelected) {
       player.setSelectedCard(deckLayer.getCardNodeByHandIndex(0));
+    }
+    if (setMouseOver) {
+      const mouseBoardPosition = player.getMouseBoardPosition();
+      const entityNode = gameLayer.getEntityNodeAtBoardPosition(
+        mouseBoardPosition.x,
+        mouseBoardPosition.y,
+        true,
+        true,
+      );
+      player.setMouseOverEntityNode(entityNode);
     }
   },
 
