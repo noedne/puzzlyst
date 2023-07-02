@@ -229,8 +229,10 @@ var GameLayout = Backbone.Marionette.LayoutView.extend({
     }
   },
 
-  onEditCardStart: function () {
-    this.customOverlayRegion.show(new EditCardContextMenu());
+  onEditCardStart: function (event) {
+    const editCardContextMenu = new EditCardContextMenu({ card: event.card });
+    this.customOverlayRegion.show(editCardContextMenu);
+    this.listenToOnce(editCardContextMenu, 'close', this.onEditCardStop);
   },
 
   onEditCardStop: function () {

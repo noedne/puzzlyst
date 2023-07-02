@@ -1,3 +1,4 @@
+const Card = require('app/sdk/cards/card');
 const Template = require('app/ui/templates/item/edit_card_context_menu.hbs');
 const UtilsPointer = require('app/common/utils/utils_pointer');
 
@@ -12,6 +13,10 @@ export default Marionette.ItemView.extend({
   events: {
     'contextmenu @ui.$dropdown': 'onRightClick',
     'mousedown @ui.$dropdown': 'onMouseDown',
+  },
+
+  initialize: function (options: { card: typeof Card }) {
+    this.card = options.card;
   },
 
   onRender: function () {

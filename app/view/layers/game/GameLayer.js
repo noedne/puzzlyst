@@ -5361,8 +5361,11 @@ var GameLayer = FXCompositeLayer.extend({
     }
   },
 
-  showEditCard() {
-    this.getEventBus().trigger(EVENTS.edit_card_start);
+  showEditCard(sdkCard) {
+    this.getEventBus().trigger(EVENTS.edit_card_start, {
+      type: EVENTS.edit_card_start,
+      card: sdkCard,
+    });
     this._isEditingCard = true;
     EventBus.current().on(
       EVENTS.pointer_down,
@@ -6322,11 +6325,12 @@ var GameLayer = FXCompositeLayer.extend({
       if (SDK.GameSession.getInstance().getIsMyFollowupActiveAndCancellable() || !!(this._player.getSelectedCard() || this._player.getSelectedEntityNode())) {
         NavigationManager.getInstance().requestUserTriggeredCancel();
       }
+      const mouseOverEntityNode = this._player.getMouseOverEntityNode();
       if (
         SDK.GameSession.current().getIsEditing()
-        && this._player.getMouseOverEntityNode() != null
+        && mouseOverEntityNode != null
       ) {
-        this.showEditCard();
+        this.showEditCard(mouseOverEntityNode.getSdkCard());
       }
     } else if (this.getIsChooseHand()) {
       // toggle cards to be mulliganed from starting hand
