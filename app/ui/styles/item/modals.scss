@@ -127,6 +127,9 @@
 		}
 		.form-control {
 			width: $prompt-form-width;
+			&[type=number]::-webkit-inner-spin-button {
+				appearance: none;
+			}
 		}
 		.form-control-buttons {
 			display: flex;
@@ -435,5 +438,32 @@
 	}
 	.form-control-buttons {
 		margin-top: auto;
+	}
+}
+
+#app-add-modifier {
+	.w-100 {
+		width: 100%;
+	}
+	.arrow:hover {
+		color: $light-blue;
+	}
+	#input-row {
+		display: flex;
+		align-self: stretch;
+	}
+	.number-input-group {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.up-arrow {
+		position: absolute;
+		translate: 0 -100%;
+	}
+	.number-input {
+		width: 3em;
+		padding: 0;
+		text-align: center;
 	}
 }
