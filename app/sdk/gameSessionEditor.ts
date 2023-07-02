@@ -1,7 +1,10 @@
+import type { ContextObject } from "./challenges/puzzleSpec/getContextObjectData";
+
 const Card = require('app/sdk/cards/card');
 const CardType = require('app/sdk/cards/cardType');
 const EVENTS = require('app/common/event_types');
 const GameSession = require('./gameSession');
+const Modifier = require('app/sdk/modifiers/modifier');
 
 const cachedMinionCards: typeof Card[] | null = null;
 const editingBench: typeof Card[] = [];
@@ -11,6 +14,25 @@ export const _private = {
   editingBench,
   isEditing,
 };
+
+export function applyModifierContextObjectToCard(
+  this: typeof GameSession,
+  card: typeof Card,
+  contextObjectData: ContextObject,
+  count: number,
+) {
+  const indices = Array.from(Array(count)).map(_ => this.generateIndex());
+  indices.forEach(index => this.applyModifierContextObject({
+    ...contextObjectData.contextObject,
+    index,
+  }, card));
+  pushEvent(this, {
+    showModifiers: {
+      card,
+      modifiers: this.getModifiersByIndices(indices),
+    },
+  });
+}
 
 export function getMinionCards(this: typeof GameSession): typeof Card[] {
   if (this._private.cachedMinionCards === null) {
@@ -110,6 +132,10 @@ function pushEvent(
     selectBenchIndex?: number,
     setInitialBenchSelected?: boolean,
     setMouseOver?: boolean,
+    showModifiers?: {
+      card: typeof Card,
+      modifiers: typeof Modifier[],
+    },
   }) {
   gameSession.pushEvent({
     type: EVENTS.editing_event,
@@ -120,6 +146,7 @@ function pushEvent(
       selectBenchIndex: options.selectBenchIndex ?? null,
       setInitialBenchSelected: options.setInitialBenchSelected ?? false,
       setMouseOver: options.setMouseOver ?? false,
+      showModifiers: options.showModifiers ?? null,
     },
   });
 }

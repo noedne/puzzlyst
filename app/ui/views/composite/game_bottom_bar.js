@@ -134,6 +134,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       selectBenchIndex,
       setInitialBenchSelected,
       setMouseOver,
+      showModifiers,
     } = event.options;
     const gameLayer = Scene.current().getGameLayer();
     const deckLayer = gameLayer.getBottomDeckLayer();
@@ -171,6 +172,18 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
         true,
       );
       player.setMouseOverEntityNode(entityNode);
+    }
+    if (showModifiers) {
+      const { card, modifiers } = showModifiers;
+      const node = gameLayer.getNodeForSdkCard(card);
+      modifiers.forEach(modifier => {
+        node.showAppliedModifier(modifier);
+        if (modifier.getIsActive()) {
+          node.showActivatedModifier(modifier);
+        }
+      });
+      card.getActionStateRecord()._currentState.modifierStacks =
+        card.getVisibleModifierStacks();
     }
   },
 
