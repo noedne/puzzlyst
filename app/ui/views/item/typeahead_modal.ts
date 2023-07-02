@@ -38,13 +38,13 @@ export default FormPromptModalItemView.extend({
       case 38:
         newFocus = this.focusedResult.prev();
         if (newFocus.length === 0) {
-          newFocus = $('li').last();
+          newFocus = this.$result().last();
         }
         break;
       case 40:
         newFocus = this.focusedResult.next();
         if (newFocus.length === 0) {
-          newFocus = $('li').first();
+          newFocus = this.$result().first();
         }
         break;
       default:
@@ -66,7 +66,7 @@ export default FormPromptModalItemView.extend({
       return;
     }
     this.ui.$results.html($('<ul>').append(results.map(this.createResult)));
-    this.updateFocusedResult($('li').first());
+    this.updateFocusedResult(this.$result().first());
   },
 
   onHoverResult: function (event: JQuery.TriggeredEvent) {
@@ -94,6 +94,10 @@ export default FormPromptModalItemView.extend({
     this.ui.$results.empty();
     this.focusedResult = null;
     this.ui.$submit.prop('disabled', true);
+  },
+
+  $result: function () {
+    return $('#results li');
   },
 
 });
