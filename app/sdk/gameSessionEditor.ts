@@ -24,6 +24,7 @@ export function setCardDamage(
     return;
   }
   card.setDamage(damage);
+  pushEvent(this, { showHP: { card }});
 }
 
 export function applyModifierContextObjectToCard(
@@ -143,6 +144,9 @@ function pushEvent(
     selectBenchIndex?: number,
     setInitialBenchSelected?: boolean,
     setMouseOver?: boolean,
+    showHP?: {
+      card: typeof Card,
+    },
     showModifiers?: {
       card: typeof Card,
       modifiers: typeof Modifier[],
@@ -157,6 +161,7 @@ function pushEvent(
       selectBenchIndex: options.selectBenchIndex ?? null,
       setInitialBenchSelected: options.setInitialBenchSelected ?? false,
       setMouseOver: options.setMouseOver ?? false,
+      showHP: options.showHP ?? null,
       showModifiers: options.showModifiers ?? null,
     },
   });
