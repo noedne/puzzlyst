@@ -127,9 +127,6 @@
 		}
 		.form-control {
 			width: $prompt-form-width;
-			&[type=number]::-webkit-inner-spin-button {
-				appearance: none;
-			}
 		}
 		.form-control-buttons {
 			display: flex;
@@ -441,12 +438,14 @@
 	}
 }
 
-#app-add-modifier {
+#app-add-modifier, #app-set-damage {
 	.w-100 {
 		width: 100%;
 	}
-	.arrow:hover {
-		color: $light-blue;
+	.arrow {
+		&:hover, &:focus {
+			color: $light-blue;
+		}
 	}
 	#input-row {
 		display: flex;
@@ -465,5 +464,8 @@
 		width: 3em;
 		padding: 0;
 		text-align: center;
+		&::-webkit-inner-spin-button {
+			appearance: none;
+		}
 	}
 }
