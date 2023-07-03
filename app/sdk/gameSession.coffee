@@ -343,6 +343,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 
 {
   _private,
+  setCardDamage,
   applyModifierContextObjectToCard,
   getBottomDeckCardAtIndex,
   getMinionCards,
@@ -354,6 +355,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 } = require('./gameSessionEditor')
 
 class _GameSession extends SDKObject
+  setCardDamage: setCardDamage
   applyModifierContextObjectToCard: applyModifierContextObjectToCard
   getBottomDeckCardAtIndex: getBottomDeckCardAtIndex
   getMinionCards: getMinionCards

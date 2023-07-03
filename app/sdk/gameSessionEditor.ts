@@ -15,6 +15,17 @@ export const _private = {
   isEditing,
 };
 
+export function setCardDamage(
+  this: typeof GameSession,
+  card: typeof Card,
+  damage: number,
+) {
+  if (damage === card.getDamage()) {
+    return;
+  }
+  card.setDamage(damage);
+}
+
 export function applyModifierContextObjectToCard(
   this: typeof GameSession,
   card: typeof Card,
