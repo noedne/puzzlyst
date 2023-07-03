@@ -1,12 +1,15 @@
 const Card = require('app/sdk/cards/card');
 const NavigationManager = require('app/ui/managers/navigation_manager');
-const Template = require('app/ui/templates/item/add_modifier_modal.hbs');
 const SDK = require('app/sdk');
+const Template = require('app/ui/templates/item/add_modifier_modal.hbs');
 import TypeaheadModal from './typeahead_modal';
 import getContextObjectData, { contextObjectCardIds, getDescription } from '../../../sdk/challenges/puzzleSpec/getContextObjectData';
 import { matchSorter } from 'match-sorter';
+import withNumberInput from './with_number_input';
 
-export default TypeaheadModal.extend({
+const NumberInputView = withNumberInput(TypeaheadModal);
+
+export default NumberInputView.extend({
   id: 'app-add-modifier',
   template: Template,
 
@@ -34,13 +37,20 @@ export default TypeaheadModal.extend({
 
   initialize: function (options: { card: typeof Card }) {
     this.card = options.card;
+    NumberInputView.prototype.initialize.apply(this, [{
+      initial: 1,
+      max: Infinity,
+      min: 1,
+      placeholder: 1,
+      select: false,
+    }]);
   },
 
-  onSubmit: function () {
+  onSubmitImpl: function (count: number) {
     SDK.GameSession.current().applyModifierContextObjectToCard(
       this.card,
       this.getResult(),
-      this.ui.$numberInput.val(),
+      count,
     );
     NavigationManager.getInstance().destroyModalView();
     this.trigger('submit');
@@ -65,17 +75,4 @@ export default TypeaheadModal.extend({
   createResult: function (item: { name: string, description: string }): JQuery {
     return $('<li>').text(`${item.name}: ${item.description}`);
   },
-
-  onClickUpArrow: function () {
-    this.ui.$numberInput[0].stepUp();
-  },
-
-  onClickDownArrow: function () {
-    this.ui.$numberInput[0].stepDown();
-  },
-
-  onNumberChange: function () {
-    this.ui.$downArrow.prop('disabled', this.ui.$numberInput.val() === '1');
-  },
-
 });
