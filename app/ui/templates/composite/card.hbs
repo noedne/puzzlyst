@@ -138,7 +138,9 @@
 <p class="{{#if longCardDescription}}card-description-long{{else}}card-description{{/if}}"><span>{{{description}}}</span></p>
 
 <div class="inventory-count">x {{inventoryCount}}</div>
-<div class="deck-count">x {{deckCount}}</div>
+{{#compare deckCount '>' 1}}
+	<div class="deck-count">x {{deckCount}}</div>
+{{/compare}}
 
 <div class="modifiers">
     <div class="modifiers-list"></div>
