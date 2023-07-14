@@ -343,10 +343,11 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 
 {
   _private,
+  copyCard,
   setCardDamage,
   applyModifierContextObjectToCard,
   getBottomDeckCardAtIndex,
-  getMinionCards,
+  getCardsByType,
   addCardToBench,
   setSelectedBenchIndex,
   applyBenchCardToBoard,
@@ -355,10 +356,11 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 } = require('./gameSessionEditor')
 
 class _GameSession extends SDKObject
+  copyCard: copyCard
   setCardDamage: setCardDamage
   applyModifierContextObjectToCard: applyModifierContextObjectToCard
   getBottomDeckCardAtIndex: getBottomDeckCardAtIndex
-  getMinionCards: getMinionCards
+  getCardsByType: getCardsByType
   addCardToBench: addCardToBench
   setSelectedBenchIndex: setSelectedBenchIndex
   applyBenchCardToBoard: applyBenchCardToBoard

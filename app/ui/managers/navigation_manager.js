@@ -36,8 +36,9 @@ var ServerStatusManager = require('./server_status_manager');
 var ChatManager = require('./chat_manager');
 var NotificationsManager = require('./notifications_manager');
 var Manager = require('./manager');
+const CardType = require('app/sdk/cards/cardType');
 const SDK = require('app/sdk');
-const AddMinionModal = require('app/ui/views/item/add_minion_modal').default;
+const AddCardModal = require('app/ui/views/item/add_card_modal').default;
 
 var NavigationManager = Manager.extend({
 
@@ -147,17 +148,6 @@ var NavigationManager = Manager.extend({
         }
       } else if (!this.getIsShowingModalView()) {
         switch (keyCode) {
-          case cc.KEY.r:
-            gameSession.getChallenge().challengeReset();
-            break;
-          case cc.KEY.e:
-            gameSession.setIsEditing(!gameSession.getIsEditing());
-            break;
-          case cc.KEY.a:
-            if (gameSession.getIsEditing()) {
-              this.showModalView(new AddMinionModal());
-            }
-            break;
           case cc.KEY['1']:
           case cc.KEY['2']:
           case cc.KEY['3']:
@@ -165,6 +155,23 @@ var NavigationManager = Manager.extend({
           case cc.KEY['5']:
           case cc.KEY['6']:
             gameSession.setSelectedBenchIndex(keyCode - cc.KEY['1']);
+            break;
+          case cc.KEY.a:
+            if (gameSession.getIsEditing()) {
+              const modal = new AddCardModal({ type: CardType.Unit });
+              this.showModalView(modal);
+              this.listenToOnce(
+                modal,
+                'submit',
+                card => gameSession.addCardToBench(card),
+              );
+            }
+            break;
+          case cc.KEY.e:
+            gameSession.setIsEditing(!gameSession.getIsEditing());
+            break;
+          case cc.KEY.r:
+            gameSession.getChallenge().challengeReset();
             break;
         }
       }

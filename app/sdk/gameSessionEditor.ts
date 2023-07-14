@@ -6,14 +6,23 @@ const EVENTS = require('app/common/event_types');
 const GameSession = require('./gameSession');
 const Modifier = require('app/sdk/modifiers/modifier');
 
-const cachedMinionCards: typeof Card[] | null = null;
+const cachedCardsByType: Record<typeof CardType, typeof Card[]> = {};
 const editingBench: typeof Card[] = [];
 const isEditing: boolean = false;
 export const _private = {
-  cachedMinionCards,
+  cachedCardsByType,
   editingBench,
   isEditing,
 };
+
+export function copyCard(
+  this: typeof GameSession,
+  oldCard: typeof Card,
+): typeof Card {
+  const card = this.createCardForIdentifier(oldCard.getId());
+  this._indexCardAsNeeded(card);
+  return card;
+}
 
 export function setCardDamage(
   this: typeof GameSession,
@@ -46,20 +55,23 @@ export function applyModifierContextObjectToCard(
   });
 }
 
-export function getMinionCards(this: typeof GameSession): typeof Card[] {
-  if (this._private.cachedMinionCards === null) {
-    const minionCache = this
+export function getCardsByType(
+  this: typeof GameSession,
+  type: typeof CardType,
+): typeof Card[] {
+  if (this._private.cachedCardsByType[type] === undefined) {
+    let cache = this
       .getCardCaches()
       .getIsPrismatic(false)
-      .getType(CardType.Unit)
       .getIsGeneral(false);
-    const collectibleCards = minionCache
-      .getIsHiddenInCollection(false)
-      .getCards();
-    const tokenCards = minionCache.getIsToken(true).getCards();
-    this._private.cachedMinionCards = collectibleCards.concat(tokenCards);
+    if (type !== CardType.Card) {
+      cache = cache.getType(type);
+    }
+    const collectibleCards = cache.getIsHiddenInCollection(false).getCards();
+    const tokenCards = cache.getIsToken(true).getCards();
+    this._private.cachedCardsByType[type] = collectibleCards.concat(tokenCards);
   }
-  return this._private.cachedMinionCards;
+  return this._private.cachedCardsByType[type];
 }
 
 export function getBottomDeckCardAtIndex(
