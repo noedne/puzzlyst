@@ -39,6 +39,7 @@ var Manager = require('./manager');
 const CardType = require('app/sdk/cards/cardType');
 const SDK = require('app/sdk');
 const AddCardModal = require('app/ui/views/item/add_card_modal').default;
+const EditHandModal = require('app/ui/views/layouts/edit_hand_modal').default;
 
 var NavigationManager = Manager.extend({
 
@@ -169,6 +170,11 @@ var NavigationManager = Manager.extend({
             break;
           case cc.KEY.e:
             gameSession.setIsEditing(!gameSession.getIsEditing());
+            break;
+          case cc.KEY.h:
+            if (gameSession.getIsEditing()) {
+              this.showModalView(new EditHandModal());
+            }
             break;
           case cc.KEY.r:
             gameSession.getChallenge().challengeReset();
