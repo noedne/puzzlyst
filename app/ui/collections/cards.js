@@ -74,6 +74,10 @@ var CardsCollection = Backbone.Collection.extend({
       factionProgressionCardIds = _.union(factionProgressionCardIds, SDK.FactionProgression.unlockedCardsUpToXP(factionXp, factionId));
     });
 
+    this.addCardsToCollection(cards, factionProgressionCardIds);
+  },
+
+  addCardsToCollection: function (cards, factionProgressionCardIds) {
     var cardModels = [];
     for (var i = 0, il = cards.length; i < il; i++) {
       var card = cards[i];
@@ -200,8 +204,10 @@ var CardsCollection = Backbone.Collection.extend({
       cardModels.push(new CardModel(modelData));
     }
 
-    // update card counts
-    this.updateCardsCount(cardModels, factionProgressionCardIds);
+    if (factionProgressionCardIds != null) {
+      // update card counts
+      this.updateCardsCount(cardModels, factionProgressionCardIds);
+    }
 
     // reset collection
     this.reset(cardModels);
