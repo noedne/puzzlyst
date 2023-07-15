@@ -37,7 +37,7 @@ var DeckCardCompositeView = CardCompositeView.extend({
     if (htmlData) {
       this._cardData = '<div class="card' + cardClasses + '">' + htmlData + '</div>';
       this.$el.popover({
-        trigger: 'manual', container: CONFIG.COLLECTION_SELECTOR, viewport: CONFIG.COLLECTION_SELECTOR, placement: this._positionPopover.bind(this), html: true, content: this._cardData,
+        trigger: 'manual', container: CONFIG.EDIT_HAND_SELECTOR, viewport: CONFIG.EDIT_HAND_SELECTOR, placement: this._positionPopover.bind(this), html: true, content: this._cardData,
       });
     }
   },

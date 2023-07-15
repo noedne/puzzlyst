@@ -949,6 +949,7 @@ CONFIG.MODAL_SELECTOR = '#app-modal-region';
 CONFIG.NOTIFICATIONS_SELECTOR = '#app-notifications-region';
 CONFIG.UTILITY_SELECTOR = '#app-utility-region';
 CONFIG.COLLECTION_SELECTOR = '#app-collection';
+CONFIG.EDIT_HAND_SELECTOR = '#app-edit-hand';
 CONFIG.MAINTENANCE_ANNOUNCEMENTS_SELECTOR = '#maintenance-announcements-region';
 
 CONFIG.DESTROY_TAG = 1001;
