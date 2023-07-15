@@ -1,4 +1,44 @@
 /* ---------- COLLECTION ---------- */
+#app-collection, #app-edit-hand {
+  .popover {
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    .arrow {
+      &:after {
+        border-left-color: rgba(24, 31, 34, 0.8);
+        z-index: 1;
+      }
+    }
+    .popover-content {
+      padding: 0;
+    }
+    .card {
+      margin: 0;
+      margin-left: 2.8rem;
+      overflow: visible;
+      .name {
+        color: #fff;
+      }
+      .inventory-count, .deck-count {
+        display: none;
+      }
+      .sidebar {
+        width: 18.0rem;
+        top: 1.5rem;
+        right: 100%;
+        left: auto;
+        z-index: -1;
+      }
+      .keyword-descriptions {
+        display: block;
+        background: rgba(20,20,20,0.95);
+        box-shadow: 0 0 1.0rem rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+}
 
 #app-collection {
 	@include overlayPanel();
@@ -88,45 +128,6 @@
   .btn {
     &.collection-cancel {
       background-color:darkred;
-    }
-  }
-
-  .popover {
-    background-color: transparent;
-    padding: 0;
-    border: 0;
-    box-shadow: none;
-    .arrow {
-      &:after {
-        border-left-color: rgba(24, 31, 34, 0.8);
-        z-index: 1;
-      }
-    }
-    .popover-content {
-      padding: 0;
-    }
-    .card {
-      margin: 0;
-      margin-left: 2.8rem;
-      overflow: visible;
-      .name {
-        color: #fff;
-      }
-      .inventory-count, .deck-count {
-        display: none;
-      }
-      .sidebar {
-        width: 18.0rem;
-        top: 1.5rem;
-        right: 100%;
-        left: auto;
-        z-index: -1;
-      }
-      .keyword-descriptions {
-        display: block;
-        background: rgba(20,20,20,0.95);
-        box-shadow: 0 0 1.0rem rgba(0, 0, 0, 0.5);
-      }
     }
   }
 
