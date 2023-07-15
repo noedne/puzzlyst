@@ -1,28 +1,6 @@
-#app-deck {
-	@include scrollbars(rgba(255,255,255, 1));
-	flex: 1;
-	display: flex;
-	flex-flow: column nowrap;
-	#app-deck-cards-region {
-		position: relative;
-		flex: 1;
-		display: flex;
-		flex-flow: column nowrap;
-		margin-bottom: 1.8rem;
-	}
-	.deck-controls {
-		flex: none;
-		margin-bottom: 1.0rem;
-		.btn-clean-primary {
-			width: 15.0rem;
-			height: 4.7rem;
-			min-width: 15.0rem;
-			min-height: 4.7rem;
-			padding: 1.3rem 2.0rem;
-		}
-	}
-	.deck-import-export {
-		flex: none;
+#app-deck, #app-edit-hand .modal-dialog {
+	.hand-region {
+		height: 31.8rem;
 	}
 	.deck-cards {
 		@include fillParent();
@@ -177,6 +155,34 @@
 				@include backgroundImage("resources/card_backgrounds/deck_builder_prismatic_card_bg.png");
 			}
 		}
+	}
+}
+
+#app-deck {
+	@include scrollbars(rgba(255,255,255, 1));
+	flex: 1;
+	display: flex;
+	flex-flow: column nowrap;
+	#app-deck-cards-region {
+		position: relative;
+		flex: 1;
+		display: flex;
+		flex-flow: column nowrap;
+		margin-bottom: 1.8rem;
+	}
+	.deck-controls {
+		flex: none;
+		margin-bottom: 1.0rem;
+		.btn-clean-primary {
+			width: 15.0rem;
+			height: 4.7rem;
+			min-width: 15.0rem;
+			min-height: 4.7rem;
+			padding: 1.3rem 2.0rem;
+		}
+	}
+	.deck-import-export {
+		flex: none;
 	}
 }
 
