@@ -13,7 +13,6 @@ var audio_engine = require('app/audio/audio_engine');
 var CardTmpl = require('app/ui/templates/composite/card.hbs');
 var PackageManager = require('app/ui/managers/package_manager');
 var GameDataManager = require('app/ui/managers/game_data_manager');
-var InventoryManager = require('app/ui/managers/inventory_manager');
 var ProfileManager = require('app/ui/managers/profile_manager');
 var Animations = require('app/ui/views/animations');
 
@@ -33,6 +32,7 @@ var CardCompositeView = Backbone.Marionette.CompositeView.extend({
     mouseenter: 'onMouseEnter',
     mouseleave: 'onMouseLeave',
     click: 'onSelect',
+    contextmenu: 'onRightClick',
   },
 
   templateHelpers: {
@@ -151,7 +151,6 @@ var CardCompositeView = Backbone.Marionette.CompositeView.extend({
     var card = this.model.get('card');
     if (card instanceof SDK.Card) {
       var cardId = this.model.get('id');
-      InventoryManager.getInstance().markCardAsReadInCollection(cardId);
       this.setRead(true);
       if (interactiveAndUsable) {
         this.setSprite(this._activeSpriteData, this._activeStartingSpriteData, this._activeStartingSound);
@@ -175,13 +174,17 @@ var CardCompositeView = Backbone.Marionette.CompositeView.extend({
     var card = this.model.get('card');
     if (card instanceof SDK.Card) {
       var cardId = this.model.get('id');
-      InventoryManager.getInstance().markCardAsReadInCollection(cardId);
       this.setRead(true);
     }
 
     if (this.interactive) {
       this.trigger('select', this);
     }
+  },
+
+  onRightClick: function (event) {
+    this.trigger('rightClick', this);
+    event.preventDefault();
   },
 
   onChangedOptions: function () {
