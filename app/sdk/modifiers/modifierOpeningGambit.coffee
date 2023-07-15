@@ -37,7 +37,7 @@ class ModifierOpeningGambit extends Modifier
         parentAction = executingAction.getParentAction()
         if parentAction instanceof PlayCardAction then executingAction = parentAction
 
-      if !executingAction? or (executingAction instanceof PlayCardAction and executingAction.getCard() == @getCard())
+      if executingAction instanceof PlayCardAction and executingAction.getCard() == @getCard()
         # only trigger when played PlayCardAction or no action (i.e. during game setup)
         @getGameSession().p_startBufferingEvents()
         @onOpeningGambit()
