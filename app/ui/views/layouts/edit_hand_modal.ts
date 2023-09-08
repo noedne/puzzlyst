@@ -141,7 +141,9 @@ export default Marionette.LayoutView.extend({
 
   onHandAdd: function () {
     const navigationManager = NavigationManager.current();
-    const modal = new AddCardModal();
+    const modal = new AddCardModal({
+      title: 'Add a Card',
+    });
     navigationManager.showModalView(modal);
     this.listenToOnce(modal, 'submit', this.addCard);
     this.listenToOnce(modal, 'prepareForDestroy', () => {

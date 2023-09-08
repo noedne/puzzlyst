@@ -11,11 +11,9 @@ export default TypeaheadModal.extend({
   template: Template,
 
   initialize: function () {
-    this.type = this.options.type ?? CardType.Card;
+    this.types = this.options.types ?? [CardType.Card];
     this.model = new Backbone.Model({
-      type: this.type === CardType.Unit
-        ? 'Minion'
-        : CardType.getNameForCardType(this.type),
+      title: this.options.title,
     });
   },
 
@@ -28,7 +26,9 @@ export default TypeaheadModal.extend({
   },
 
   autocomplete: function (name: string): typeof Card[] {
-    const cards = SDK.GameSession.current().getCardsByType(this.type);
+    const session = SDK.GameSession.current();
+    const cards = this.types.flatMap((type: typeof CardType) =>
+      session.getCardsByType(type));
     return matchSorter(
       cards,
       name,

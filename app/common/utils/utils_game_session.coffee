@@ -41,13 +41,13 @@ UtilsGameSession.getPlayerSetupDataForPlayerId = (gameSessionData,playerId) ->
   return undefined
 
 UtilsGameSession.groupModifiersBySourceCard = (modifiers) ->
-  # hash modifiers by the index of the action that played their source card
+  # hash modifiers by the index of their source card
   modifiersBySourceCardActionIndex = {}
   for m in modifiers
     sourceCard = m.getSourceCard()
-    if sourceCard? then sourceCardActionIndex = sourceCard.getAppliedToBoardByActionIndex() else sourceCardActionIndex = -1
-    if !modifiersBySourceCardActionIndex[sourceCardActionIndex]? then modifiersBySourceCardActionIndex[sourceCardActionIndex] = []
-    modifiersBySourceCardActionIndex[sourceCardActionIndex].push(m)
+    if sourceCard? then sourceCardIndex = sourceCard.getIndex() else sourceCardIndex = -1
+    if !modifiersBySourceCardActionIndex[sourceCardIndex]? then modifiersBySourceCardActionIndex[sourceCardIndex] = []
+    modifiersBySourceCardActionIndex[sourceCardIndex].push(m)
 
   # create list of modifiers by source card in order of when the cards were played
   modifiersGroupedBySourceCard = []

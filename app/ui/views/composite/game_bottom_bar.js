@@ -142,9 +142,17 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     const player = gameLayer.getMyPlayer();
     if (addNodeForSdkCard !== null) {
       const { card, position } = addNodeForSdkCard;
-      const entityNode = gameLayer.addNodeForSdkCard(card, position);
-      entityNode.showSpawned();
-      entityNode.getStatsNode().showStatsAsOfAction();
+      if (card instanceof SDK.Entity) {
+        const entityNode = gameLayer.addNodeForSdkCard(card, position);
+        entityNode.showSpawned();
+        entityNode.getStatsNode().showStatsAsOfAction();
+      } else if (card instanceof SDK.Artifact) {
+        gameLayer.getMyPlayerLayer().bindArtifacts();
+        const general = SDK.GameSession.current().getGeneralForMyPlayer();
+        gameLayer.getNodeForSdkCard(general)
+          .getStatsNode()
+          .showStatsAsOfAction();
+      }
     }
     if (bindHand) {
       deckLayer.bindHand();
