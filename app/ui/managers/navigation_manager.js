@@ -160,8 +160,8 @@ var NavigationManager = Manager.extend({
           case cc.KEY.a:
             if (gameSession.getIsEditing()) {
               const modal = new AddCardModal({
-                title: 'Add an Artifact or Minion',
-                types: [CardType.Artifact, CardType.Unit],
+                title: 'Add an Artifact, Minion, or Tile',
+                types: [CardType.Artifact, CardType.Tile, CardType.Unit],
               });
               this.showModalView(modal);
               this.listenToOnce(

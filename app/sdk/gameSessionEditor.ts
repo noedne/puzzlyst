@@ -67,6 +67,9 @@ export function getCardsByType(
     if (type !== CardType.Card) {
       cache = cache.getType(type);
     }
+    if (type === CardType.Tile) {
+      return cache.getCards();
+    }
     const collectibleCards = cache.getIsHiddenInCollection(false).getCards();
     const tokenCards = cache.getIsToken(true).getCards();
     this._private.cachedCardsByType[type] = collectibleCards.concat(tokenCards);

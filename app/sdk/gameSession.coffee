@@ -3037,8 +3037,11 @@ class _GameSession extends SDKObject
           # this works because the search always returns the first tile found
           existingTile = @board.getTileAtPosition(targetPosition, true)
           if existingTile?
-            #Logger.module("SDK").debug "[G:#{@.gameId}]", "GS.playCard - kill existing tile #{existingTile.getName()} at grid(#{position.x}, #{position.y})"
-            @executeAction(existingTile.actionDie(card))
+            if @getIsEditing()
+              @removeCardFromBoard(existingTile, x, y)
+            else
+              #Logger.module("SDK").debug "[G:#{@.gameId}]", "GS.playCard - kill existing tile #{existingTile.getName()} at grid(#{position.x}, #{position.y})"
+              @executeAction(existingTile.actionDie(card))
 
         # add card to board
         # must be done before setting card as applied
