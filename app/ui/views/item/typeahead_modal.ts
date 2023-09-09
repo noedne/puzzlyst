@@ -37,7 +37,7 @@ export default FormPromptModalItemView.extend({
     let newFocus = null;
     switch (event.which) {
       case 9:
-        this.ui.$typeahead.val(this.getResult());
+        this.selectResult($(this.$result().get(this.focusedIndex)));
         return;
       case 38:
         newFocus = this.focusedResult.prev();
@@ -81,9 +81,13 @@ export default FormPromptModalItemView.extend({
 
   onClickResult: function (event: JQuery.TriggeredEvent) {
     const result = $(event.currentTarget);
+    this.selectResult(result);
+    this.ui.$typeahead.focus();
+  },
+
+  selectResult: function (result: JQuery) {
     this.ui.$typeahead.val(result.text());
     this.ui.$results.html($('<ul>').append(result));
-    this.ui.$typeahead.focus();
   },
 
   updateValidState: function () {
