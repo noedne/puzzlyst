@@ -156,8 +156,9 @@ export default Marionette.LayoutView.extend({
   },
 
   addCard: function (card: typeof Card) {
-    card.setOwnerId(SDK.GameSession.current().getMyPlayerId());
-    this.getDeck().putCardIndexInHand(card.getIndex());
+    const gameSession = SDK.GameSession.current();
+    card.setOwnerId(gameSession.getMyPlayerId());
+    gameSession.applyCardToHand(this.getDeck(), null, card);
   },
 
   maybeDisableAdd: function () {
