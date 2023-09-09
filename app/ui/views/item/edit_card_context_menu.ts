@@ -16,13 +16,13 @@ export default Marionette.ItemView.extend({
     $dropdown: '.dropdown-menu',
     $setDamageItem: '.set-damage-item',
     $addModifierItem: '.add-modifier-item',
-    $deleteMinionItem: '.delete-minion-item',
+    $deleteItem: '.delete-item',
   },
 
   events: {
     'click @ui.$setDamageItem': 'onSetDamage',
     'click @ui.$addModifierItem': 'onAddModifier',
-    'click @ui.$deleteMinionItem': 'onDeleteMinion',
+    'click @ui.$deleteItem': 'onDelete',
     'contextmenu @ui.$dropdown': 'onRightClick',
     'mousedown @ui.$dropdown': 'onMouseDown',
   },
@@ -30,9 +30,11 @@ export default Marionette.ItemView.extend({
   initialize: function (options: { card: typeof Card }) {
     const card = options.card;
     this.card = card;
-    const isUnit = CardType.getIsUnitCardType(card.getType());
+    const type = card.getType();
+    const isUnit = CardType.getIsUnitCardType(type);
     this.model = new Backbone.Model({
       deleteMinion: isUnit && !card.getIsGeneral(),
+      deleteTile: CardType.getIsTileCardType(type),
     });
   },
 
@@ -52,7 +54,7 @@ export default Marionette.ItemView.extend({
     this.onOpenModal(AddModifierModal);
   },
 
-  onDeleteMinion: function () {
+  onDelete: function () {
     SDK.GameSession.current().removeCardFromBoardWhileEditing(this.card);
     this.trigger('close');
   },

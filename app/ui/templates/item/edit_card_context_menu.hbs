@@ -10,12 +10,12 @@
         Add modifier
       </a>
     </li>
-    {{#if deleteMinion}}
+    {{#compare deleteMinion '||' deleteTile}}
     <li>
-      <a class="delete-minion-item">
-        Delete minion
+      <a class="delete-item">
+        Delete {{#if deleteMinion}}minion{{else}}tile{{/if}}
       </a>
     </li>
-    {{/if}}
+    {{/compare}}
   </ul>
 </div>
