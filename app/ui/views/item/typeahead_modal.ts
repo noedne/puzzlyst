@@ -10,7 +10,6 @@ export default FormPromptModalItemView.extend({
 
   events: {
     'click @ui.$submit': 'onClickSubmit',
-    'click .prompt-cancel': 'onCancel',
     'keydown .modal-dialog': 'onKeyDown',
     'input @ui.$typeahead': 'onInputChange',
     'mousemove li': 'onHoverResult',
