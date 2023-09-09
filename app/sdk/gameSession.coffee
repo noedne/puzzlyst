@@ -346,6 +346,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   copyCard,
   setCardDamage,
   applyModifierContextObjectToCard,
+  removeCardFromBoardWhileEditing,
   getBottomDeckCardAtIndex,
   getCardsByType,
   addCardToBench,
@@ -359,6 +360,7 @@ class _GameSession extends SDKObject
   copyCard: copyCard
   setCardDamage: setCardDamage
   applyModifierContextObjectToCard: applyModifierContextObjectToCard
+  removeCardFromBoardWhileEditing: removeCardFromBoardWhileEditing
   getBottomDeckCardAtIndex: getBottomDeckCardAtIndex
   getCardsByType: getCardsByType
   addCardToBench: addCardToBench
@@ -3038,7 +3040,7 @@ class _GameSession extends SDKObject
           existingTile = @board.getTileAtPosition(targetPosition, true)
           if existingTile?
             if @getIsEditing()
-              @removeCardFromBoard(existingTile, x, y)
+              @removeCardFromBoardWhileEditing(existingTile)
             else
               #Logger.module("SDK").debug "[G:#{@.gameId}]", "GS.playCard - kill existing tile #{existingTile.getName()} at grid(#{position.x}, #{position.y})"
               @executeAction(existingTile.actionDie(card))

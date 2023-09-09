@@ -131,6 +131,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       addNodeForSdkCard,
       bindHand,
       bindSubmitTurn,
+      destroyNodeForSdkCard,
       selectBenchIndex,
       setInitialBenchSelected,
       setMouseOver,
@@ -161,6 +162,9 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     }
     if (bindSubmitTurn) {
       this._updateControls();
+    }
+    if (destroyNodeForSdkCard !== null) {
+      gameLayer.getNodeForSdkCard(destroyNodeForSdkCard).destroy();
     }
     if (selectBenchIndex !== null) {
       if (selectBenchIndex === player.getSelectedCardIndexInHand()) {

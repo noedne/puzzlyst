@@ -55,6 +55,16 @@ export function applyModifierContextObjectToCard(
   });
 }
 
+export function removeCardFromBoardWhileEditing(
+  this: typeof GameSession,
+  card: typeof Card,
+) {
+  this.removeCardFromBoard(card, card.getPositionX(), card.getPositionY());
+  pushEvent(this, {
+    destroyNodeForSdkCard: card,
+  });
+}
+
 export function getCardsByType(
   this: typeof GameSession,
   type: typeof CardType,
@@ -156,6 +166,7 @@ function pushEvent(
     },
     bindHand?: boolean,
     bindSubmitTurn?: boolean,
+    destroyNodeForSdkCard?: typeof Card,
     selectBenchIndex?: number,
     setInitialBenchSelected?: boolean,
     setMouseOver?: boolean,
@@ -173,6 +184,7 @@ function pushEvent(
       addNodeForSdkCard: options.addNodeForSdkCard ?? null,
       bindHand: options.bindHand ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
+      destroyNodeForSdkCard: options.destroyNodeForSdkCard ?? null,
       selectBenchIndex: options.selectBenchIndex ?? null,
       setInitialBenchSelected: options.setInitialBenchSelected ?? false,
       setMouseOver: options.setMouseOver ?? false,
