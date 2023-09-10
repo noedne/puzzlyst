@@ -18,14 +18,16 @@ export default Marionette.ItemView.extend({
     $setDamageItem: '.set-damage-item',
     $addModifierItem: '.add-modifier-item',
     $manaTileItem: '.mana-tile-item',
-    $deleteItem: '.delete-item',
+    $deleteMinionItem: '.delete-minion-item',
+    $deleteTileItem: '.delete-tile-item',
   },
 
   events: {
     'click @ui.$setDamageItem': 'onSetDamage',
     'click @ui.$addModifierItem': 'onAddModifier',
     'click @ui.$manaTileItem': 'onToggleManaSpring',
-    'click @ui.$deleteItem': 'onDelete',
+    'click @ui.$deleteMinionItem': 'onDeleteMinion',
+    'click @ui.$deleteTileItem': 'onDeleteTile',
     'contextmenu @ui.$dropdown': 'onRightClick',
     'mousedown @ui.$dropdown': 'onMouseDown',
   },
@@ -34,11 +36,15 @@ export default Marionette.ItemView.extend({
     const card = options.card;
     this.card = card;
     const type = card.getType();
+    this.tile = SDK.GameSession.current().getBoard().getTileAtPosition(
+      card.getPosition(),
+      true,
+    );
     const isManaTile = card.getId() === Cards.Tile.BonusMana;
     this.isManaTileDepleted = isManaTile && card.getDepleted();
     this.model = new Backbone.Model({
       deleteMinion: CardType.getIsUnitCardType(type) && !card.getIsGeneral(),
-      deleteTile: CardType.getIsTileCardType(type),
+      deleteTile: this.tile != null,
       isManaTile,
       isManaTileDepleted: this.isManaTileDepleted,
     });
@@ -76,8 +82,13 @@ export default Marionette.ItemView.extend({
     this.trigger('close');
   },
 
-  onDelete: function () {
+  onDeleteMinion: function () {
     SDK.GameSession.current().removeCardFromBoardWhileEditing(this.card);
+    this.trigger('close');
+  },
+
+  onDeleteTile: function () {
+    SDK.GameSession.current().removeCardFromBoardWhileEditing(this.tile);
     this.trigger('close');
   },
 

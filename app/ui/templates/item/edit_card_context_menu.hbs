@@ -17,12 +17,19 @@
       </a>
     </li>
     {{/if}}
-    {{#compare deleteMinion '||' deleteTile}}
+    {{#if deleteMinion}}
     <li>
-      <a class="delete-item">
-        Delete {{#if deleteMinion}}minion{{else}}tile{{/if}}
+      <a class="delete-minion-item">
+        Delete minion
       </a>
     </li>
-    {{/compare}}
+    {{/if}}
+    {{#if deleteTile}}
+    <li>
+      <a class="delete-tile-item">
+        Delete tile
+      </a>
+    </li>
+    {{/if}}
   </ul>
 </div>
