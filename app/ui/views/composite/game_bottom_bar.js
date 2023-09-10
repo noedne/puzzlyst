@@ -137,6 +137,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       setMouseOver,
       showHP,
       showModifiers,
+      showDeactivatedModifier,
     } = event.options;
     const gameLayer = Scene.current().getGameLayer();
     const deckLayer = gameLayer.getBottomDeckLayer();
@@ -208,6 +209,10 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       });
       card.getActionStateRecord()._currentState.modifierStacks =
         card.getVisibleModifierStacks();
+    }
+    if (showDeactivatedModifier) {
+      const { card, modifier } = showDeactivatedModifier;
+      gameLayer.getNodeForSdkCard(card).showDeactivatedModifier(modifier);
     }
   },
 

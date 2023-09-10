@@ -10,6 +10,13 @@
         Add modifier
       </a>
     </li>
+    {{#if isManaTile}}
+    <li>
+      <a class="mana-tile-item">
+        {{#if isManaTileDepleted}}Refresh{{else}}Deplete{{/if}} mana tile
+      </a>
+    </li>
+    {{/if}}
     {{#compare deleteMinion '||' deleteTile}}
     <li>
       <a class="delete-item">

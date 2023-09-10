@@ -55,6 +55,19 @@ export function applyModifierContextObjectToCard(
   });
 }
 
+export function showDeactivatedModifier(
+  this: typeof GameSession,
+  card: typeof Card,
+  modifier: typeof Modifier,
+) {
+  pushEvent(this, {
+    showDeactivatedModifier: {
+      card,
+      modifier,
+    },
+  });
+}
+
 export function removeCardFromBoardWhileEditing(
   this: typeof GameSession,
   card: typeof Card,
@@ -177,6 +190,10 @@ function pushEvent(
       card: typeof Card,
       modifiers: typeof Modifier[],
     },
+    showDeactivatedModifier?: {
+      card: typeof Card,
+      modifier: typeof Modifier,
+    },
   }) {
   gameSession.pushEvent({
     type: EVENTS.editing_event,
@@ -190,6 +207,7 @@ function pushEvent(
       setMouseOver: options.setMouseOver ?? false,
       showHP: options.showHP ?? null,
       showModifiers: options.showModifiers ?? null,
+      showDeactivatedModifier: options.showDeactivatedModifier ?? null,
     },
   });
 }

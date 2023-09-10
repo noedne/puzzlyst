@@ -1,4 +1,5 @@
 const Card = require('app/sdk/cards/card');
+const Cards = require('app/sdk/cards/cardsLookupComplete');
 const CardType = require('app/sdk/cards/cardType');
 const FormPromptModalItemView = require('./form_prompt_modal');
 const NavigationManager = require('app/ui/managers/navigation_manager');
@@ -16,12 +17,14 @@ export default Marionette.ItemView.extend({
     $dropdown: '.dropdown-menu',
     $setDamageItem: '.set-damage-item',
     $addModifierItem: '.add-modifier-item',
+    $manaTileItem: '.mana-tile-item',
     $deleteItem: '.delete-item',
   },
 
   events: {
     'click @ui.$setDamageItem': 'onSetDamage',
     'click @ui.$addModifierItem': 'onAddModifier',
+    'click @ui.$manaTileItem': 'onToggleManaSpring',
     'click @ui.$deleteItem': 'onDelete',
     'contextmenu @ui.$dropdown': 'onRightClick',
     'mousedown @ui.$dropdown': 'onMouseDown',
@@ -31,10 +34,13 @@ export default Marionette.ItemView.extend({
     const card = options.card;
     this.card = card;
     const type = card.getType();
-    const isUnit = CardType.getIsUnitCardType(type);
+    const isManaTile = card.getId() === Cards.Tile.BonusMana;
+    this.isManaTileDepleted = isManaTile && card.getDepleted();
     this.model = new Backbone.Model({
-      deleteMinion: isUnit && !card.getIsGeneral(),
+      deleteMinion: CardType.getIsUnitCardType(type) && !card.getIsGeneral(),
       deleteTile: CardType.getIsTileCardType(type),
+      isManaTile,
+      isManaTileDepleted: this.isManaTileDepleted,
     });
   },
 
@@ -52,6 +58,23 @@ export default Marionette.ItemView.extend({
 
   onAddModifier: function () {
     this.onOpenModal(AddModifierModal);
+  },
+
+  onToggleManaSpring: function () {
+    const gameSession = SDK.GameSession.current();
+    const modifierClass = SDK.ModifierCollectableBonusMana;
+    if (this.isManaTileDepleted) {
+      gameSession.applyModifierContextObjectToCard(
+        this.card,
+        modifierClass.createContextObject(),
+      );
+      this.card.setDepleted(false);
+    } else {
+      const modifier = this.card.getActiveModifierByType(modifierClass.type);
+      modifier.onDepleted();
+      gameSession.showDeactivatedModifier(this.card, modifier);
+    }
+    this.trigger('close');
   },
 
   onDelete: function () {
