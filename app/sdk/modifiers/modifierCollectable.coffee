@@ -66,6 +66,8 @@ class ModifierCollectable extends Modifier
     @getGameSession().removeModifier(@)
     if entity.getNumModifiersOfClass(ModifierCollectable) == 0
       entity.setDepleted(true)
+    if @getGameSession().getIsEditing()
+      @getGameSession().showDeactivatedModifier(entity, @)
 
   postDeserialize: () ->
     super()

@@ -21,6 +21,8 @@ class ModifierCollectableBonusMana extends ModifierCollectable
 
   onCollect: (entity) ->
     super(entity)
+    if @getGameSession().getIsEditing()
+      return
 
     action = @getGameSession().createActionForType(BonusManaAction.type)
     action.setSource(@getCard())

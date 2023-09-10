@@ -72,7 +72,6 @@ export default Marionette.ItemView.extend({
     } else {
       const modifier = this.card.getActiveModifierByType(modifierClass.type);
       modifier.onDepleted();
-      gameSession.showDeactivatedModifier(this.card, modifier);
     }
     this.trigger('close');
   },
