@@ -48,7 +48,7 @@ export default NumberInputView.extend({
   onSubmitImpl: function (count: number) {
     SDK.GameSession.current().applyModifierContextObjectToCard(
       this.card,
-      this.getResult(),
+      this.getResult().contextObject,
       count,
     );
     NavigationManager.getInstance().destroyModalView();

@@ -39,12 +39,12 @@ export function setCardDamage(
 export function applyModifierContextObjectToCard(
   this: typeof GameSession,
   card: typeof Card,
-  contextObjectData: ContextObject,
-  count: number,
+  contextObject: ContextObject['contextObject'],
+  count: number = 1,
 ) {
   const indices = Array.from(Array(count)).map(_ => this.generateIndex());
   indices.forEach(index => this.applyModifierContextObject({
-    ...contextObjectData.contextObject,
+    ...contextObject,
     index,
   }, card));
   pushEvent(this, {
