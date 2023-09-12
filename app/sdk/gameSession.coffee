@@ -349,6 +349,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   applyModifierContextObjectToCard,
   showDeactivatedModifier,
   removeCardFromBoardWhileEditing,
+  removeArtifact,
   getBottomDeckCardAtIndex,
   getCardsByType,
   addCardToBench,
@@ -365,6 +366,7 @@ class _GameSession extends SDKObject
   applyModifierContextObjectToCard: applyModifierContextObjectToCard
   showDeactivatedModifier: showDeactivatedModifier
   removeCardFromBoardWhileEditing: removeCardFromBoardWhileEditing
+  removeArtifact: removeArtifact
   getBottomDeckCardAtIndex: getBottomDeckCardAtIndex
   getCardsByType: getCardsByType
   addCardToBench: addCardToBench

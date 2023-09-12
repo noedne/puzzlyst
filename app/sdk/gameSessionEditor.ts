@@ -101,6 +101,14 @@ export function removeCardFromBoardWhileEditing(
   });
 }
 
+export function removeArtifact(
+  this: typeof GameSession,
+  artifact: typeof Artifact,
+) {
+  artifact.getArtifactModifiers()
+    .forEach((modifier: typeof Modifier) => this.removeModifier(modifier));
+}
+
 export function getCardsByType(
   this: typeof GameSession,
   type: typeof CardType,
