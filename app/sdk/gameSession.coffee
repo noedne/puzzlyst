@@ -345,6 +345,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   _private,
   copyCard,
   setCardDamage,
+  setArtifactDurability,
   applyModifierContextObjectToCard,
   showDeactivatedModifier,
   removeCardFromBoardWhileEditing,
@@ -360,6 +361,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 class _GameSession extends SDKObject
   copyCard: copyCard
   setCardDamage: setCardDamage
+  setArtifactDurability: setArtifactDurability
   applyModifierContextObjectToCard: applyModifierContextObjectToCard
   showDeactivatedModifier: showDeactivatedModifier
   removeCardFromBoardWhileEditing: removeCardFromBoardWhileEditing

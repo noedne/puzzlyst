@@ -1,5 +1,6 @@
 import type { ContextObject } from "./challenges/puzzleSpec/getContextObjectData";
 
+const Artifact = require('app/sdk/artifacts/artifact');
 const audio_engine = require('app/audio/audio_engine');
 const Card = require('app/sdk/cards/card');
 const CardType = require('app/sdk/cards/cardType');
@@ -8,6 +9,7 @@ const EVENTS = require('app/common/event_types');
 const GameSession = require('./gameSession');
 const Modifier = require('app/sdk/modifiers/modifier');
 const RSX = require('app/data/resources');
+const UtilsGameSession = require('app/common/utils/utils_game_session');
 
 const cachedCardsByType: Record<typeof CardType, typeof Card[]> = {};
 const editingBench: typeof Card[] = [];
@@ -37,6 +39,21 @@ export function setCardDamage(
   }
   card.setDamage(damage);
   pushEvent(this, { showHP: { card }});
+}
+
+export function setArtifactDurability(
+  this: typeof GameSession,
+  artifact: typeof Artifact,
+  durability: number,
+) {
+  if (durability === artifact.durability) {
+    return;
+  }
+  artifact.durability = durability;
+  UtilsGameSession.getModifiersBySourceCard(
+    this.getGeneralForPlayerId(artifact.getOwnerId()).getArtifactModifiers(),
+    artifact,
+  ).forEach((modifier: typeof Modifier) => modifier.setDurability(durability));
 }
 
 export function applyModifierContextObjectToCard(
