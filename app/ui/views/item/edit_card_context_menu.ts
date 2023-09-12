@@ -22,6 +22,7 @@ export default Marionette.ItemView.extend({
     $manaTileItem: '.mana-tile-item',
     $deleteMinionItem: '.delete-minion-item',
     $deleteTileItem: '.delete-tile-item',
+    $deleteArtifactItem: '.delete-artifact-item',
   },
 
   events: {
@@ -31,6 +32,7 @@ export default Marionette.ItemView.extend({
     'click @ui.$manaTileItem': 'onToggleManaSpring',
     'click @ui.$deleteMinionItem': 'onDeleteMinion',
     'click @ui.$deleteTileItem': 'onDeleteTile',
+    'click @ui.$deleteArtifactItem': 'onDeleteArtifact',
     'contextmenu @ui.$dropdown': 'onRightClick',
     'mousedown @ui.$dropdown': 'onMouseDown',
   },
@@ -49,6 +51,7 @@ export default Marionette.ItemView.extend({
     this.isManaTileDepleted = isManaTile && card.getDepleted();
     this.model = new Backbone.Model({
       addModifier: isUnit,
+      deleteArtifact: isArtifact,
       deleteMinion: isUnit && !card.getIsGeneral(),
       deleteTile: this.tile != null,
       isManaTile,
@@ -101,6 +104,11 @@ export default Marionette.ItemView.extend({
 
   onDeleteTile: function () {
     SDK.GameSession.current().removeCardFromBoardWhileEditing(this.tile);
+    this.trigger('close');
+  },
+
+  onDeleteArtifact: function () {
+    SDK.GameSession.current().removeArtifact(this.card);
     this.trigger('close');
   },
 
