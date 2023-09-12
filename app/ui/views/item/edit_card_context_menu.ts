@@ -5,6 +5,7 @@ const FormPromptModalItemView = require('./form_prompt_modal');
 const NavigationManager = require('app/ui/managers/navigation_manager');
 const SDK = require('app/sdk');
 const Template = require('app/ui/templates/item/edit_card_context_menu.hbs');
+const UtilsEngine = require('app/common/utils/utils_engine');
 const UtilsPointer = require('app/common/utils/utils_pointer');
 import AddModifierModal from './add_modifier_modal';
 import SetDamageModal from './set_damage_modal';
@@ -61,11 +62,23 @@ export default Marionette.ItemView.extend({
     });
   },
 
-  onRender: function () {
+  onShow: function () {
     const pointerEvent = UtilsPointer.getPointerEvent();
+    const pointerLeft = pointerEvent.getLocationLeft();
+    const pointerTop = pointerEvent.getLocationTop();
+    const winTop = UtilsEngine.getGSIWinTop();
+    const winRight = UtilsEngine.getGSIWinRight();
+    const height = this.ui.$dropdown.height();
+    const width = this.ui.$dropdown.width();
+    const top = pointerTop + height < winTop
+      ? pointerTop
+      : pointerTop - height;
+    const left = pointerLeft + width < winRight
+      ? pointerLeft
+      : winRight - width;
     this.ui.$dropdown.css({
-      left: pointerEvent.getLocationLeft(),
-      top: pointerEvent.getLocationTop(),
+      top,
+      left
     });
   },
 
