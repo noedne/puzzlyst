@@ -66,4 +66,11 @@ class Artifact extends Card
 
   # endregion ### APPLY ###
 
+  getArtifactModifiers: () ->
+    general = @getGameSession().getGeneralForPlayerId(@getOwnerId())
+    return UtilsGameSession.getModifiersBySourceCard(
+      general.getArtifactModifiers(),
+      @,
+    )
+
 module.exports = Artifact
