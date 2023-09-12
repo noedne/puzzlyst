@@ -133,6 +133,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       bindSubmitTurn,
       destroyNodeForSdkCard,
       selectBenchIndex,
+      setArtifactDurability,
       setInitialBenchSelected,
       setMouseOver,
       showHP,
@@ -177,6 +178,10 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
           deckLayer.getCardNodeByHandIndex(selectBenchIndex),
         );
       }
+    }
+    if (setArtifactDurability) {
+      const { artifact, durability } = setArtifactDurability;
+      gameLayer.getNodeForSdkCard(artifact).setDurability(durability);
     }
     if (setInitialBenchSelected) {
       player.setSelectedCard(deckLayer.getCardNodeByHandIndex(0));

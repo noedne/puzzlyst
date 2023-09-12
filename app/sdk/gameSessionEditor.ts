@@ -54,6 +54,12 @@ export function setArtifactDurability(
     this.getGeneralForPlayerId(artifact.getOwnerId()).getArtifactModifiers(),
     artifact,
   ).forEach((modifier: typeof Modifier) => modifier.setDurability(durability));
+  pushEvent(this, {
+    setArtifactDurability: {
+      artifact,
+      durability,
+    },
+  });
 }
 
 export function applyModifierContextObjectToCard(
@@ -214,6 +220,10 @@ function pushEvent(
     bindSubmitTurn?: boolean,
     destroyNodeForSdkCard?: typeof Card,
     selectBenchIndex?: number,
+    setArtifactDurability?: {
+      artifact: typeof Artifact,
+      durability: number,
+    },
     setInitialBenchSelected?: boolean,
     setMouseOver?: boolean,
     showHP?: {
@@ -236,6 +246,7 @@ function pushEvent(
       bindSubmitTurn: options.bindSubmitTurn ?? false,
       destroyNodeForSdkCard: options.destroyNodeForSdkCard ?? null,
       selectBenchIndex: options.selectBenchIndex ?? null,
+      setArtifactDurability: options.setArtifactDurability ?? null,
       setInitialBenchSelected: options.setInitialBenchSelected ?? false,
       setMouseOver: options.setMouseOver ?? false,
       showHP: options.showHP ?? null,
