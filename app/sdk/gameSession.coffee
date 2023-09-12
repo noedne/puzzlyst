@@ -3348,7 +3348,7 @@ class _GameSession extends SDKObject
       card.onRemoveModifier(modifier)
 
       # unapply the modifier
-      modifier.onRemoveFromCard()
+      modifier.onRemoveFromCardMaybeWithCustomEffects()
 
   moveModifierToCard: (modifier, card) ->
     if @getIsRunningAsAuthoritative() and card instanceof Card and modifier instanceof Modifier

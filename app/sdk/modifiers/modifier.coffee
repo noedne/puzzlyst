@@ -295,8 +295,18 @@ class Modifier extends SDKObject
 
   onApplyToCardBeforeSyncState: () ->
     # override in sub class to do something on apply to card before syncing state
+  
+  onRemoveFromCardMaybeWithCustomEffects: () ->
+    if @getGameSession().getIsEditing()
+      @onRemoveFromCardBase()
+    else
+      @onRemoveFromCard()
 
   onRemoveFromCard: () ->
+    # override for custom effects
+    @onRemoveFromCardBase()
+
+  onRemoveFromCardBase: () ->
     # set removed and sync
     @setIsRemoved(true)
     @onRemoveFromCardBeforeSyncState()
