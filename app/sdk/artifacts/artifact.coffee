@@ -58,7 +58,7 @@ class Artifact extends Card
         modifierContextObject.isRemovable = false
 
         # artifact modifiers are removed when their durability reaches 0
-        modifierContextObject.maxDurability = @durability
+        modifierContextObject.maxDurability = CONFIG.MAX_ARTIFACT_DURABILITY
         modifierContextObject.durability = @durability
 
         # apply modifier
