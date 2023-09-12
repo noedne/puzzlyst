@@ -42,18 +42,18 @@ UtilsGameSession.getPlayerSetupDataForPlayerId = (gameSessionData,playerId) ->
 
 UtilsGameSession.groupModifiersBySourceCard = (modifiers) ->
   # hash modifiers by the index of their source card
-  modifiersBySourceCardActionIndex = {}
+  modifiersBySourceCardIndex = {}
   for m in modifiers
     sourceCard = m.getSourceCard()
     if sourceCard? then sourceCardIndex = sourceCard.getIndex() else sourceCardIndex = -1
-    if !modifiersBySourceCardActionIndex[sourceCardIndex]? then modifiersBySourceCardActionIndex[sourceCardIndex] = []
-    modifiersBySourceCardActionIndex[sourceCardIndex].push(m)
+    if !modifiersBySourceCardIndex[sourceCardIndex]? then modifiersBySourceCardIndex[sourceCardIndex] = []
+    modifiersBySourceCardIndex[sourceCardIndex].push(m)
 
   # create list of modifiers by source card in order of when the cards were played
   modifiersGroupedBySourceCard = []
-  sourceCardActionIndices = Object.keys(modifiersBySourceCardActionIndex).sort((a,b) -> return parseInt(a) - parseInt(b))
-  for index in sourceCardActionIndices
-    modifiersGroupedBySourceCard.push(modifiersBySourceCardActionIndex[index])
+  sourceCardIndices = Object.keys(modifiersBySourceCardIndex).sort((a,b) -> return parseInt(a) - parseInt(b))
+  for index in sourceCardIndices
+    modifiersGroupedBySourceCard.push(modifiersBySourceCardIndex[index])
   return modifiersGroupedBySourceCard
 
 UtilsGameSession.getValidBoardPositionsFromPattern = (board, boardPosition, pattern, allowObstructions=true) ->
