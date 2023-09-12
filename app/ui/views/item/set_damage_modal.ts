@@ -2,7 +2,7 @@ const Card = require('app/sdk/cards/card');
 const FormPromptModalItemView = require('./form_prompt_modal');
 const NavigationManager = require('app/ui/managers/navigation_manager');
 const SDK = require('app/sdk');
-const Template = require('app/ui/templates/item/set_damage_modal.hbs');
+const Template = require('app/ui/templates/item/set_value_modal.hbs');
 import withNumberInput from './with_number_input';
 
 const NumberInputView = withNumberInput(FormPromptModalItemView);
@@ -20,6 +20,9 @@ export default NumberInputView.extend({
       placeholder: 0,
       select: true,
     }]);
+    this.model = new Backbone.Model({
+      label: 'damage',
+    });
   },
 
   onSubmitImpl: function (damage: number) {
