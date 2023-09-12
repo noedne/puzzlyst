@@ -1,15 +1,26 @@
 <div class="open">
   <ul class="dropdown-menu">
+    {{#if setDamage}}
     <li>
       <a class="set-damage-item">
         Set damage
       </a>
     </li>
+    {{/if}}
+    {{#if setDurability}}
+    <li>
+      <a class="set-durability-item">
+        Set durability
+      </a>
+    </li>
+    {{/if}}
+    {{#if addModifier}}
     <li>
       <a class="add-modifier-item">
         Add modifier
       </a>
     </li>
+    {{/if}}
     {{#if isManaTile}}
     <li>
       <a class="mana-tile-item">

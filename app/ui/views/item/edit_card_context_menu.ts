@@ -8,6 +8,7 @@ const Template = require('app/ui/templates/item/edit_card_context_menu.hbs');
 const UtilsPointer = require('app/common/utils/utils_pointer');
 import AddModifierModal from './add_modifier_modal';
 import SetDamageModal from './set_damage_modal';
+import SetDurabilityModal from './set_durability_modal';
 
 export default Marionette.ItemView.extend({
   id: 'app-edit-card-context-menu',
@@ -16,6 +17,7 @@ export default Marionette.ItemView.extend({
   ui: {
     $dropdown: '.dropdown-menu',
     $setDamageItem: '.set-damage-item',
+    $setDurabilityItem: '.set-durability-item',
     $addModifierItem: '.add-modifier-item',
     $manaTileItem: '.mana-tile-item',
     $deleteMinionItem: '.delete-minion-item',
@@ -24,6 +26,7 @@ export default Marionette.ItemView.extend({
 
   events: {
     'click @ui.$setDamageItem': 'onSetDamage',
+    'click @ui.$setDurabilityItem': 'onSetDurability',
     'click @ui.$addModifierItem': 'onAddModifier',
     'click @ui.$manaTileItem': 'onToggleManaSpring',
     'click @ui.$deleteMinionItem': 'onDeleteMinion',
@@ -40,13 +43,18 @@ export default Marionette.ItemView.extend({
       card.getPosition(),
       true,
     );
+    const isArtifact = CardType.getIsArtifactCardType(type);
     const isManaTile = card.getId() === Cards.Tile.BonusMana;
+    const isUnit = CardType.getIsUnitCardType(type);
     this.isManaTileDepleted = isManaTile && card.getDepleted();
     this.model = new Backbone.Model({
-      deleteMinion: CardType.getIsUnitCardType(type) && !card.getIsGeneral(),
+      addModifier: isUnit,
+      deleteMinion: isUnit && !card.getIsGeneral(),
       deleteTile: this.tile != null,
       isManaTile,
       isManaTileDepleted: this.isManaTileDepleted,
+      setDamage: isUnit,
+      setDurability: isArtifact,
     });
   },
 
@@ -60,6 +68,10 @@ export default Marionette.ItemView.extend({
 
   onSetDamage: function () {
     this.onOpenModal(SetDamageModal);
+  },
+
+  onSetDurability: function () {
+    this.onOpenModal(SetDurabilityModal);
   },
 
   onAddModifier: function () {
