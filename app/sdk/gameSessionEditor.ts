@@ -1,10 +1,13 @@
 import type { ContextObject } from "./challenges/puzzleSpec/getContextObjectData";
 
+const audio_engine = require('app/audio/audio_engine');
 const Card = require('app/sdk/cards/card');
 const CardType = require('app/sdk/cards/cardType');
+const CONFIG = require('app/common/config');
 const EVENTS = require('app/common/event_types');
 const GameSession = require('./gameSession');
 const Modifier = require('app/sdk/modifiers/modifier');
+const RSX = require('app/data/resources');
 
 const cachedCardsByType: Record<typeof CardType, typeof Card[]> = {};
 const editingBench: typeof Card[] = [];
@@ -140,13 +143,22 @@ export function applyBenchCardToBoard(
   boardX: number,
   boardY: number,
 ) {
+  const benchCard = this._private.editingBench[selectedBenchIndex];
+  const position = { x: boardX, y: boardY };
+  if (!benchCard.getIsPositionValidTarget(position)) {
+    audio_engine.current().play_effect_for_interaction(
+      RSX.sfx_ui_error.audio,
+      CONFIG.ERROR_SFX_PRIORITY,
+    );
+    return;
+  }
   const card = this.getChallenge().applyCardToBoard(
-    { id: this._private.editingBench[selectedBenchIndex].getId() },
+    { id: benchCard.getId() },
     boardX,
     boardY,
     this.getMyPlayerId(),
   );
-  pushEvent(this, { addNodeForSdkCard: { card, position: card.getPosition() }});
+  pushEvent(this, { addNodeForSdkCard: { card, position }});
 }
 
 export function getIsEditing(this: typeof GameSession): boolean {
