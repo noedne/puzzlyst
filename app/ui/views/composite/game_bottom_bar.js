@@ -132,6 +132,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       bindHand,
       bindSubmitTurn,
       destroyNodeForSdkCard,
+      removeArtifact,
       selectBenchIndex,
       setArtifactDurability,
       setInitialBenchSelected,
@@ -153,12 +154,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
         }
         gameLayer.bindAppliedModifiersForEntityNode(entityNode);
       } else if (card instanceof SDK.Artifact) {
-        const playerId = card.getOwnerId();
-        gameLayer.getPlayerLayerByPlayerId(playerId).bindArtifacts();
-        const general = card.getGameSession().getGeneralForPlayerId(playerId);
-        gameLayer.getNodeForSdkCard(general)
-          .getStatsNode()
-          .showStatsAsOfAction();
+        this.updateArtifactsForPlayer(card.getOwner());
       }
     }
     if (bindHand) {
@@ -169,6 +165,9 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     }
     if (destroyNodeForSdkCard !== null) {
       gameLayer.getNodeForSdkCard(destroyNodeForSdkCard).destroy();
+    }
+    if (removeArtifact !== null) {
+      this.updateArtifactsForPlayer(removeArtifact.getOwner());
     }
     if (selectBenchIndex !== null) {
       if (selectBenchIndex === player.getSelectedCardIndexInHand()) {
@@ -220,6 +219,16 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       const { card, modifier } = showDeactivatedModifier;
       gameLayer.getNodeForSdkCard(card).showDeactivatedModifier(modifier);
     }
+  },
+
+  updateArtifactsForPlayer: function (player) {
+    const gameLayer = Scene.current().getGameLayer();
+    const playerId = player.getPlayerId();
+    gameLayer.getPlayerLayerByPlayerId(playerId).bindArtifacts();
+    const general = player.getGameSession().getGeneralForPlayerId(playerId);
+    gameLayer.getNodeForSdkCard(general)
+      .getStatsNode()
+      .showStatsAsOfAction();
   },
 
   onBeforeShowStep: function (event) {

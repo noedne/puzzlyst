@@ -107,6 +107,10 @@ export function removeArtifact(
 ) {
   artifact.getArtifactModifiers()
     .forEach((modifier: typeof Modifier) => this.removeModifier(modifier));
+  this.syncState();
+  pushEvent(this, {
+    removeArtifact: artifact,
+  });
 }
 
 export function getCardsByType(
@@ -224,6 +228,7 @@ function pushEvent(
     bindHand?: boolean,
     bindSubmitTurn?: boolean,
     destroyNodeForSdkCard?: typeof Card,
+    removeArtifact?: typeof Artifact,
     selectBenchIndex?: number,
     setArtifactDurability?: {
       artifact: typeof Artifact,
@@ -250,6 +255,7 @@ function pushEvent(
       bindHand: options.bindHand ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
       destroyNodeForSdkCard: options.destroyNodeForSdkCard ?? null,
+      removeArtifact: options.removeArtifact ?? null,
       selectBenchIndex: options.selectBenchIndex ?? null,
       setArtifactDurability: options.setArtifactDurability ?? null,
       setInitialBenchSelected: options.setInitialBenchSelected ?? false,
