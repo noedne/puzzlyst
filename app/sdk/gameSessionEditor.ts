@@ -152,11 +152,15 @@ export function applyBenchCardToBoard(
     );
     return;
   }
+  const playerId = CardType.getIsArtifactCardType(benchCard.getType())
+    // artifacts target generals
+    ? this.getBoard().getUnitAtPosition(position).getOwnerId()
+    : this.getMyPlayerId();
   const card = this.getChallenge().applyCardToBoard(
     { id: benchCard.getId() },
     boardX,
     boardY,
-    this.getMyPlayerId(),
+    playerId,
   );
   pushEvent(this, { addNodeForSdkCard: { card, position }});
 }

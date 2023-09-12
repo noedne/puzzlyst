@@ -152,8 +152,9 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
         }
         gameLayer.bindAppliedModifiersForEntityNode(entityNode);
       } else if (card instanceof SDK.Artifact) {
-        gameLayer.getMyPlayerLayer().bindArtifacts();
-        const general = SDK.GameSession.current().getGeneralForMyPlayer();
+        const playerId = card.getOwnerId();
+        gameLayer.getPlayerLayerByPlayerId(playerId).bindArtifacts();
+        const general = card.getGameSession().getGeneralForPlayerId(playerId);
         gameLayer.getNodeForSdkCard(general)
           .getStatsNode()
           .showStatsAsOfAction();

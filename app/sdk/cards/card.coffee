@@ -1331,8 +1331,15 @@ class Card extends SDKObject
   getValidTargetPositions: () ->
     if !@_private.cachedValidTargetPositions?
       # valid positions where card can be played on board
-      # defaults to every space on the board
-      @_private.cachedValidTargetPositions = @getGameSession().getBoard().getPositions() || []
+      @_private.cachedValidTargetPositions =
+        if @getGameSession().getIsEditing() &&
+          CardType.getIsArtifactCardType(@getType())
+        # target artifacts on generals when editing
+        then @getGameSession().getPlayers().map((player) =>
+          @getGameSession().getGeneralForPlayer(player).getPosition()
+        )
+        # defaults to every space on the board
+        else @getGameSession().getBoard().getPositions() || []
     return @_private.cachedValidTargetPositions
 
   getIsPositionValidTarget: (targetPosition) ->
