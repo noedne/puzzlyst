@@ -1,5 +1,7 @@
 export default function(Base: typeof Marionette.View) {
   return Base.extend({
+    className: Base.prototype.className + ' number-input-view',
+
     ui: {
       $form: '.prompt-form',
       $submit: '.prompt-submit',

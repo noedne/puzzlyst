@@ -438,34 +438,37 @@
 	}
 }
 
-#app-add-modifier, #app-set-damage, #app-set-durability {
+#app-add-modifier {
 	.w-100 {
-		width: 100%;
-	}
-	.arrow {
-		&:hover, &:focus {
-			color: $light-blue;
-		}
+		width: 100%
 	}
 	#input-row {
 		display: flex;
 		align-self: stretch;
 	}
+}
+
+.number-input-view {
 	.number-input-group {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-	.up-arrow {
-		position: absolute;
-		translate: 0 -100%;
-	}
-	.number-input {
-		width: 3em;
-		padding: 0;
-		text-align: center;
-		&::-webkit-inner-spin-button {
-			appearance: none;
+		.arrow {
+			&:hover, &:focus {
+				color: $light-blue;
+			}
+		}
+		.up-arrow {
+			position: absolute;
+			translate: 0 -100%;
+		}
+		.number-input {
+			width: 3em;
+			padding: 0;
+			text-align: center;
+			&::-webkit-inner-spin-button {
+				appearance: none;
+			}
 		}
 	}
 }
