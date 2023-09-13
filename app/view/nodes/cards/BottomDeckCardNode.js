@@ -39,6 +39,7 @@ const BottomDeckCardNode = SdkNode.extend({
   _prismaticGlow: null,
   _usable: null,
   sdkCard: null,
+  sdkCardOwnerId: null,
   selected: false,
   _showingMulligan: null,
   _showingPrismatic: false,
@@ -183,7 +184,10 @@ const BottomDeckCardNode = SdkNode.extend({
   },
 
   setSdkCard(sdkCard, cardFadeDuration) {
-    if (this.sdkCard !== sdkCard) {
+    const sdkCardOwnerId = sdkCard == null ? null : sdkCard.getOwnerId();
+    if (this.sdkCard !== sdkCard || this.sdkCardOwnerId !== sdkCardOwnerId) {
+      this.sdkCardOwnerId = sdkCardOwnerId;
+      const didCardChange = this.sdkCard !== sdkCard;
       // destroy previous card
       if (this.sdkCard != null) {
         this._usable = null;
@@ -264,8 +268,10 @@ const BottomDeckCardNode = SdkNode.extend({
         }
       }
 
-      this.resetHighlightAndSelection();
-      this.showInactiveAnimState();
+      if (didCardChange) {
+        this.resetHighlightAndSelection();
+        this.showInactiveAnimState();
+      }
     }
   },
 

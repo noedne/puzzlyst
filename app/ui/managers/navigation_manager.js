@@ -174,6 +174,11 @@ var NavigationManager = Manager.extend({
           case cc.KEY.e:
             gameSession.setIsEditing(!gameSession.getIsEditing());
             break;
+          case cc.KEY.f:
+            gameSession.toggleOwnership(
+              Scene.current().getGameLayer().getMyPlayer().getSelectedCard(),
+            );
+            break;
           case cc.KEY.h:
             if (gameSession.getIsEditing()) {
               this.showModalView(new EditHandModal());

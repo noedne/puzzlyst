@@ -147,6 +147,7 @@ export function getBottomDeckCardAtIndex(
 
 export function addCardToBench(this: typeof GameSession, card: typeof Card) {
   card.canBeAppliedAnywhere = true;
+  card.setOwnerId(this.getMyPlayerId());
   const existingIndex = this._private.editingBench.findIndex(
     (existingCard: typeof Card) => existingCard.getId() === card.getId(),
   );
@@ -169,6 +170,19 @@ export function setSelectedBenchIndex(this: typeof GameSession, index: number) {
   }
 }
 
+export function toggleOwnership(
+  this: typeof GameSession,
+  card: typeof Card | null,
+) {
+  if (card === null) {
+    return;
+  }
+  card.setOwnerId(this.getOpponentPlayerIdOfPlayerId(card.getOwnerId()));
+  pushEvent(this, {
+    bindHand: true,
+  });
+}
+
 export function applyBenchCardToBoard(
   this: typeof GameSession,
   selectedBenchIndex: number,
@@ -187,7 +201,7 @@ export function applyBenchCardToBoard(
   const playerId = CardType.getIsArtifactCardType(benchCard.getType())
     // artifacts target generals
     ? this.getBoard().getUnitAtPosition(position).getOwnerId()
-    : this.getMyPlayerId();
+    : benchCard.getOwnerId();
   const card = this.getChallenge().applyCardToBoard(
     { id: benchCard.getId() },
     boardX,
