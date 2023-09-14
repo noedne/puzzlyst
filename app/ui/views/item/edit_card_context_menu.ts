@@ -50,7 +50,7 @@ export default Marionette.ItemView.extend({
     const isManaTile = card.getId() === Cards.Tile.BonusMana;
     const isUnit = CardType.getIsUnitCardType(type);
     this.isManaTileDepleted = isManaTile && card.getDepleted();
-    this.model = new Backbone.Model({
+    this.templateHelpers = {
       addModifier: isUnit,
       deleteArtifact: isArtifact,
       deleteMinion: isUnit && !card.getIsGeneral(),
@@ -59,7 +59,7 @@ export default Marionette.ItemView.extend({
       isManaTileDepleted: this.isManaTileDepleted,
       setDamage: isUnit,
       setDurability: isArtifact,
-    });
+    };
   },
 
   onShow: function () {

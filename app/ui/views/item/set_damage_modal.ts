@@ -11,6 +11,10 @@ export default NumberInputView.extend({
   id: 'app-set-damage',
   template: Template,
 
+  templateHelpers: {
+    label: 'damage',
+  },
+
   initialize: function (options: { card: typeof Card }) {
     this.card = options.card;
     NumberInputView.prototype.initialize.apply(this, [{
@@ -20,9 +24,6 @@ export default NumberInputView.extend({
       placeholder: 0,
       select: true,
     }]);
-    this.model = new Backbone.Model({
-      label: 'damage',
-    });
   },
 
   onSubmitImpl: function (damage: number) {

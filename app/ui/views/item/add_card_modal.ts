@@ -10,11 +10,14 @@ export default TypeaheadModal.extend({
   id: 'app-add-card',
   template: Template,
 
-  initialize: function () {
-    this.types = this.options.types ?? [CardType.Card];
-    this.model = new Backbone.Model({
-      title: this.options.title,
-    });
+  initialize: function (options: {
+    title: string,
+    types: typeof CardType[],
+  }) {
+    this.types = options.types ?? [CardType.Card];
+    this.templateHelpers = {
+      title: options.title,
+    };
   },
 
   onSubmit: function () {

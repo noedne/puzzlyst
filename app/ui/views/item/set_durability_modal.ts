@@ -12,6 +12,10 @@ export default NumberInputView.extend({
   id: 'app-set-durability',
   template: Template,
 
+  templateHelpers: {
+    label: 'durability',
+  },
+
   initialize: function (options: { card: typeof Artifact }) {
     this.artifact = options.card;
     NumberInputView.prototype.initialize.apply(this, [{
@@ -21,9 +25,6 @@ export default NumberInputView.extend({
       placeholder: CONFIG.MAX_ARTIFACT_DURABILITY,
       select: true,
     }]);
-    this.model = new Backbone.Model({
-      label: 'durability',
-    });
   },
 
   onSubmitImpl: function (durability: number) {
