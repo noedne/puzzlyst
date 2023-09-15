@@ -171,6 +171,7 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
       this.listenTo(gameLayer.getEventBus(), EVENTS.inspect_card_start, this.onInspectCardStart);
       this.listenTo(gameLayer.getEventBus(), EVENTS.inspect_card_stop, this.onInspectCardStop);
       this.listenTo(gameLayer.getEventBus(), EVENTS.game_selection_changed, this.onSelectionChanged);
+      this.listenTo(gameLayer.getEventBus(), 'bindGeneralHP', this.bindGeneralHP);
     }
 
     // listen to global events
@@ -540,7 +541,10 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
     );
   },
 
-  bindGeneralHP: function () {
+  bindGeneralHP: function (event) {
+    if (event != null && event.playerId !== this.model.get('playerId')) {
+      return;
+    }
     var scene = Scene.getInstance();
     var gameLayer = scene && scene.getGameLayer();
     var action = gameLayer && gameLayer.getLastShownSdkStateRecordingAction();

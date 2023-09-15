@@ -202,6 +202,10 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
         hp: card.getHP(),
       });
       gameLayer.getNodeForSdkCard(card).getStatsNode().showHP();
+      if (card.getIsGeneral()) {
+        const playerId = card.getOwnerId();
+        gameLayer.getEventBus().trigger('bindGeneralHP', { playerId });
+      }
     }
     if (showModifiers) {
       const { card, modifiers } = showModifiers;
