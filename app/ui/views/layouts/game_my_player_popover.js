@@ -7,6 +7,7 @@ var _ = require('underscore');
 var CONFIG = require('app/common/config');
 var EVENTS = require('app/common/event_types');
 var RSX = require('app/data/resources');
+const Scene = require('app/view/Scene');
 var audio_engine = require('app/audio/audio_engine');
 var EmotesListCompositeView = require('app/ui/views/composite/emotes-list');
 var MyPlayerPopoverLayoutTempl = require('app/ui/templates/layouts/game_my_player_popover.hbs');
@@ -281,6 +282,9 @@ var MyPlayerPopoverLayout = PlayerPopoverLayout.extend({
     // get non-default non-text emotes
     var emoteModelsByCategoryId = {};
     var addEmoteToCategory = function (emoteData, categoryId, canUse, canPurchase) {
+      if (categoryId !== SDK.EmoteCategory.Default) {
+        return;
+      }
       var emoteModel = new Backbone.Model(emoteData);
       emoteModel.set('_canUse', canUse);
       emoteModel.set('_canPurchase', canPurchase);
@@ -378,6 +382,29 @@ var MyPlayerPopoverLayout = PlayerPopoverLayout.extend({
           });
         }
 
+        const gameSession = SDK.GameSession.current();
+        const generalId = emoteModel.get('generalId');
+        const playerId = this.model.get('playerId');
+        const general = gameSession.getGeneralForPlayerId(playerId);
+        if (
+          generalId != null
+          && generalId !== general.getId()
+          && gameSession.getIsEditing()
+        ) {
+          this.trigger('emote', { generalId });
+          general.setId(generalId);
+          const newGeneral = gameSession.createCardForIdentifier(generalId);
+          general.factionId = newGeneral.getFactionId();
+          general.name = newGeneral.getName();
+          general.setBaseAnimResource(newGeneral.getBaseAnimResource());
+          general.setBaseSoundResource(newGeneral.getBaseSoundResource());
+          general.updateCachedState();
+          const generalNode =
+            Scene.current().getGameLayer().getNodeForSdkCard(general);
+          generalNode.updateResources();
+          generalNode.updateEntitySprites();
+          generalNode.showSpawned();
+        }
         // show emote
         this.showEmote(emoteId);
       }
