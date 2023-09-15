@@ -5104,6 +5104,7 @@ var GameLayer = FXCompositeLayer.extend({
 
   showEntitiesKilledByAttack(attackingSdkEntity, defendingSdkEntity) {
     if (!SDK.GameSession.getInstance().getIsSpectateMode()
+      && !SDK.GameSession.current().getIsEditing()
       && attackingSdkEntity != null && defendingSdkEntity != null
       && (attackingSdkEntity !== this._showingAttackSourceSdkEntity || defendingSdkEntity !== this._showingAttackTargetSdkEntity)) {
       // get entities killed
@@ -5985,7 +5986,7 @@ var GameLayer = FXCompositeLayer.extend({
           && this._battleLog.getMouseOverBattleLogNode() == null) {
         // check for selected entity actions
         const selectedSdkEntity = player.getSelectedSdkEntity();
-        if (selectedSdkEntity != null) {
+        if (selectedSdkEntity != null && !SDK.GameSession.current().getIsEditing()) {
           if (mouseOverSdkEntity && mouseOverSdkEntity.getIsActive() && selectedSdkEntity !== mouseOverSdkEntity) {
             if (!selectedSdkEntity.getIsSameTeamAs(mouseOverSdkEntity) && selectedSdkEntity.getAttackRange().getIsValidTarget(SDK.GameSession.getInstance().getBoard(), selectedSdkEntity, mouseOverSdkEntity)) {
               return this.updateMouseCursorByState('attack');
@@ -6660,6 +6661,10 @@ var GameLayer = FXCompositeLayer.extend({
   },
 
   _actionSelectedCardOnBoard(selectedEntityNode, mouseOverEntityNode) {
+    if (SDK.GameSession.current().getIsEditing()) {
+      return null;
+    }
+
     let actionToExecute;
 
     if (selectedEntityNode) {
