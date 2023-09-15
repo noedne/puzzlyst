@@ -6866,7 +6866,7 @@ cos[Emote.Faction1AltHappy] = {
   factionId: Factions.Faction1
   generalId: Cards.Faction1.AltGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction1AltKiss] = {
   id: Emote.Faction1AltKiss
@@ -7080,7 +7080,7 @@ cos[Emote.Faction2AltAngry] = {
   factionId: Factions.Faction2
   generalId: Cards.Faction2.AltGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction2AltKiss] = {
   id: Emote.Faction2AltKiss
@@ -7294,7 +7294,7 @@ cos[Emote.Faction3AltConfused] = {
   factionId: Factions.Faction3
   generalId: Cards.Faction3.AltGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction3AltKiss] = {
   id: Emote.Faction3AltKiss
@@ -7508,7 +7508,7 @@ cos[Emote.Faction4AltFrustrated] = {
   factionId: Factions.Faction4
   generalId: Cards.Faction4.AltGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction4AltKiss] = {
   id: Emote.Faction4AltKiss
@@ -7722,7 +7722,7 @@ cos[Emote.Faction5AltSad] = {
   factionId: Factions.Faction5
   generalId: Cards.Faction5.AltGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction5AltKiss] = {
   id: Emote.Faction5AltKiss
@@ -7955,7 +7955,7 @@ cos[Emote.Faction6AltKiss] = {
   factionId: Factions.Faction6
   generalId: Cards.Faction6.AltGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 
 # endregion FACTION 6 ALT
@@ -8153,7 +8153,7 @@ cos[Emote.Faction1ThirdHappy] = {
   factionId: Factions.Faction1
   generalId: Cards.Faction1.ThirdGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction1ThirdKiss] = {
   id: Emote.Faction1ThirdKiss
@@ -8367,7 +8367,7 @@ cos[Emote.Faction2ThirdAngry] = {
   factionId: Factions.Faction2
   generalId: Cards.Faction2.ThirdGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction2ThirdKiss] = {
   id: Emote.Faction2ThirdKiss
@@ -8581,7 +8581,7 @@ cos[Emote.Faction3ThirdConfused] = {
   factionId: Factions.Faction3
   generalId: Cards.Faction3.ThirdGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction3ThirdKiss] = {
   id: Emote.Faction3ThirdKiss
@@ -8795,7 +8795,7 @@ cos[Emote.Faction4ThirdFrustrated] = {
   factionId: Factions.Faction4
   generalId: Cards.Faction4.ThirdGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction4ThirdKiss] = {
   id: Emote.Faction4ThirdKiss
@@ -9009,7 +9009,7 @@ cos[Emote.Faction5ThirdSad] = {
   factionId: Factions.Faction5
   generalId: Cards.Faction5.ThirdGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 cos[Emote.Faction5ThirdKiss] = {
   id: Emote.Faction5ThirdKiss
@@ -9242,7 +9242,7 @@ cos[Emote.Faction6ThirdKiss] = {
   factionId: Factions.Faction6
   generalId: Cards.Faction6.ThirdGeneral
   unlockable: false
-  purchasable: true
+  purchasable: false
 }
 
 # endregion FACTION 6 THIRD
