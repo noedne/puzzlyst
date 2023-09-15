@@ -121,44 +121,46 @@ const SdkNode = cc.Node.extend({
    */
   setSdkCard(sdkCard) {
     if (this.sdkCard != sdkCard) {
-      // stop any running animations
-      this.stopAnimations();
-
-      // invalidate previous resources
-      if (this._cardResourceRequestId != null) {
-        this.removeResourceRequestById(this._cardResourceRequestId);
-        this._cardResourceRequestId = null;
-      }
-
-      // store new card
       this.sdkCard = sdkCard;
+      this.updateResources();
+    }
+  },
 
-      if (this.sdkCard instanceof SDK.Card) {
-        // load resources for this card with a unique package identifier
-        // this way we can release this package when we destroy this node
-        // but anything else using this same card package will be preserved
-        const cardPkgId = this.getCardResourcePackageId(sdkCard);
-        this._cardResourceRequestId = `${sdkCard.getId()}_${UtilsJavascript.generateIncrementalId()}`;
+  updateResources() {
+    // stop any running animations
+    this.stopAnimations();
 
-        let additionalCardResources;
+    // invalidate previous resources
+    if (this._cardResourceRequestId != null) {
+      this.removeResourceRequestById(this._cardResourceRequestId);
+      this._cardResourceRequestId = null;
+    }
 
-        // include signature card resources
-        if (this.sdkCard instanceof SDK.Entity && this.sdkCard.getWasGeneral()) {
-          const referenceSignatureCard = this.sdkCard.getReferenceSignatureCard();
-          if (referenceSignatureCard != null) {
-            const signatureCardPkgId = this.getCardResourcePackageId(referenceSignatureCard);
-            additionalCardResources = PKGS.getPkgForIdentifier(signatureCardPkgId);
-          }
+    if (this.sdkCard instanceof SDK.Card) {
+      // load resources for this card with a unique package identifier
+      // this way we can release this package when we destroy this node
+      // but anything else using this same card package will be preserved
+      const cardPkgId = this.getCardResourcePackageId(this.sdkCard);
+      this._cardResourceRequestId = `${this.sdkCard.getId()}_${UtilsJavascript.generateIncrementalId()}`;
+
+      let additionalCardResources;
+
+      // include signature card resources
+      if (this.sdkCard instanceof SDK.Entity && this.sdkCard.getWasGeneral()) {
+        const referenceSignatureCard = this.sdkCard.getReferenceSignatureCard();
+        if (referenceSignatureCard != null) {
+          const signatureCardPkgId = this.getCardResourcePackageId(referenceSignatureCard);
+          additionalCardResources = PKGS.getPkgForIdentifier(signatureCardPkgId);
         }
-
-        // setup promise to wait for resources
-        this.addResourceRequest(this._cardResourceRequestId, cardPkgId, additionalCardResources);
       }
 
-      // set base resources from card
-      this.updateAnimResource();
-      this.updateSoundResource();
+      // setup promise to wait for resources
+      this.addResourceRequest(this._cardResourceRequestId, cardPkgId, additionalCardResources);
     }
+
+    // set base resources from card
+    this.updateAnimResource();
+    this.updateSoundResource();
   },
 
   getSdkCard() {
