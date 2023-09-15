@@ -67,6 +67,7 @@ export default class Puzzle extends Challenge {
 
   setupBoard(gameSession: GameSession) {
     super.setupBoard(gameSession);
+    gameSession.getOpponentPlayer().remainingMana = 0;
     this.setupManaTiles();
     this.setupGenerals(gameSession);
     this.setupCardsInPlay(gameSession);

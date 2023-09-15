@@ -172,6 +172,7 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
       this.listenTo(gameLayer.getEventBus(), EVENTS.inspect_card_stop, this.onInspectCardStop);
       this.listenTo(gameLayer.getEventBus(), EVENTS.game_selection_changed, this.onSelectionChanged);
       this.listenTo(gameLayer.getEventBus(), 'bindGeneralHP', this.bindGeneralHP);
+      this.listenTo(gameLayer.getEventBus(), 'bindMana', this.bindMana);
     }
 
     // listen to global events
@@ -461,6 +462,9 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
             $icons.append('<div class=\'mana-icon inactive\'></div>');
           }
         }
+        $icons.children().each((index, element) =>
+          $(element).on('click', () => this.onClickManaIconIndex(index))
+        );
       }
 
       // only show mana icon states for my player
@@ -482,6 +486,20 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
           }
         }
       }
+    }
+  },
+
+  onClickManaIconIndex: function (index) {
+    const gameSession = SDK.GameSession.current();
+    if (gameSession.getIsEditing()) {
+      const myPlayer = gameSession.getMyPlayer();
+      const myMana = index + 1;
+      myPlayer.setStartingMana(myMana);
+      const isPlayer1 = myPlayer.getPlayerId() === gameSession.getPlayer1Id();
+      const opponentHasSameMana = isPlayer1 || myMana === CONFIG.MAX_MANA;
+      const opponentMana = opponentHasSameMana ? myMana : myMana - 1;
+      gameSession.getOpponentPlayer().maximumMana = opponentMana;
+      Scene.current().getGameLayer().getEventBus().trigger('bindMana');
     }
   },
 

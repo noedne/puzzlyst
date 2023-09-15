@@ -862,6 +862,7 @@ $major-size: 100% - $minor-size * 2;
 			}
 			.mana-icon {
 				opacity: 1;
+				pointer-events: auto,
 			}
 		}
 
