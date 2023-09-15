@@ -15,6 +15,7 @@ var ProfileManager = require('app/ui/managers/profile_manager');
 var i18next = require('i18next');
 var OpponentPlayerPopoverLayout = require('./game_opponent_player_popover');
 var MyPlayerPopoverLayout = require('./game_my_player_popover');
+const Handlebars = require('hbsfy/runtime');
 
 /**
  * Abstract player view, override and assign a playerId to the model.
@@ -154,15 +155,10 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
   },
 
   onShow: function () {
-    if (!SDK.GameSession.getInstance().isChallenge()) {
-      // setup player popover
-      if ((!SDK.GameSession.getInstance().getIsSpectateMode() && this.model.get('playerId') === SDK.GameSession.getInstance().getMyPlayerId()) || SDK.GameSession.getInstance().isSandbox()) {
-        this.popoverView = new MyPlayerPopoverLayout({ model: new Backbone.Model({ playerId: this.model.get('playerId') }) });
-      } else {
-        this.popoverView = new OpponentPlayerPopoverLayout({ model: new Backbone.Model({ playerId: this.model.get('playerId') }) });
-      }
-      this.popoverRegion.show(this.popoverView);
-    }
+    // setup player popover
+    this.popoverView = new MyPlayerPopoverLayout({ model: new Backbone.Model({ playerId: this.model.get('playerId') }) });
+    this.popoverRegion.show(this.popoverView);
+    this.listenTo(this.popoverView, 'emote', this.setGeneralPortrait);
 
     // listen to game events
     var scene = Scene.getInstance();
@@ -531,6 +527,17 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
    */
   bindGeneral: function () {
     // don't bind general HP here, only in response to an action
+  },
+
+  setGeneralPortrait: function (event) {
+    const {
+      generalPortraitHexImageForGeneralId: getGeneralPortrait,
+      imageForResourceScale,
+    } = Handlebars.helpers;
+    this.ui.$generalPortraitImage.css(
+      'background-image',
+      `url(${imageForResourceScale(getGeneralPortrait(event.generalId))})`,
+    );
   },
 
   bindGeneralHP: function () {
