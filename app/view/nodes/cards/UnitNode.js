@@ -21,16 +21,17 @@ const EntityNode = require('./EntityNode');
 
 const UnitNode = EntityNode.extend({
 
+  shadowOffset: null,
   // sprites
   shadowSprite: null,
 
   initEntitySprites(spriteOptions) {
     spriteOptions || (spriteOptions = {});
     const scale = spriteOptions.scale || CONFIG.SCALE;
-    const shadowOffset = (spriteOptions.shadowOffset || UnitSprite.prototype.shadowOffset) * scale;
+    this.shadowOffset = (spriteOptions.shadowOffset || UnitSprite.prototype.shadowOffset) * scale;
 
     // update center offset for shadow offset
-    this.centerOffset.y += shadowOffset;
+    this.centerOffset.y += this.shadowOffset;
 
     this.whenResourcesReady(this.getCardResourceRequestId()).then((cardResourceRequestId) => {
       if (!this.getAreResourcesValid(cardResourceRequestId)) return; // card has changed
@@ -50,7 +51,7 @@ const UnitNode = EntityNode.extend({
       // set center offset based on sprite size
       const contentSize = this.entitySprite.getContentSize();
       const centerPositionForSprite = this.getCenterPosition();
-      centerPositionForSprite.y += contentSize.height - shadowOffset * 2.0;
+      centerPositionForSprite.y += contentSize.height - this.shadowOffset * 2.0;
       this.entitySprite.setPosition(centerPositionForSprite);
       this.shadowSprite.setPosition(this.getGroundPosition());
 
@@ -58,6 +59,13 @@ const UnitNode = EntityNode.extend({
       this.addChild(this.entitySprite);
       this.addChild(this.shadowSprite, -9999);
     });
+  },
+
+  updateEntitySprites() {
+    this.removeChild(this.entitySprite);
+    this.removeChild(this.shadowSprite);
+    this.centerOffset.y -= this.shadowOffset;
+    this.initEntitySprites();
   },
 
   cleanupStateChanges() {
