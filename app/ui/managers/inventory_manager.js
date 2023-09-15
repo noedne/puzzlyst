@@ -48,7 +48,7 @@ var InventoryManager = Manager.extend({
   cardLoreCollection: null,
   cardLoreReadRequests: null,
   decksCollection: null,
-  cosmeticsCollection: null,
+  cosmeticsCollection: new Backbone.Collection(),
   codexChaptersCollection: null,
   portraitsCollection: null,
   totalOrbCountModel: null, // Tracks total orb counts for card sets with a max number of orbs a user can own
