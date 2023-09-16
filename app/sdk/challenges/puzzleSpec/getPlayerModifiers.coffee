@@ -1,4 +1,4 @@
-getPlayerModifiers = (version = 0) ->
+getPlayerModifiers = () ->
   return []
 
 module.exports = getPlayerModifiers

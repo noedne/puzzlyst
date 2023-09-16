@@ -9,11 +9,10 @@ export type ContextObject = {
     durationIsUntilYourNextTurn?: boolean,
     indexOfContextObject: number,
     type: string,
-    version: number,
   },
 };
 
-function getContextObjectData(cardId: number, _version = 0) {
+function getContextObjectData(cardId: number) {
   switch (cardId) {
     case Cards.Artifact.Winterblade:
       return [
@@ -44,9 +43,9 @@ export function getDescription({ contextObject }: ContextObject): string {
 }
 
 export default function getContextObjectDataWithIndex(
-  cardId: number, version = 0,
+  cardId: number,
 ): ContextObject[] {
-  return getContextObjectData(cardId, version).map(
+  return getContextObjectData(cardId).map(
     (data, indexOfContextObject) =>
     ({
       ...data,
@@ -54,7 +53,6 @@ export default function getContextObjectDataWithIndex(
         ...data.contextObject,
         cardId,
         indexOfContextObject,
-        version,
       }
     }));
 }

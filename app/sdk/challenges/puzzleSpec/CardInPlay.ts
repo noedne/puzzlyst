@@ -40,7 +40,7 @@ export default class CardInPlay {
     if (baseCard === null) {
       return null;
     }
-    const { card, cardId, version } = baseCard;
+    const { card, cardId } = baseCard;
     if (card == null) {
       return null;
     }
@@ -55,7 +55,7 @@ export default class CardInPlay {
     if (properties === null) {
       return null;
     }
-    const customModifiers = getCustomModifiers(cardId, version).map(
+    const customModifiers = getCustomModifiers(cardId).map(
       ({ fromSpecString }) => fromSpecString(specString));
     return new CardInPlay(baseCard, owner, properties, customModifiers);
   }
@@ -74,8 +74,8 @@ export default class CardInPlay {
   }
 
   toString(): string {
-    const { card, cardId, version } = this.baseCard;
-    const customModifiers = getCustomModifiers(cardId, version)
+    const { card, cardId } = this.baseCard;
+    const customModifiers = getCustomModifiers(cardId)
       .map(({ toString }) => toString(card)).join('');
     return `${this.baseCard}${this.owner}${this.properties}${customModifiers}`;
   }

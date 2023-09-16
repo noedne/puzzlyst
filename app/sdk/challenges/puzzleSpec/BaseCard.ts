@@ -8,7 +8,6 @@ import SpecString from './SpecString';
 
 export default class BaseCard {
   constructor(
-    public version: number,
     public cardId: number,
     private group: Group,
     private id: number,
@@ -16,10 +15,6 @@ export default class BaseCard {
   ) {}
 
   static fromSpecString(specString: SpecString): BaseCard | null {
-    const version = specString.countZeroes();
-    if (version === null) {
-      return null;
-    }
     const group = specString.matchRegex(/^(0[01]{3}|1[01])/) as Group | null;
     if (group === null) {
       return null;
@@ -29,7 +24,7 @@ export default class BaseCard {
       return null;
     }
     const cardId = id + getIdOffset(group);
-    return new BaseCard(version, cardId, group, id);
+    return new BaseCard(cardId, group, id);
   }
 
   static fromCard(card: typeof Card): BaseCard | null {
@@ -38,33 +33,29 @@ export default class BaseCard {
       return null;
     }
     const id = card.getId() - getIdOffset(group);
-    return new BaseCard(card.version, card.getId(), group, id, card);
+    return new BaseCard(card.getId(), group, id, card);
   }
 
-  static fromCardId(cardId: number, version: number = 0): BaseCard | null {
-    return BaseCard.fromCard(BaseCard.getCard(cardId, version));
+  static fromCardId(cardId: number): BaseCard | null {
+    return BaseCard.fromCard(BaseCard.getCard(cardId));
   }
 
   get card(): typeof Card {
-    this._card ??= BaseCard.getCard(this.cardId, this.version);
+    this._card ??= BaseCard.getCard(this.cardId);
     return this._card;
   }
 
   toString(): string {
-    const version = SpecString.writeNZeroes(this.version);
     const group = this.group;
     const id = SpecString.padNumWithZeroesForCountingPastNMinBits(
       this.id,
       getIdMinBitLength(group),
     )
-    return `${version}${group}${id}`;
+    return `${group}${id}`;
   }
 
-  private static getCard(cardId: number, version: number): typeof Card {
-    return SDK.GameSession.current().createCardForIdentifier(
-      cardId,
-      version,
-    )
+  private static getCard(cardId: number): typeof Card {
+    return SDK.GameSession.current().createCardForIdentifier(cardId);
   }
 }
 

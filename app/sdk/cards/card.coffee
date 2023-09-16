@@ -68,7 +68,6 @@ class Card extends SDKObject
   removedFromBoardByActionIndex: -1 # unique index of action that removed this card from the board, where -1 is during game setup
   removedFromSignatureCardsByActionIndex: -1 # unique index of action that removed this card from signature cards, where -1 is during game setup
   subCardIndices: null # indices of cards that were played by this card
-  version: 0
 
   constructor: (gameSession) ->
     super(gameSession)

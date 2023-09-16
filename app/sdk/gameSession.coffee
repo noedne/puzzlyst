@@ -2471,8 +2471,8 @@ class _GameSession extends SDKObject
   createActionForType:(actionType) ->
     return ActionFactory.actionForType(actionType, @)
 
-  createCardForIdentifier:(identifier, version = 0) ->
-    return CardFactory.cardForIdentifier(identifier, @, version)
+  createCardForIdentifier:(identifier) ->
+    return CardFactory.cardForIdentifier(identifier, @)
 
   ###*
    * Returns an existing card matching an index, or a cached card from card data by id.
@@ -2502,7 +2502,7 @@ class _GameSession extends SDKObject
    * @param {Object|Number|String} cardDataOrIndex plain object of card data with at least an "id" property or a card index
    * @returns {Card}
    ###
-  getExistingCardFromIndexOrCreateCardFromData: (cardDataOrIndex, version = 0) ->
+  getExistingCardFromIndexOrCreateCardFromData: (cardDataOrIndex) ->
     if cardDataOrIndex?
       if _.isObject(cardDataOrIndex)
         # attempt to find indexed card
@@ -2512,7 +2512,7 @@ class _GameSession extends SDKObject
 
         # create new card
         if !card? and cardDataOrIndex.id? and cardDataOrIndex.id != -1
-          card = @createCardForIdentifier(cardDataOrIndex.id, cardDataOrIndex.version)
+          card = @createCardForIdentifier(cardDataOrIndex.id)
       else
         # attempt to find indexed card
         card = @getCardByIndex(cardDataOrIndex)

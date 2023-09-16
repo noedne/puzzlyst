@@ -85,9 +85,9 @@ class CardFactory_CoreSet_Faction6
    * @param {GameSession} gameSession
    * @returns {Card}
    ###
-  @cardForIdentifier: (identifier,gameSession, version = 0) ->
+  @cardForIdentifier: (identifier,gameSession) ->
     card = null
-    contextObjects = getContextObjectData(identifier, version).map (data) ->
+    contextObjects = getContextObjectData(identifier).map (data) ->
       data.contextObject
 
     if (identifier == Cards.Faction6.General)

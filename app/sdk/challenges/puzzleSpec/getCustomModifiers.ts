@@ -5,7 +5,7 @@ const Cards = require('app/sdk/cards/cardsLookupComplete');
 const Modifier = require('app/sdk/modifiers/modifier');
 const ModifierAbsorbDamage = require('app/sdk/modifiers/modifierAbsorbDamage');
 
-export default function getCustomModifiers(cardId: number, _version = 0) {
+export default function getCustomModifiers(cardId: number) {
   switch (cardId) {
     case Cards.Artifact.ArclyteRegalia: {
       const getModifierAbsorbDamage = (card: typeof Card) =>

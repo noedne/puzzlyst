@@ -78,14 +78,14 @@ export default class Puzzle extends Challenge {
   static getPlayerDeckData(player: Player): DeckData {
     const {
       deck,
-      generalCard: { cardId, version },
+      generalCard: { cardId },
       hand,
     } = player;
     return [
-      { id: cardId, version },
+      { id: cardId },
       ...hand
         .concat(deck)
-        .map(({ baseCard: { cardId, version } }) => ({ id: cardId, version  }))
+        .map(({ baseCard: { cardId } }) => ({ id: cardId  }))
         .reverse(),
     ];
   }
@@ -169,5 +169,5 @@ export default class Puzzle extends Challenge {
 
 type Card = any;
 type CustomModifier = any;
-type DeckData = { id: number, version: number }[];
+type DeckData = { id: number }[];
 type GameSession = any;

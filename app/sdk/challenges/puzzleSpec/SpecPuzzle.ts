@@ -15,7 +15,6 @@ const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModif
 export default class SpecPuzzle {
   static manaIndexLengthInBits = 3;
   constructor(
-    public version: number,
     public isPlayer1: boolean,
     public mana: number,
     public hasBottomManaTile: boolean,
@@ -28,10 +27,6 @@ export default class SpecPuzzle {
   ) {}
 
   static fromSpecString(specString: SpecString): SpecPuzzle | null {
-    const version = specString.countZeroes();
-    if (version === null) {
-      return null;
-    }
     const isPlayer1 = specString.readNBits(1) === 0;
     if (isPlayer1 === null) {
       return null;
@@ -45,7 +40,7 @@ export default class SpecPuzzle {
     const hasCenterManaTile = specString.readNBits(1) === 1;
     const hasTopManaTile = specString.readNBits(1) === 1;
     const playerModifiers =
-      getPlayerModifiers(version).map(({ modifier }: {
+      getPlayerModifiers().map(({ modifier }: {
         modifier: (specString: SpecString) => any,
       }) => modifier(specString));
     const you = Player.fromSpecString(specString);
@@ -61,7 +56,6 @@ export default class SpecPuzzle {
       return null;
     }
     return new SpecPuzzle(
-      version,
       isPlayer1,
       mana,
       hasBottomManaTile,
@@ -109,7 +103,6 @@ export default class SpecPuzzle {
         [],
       );
     return new SpecPuzzle(
-      0,
       gameSession.getMyPlayerId() === gameSession.getPlayer1Id(),
       myPlayer.getRemainingMana(),
       hasBottomManaTile,
@@ -123,7 +116,6 @@ export default class SpecPuzzle {
   }
 
   toString(): string {
-    const version = SpecString.writeNZeroes(this.version);
     const isPlayer1 = SpecString.boolToBit(!this.isPlayer1);
     const manaIndex = SpecString.writeNumWithNBits(
       this.mana - 2,
@@ -134,7 +126,6 @@ export default class SpecPuzzle {
     const hasTopManaTile = SpecString.boolToBit(this.hasTopManaTile);
     const cardsInPlay = SpecString.constructList(this.cardsInPlay);
     return `\
-${version}\
 ${isPlayer1}\
 ${manaIndex}\
 ${hasBottomManaTile}\

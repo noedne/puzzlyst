@@ -14,7 +14,6 @@ export default class GeneralCard {
   static damageMinBitLength = 5;
 
   constructor(
-    public version: number,
     public cardId: number,
     public position: Position,
     public damage: number,
@@ -24,10 +23,6 @@ export default class GeneralCard {
   ) {}
 
   static fromSpecString(specString: SpecString): GeneralCard | null {
-    const version = specString.countZeroes();
-    if (version === null) {
-      return null;
-    }
     const faction = specString.matchRegex(/^(0[01]|10)[01]/) as Faction | null;
     if (faction === null) {
       return null;
@@ -50,7 +45,6 @@ export default class GeneralCard {
       return null;
     }
     return new GeneralCard(
-      version,
       GeneralCard.getCardId(faction, general),
       position,
       damage,
@@ -64,7 +58,6 @@ export default class GeneralCard {
     const faction = GeneralCard.getFaction(unit);
     const general = GeneralCard.getGeneral(unit, faction);
     return new GeneralCard(
-      unit.version,
       unit.getId(),
       getPositionFromCard(unit),
       unit.getDamage(),
@@ -75,14 +68,13 @@ export default class GeneralCard {
   }
 
   toString(): string {
-    const version = SpecString.writeNZeroes(this.version);
     const position = positionToString(this.position);
     const damage = SpecString.padNumWithZeroesForCountingPastNMinBits(
       this.damage,
       GeneralCard.damageMinBitLength,
     );
     const modifiers = SpecString.constructList(this.modifiers);
-    return `${version}${this.faction}${this.general}${position}${damage}${modifiers}`;
+    return `${this.faction}${this.general}${position}${damage}${modifiers}`;
   }
 
   private static getCardId(faction: Faction, general: General): number {

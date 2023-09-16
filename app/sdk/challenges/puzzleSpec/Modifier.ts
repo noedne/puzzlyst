@@ -15,7 +15,7 @@ export default class Modifier {
     if (baseCard === null) {
       return null;
     }
-    const array = getContextObjectData(baseCard.cardId, baseCard.version);
+    const array = getContextObjectData(baseCard.cardId);
     if (array.length === 0) {
       return null;
     }
@@ -57,10 +57,7 @@ export default class Modifier {
   }
 
   toString(): string {
-    const array = getContextObjectData(
-      this.baseCard.cardId,
-      this.baseCard.version,
-    );    
+    const array = getContextObjectData(this.baseCard.cardId);
     const indexOfContextObject = array.length === 1
       ? ''
       : SpecString.writeNZeroes(this.indexOfContextObject);
@@ -72,11 +69,11 @@ export default class Modifier {
   }
 
   private static fromContextObject(contextObject: any): Modifier | null { 
-    const { cardId, indexOfContextObject, version } = contextObject;
+    const { cardId, indexOfContextObject } = contextObject;
     if (cardId == null || indexOfContextObject == null) {
       return null;
     }
-    const baseCard = BaseCard.fromCardId(cardId, version);
+    const baseCard = BaseCard.fromCardId(cardId);
     if (baseCard === null) {
       return null;
     }
