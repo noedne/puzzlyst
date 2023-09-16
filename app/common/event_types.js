@@ -269,7 +269,6 @@ const EVENTS = {
   instruction_triggered: 'instruction_triggered',
   challenge_attempted: 'challenge_attempted',
   challenge_completed: 'challenge_completed',
-  challenge_lost: 'challenge_lost',
   challenge_reset: 'challenge_reset',
   challenge_start: 'challenge_start',
 

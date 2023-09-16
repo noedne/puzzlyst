@@ -310,17 +310,10 @@ class Challenge
     gameSession = GameSession.current()
     @_snapShotData = gameSession.serializeToJSON(gameSession)
 
-  onChallengeLost: () ->
+  challengeReset: () ->
     # record loss
     @otkChallengeFailureCount++
     @isChallengeLost = true
-
-    # trigger challenge lost event
-    @_eventBus.trigger(EVENTS.challenge_lost, {type: EVENTS.challenge_lost, needsRollback:true})
-
-  challengeReset: () ->
-    # trigger challenge loss
-    @onChallengeLost()
 
     # trigger challenge reset event
     @_eventBus.trigger(EVENTS.challenge_reset, {type: EVENTS.challenge_reset})
