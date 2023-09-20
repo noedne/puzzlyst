@@ -2,7 +2,7 @@ const Card = require('app/sdk/cards/card');
 const Cards = require('app/sdk/cards/cardsLookupComplete');
 const CardType = require('app/sdk/cards/cardType');
 const Factions = require('app/sdk/cards/factionsLookup');
-const SDK = require('app/sdk');
+const GameSession = require('app/sdk/gameSession');
 
 import SpecString from './SpecString';
 
@@ -55,7 +55,7 @@ export default class BaseCard {
   }
 
   private static getCard(cardId: number): typeof Card {
-    return SDK.GameSession.current().createCardForIdentifier(cardId);
+    return GameSession.current().createCardForIdentifier(cardId);
   }
 }
 
