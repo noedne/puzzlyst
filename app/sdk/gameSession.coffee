@@ -342,7 +342,7 @@ ValidatorReplaceCardFromHand = require './validators/validatorReplaceCardFromHan
 ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemoval'
 
 {
-  _private,
+  editorProperties,
   copyCard,
   setCardDamage,
   setArtifactDurability,
@@ -356,6 +356,10 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   setSelectedBenchIndex,
   toggleOwnership,
   applyBenchCardToBoard,
+  getCachedCardsByType,
+  setCachedCardsByType,
+  getEditingBench,
+  setEditingBench,
   getIsEditing,
   setIsEditing,
 } = require('./gameSessionEditor')
@@ -374,6 +378,10 @@ class _GameSession extends SDKObject
   setSelectedBenchIndex: setSelectedBenchIndex
   toggleOwnership: toggleOwnership
   applyBenchCardToBoard: applyBenchCardToBoard
+  getCachedCardsByType: getCachedCardsByType
+  setCachedCardsByType: setCachedCardsByType
+  getEditingBench: getEditingBench
+  setEditingBench: setEditingBench
   getIsEditing: getIsEditing  
   setIsEditing: setIsEditing  
 
@@ -428,7 +436,7 @@ class _GameSession extends SDKObject
 
   getPrivateDefaults: (gameSession) ->
     p = super(gameSession)
-    Object.assign(p, _private)
+    p.editorProperties = editorProperties
 
     # caches
     p.cachedGeneralsByPlayerId = {}

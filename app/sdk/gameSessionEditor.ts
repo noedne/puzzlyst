@@ -13,7 +13,7 @@ const RSX = require('app/data/resources');
 const cachedCardsByType: Record<typeof CardType, typeof Card[]> = {};
 const editingBench: typeof Card[] = [];
 const isEditing: boolean = false;
-export const _private = {
+export const editorProperties = {
   cachedCardsByType,
   editingBench,
   isEditing,
@@ -117,7 +117,7 @@ export function getCardsByType(
   this: typeof GameSession,
   type: typeof CardType,
 ): typeof Card[] {
-  if (this._private.cachedCardsByType[type] === undefined) {
+  if (this.getCachedCardsByType(type) === undefined) {
     let cache = this
       .getCardCaches()
       .getIsPrismatic(false)
@@ -130,9 +130,9 @@ export function getCardsByType(
     }
     const collectibleCards = cache.getIsHiddenInCollection(false).getCards();
     const tokenCards = cache.getIsToken(true).getCards();
-    this._private.cachedCardsByType[type] = collectibleCards.concat(tokenCards);
+    this.setCachedCardsByType(type, collectibleCards.concat(tokenCards));
   }
-  return this._private.cachedCardsByType[type];
+  return this.getCachedCardsByType(type);
 }
 
 export function getBottomDeckCardAtIndex(
@@ -140,7 +140,7 @@ export function getBottomDeckCardAtIndex(
   index: number
 ): typeof Card | undefined {
   if (this.getIsEditing()) {
-    return this._private.editingBench[index];
+    return this.getEditingBench()[index];
   }
   return this.getMyPlayer().getDeck().getCardInHandAtIndex(index);
 }
@@ -148,24 +148,24 @@ export function getBottomDeckCardAtIndex(
 export function addCardToBench(this: typeof GameSession, card: typeof Card) {
   card.canBeAppliedAnywhere = true;
   card.setOwnerId(this.getMyPlayerId());
-  const existingIndex = this._private.editingBench.findIndex(
+  const existingIndex = this.getEditingBench().findIndex(
     (existingCard: typeof Card) => existingCard.getId() === card.getId(),
   );
-  let bench = this._private.editingBench;
+  let bench = this.getEditingBench();
   if (existingIndex !== -1) {
     const leftBench = bench.slice(0, existingIndex)
     const rightBench = bench.slice(
       existingIndex + 1,
-      this._private.editingBench.length,
+      this.getEditingBench().length,
     );
     bench = leftBench.concat(rightBench);
   }
-  this._private.editingBench = [card].concat(bench).slice(0, 6);
+  this.setEditingBench([card].concat(bench).slice(0, 6));
   pushEvent(this, { bindHand: true, setInitialBenchSelected: true });
 }
 
 export function setSelectedBenchIndex(this: typeof GameSession, index: number) {
-  if (this.getIsEditing() && index < this._private.editingBench.length) {
+  if (this.getIsEditing() && index < this.getEditingBench().length) {
     pushEvent(this, { selectBenchIndex: index });
   }
 }
@@ -189,7 +189,7 @@ export function applyBenchCardToBoard(
   boardX: number,
   boardY: number,
 ) {
-  const benchCard = this._private.editingBench[selectedBenchIndex];
+  const benchCard = this.getEditingBench()[selectedBenchIndex];
   const position = { x: boardX, y: boardY };
   if (!benchCard.getIsPositionValidTarget(position)) {
     audio_engine.current().play_effect_for_interaction(
@@ -211,15 +211,41 @@ export function applyBenchCardToBoard(
   pushEvent(this, { addNodeForSdkCard: { card, position }});
 }
 
+export function getCachedCardsByType(
+  this: typeof GameSession,
+  type: typeof CardType,
+): typeof Card[] | undefined {
+  return this._private.editorProperties.cachedCardsByType[type];
+}
+
+export function setCachedCardsByType(
+  this: typeof GameSession,
+  type: typeof CardType,
+  cards: typeof Card[],
+) {
+  this._private.editorProperties.cachedCardsByType[type] = cards;
+}
+
+export function getEditingBench(this: typeof GameSession): typeof Card[] {
+  return this._private.editorProperties.editingBench;
+}
+
+export function setEditingBench(
+  this: typeof GameSession,
+  editingBench: typeof Card[],
+) {
+  this._private.editorProperties.editingBench = editingBench;
+}
+
 export function getIsEditing(this: typeof GameSession): boolean {
-  return this._private.isEditing;
+  return this._private.editorProperties.isEditing;
 }
 
 export function setIsEditing(this: typeof GameSession, isEditing: boolean) {
   if (isEditing === this.getIsEditing()) {
     return;
   }
-  this._private.isEditing = isEditing;
+  this._private.editorProperties.isEditing = isEditing;
   if (isEditing) {
     this.getChallenge().challengeReset();
   } else {
