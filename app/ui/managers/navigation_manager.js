@@ -189,7 +189,16 @@ var NavigationManager = Manager.extend({
             }
             break;
           case cc.KEY.r:
-            gameSession.getChallenge().challengeReset();
+            if (gameSession.getIsPlaying()) {
+              gameSession.getChallenge().challengeReset();
+            } else if (gameSession.getIsEditing()) {
+              gameSession.redo();
+            }
+            break;
+          case cc.KEY.u:
+            if (gameSession.getIsEditing()) {
+              gameSession.undo();
+            }
             break;
         }
       }

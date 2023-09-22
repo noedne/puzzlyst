@@ -129,6 +129,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
   onEditingEvent: function (event) {
     const {
       addNodeForSdkCard,
+      bindGameSession,
       bindHand,
       bindSubmitTurn,
       destroyNodeForSdkCard,
@@ -156,6 +157,9 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       } else if (card instanceof SDK.Artifact) {
         this.updateArtifactsForPlayer(card.getOwner());
       }
+    }
+    if (bindGameSession) {
+      gameLayer.bindToGameSession();
     }
     if (bindHand) {
       deckLayer.bindHand();

@@ -38,6 +38,8 @@ export default class Puzzle extends Challenge {
   startingHandSizePlayer: number | null = null;
   startingHandSizeOpponent: number | null = null;
 
+  snapshot = null;
+
   constructor(public puzzle: SpecPuzzle) {
     super();
   }
@@ -71,6 +73,11 @@ export default class Puzzle extends Challenge {
     this.startingHandSizeOpponent = this.puzzle.opponent.hand.length;
     const editingMode = gameSession.getEditingMode();
     gameSession.setIsSettingUp();
+    if (this.snapshot === null) {
+      this.snapshot = gameSession.generateGameSessionSnapshot();
+    } else {
+      gameSession._rollbackToSnapshot(this.snapshot);
+    }
     super.setupSession(gameSession);
     gameSession.setEditingMode(editingMode);
     return gameSession;

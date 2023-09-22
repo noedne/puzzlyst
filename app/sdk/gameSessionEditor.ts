@@ -1,4 +1,6 @@
 import Puzzle from "./challenges/Puzzle";
+import SpecPuzzle from "./challenges/puzzleSpec/SpecPuzzle";
+import { binaryToBase64String } from "./challenges/puzzleSpec/base64";
 import type { ContextObject } from "./challenges/puzzleSpec/getContextObjectData";
 
 const Artifact = require('app/sdk/artifacts/artifact');
@@ -20,10 +22,19 @@ const enum Mode {
 const cachedCardsByType: Record<typeof CardType, typeof Card[]> = {};
 const editingBench: typeof Card[] = [];
 const mode: Mode = Mode.Play;
+const history: {
+  states: string[],
+  current: number,
+} = {
+  states: [],
+  current: -1,
+};
+
 export const editorProperties = {
   cachedCardsByType,
   editingBench,
   mode,
+  history,
 };
 
 export function copyCard(
@@ -296,6 +307,34 @@ export function setIsSettingUp(this: typeof GameSession) {
   this.setEditingMode(Mode.Setup);
 }
 
+function pushHistory(gameSession: typeof GameSession, string: string) {
+  const { history } = gameSession._private.editorProperties;
+  history.states.length = ++history.current;
+  history.states.push(string);
+}
+
+function jumpHistory(gameSession: typeof GameSession, step: number) {
+  const { history } = gameSession._private.editorProperties;
+  const index = history.current + step;
+  if (index < 0 || history.states.length <= index) {
+    return;
+  }
+  history.current += step;
+  const string = history.states[index];
+  gameSession.getChallenge().updateFromBase64(string).setupSession(gameSession);
+  pushEvent(gameSession, {
+    bindGameSession: true,
+  });
+}
+
+export function redo(this: typeof GameSession) {
+  jumpHistory(this, 1);
+}
+
+export function undo(this: typeof GameSession) {
+  jumpHistory(this, -1);
+}
+
 export function setupPuzzleForString(this: typeof GameSession, string: string) {
   Puzzle.fromBase64(string).setupSession(this);
   pushUndo(this);
@@ -308,6 +347,7 @@ function pushEvent(
       card: typeof Card,
       position: { x: number, y: number },
     },
+    bindGameSession?: boolean,
     bindHand?: boolean,
     bindSubmitTurn?: boolean,
     destroyNodeForSdkCard?: typeof Card,
@@ -335,6 +375,7 @@ function pushEvent(
     type: EVENTS.editing_event,
     options: {
       addNodeForSdkCard: options.addNodeForSdkCard ?? null,
+      bindGameSession: options.bindGameSession ?? false,
       bindHand: options.bindHand ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
       destroyNodeForSdkCard: options.destroyNodeForSdkCard ?? null,
@@ -348,4 +389,16 @@ function pushEvent(
       showDeactivatedModifier: options.showDeactivatedModifier ?? null,
     },
   });
+}
+
+function pushUndo(gameSession: typeof GameSession) {
+  const specPuzzle = SpecPuzzle.fromGameSession(gameSession);
+  if (specPuzzle === null) {
+    return;
+  }
+  const base64 = binaryToBase64String(specPuzzle.toString());
+  if (base64 === null) {
+    return;
+  }
+  pushHistory(gameSession, base64);
 }
