@@ -146,12 +146,14 @@ class Challenge
     if @battleMapTemplateIndex?
       gameSession.setBattleMapTemplate(new BattleMapTemplate(gameSession, @battleMapTemplateIndex))
 
+    player1Id = gameSession.getPlayer1Id()
+    player2Id = gameSession.getPlayer2Id()
+
     # get ids and names
     if @userIsPlayer1
       player1Name = i18next.t("battle.your_name_default_label")
       player2Name = i18next.t("battle.opponent_name_default_label")
-      player1Id = gameSession.getUserId()
-      player2Id = "CPU"
+      gameSession.setUserId(player1Id)
       player1StartingMana = if @startingManaPlayer? then @startingManaPlayer else if @startingMana? then @startingMana else null
       player2StartingMana = if @startingManaOpponent? then @startingManaOpponent else if @startingMana? then (@startingMana + 1) else null
       player1StartingHandSize = if @startingHandSizePlayer? then @startingHandSizePlayer else @startingHandSize
@@ -161,8 +163,7 @@ class Challenge
     else
       player1Name = i18next.t("battle.opponent_name_default_label")
       player2Name = i18next.t("battle.your_name_default_label")
-      player1Id = "CPU"
-      player2Id = gameSession.getUserId()
+      gameSession.setUserId(player2Id)
       player1StartingMana = if @startingManaOpponent? then @startingManaOpponent else if @startingMana? then @startingMana else null
       player2StartingMana = if @startingManaPlayer? then @startingManaPlayer else if @startingMana? then (@startingMana + 1) else null
       player1StartingHandSize = if @startingHandSizeOpponent? then @startingHandSizeOpponent else @startingHandSize

@@ -142,8 +142,6 @@ ReplayEngine = require 'app/replay/replayEngine'
 
 AnalyticsTracker = require 'app/common/analyticsTracker'
 
-Puzzle = require('app/sdk/challenges/Puzzle').default
-
 # require the Handlebars Template Helpers extension here since it modifies core Marionette code
 require 'app/ui/extensions/handlebars_template_helpers'
 
@@ -2017,15 +2015,8 @@ App._startGameWithChallenge = () ->
   # set user as in game
   ChatManager.getInstance().setStatus(ChatManager.STATUS_CHALLENGE)
 
-  if not challenge instanceof SDK.ChallengeRemote
-    # mark challenge as attempted
-    ProgressionManager.getInstance().markChallengeAsAttemptedWithType(challenge.type)
-
   # challenge handles setting up game session
-  SDK.GameSession.reset()
-  SDK.GameSession.getInstance().setUserId('You')
-  challenge = new Puzzle(App._queryStringParams['p'])
-  challenge.setupSession(SDK.GameSession.getInstance())
+  SDK.GameSession.current().setupPuzzleForString(App._queryStringParams['p'])
 
   # get ui promise
   if CONFIG.LOAD_ALL_AT_START

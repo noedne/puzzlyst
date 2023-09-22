@@ -368,6 +368,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   setIsPlaying,
   getIsSettingUp,
   setIsSettingUp,
+  setupPuzzleForString,
 } = require('./gameSessionEditor')
 
 class _GameSession extends SDKObject
@@ -396,6 +397,7 @@ class _GameSession extends SDKObject
   setIsPlaying: setIsPlaying
   getIsSettingUp: getIsSettingUp
   setIsSettingUp: setIsSettingUp
+  setupPuzzleForString: setupPuzzleForString
 
   aiDifficulty: null
   aiPlayerId:null

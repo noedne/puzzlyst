@@ -1,3 +1,4 @@
+import Puzzle from "./challenges/Puzzle";
 import type { ContextObject } from "./challenges/puzzleSpec/getContextObjectData";
 
 const Artifact = require('app/sdk/artifacts/artifact');
@@ -18,7 +19,7 @@ const enum Mode {
 
 const cachedCardsByType: Record<typeof CardType, typeof Card[]> = {};
 const editingBench: typeof Card[] = [];
-const mode: Mode = Mode.Setup;
+const mode: Mode = Mode.Play;
 export const editorProperties = {
   cachedCardsByType,
   editingBench,
@@ -259,7 +260,11 @@ export function setIsEditing(this: typeof GameSession) {
   if (this.getIsEditing()) {
     return;
   }
+  const wasSettingUp = this.getIsSettingUp();
   this.setEditingMode(Mode.Edit);
+  if (wasSettingUp) {
+    return;
+  }
   this.getChallenge().challengeReset();
   pushEvent(this, {
     bindSubmitTurn: true,
@@ -289,6 +294,11 @@ export function getIsSettingUp(this: typeof GameSession): boolean {
 
 export function setIsSettingUp(this: typeof GameSession) {
   this.setEditingMode(Mode.Setup);
+}
+
+export function setupPuzzleForString(this: typeof GameSession, string: string) {
+  Puzzle.fromBase64(string).setupSession(this);
+  pushUndo(this);
 }
 
 function pushEvent(

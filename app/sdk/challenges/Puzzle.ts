@@ -33,15 +33,26 @@ export default class Puzzle extends Challenge {
   startingManaOpponent = 9;
   usesResetTurn = false;
 
-  userIsPlayer1;
-  startingManaPlayer;
-  startingHandSizePlayer;
-  startingHandSizeOpponent;
-  puzzle;
+  userIsPlayer1: boolean = true;
+  startingManaPlayer: number | null = null;
+  startingHandSizePlayer: number | null = null;
+  startingHandSizeOpponent: number | null = null;
 
-  constructor(p: string) {
+  constructor(public puzzle: SpecPuzzle) {
     super();
-    const binary = base64StringToBinary(p);
+  }
+
+  static fromBase64(base64: string): Puzzle {
+    return new Puzzle(this.base64ToSpecPuzzle(base64));
+  }
+
+  updateFromBase64(base64: string): Puzzle {
+    this.puzzle = Puzzle.base64ToSpecPuzzle(base64);
+    return this;
+  }
+
+  private static base64ToSpecPuzzle(base64: string): SpecPuzzle {
+    const binary = base64StringToBinary(base64);
     if (binary === null) {
       throw Error('invalid');
     }
@@ -50,11 +61,19 @@ export default class Puzzle extends Challenge {
     if (puzzle === null) {
       throw Error('invalid');
     }
-    this.userIsPlayer1 = puzzle.isPlayer1;
-    this.startingManaPlayer = puzzle.mana;
-    this.startingHandSizePlayer = puzzle.you.hand.length;
-    this.startingHandSizeOpponent = puzzle.opponent.hand.length;
-    this.puzzle = puzzle;
+    return puzzle;
+  }
+
+  setupSession(gameSession: GameSession): GameSession {
+    this.userIsPlayer1 = this.puzzle.isPlayer1;
+    this.startingManaPlayer = this.puzzle.mana;
+    this.startingHandSizePlayer = this.puzzle.you.hand.length;
+    this.startingHandSizeOpponent = this.puzzle.opponent.hand.length;
+    const editingMode = gameSession.getEditingMode();
+    gameSession.setIsSettingUp();
+    super.setupSession(gameSession);
+    gameSession.setEditingMode(editingMode);
+    return gameSession;
   }
 
   getMyPlayerDeckData(_gameSession: GameSession): DeckData {
