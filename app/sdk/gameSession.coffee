@@ -360,8 +360,14 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   setCachedCardsByType,
   getEditingBench,
   setEditingBench,
+  getEditingMode,
+  setEditingMode,
   getIsEditing,
   setIsEditing,
+  getIsPlaying,
+  setIsPlaying,
+  getIsSettingUp,
+  setIsSettingUp,
 } = require('./gameSessionEditor')
 
 class _GameSession extends SDKObject
@@ -382,8 +388,14 @@ class _GameSession extends SDKObject
   setCachedCardsByType: setCachedCardsByType
   getEditingBench: getEditingBench
   setEditingBench: setEditingBench
+  getEditingMode: getEditingMode
+  setEditingMode: setEditingMode
   getIsEditing: getIsEditing  
   setIsEditing: setIsEditing  
+  getIsPlaying: getIsPlaying
+  setIsPlaying: setIsPlaying
+  getIsSettingUp: getIsSettingUp
+  setIsSettingUp: setIsSettingUp
 
   aiDifficulty: null
   aiPlayerId:null
@@ -3055,11 +3067,11 @@ class _GameSession extends SDKObject
           # this works because the search always returns the first tile found
           existingTile = @board.getTileAtPosition(targetPosition, true)
           if existingTile?
-            if @getIsEditing()
-              @removeCardFromBoardWhileEditing(existingTile)
-            else
+            if @getIsPlaying()
               #Logger.module("SDK").debug "[G:#{@.gameId}]", "GS.playCard - kill existing tile #{existingTile.getName()} at grid(#{position.x}, #{position.y})"
               @executeAction(existingTile.actionDie(card))
+            else
+              @removeCardFromBoardWhileEditing(existingTile)
 
         # add card to board
         # must be done before setting card as applied

@@ -10,13 +10,19 @@ const GameSession = require('./gameSession');
 const Modifier = require('app/sdk/modifiers/modifier');
 const RSX = require('app/data/resources');
 
+const enum Mode {
+  Edit,
+  Play,
+  Setup,
+}
+
 const cachedCardsByType: Record<typeof CardType, typeof Card[]> = {};
 const editingBench: typeof Card[] = [];
-const isEditing: boolean = false;
+const mode: Mode = Mode.Setup;
 export const editorProperties = {
   cachedCardsByType,
   editingBench,
-  isEditing,
+  mode,
 };
 
 export function copyCard(
@@ -237,25 +243,52 @@ export function setEditingBench(
   this._private.editorProperties.editingBench = editingBench;
 }
 
-export function getIsEditing(this: typeof GameSession): boolean {
-  return this._private.editorProperties.isEditing;
+export function getEditingMode(this: typeof GameSession): Mode {
+  return this._private.editorProperties.mode;
 }
 
-export function setIsEditing(this: typeof GameSession, isEditing: boolean) {
-  if (isEditing === this.getIsEditing()) {
+export function setEditingMode(this: typeof GameSession, mode: Mode) {
+  return this._private.editorProperties.mode = mode;
+}
+
+export function getIsEditing(this: typeof GameSession): boolean {
+  return this.getEditingMode() === Mode.Edit;
+}
+
+export function setIsEditing(this: typeof GameSession) {
+  if (this.getIsEditing()) {
     return;
   }
-  this._private.editorProperties.isEditing = isEditing;
-  if (isEditing) {
-    this.getChallenge().challengeReset();
-  } else {
-    this.getChallenge().snapshotChallenge();
-  }
+  this.setEditingMode(Mode.Edit);
+  this.getChallenge().challengeReset();
   pushEvent(this, {
-    bindHand: !isEditing,
     bindSubmitTurn: true,
-    setMouseOver: isEditing,
+    setMouseOver: true,
   });
+}
+
+export function getIsPlaying(this: typeof GameSession): boolean {
+  return this.getEditingMode() === Mode.Play;
+}
+
+export function setIsPlaying(this: typeof GameSession) {
+  if (this.getIsPlaying()) {
+    return;
+  }
+  this.setEditingMode(Mode.Play);
+  this.getChallenge().snapshotChallenge();
+  pushEvent(this, {
+    bindHand: true,
+    bindSubmitTurn: true,
+  });
+}
+
+export function getIsSettingUp(this: typeof GameSession): boolean {
+  return this.getEditingMode() === Mode.Setup;
+}
+
+export function setIsSettingUp(this: typeof GameSession) {
+  this.setEditingMode(Mode.Setup);
 }
 
 function pushEvent(

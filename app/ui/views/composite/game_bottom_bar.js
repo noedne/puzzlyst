@@ -254,7 +254,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     var gameSession = SDK.GameSession.current();
 
     if (gameSession.getIsEditing()) {
-      gameSession.setIsEditing(false);
+      gameSession.setIsPlaying();
     } else if (gameLayer && gameLayer.getIsMyTurn() && !gameSession.getChallenge().usesResetTurn) {
       gameSession.submitExplicitAction(gameSession.actionEndTurn());
     } else {

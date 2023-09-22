@@ -172,7 +172,11 @@ var NavigationManager = Manager.extend({
             }
             break;
           case cc.KEY.e:
-            gameSession.setIsEditing(!gameSession.getIsEditing());
+            if (gameSession.getIsEditing()) {
+              gameSession.setIsPlaying();
+            } else {
+              gameSession.setIsEditing();
+            }
             break;
           case cc.KEY.f:
             gameSession.toggleOwnership(
