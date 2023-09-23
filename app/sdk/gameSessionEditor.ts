@@ -55,6 +55,7 @@ export function setCardDamage(
     return;
   }
   card.setDamage(damage);
+  pushUndo(this);
   pushEvent(this, { showHP: { card }});
 }
 
@@ -69,6 +70,7 @@ export function setArtifactDurability(
   artifact.durability = durability;
   artifact.getArtifactModifiers()
     .forEach((modifier: typeof Modifier) => modifier.setDurability(durability));
+  pushUndo(this);
   pushEvent(this, {
     setArtifactDurability: {
       artifact,
@@ -88,6 +90,7 @@ export function applyModifierContextObjectToCard(
     ...contextObject,
     index,
   }, card));
+  pushUndo(this);
   pushEvent(this, {
     showModifiers: {
       card,
@@ -114,6 +117,7 @@ export function removeCardFromBoardWhileEditing(
   card: typeof Card,
 ) {
   this.removeCardFromBoard(card, card.getPositionX(), card.getPositionY());
+  pushUndo(this);
   pushEvent(this, {
     destroyNodeForSdkCard: card,
   });
@@ -126,6 +130,7 @@ export function removeArtifact(
   artifact.getArtifactModifiers()
     .forEach((modifier: typeof Modifier) => this.removeModifier(modifier));
   this.syncState();
+  pushUndo(this);
   pushEvent(this, {
     removeArtifact: artifact,
   });
@@ -226,6 +231,7 @@ export function applyBenchCardToBoard(
     boardY,
     playerId,
   );
+  pushUndo(this);
   pushEvent(this, { addNodeForSdkCard: { card, position }});
 }
 
