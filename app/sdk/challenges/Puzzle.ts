@@ -76,7 +76,7 @@ export default class Puzzle extends Challenge {
     if (this.snapshot === null) {
       this.snapshot = gameSession.generateGameSessionSnapshot();
     } else {
-      gameSession._rollbackToSnapshot(this.snapshot);
+      gameSession.deserializeSessionFromFirebase(JSON.parse(this.snapshot));
     }
     super.setupSession(gameSession);
     gameSession.setEditingMode(editingMode);
