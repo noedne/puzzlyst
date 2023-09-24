@@ -170,6 +170,8 @@ class Challenge
       player2StartingHandSize = if @startingHandSizePlayer? then @startingHandSizePlayer else @startingHandSize
       player1DeckData = @getOpponentPlayerDeckData(gameSession)
       player2DeckData = @getMyPlayerDeckData(gameSession)
+      gameSession.getPlayer1().setIsCurrentPlayer(false)
+      gameSession.getPlayer2().setIsCurrentPlayer(true)
 
     # ensure basic player data
     player1Data = UtilsJavascript.fastExtend({

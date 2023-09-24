@@ -178,11 +178,19 @@ var NavigationManager = Manager.extend({
               gameSession.setIsEditing();
             }
             break;
-          case cc.KEY.f:
-            gameSession.toggleOwnership(
-              Scene.current().getGameLayer().getMyPlayer().getSelectedCard(),
-            );
+          case cc.KEY.f: {
+            if (!gameSession.getIsEditing()) {
+              break;
+            }
+            const selectedCard =
+              Scene.current().getGameLayer().getMyPlayer().getSelectedCard();
+            if (selectedCard != null) {
+              gameSession.toggleOwnership(selectedCard);
+            } else {
+              gameSession.flipPlayers();
+            }
             break;
+          }
           case cc.KEY.h:
             if (gameSession.getIsEditing()) {
               this.showModalView(new EditHandModal());

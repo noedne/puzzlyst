@@ -326,9 +326,7 @@ function jumpHistory(gameSession: typeof GameSession, step: number) {
     return;
   }
   history.current += step;
-  const string = history.states[index];
-  gameSession.getChallenge().updateFromBase64(string).setupSession(gameSession);
-  gameSession.pushRollbackEvent();
+  updateFromBase64(gameSession, history.states[index]);
 }
 
 export function redo(this: typeof GameSession) {
@@ -337,6 +335,21 @@ export function redo(this: typeof GameSession) {
 
 export function undo(this: typeof GameSession) {
   jumpHistory(this, -1);
+}
+
+export function flipPlayers(this: typeof GameSession) {
+  this.getPlayers().reverse();
+  const state = getState(this);
+  if (state === null) {
+    return;
+  }
+  updateFromBase64(this, state);
+  pushUndo(this);
+}
+
+function updateFromBase64(gameSession: typeof GameSession, base64: string) {
+  gameSession.getChallenge().updateFromBase64(base64).setupSession(gameSession);
+  gameSession.pushRollbackEvent();
 }
 
 export function setupPuzzleForString(this: typeof GameSession, string: string) {
@@ -393,14 +406,21 @@ function pushEvent(
   });
 }
 
-function pushUndo(gameSession: typeof GameSession) {
+function getState(gameSession: typeof GameSession): string | null {
   const specPuzzle = SpecPuzzle.fromGameSession(gameSession);
   if (specPuzzle === null) {
-    return;
+    return null;
   }
   const base64 = binaryToBase64String(specPuzzle.toString());
   if (base64 === null) {
-    return;
+    return null;
   }
-  pushHistory(gameSession, base64);
+  return base64;
+}
+
+function pushUndo(gameSession: typeof GameSession) {
+  const state = getState(gameSession);
+  if (state !== null) {
+    pushHistory(gameSession, state);
+  }
 }
