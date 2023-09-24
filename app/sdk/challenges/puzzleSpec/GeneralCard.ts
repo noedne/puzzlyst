@@ -120,10 +120,7 @@ export default class GeneralCard {
   }
 
   private static getFaction(unit: typeof Unit): Faction | null {
-    const { factionId } = unit
-      .getGameSession()
-      .getPlayerSetupDataForPlayerId(unit.getOwnerId());
-    switch (factionId) {
+    switch (unit.getFactionId()) {
       case Factions.Faction1:
         return Faction.Faction1;
       case Factions.Faction2:
