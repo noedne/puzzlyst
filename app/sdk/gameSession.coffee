@@ -878,7 +878,10 @@ class _GameSession extends SDKObject
       # rollback by deserializing the snapshot data
       @pushEvent({type: EVENTS.before_rollback_to_snapshot, gameSession: @}, {blockActionExecution: true})
       @deserializeSessionFromFirebase(JSON.parse(snapshotData))
-      @pushEvent({type: EVENTS.rollback_to_snapshot, gameSession: @}, {blockActionExecution: true})
+      @pushRollbackEvent()
+
+  pushRollbackEvent: () ->
+    @pushEvent({type: EVENTS.rollback_to_snapshot, gameSession: @}, {blockActionExecution: true})
 
 
   _discardRollbackSnapshot: () ->

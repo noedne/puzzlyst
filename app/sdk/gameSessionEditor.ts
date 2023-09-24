@@ -328,9 +328,7 @@ function jumpHistory(gameSession: typeof GameSession, step: number) {
   history.current += step;
   const string = history.states[index];
   gameSession.getChallenge().updateFromBase64(string).setupSession(gameSession);
-  pushEvent(gameSession, {
-    bindGameSession: true,
-  });
+  gameSession.pushRollbackEvent();
 }
 
 export function redo(this: typeof GameSession) {
@@ -353,7 +351,6 @@ function pushEvent(
       card: typeof Card,
       position: { x: number, y: number },
     },
-    bindGameSession?: boolean,
     bindHand?: boolean,
     bindSubmitTurn?: boolean,
     destroyNodeForSdkCard?: typeof Card,
@@ -381,7 +378,6 @@ function pushEvent(
     type: EVENTS.editing_event,
     options: {
       addNodeForSdkCard: options.addNodeForSdkCard ?? null,
-      bindGameSession: options.bindGameSession ?? false,
       bindHand: options.bindHand ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
       destroyNodeForSdkCard: options.destroyNodeForSdkCard ?? null,
