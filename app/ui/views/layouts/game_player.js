@@ -158,7 +158,7 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
     // setup player popover
     this.popoverView = new MyPlayerPopoverLayout({ model: new Backbone.Model({ playerId: this.model.get('playerId') }) });
     this.popoverRegion.show(this.popoverView);
-    this.listenTo(this.popoverView, 'emote', this.setGeneralPortrait);
+    this.listenTo(this.popoverView, 'emote', this.bindGeneral);
 
     // listen to game events
     var scene = Scene.getInstance();
@@ -546,16 +546,14 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
    */
   bindGeneral: function () {
     // don't bind general HP here, only in response to an action
-  },
-
-  setGeneralPortrait: function (event) {
     const {
       generalPortraitHexImageForGeneralId: getGeneralPortrait,
       imageForResourceScale,
     } = Handlebars.helpers;
+    const generalId = this.templateHelpers.generalId.call(this);
     this.ui.$generalPortraitImage.css(
       'background-image',
-      `url(${imageForResourceScale(getGeneralPortrait(event.generalId))})`,
+      `url(${imageForResourceScale(getGeneralPortrait(generalId))})`,
     );
   },
 

@@ -391,8 +391,8 @@ var MyPlayerPopoverLayout = PlayerPopoverLayout.extend({
           && generalId !== general.getId()
           && gameSession.getIsEditing()
         ) {
-          this.trigger('emote', { generalId });
           general.setId(generalId);
+          this.trigger('emote');
           const newGeneral = gameSession.createCardForIdentifier(generalId);
           general.factionId = newGeneral.getFactionId();
           general.name = newGeneral.getName();
