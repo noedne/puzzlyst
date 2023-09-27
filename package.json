@@ -187,6 +187,7 @@
     "css": "gulp css",
     "deploy:staging": "npm run push:master && npm run push:staging",
     "js": "gulp js",
+    "localization": "gulp localization:copy",
     "lint:coffee": "coffeelint -f coffeelint.json -q",
     "lint:coffee:all": "coffeelint -f coffeelint.json -q app cli scripts server worker",
     "lint:js": "eslint --quiet",
