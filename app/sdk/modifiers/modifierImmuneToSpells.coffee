@@ -10,8 +10,10 @@ class ModifierImmuneToSpells extends ModifierImmune
   type:"ModifierImmuneToSpells"
   @type:"ModifierImmuneToSpells"
 
+  @isKeyworded: true
   @modifierName:i18next.t("modifiers.immune_to_spells_name")
   @description:i18next.t("modifiers.immune_to_spells_def")
+  @keywordDefinition:i18next.t("modifiers.immune_to_spells_def")
 
   fxResource: ["FX.Modifiers.ModifierImmunity", "FX.Modifiers.ModifierImmunitySpell"]
 

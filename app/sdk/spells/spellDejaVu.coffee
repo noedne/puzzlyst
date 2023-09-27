@@ -11,7 +11,7 @@ class SpellDejaVu extends Spell
     ownerId = @getOwnerId()
     if spellsPlayedToBoard.length > 0
       for spell in spellsPlayedToBoard by -1
-        if !spell.getIsFollowup() and spell.getOwnerId() == ownerId and !(spell is this) and !(spell.getBaseCardId() is Cards.Spell.DejaVu)
+        if !spell.getIsFollowup() and spell.getOwnerId() == ownerId and !(spell is this)
           spellToCopy = spell
           break
 
@@ -19,13 +19,5 @@ class SpellDejaVu extends Spell
         # put fresh copy of spell into deck
         a = new PutCardInDeckAction(@getGameSession(), ownerId, spellToCopy.createNewCardData())
         @getGameSession().executeAction(a)
-        b = new PutCardInDeckAction(@getGameSession(), ownerId, spellToCopy.createNewCardData())
-        @getGameSession().executeAction(b)
-        c = new PutCardInDeckAction(@getGameSession(), ownerId, spellToCopy.createNewCardData())
-        @getGameSession().executeAction(c)
-        d = new PutCardInDeckAction(@getGameSession(), ownerId, spellToCopy.createNewCardData())
-        @getGameSession().executeAction(d)
-        e = new PutCardInDeckAction(@getGameSession(), ownerId, spellToCopy.createNewCardData())
-        @getGameSession().executeAction(e)
 
 module.exports = SpellDejaVu

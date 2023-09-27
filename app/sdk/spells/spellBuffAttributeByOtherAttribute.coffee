@@ -11,6 +11,7 @@ class SpellBuffAttributeByOtherAttribute extends Spell
   spellFilterType: SpellFilterType.NeutralDirect
   attributeTarget: null #change this attribute
   attributeSource: null #change by the value of this attribute
+  isSetBuff: false
   appliedName: null
   appliedDescription: null
   durationEndTurn: null
@@ -34,6 +35,7 @@ class SpellBuffAttributeByOtherAttribute extends Spell
     # apply modifier to buff attributes
     contextObject = Modifier.createContextObject()
     contextObject.attributeBuffs = attributeBuffs
+    if @isSetBuff then contextObject.attributeBuffsAbsolute = [@attributeTarget]
     if @appliedName? then contextObject.appliedName = @appliedName
     if @appliedDescription? then contextObject.appliedDescription = @appliedDescription
     if @durationEndTurn? then contextObject.durationEndTurn = @durationEndTurn
