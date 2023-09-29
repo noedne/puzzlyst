@@ -1103,7 +1103,9 @@ class Card extends SDKObject
     return @getGameSession()?.getCurrentPlayer().getPlayerId() == @ownerId
 
   getDoesOwnerHaveEnoughManaToPlay: () ->
-    return @isOwnedByGameSession() or @getManaCost() <= @getOwner().getRemainingMana()
+    return @isOwnedByGameSession() or
+      @getManaCost() <= @getOwner().getRemainingMana() or
+      @getGameSession().getIsEditing()
 
   getIsAllowedToBePlayed: () ->
     getIsAllowedToBePlayed = true
