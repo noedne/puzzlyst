@@ -26,7 +26,7 @@ class ModifierStartTurnWatchDamageGenerals extends ModifierStartTurnWatch
     @damageGeneralByAmount(opponentsGeneral, @opponentsGeneralDamageAmount)
   
   damageGeneralByAmount: (general, damageAmount) ->
-    if general? && damageAmount?
+    if general? && damageAmount? && damageAmount > 0
       damageAction = new DamageAction(this.getGameSession())
       damageAction.setOwnerId(@getCard().getOwnerId())
       damageAction.setSource(@getCard())
