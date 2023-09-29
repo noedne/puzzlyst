@@ -1,6 +1,6 @@
 Modifier = require './modifier'
+PlayCardAction = require 'app/sdk/actions/playCardAction'
 PlayCardFromHandAction = require 'app/sdk/actions/playCardFromHandAction'
-PlaySignatureCardAction = require 'app/sdk/actions/playSignatureCardAction'
 DamageAction = require 'app/sdk/actions/damageAction'
 CardType = require 'app/sdk/cards/cardType'
 Stringifiers = require 'app/sdk/helpers/stringifiers'
@@ -25,8 +25,16 @@ class ModifierSpellDamageWatch extends Modifier
 
     action = e.action
 
-    # watch for a spell (but not a followup) being cast by player who owns this entity
-    if (action instanceof PlayCardFromHandAction or action instanceof PlaySignatureCardAction) and action.getOwnerId() is @getCard().getOwnerId() and action.getCard()?.type is CardType.Spell and @createdDamageSubaction(action)
+    isSpell = action instanceof PlayCardFromHandAction and
+      action.getCard()?.type is CardType.Spell
+
+    isFollowupOfSpell = action instanceof PlayCardAction and
+      action.getCard()?.getRootCard()?.getType() is CardType.Spell
+
+    # watch for a spell (or followup of spell) being cast by player who owns this entity
+    if (isSpell or isFollowupOfSpell) and
+        action.getOwnerId() is @getCard().getOwnerId() and
+        @createdDamageSubaction(action)
       @onDamagingSpellcast(action)
 
   onDamagingSpellcast: (action) ->
