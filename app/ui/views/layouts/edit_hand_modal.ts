@@ -88,10 +88,7 @@ export default Marionette.LayoutView.extend({
     if (this.getDeck().getNumCardsInHand() < CONFIG.MAX_HAND_SIZE) {
       this.changeCardView(cardView, 1);
     } else {
-      audio_engine.current().play_effect_for_interaction(
-        RSX.sfx_ui_error.audio,
-        CONFIG.ERROR_SFX_PRIORITY,
-      );
+      this.playErrorSFX();
     }
   },
 
@@ -140,6 +137,10 @@ export default Marionette.LayoutView.extend({
   },
 
   onHandAdd: function () {
+    if (this.isHandFull()) {
+      this.playErrorSFX();
+      return;
+    }
     const navigationManager = NavigationManager.current();
     const modal = new AddCardModal({
       title: 'Add a Card',
@@ -161,10 +162,21 @@ export default Marionette.LayoutView.extend({
     gameSession.applyCardToHand(this.getDeck(), null, card);
   },
 
+  playErrorSFX: function () {
+    audio_engine.current().play_effect_for_interaction(
+      RSX.sfx_ui_error.audio,
+      CONFIG.ERROR_SFX_PRIORITY,
+    );
+  },
+
   maybeDisableAdd: function () {
-    if (this.getDeck().getNumCardsInHand() >= CONFIG.MAX_HAND_SIZE) {
+    if (this.isHandFull()) {
       this.ui.$handAdd.prop('disabled', true);
     }
+  },
+
+  isHandFull: function () {
+    return this.getDeck().getNumCardsInHand() >= CONFIG.MAX_HAND_SIZE;
   },
 
   getDeck: function () {
