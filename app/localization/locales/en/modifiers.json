@@ -34,7 +34,7 @@
 	"deathwatch_def":"Triggers effect whenever ANY minion dies.",
 
 	"destructible_name":"Destructible",
-	"destructible_def":"Artifacts have 3 Durability. Whenever your General takes damage, it loses 1 Durability. It's destroyed at 0 Durability.",
+	"destructible_def":"Artifacts have 3 Durability. When your General takes damage, it loses 1 Durability. When an artifact has no durability, it is destroyed.",
 
 	"dying_wish_name":"Dying Wish",
 	"dying_wish_def":"Triggers an effect when this minion dies.",

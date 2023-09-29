@@ -13,7 +13,7 @@ class ModifierDestructible extends Modifier
   @modifierName:i18next.t("modifiers.destructible_name")
   @description: null
   @keywordDefinition:i18next.t("modifiers.destructible_def")
-  @isHiddenToUI: true
+  @isHiddenToUI: false
   @isKeyworded: true
   maxStacks: 1
 
