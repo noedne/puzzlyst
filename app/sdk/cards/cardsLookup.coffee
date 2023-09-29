@@ -619,6 +619,7 @@ class Cards
     IceCage:                   20501
     SpiritoftheWild:           20502
     Cryogenesis:               20503
+    FollowupTwinStrike:        20504
   }
 
   @Artifact: {

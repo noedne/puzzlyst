@@ -2,14 +2,15 @@ ModifierOpeningGambit = require './modifierOpeningGambit'
 Stringifiers = require 'app/sdk/helpers/stringifiers'
 Modifier = require './modifier'
 
-class ModifierOpeningGambitBuffSelfByOpponentHandCount extends ModifierOpeningGambit
+class ModifierOpeningGambitBuffSelfByHandCount extends ModifierOpeningGambit
 
-  type: "ModifierOpeningGambitBuffSelfByOpponentHandCount"
-  @type: "ModifierOpeningGambitBuffSelfByOpponentHandCount"
+  type: "ModifierOpeningGambitBuffSelfByHandCount"
+  @type: "ModifierOpeningGambitBuffSelfByHandCount"
 
   @description: "Gains %X for each card in your opponent\'s action bar"
 
   fxResource: ["FX.Modifiers.ModifierOpeningGambit", "FX.Modifiers.ModifierGenericBuff"]
+  useOpponentHand: true
 
   getPrivateDefaults: (gameSession) ->
     p = super(gameSession)
@@ -18,10 +19,10 @@ class ModifierOpeningGambitBuffSelfByOpponentHandCount extends ModifierOpeningGa
 
     return p
 
-  @createContextObject: (attackBuff = 0, maxHPBuff = 0, options = undefined) ->
+  @createContextObject: (attackBuff = 0, maxHPBuff = 0, appliedName = "Power of The Hand", options = undefined) ->
     contextObject = super(options)
     buffContextObject = Modifier.createContextObjectWithAttributeBuffs(attackBuff,maxHPBuff)
-    buffContextObject.appliedName = "Power of The Hand"
+    buffContextObject.appliedName = appliedName
     contextObject.modifiersContextObjects = [buffContextObject]
     return contextObject
 
@@ -36,11 +37,14 @@ class ModifierOpeningGambitBuffSelfByOpponentHandCount extends ModifierOpeningGa
     # apply once per card in opponent's hand
     for i in [0...@_private.numCardsInHand]
       super(modifiersContextObjects, card)
+    return
 
   onOpeningGambit: () ->
     super()
-
-    @_private.numCardsInHand = @getCard().getGameSession().getOpponentPlayerOfPlayerId(@getCard().getOwnerId()).getDeck().getNumCardsInHand()
+    playerId = @getCard().getOwnerId()
+    if @useOpponentHand
+      playerId = @getGameSession().getOpponentPlayerIdOfPlayerId(playerId)
+    @_private.numCardsInHand = @getGameSession().getPlayerById(playerId).getDeck().getNumCardsInHand()
     @applyManagedModifiersFromModifiersContextObjects(@modifiersContextObjects, @getCard())
 
-module.exports = ModifierOpeningGambitBuffSelfByOpponentHandCount
+module.exports = ModifierOpeningGambitBuffSelfByHandCount

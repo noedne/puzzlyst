@@ -65,7 +65,7 @@ ModifierOpeningGambitRemoveRandomArtifact = require 'app/sdk/modifiers/modifierO
 ModifierEndTurnWatchHealNearby = require 'app/sdk/modifiers/modifierEndTurnWatchHealNearby'
 ModifierDealDamageWatchTeleportToMe = require 'app/sdk/modifiers/modifierDealDamageWatchTeleportToMe'
 ModifierDyingWishSpawnEntityNearbyGeneral = require 'app/sdk/modifiers/modifierDyingWishSpawnEntityNearbyGeneral'
-ModifierOpeningGambitBuffSelfByOpponentHandCount = require 'app/sdk/modifiers/modifierOpeningGambitBuffSelfByOpponentHandCount'
+ModifierOpeningGambitBuffSelfByHandCount = require 'app/sdk/modifiers/modifierOpeningGambitBuffSelfByHandCount'
 ModifierTakeDamageWatchDamageEnemyGeneralForSame = require 'app/sdk/modifiers/modifierTakeDamageWatchDamageEnemyGeneralForSame'
 ModifierDealDamageWatchDrawCard = require 'app/sdk/modifiers/modifierDealDamageWatchDrawCard'
 ModifierStartTurnWatchSwapStats = require 'app/sdk/modifiers/modifierStartTurnWatchSwapStats'
@@ -3083,7 +3083,7 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralHighHandHit.name
         death : RSX.neutralHighHandDeath.name
       )
-      attackBuff = ModifierOpeningGambitBuffSelfByOpponentHandCount.createContextObject(1,1)
+      attackBuff = ModifierOpeningGambitBuffSelfByHandCount.createContextObject(1,1)
       card.setInherentModifiersContextObjects([ attackBuff  ])
       card.atk = 2
       card.maxHP = 3

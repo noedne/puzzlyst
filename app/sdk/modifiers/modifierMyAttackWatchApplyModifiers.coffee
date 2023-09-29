@@ -6,6 +6,7 @@ class ModifierMyAttackWatchApplyModifiers extends ModifierMyAttackWatch
   @type:"ModifierMyAttackWatchApplyModifiers"
 
   modifiersContextObjects: null
+  applyToGeneral: false
 
   fxResource: ["FX.Modifiers.ModifierGenericBuff"]
 
@@ -19,6 +20,10 @@ class ModifierMyAttackWatchApplyModifiers extends ModifierMyAttackWatch
     if @modifiersContextObjects?
       for modifier in @modifiersContextObjects
         if modifier?
-          @getGameSession().applyModifierContextObject(modifier, @getCard())
+          card = if @applyToGeneral
+          then @getGameSession().getGeneralForPlayerId(@getCard().getOwnerId())
+          else @getCard()
+          @getGameSession().applyModifierContextObject(modifier, card)
+    return
 
 module.exports = ModifierMyAttackWatchApplyModifiers

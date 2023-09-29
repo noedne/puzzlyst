@@ -7,6 +7,8 @@ PlayerModifierCardDrawModifier = require 'app/sdk/playerModifiers/playerModifier
 class SpellTwinStrike extends SpellDamage
 
   onApplyOneEffectToBoard: (board,x,y,sourceAction) ->
+    if @getIsFollowup()
+      return;
     super(board, x, y, sourceAction)
 
     ownerId = @getOwnerId()
@@ -14,15 +16,8 @@ class SpellTwinStrike extends SpellDamage
     @getGameSession().applyModifierContextObject(PlayerModifierCardDrawModifier.createContextObject(1,1), general)
 
   _findApplyEffectPositions: (position, sourceAction) ->
-    # pick 2 targets from all potential targets
-    potentialPositions = super(position, sourceAction)
-    applyEffectPositions = []
-    for i in [0..1]
-      if potentialPositions.length > 0
-        index = @getGameSession().getRandomIntegerForExecution(potentialPositions.length)
-        applyEffectPositions.push(potentialPositions.splice(index, 1)[0])
-
-    return applyEffectPositions
+    if @getIsFollowup()
+      return [@getFollowupSourcePosition(), position]
 
   _filterPlayPositions: (spellPositions) ->
     # there must be at least 2 enemy minions on the board to play this spell

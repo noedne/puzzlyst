@@ -157,7 +157,7 @@ ModifierWraithlingFury = require './modifierWraithlingFury'
 ModifierOpeningGambitRazorback = require './modifierOpeningGambitRazorback'
 ModifierDyingWishSpawnEntityNearbyGeneral = require './modifierDyingWishSpawnEntityNearbyGeneral'
 ModifierSummonWatchFromActionBarSpawnEntity = require './modifierSummonWatchFromActionBarSpawnEntity'
-ModifierOpeningGambitBuffSelfByOpponentHandCount = require './modifierOpeningGambitBuffSelfByOpponentHandCount'
+ModifierOpeningGambitBuffSelfByHandCount = require './modifierOpeningGambitBuffSelfByHandCount'
 ModifierTakeDamageWatchDamageEnemyGeneralForSame = require './modifierTakeDamageWatchDamageEnemyGeneralForSame'
 ModifierDealDamageWatchBuffSelf = require './modifierDealDamageWatchBuffSelf'
 ModifierDyingWishDamageNearbyAllies = require './modifierDyingWishDamageNearbyAllies'
@@ -1057,8 +1057,8 @@ class ModifierFactory
       return ModifierDyingWishSpawnEntityNearbyGeneral
     if (modifierType == ModifierSummonWatchFromActionBarSpawnEntity.type)
       return ModifierSummonWatchFromActionBarSpawnEntity
-    if (modifierType == ModifierOpeningGambitBuffSelfByOpponentHandCount.type)
-      return ModifierOpeningGambitBuffSelfByOpponentHandCount
+    if (modifierType == ModifierOpeningGambitBuffSelfByHandCount.type)
+      return ModifierOpeningGambitBuffSelfByHandCount
     if (modifierType == ModifierTakeDamageWatchDamageEnemyGeneralForSame.type)
       return ModifierTakeDamageWatchDamageEnemyGeneralForSame
     if (modifierType == ModifierDealDamageWatchBuffSelf.type)
