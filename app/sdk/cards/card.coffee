@@ -1136,9 +1136,9 @@ class Card extends SDKObject
       if @_private.description # pre-defined descrption (most cards will use this)
         # format hard line breaks for plain text or HTML
         if entryDelimiter != "\n"
-          @_private.description = @_private.description.replace /\n/g, "<br/>"
-        # add the manually entered followup description if there is one
-        description += @_private.description
+          description += @_private.description.replace /\n/g, "<br/>"
+        else
+          description += @_private.description
       else
         # generate description from modifiers
         filteredContextObjects = _.filter(@modifiersContextObjects, ((contextObject) ->
