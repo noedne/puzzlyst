@@ -705,8 +705,8 @@ var CardNode = SdkNode.extend({
         if (description.includes('\n')) {
           descriptionLength += 15;
         }
-        if (descriptionLength >= 110) {
-          this.cardDescriptionLabel.setFontSize(11);
+        if (descriptionLength >= 135) {
+          this.cardDescriptionLabel.setFontSize(12);
         } else {
           this.cardDescriptionLabel.setFontSize(13);
         }
