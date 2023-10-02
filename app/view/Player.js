@@ -1629,6 +1629,9 @@ const Player = cc.Class.extend({
           const gameSession = SDK.GameSession.current();
           if (gameSession.getIsEditing() && selectedSdkEntity !== null) {
             if (!mouseIsOnBoard) {
+              if (selectedSdkEntity.getIsGeneral()) {
+                return;
+              }
               gameSession._removeCardFromCurrentLocation(selectedSdkEntity);
               selectedEntityNode.destroy();
               gameLayer.stopMouseDown();
