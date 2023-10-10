@@ -236,6 +236,9 @@ class Modifier extends SDKObject
   @createContextObjectWithOnBoardAuraForNearbyEnemies: (modifiersContextObjects, raceIds, cardIds, modifierTypes, description, options) ->
     return @createContextObjectWithAura(modifiersContextObjects, false, false, true, false, 1, raceIds, cardIds, modifierTypes, description, options)
 
+  @createContextObjectWithAuraForNearbyEnemiesAndGeneral: (modifiersContextObjects, raceIds, cardIds, modifierTypes, description, options) ->
+    return @createContextObjectWithAura(modifiersContextObjects, false, false, true, true, 1, raceIds, cardIds, modifierTypes, description, options)
+
   @createContextObjectWithAuraForAllEnemies: (modifiersContextObjects, raceIds, cardIds, modifierTypes, description, options) ->
     return @createContextObjectWithAura(modifiersContextObjects, false, false, true, false, CONFIG.WHOLE_BOARD_RADIUS, raceIds, cardIds, modifierTypes, description, options)
 

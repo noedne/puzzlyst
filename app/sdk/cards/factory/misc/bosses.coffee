@@ -89,7 +89,7 @@ ModifierSummonWatchFromActionBarApplyModifiers = require 'app/sdk/modifiers/modi
 ModifierGrowPermanent = require 'app/sdk/modifiers/modifierGrowPermanent'
 ModifierTakeDamageWatchSpawnWraithlings = require 'app/sdk/modifiers/modifierTakeDamageWatchSpawnWraithlings'
 ModifierTakeDamageWatchDamageAttacker = require 'app/sdk/modifiers/modifierTakeDamageWatchDamageAttacker'
-ModifierAbsorbDamage = require 'app/sdk/modifiers/modifierAbsorbDamage'
+ModifierAbsorbDamageOnce = require 'app/sdk/modifiers/modifierAbsorbDamageOnce'
 ModifierDyingWishDamageNearbyEnemies = require 'app/sdk/modifiers/modifierDyingWishDamageNearbyEnemies'
 ModifierStartTurnWatchTeleportRandomSpace = require 'app/sdk/modifiers/modifierStartTurnWatchTeleportRandomSpace'
 ModifierSummonWatchFromActionBarAnyPlayerApplyModifiers = require 'app/sdk/modifiers/modifierSummonWatchFromActionBarAnyPlayerApplyModifiers'
@@ -1391,7 +1391,7 @@ class CardFactory_Bosses
       card.rarityId = Rarity.Epic
       card.durability = 3
       card.setTargetModifiersContextObjects([
-        ModifierAbsorbDamage.createContextObject(1, {
+        ModifierAbsorbDamageOnce.createContextObject(1, {
           name: "Frost Armor"
           description: "The first time your General takes damage each turn, prevent 1 of it."
         }),

@@ -51,7 +51,7 @@ ModifierTranscendance = require 'app/sdk/modifiers/modifierTranscendance'
 ModifierStunned = require 'app/sdk/modifiers/modifierStunned'
 ModifierStun = require 'app/sdk/modifiers/modifierStun'
 ModifierBackupGeneral = require 'app/sdk/modifiers/modifierBackupGeneral'
-ModifierAbsorbDamage = require 'app/sdk/modifiers/modifierAbsorbDamage'
+ModifierAbsorbDamageOnce = require 'app/sdk/modifiers/modifierAbsorbDamageOnce'
 ModifierBandingDealDamageWatchDrawCard = require 'app/sdk/modifiers/modifierBandingDealDamageWatchDrawCard'
 ModifierHealWatchBuffSelf = require 'app/sdk/modifiers/modifierHealWatchBuffSelf'
 ModifierHealWatchDamageNearbyEnemies = require 'app/sdk/modifiers/modifierHealWatchDamageNearbyEnemies'
@@ -1112,7 +1112,7 @@ class CardFactory_CoreSet_Faction1
           name: i18next.t("cards.faction_1_artifact_arclyte_regalia_name")
           description: i18next.t("modifiers.plus_attack_key",{amount:2})
         }),
-        ModifierAbsorbDamage.createContextObject(2, {
+        ModifierAbsorbDamageOnce.createContextObject(2, {
           name: i18next.t("cards.faction_1_artifact_arclyte_regalia_name")
           description: i18next.t("modifiers.faction_1_artifact_arclyte_regalia_2")
         })

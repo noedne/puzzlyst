@@ -3,7 +3,7 @@ import SpecString from "./SpecString";
 const Card = require('app/sdk/cards/card');
 const Cards = require('app/sdk/cards/cardsLookupComplete');
 const Modifier = require('app/sdk/modifiers/modifier');
-const ModifierAbsorbDamage = require('app/sdk/modifiers/modifierAbsorbDamage');
+const ModifierAbsorbDamageOnce = require('app/sdk/modifiers/modifierAbsorbDamageOnce');
 
 export default function getCustomModifiers(cardId: number) {
   switch (cardId) {
@@ -14,7 +14,7 @@ export default function getCustomModifiers(cardId: number) {
           .getGeneralForPlayerId(card.getOwnerId())
           .getArtifactModifiers()
           .find((modifier: typeof Modifier) =>
-            modifier.type === ModifierAbsorbDamage.type);
+            modifier.type === ModifierAbsorbDamageOnce.type);
       return [
         {
           description: 'Damaged at start of turn',

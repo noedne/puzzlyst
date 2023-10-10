@@ -1,18 +1,11 @@
-SpellRefreshExhaustion = require './spellRefreshExhaustion'
-SpellFilterType = require './spellFilterType'
+Spell = require './spell'
+TakeAnotherTurnAction = require 'app/sdk/actions/takeAnotherTurnAction'
 
-class SpellTimeMaelstrom extends SpellRefreshExhaustion
+class SpellTimeMaelstrom extends Spell
 
-  spellFilterType: SpellFilterType.AllyIndirect
-  canTargetGeneral: true
-
-  _postFilterApplyPositions: (validPositions) ->
-    ownGeneral = @getGameSession().getGeneralForPlayerId(@getOwnerId())
-    finalPositions = []
-    for position in validPositions
-      if @getGameSession().getBoard().getCardAtPosition(position) is ownGeneral
-        finalPositions.push(position)
-    return finalPositions
-
+  onApplyOneEffectToBoard: (board, x, y, sourceAction) ->
+    action = new TakeAnotherTurnAction(@getGameSession())
+    action.setOwnerId(@getOwnerId())
+    @getGameSession().executeAction(action)
 
 module.exports = SpellTimeMaelstrom

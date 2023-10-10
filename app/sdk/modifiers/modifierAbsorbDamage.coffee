@@ -19,8 +19,6 @@ class ModifierAbsorbDamage extends Modifier
   activeInSignatureCards: false
   activeOnBoard: true
 
-  canAbsorb: true # can absorb damage from 1 damage action per turn
-
   fxResource: ["FX.Modifiers.ModifierAbsorbDamage"]
 
   onEvent: (event) ->
@@ -37,16 +35,14 @@ class ModifierAbsorbDamage extends Modifier
 
   @getDescription: (modifierContextObject) ->
     if modifierContextObject
-      return i18next.t("modifiers.absorb_damage_def",{amount:@damageAbsorbAmount})
+      return i18next.t("modifiers.absorb_damage_def", {
+        amount: modifierContextObject.damageAbsorbAmount
+      })
     else
       return @description
 
-  onStartTurn: (actionEvent) ->
-    super(actionEvent)
-    @canAbsorb = true
-
   getIsActionRelevant: (a) ->
-    return @canAbsorb and a instanceof DamageAction and a.getTarget() is @getCard()
+    return a instanceof DamageAction and a.getTarget() is @getCard()
 
   _modifyAction: (a) ->
     a.setChangedByModifier(@)
@@ -58,7 +54,6 @@ class ModifierAbsorbDamage extends Modifier
     a = actionEvent.action
     if @getIsActionRelevant(a)
       @_modifyAction(a)
-      @canAbsorb = false
 
   onModifyActionForEntitiesInvolvedInAttack: (actionEvent) ->
     a = actionEvent.action

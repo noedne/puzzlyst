@@ -49,6 +49,7 @@ ModifierKillWatchSpawnEntity = require './modifierKillWatchSpawnEntity'
 ModifierDyingWishBonusMana = require './modifierDyingWishBonusMana'
 ModifierDyingWishDrawCard = require './modifierDyingWishDrawCard'
 ModifierDyingWishSpawnEntity = require './modifierDyingWishSpawnEntity'
+ModifierDyingWishEquipArtifact = require './modifierDyingWishEquipArtifact'
 ModifierCollectableBonusMana = require './modifierCollectableBonusMana'
 ModifierSpellWatchSpawnEntity = require './modifierSpellWatchSpawnEntity'
 ModifierSpellWatch = require './modifierSpellWatch'
@@ -129,6 +130,7 @@ ModifierDestroyAtEndOfTurn = require './modifierDestroyAtEndOfTurn'
 ModifierMyMinionOrGeneralDamagedWatch = require './modifierMyMinionOrGeneralDamagedWatch'
 ModifierMyMinionOrGeneralDamagedWatchBuffSelf = require './modifierMyMinionOrGeneralDamagedWatchBuffSelf'
 ModifierAbsorbDamage = require './modifierAbsorbDamage'
+ModifierAbsorbDamageOnce = require './modifierAbsorbDamageOnce'
 ModifierDyingWishSpawnUnitFromOpponentsDeck = require './modifierDyingWishSpawnUnitFromOpponentsDeck'
 ModifierTransformed = require './modifierTransformed'
 ModifierStunWhenAttacked = require './modifierStunWhenAttacked'
@@ -323,6 +325,7 @@ ModifierOpeningGambitSpawnVanarTokensAroundGeneral = require './modifierOpeningG
 ModifierDyingWishTransformRandomMinion = require './modifierDyingWishTransformRandomMinion'
 ModifierOnSpawnCopyMyGeneral = require './modifierOnSpawnCopyMyGeneral'
 ModifierTakesDoubleDamage = require './modifierTakesDoubleDamage'
+ModifierGeneralDealsDoubleDamage = require './modifierGeneralDealsDoubleDamage'
 ModifierMyHealWatchAnywhereBuffSelf = require './modifierMyHealWatchAnywhereBuffSelf'
 ModifierToggleStructure = require './modifierToggleStructure'
 ModifierSynergizeTeleportRandomEnemy = require './modifierSynergizeTeleportRandomEnemy'
@@ -674,6 +677,7 @@ ModifierQuestStatusNeutral = require './modifierQuestStatusNeutral'
 ModifierOnRemoveBuffGeneral = require './modifierOnRemoveBuffGeneral'
 ModifierDispels = require './modifierDispels'
 ModifierStartOpponentsTurnWatchApplyTempModifier = require './modifierStartOpponentsTurnWatchApplyTempModifier'
+ModifierOnRemoveShuffleCopyIntoDeck = require './modifierOnRemoveShuffleCopyIntoDeck'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -831,6 +835,8 @@ class ModifierFactory
       return ModifierDamageGeneralOnAttack
     if (modifierType == ModifierDyingWishSpawnEntity.type)
       return ModifierDyingWishSpawnEntity
+    if (modifierType == ModifierDyingWishEquipArtifact.type)
+      return ModifierDyingWishEquipArtifact
     if (modifierType == ModifierStartTurnWatchSpawnEntity.type)
       return ModifierStartTurnWatchSpawnEntity
     if (modifierType == ModifierStartTurnWatchDamageGenerals.type)
@@ -1001,6 +1007,8 @@ class ModifierFactory
       return ModifierMyMinionOrGeneralDamagedWatchBuffSelf
     if (modifierType == ModifierAbsorbDamage.type)
       return ModifierAbsorbDamage
+    if (modifierType == ModifierAbsorbDamageOnce.type)
+      return ModifierAbsorbDamageOnce
     if (modifierType == ModifierDyingWishSpawnUnitFromOpponentsDeck.type)
       return ModifierDyingWishSpawnUnitFromOpponentsDeck
     if (modifierType == ModifierTransformed.type)
@@ -1387,6 +1395,8 @@ class ModifierFactory
       return ModifierOnSpawnCopyMyGeneral
     if (modifierType == ModifierTakesDoubleDamage.type)
       return ModifierTakesDoubleDamage
+    if (modifierType == ModifierGeneralDealsDoubleDamage.type)
+      return ModifierGeneralDealsDoubleDamage
     if (modifierType == ModifierMyHealWatchAnywhereBuffSelf.type)
       return ModifierMyHealWatchAnywhereBuffSelf
     if (modifierType == ModifierToggleStructure.type)
@@ -2085,6 +2095,8 @@ class ModifierFactory
       return ModifierDispels;
     if (modifierType == ModifierStartOpponentsTurnWatchApplyTempModifier.type)
       return ModifierStartOpponentsTurnWatchApplyTempModifier;
+    if (modifierType == ModifierOnRemoveShuffleCopyIntoDeck.type)
+      return ModifierOnRemoveShuffleCopyIntoDeck;
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier

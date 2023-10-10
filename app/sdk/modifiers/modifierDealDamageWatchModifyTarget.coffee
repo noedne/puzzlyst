@@ -28,9 +28,13 @@ class ModifierDealDamageWatchModifyTarget extends ModifierDealDamageWatch
 
   onDealDamage: (action) ->
     target = action.getTarget()
-    if target? and target.getOwnerId() isnt @getCard().getOwnerId() and CardType.getIsEntityCardType(target.getType()) and !target.getIsGeneral() #don't fire when we hit a General, only when we hit a minion
+    if target? and
+        target.getOwnerId() isnt @getCard().getOwnerId() and
+        CardType.getIsEntityCardType(target.getType())
       if @modifiersContextObjects?
         for modifierContextObject in @modifiersContextObjects
-          @getGameSession().applyModifierContextObject(modifierContextObject, target)
+          if !target.getIsGeneral() or modifierContextObject.canTargetGeneral
+            @getGameSession().applyModifierContextObject(modifierContextObject, target)
+    return
 
 module.exports = ModifierDealDamageWatchModifyTarget

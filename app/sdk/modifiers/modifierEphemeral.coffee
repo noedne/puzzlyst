@@ -7,13 +7,8 @@ class ModifierEphemeral extends ModifierEndTurnWatch
   type:"ModifierEphemeral"
   @type:"ModifierEphemeral"
 
-  @isKeyworded: true
-  @keywordDefinition:i18next.t("modifiers.ephemeral_def")
-
   @isHiddenToUI: true
-  @modifierName:i18next.t("modifiers.ephemeral_name")
   @description:null
-  isRemovable: false
 
   activeInHand: false
   activeInDeck: false
@@ -24,10 +19,8 @@ class ModifierEphemeral extends ModifierEndTurnWatch
 
   fxResource: ["FX.Modifiers.ModifierEphemeral"]
 
-  onEndTurn: ()  ->
-    super()
-
-    # then remove entity from the board (just remove, don't die)
+  onTurnWatch: ()  ->
+    # remove entity from the board (just remove, don't die)
     removeAction = @getGameSession().createActionForType(RemoveAction.type)
     removeAction.setSource(@getCard())
     removeAction.setTarget(@getCard())
