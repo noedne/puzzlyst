@@ -3,9 +3,11 @@ SpellAspectBase = require './spellAspectBase'
 class SpellFountainOfYouth extends SpellAspectBase
 
   getCardDataOrIndexToSpawn: (x, y) ->
-    @cardDataOrIndexToSpawn = {
-      id: @getGameSession().getBoard().getUnitAtPosition({ x, y }).getId()
-    }
+    @cardDataOrIndexToSpawn =
+      @getGameSession()
+        .getBoard()
+        .getUnitAtPosition({ x, y })
+        .createNewCardData()
     return super(x, y)
 
 module.exports = SpellFountainOfYouth
