@@ -4,17 +4,19 @@ CardType =                 require 'app/sdk/cards/cardType'
 Modifier =                 require './modifier'
 Stringifiers =             require 'app/sdk/helpers/stringifiers'
 Modifier =                require './modifier'
+PlayCardAction = require 'app/sdk/actions/playCardAction'
 
-class ModifierOpeningGambitSacrificeNearbyBuffSelf extends ModifierOpeningGambit
+class ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity extends ModifierOpeningGambit
 
-  type: "ModifierOpeningGambitSacrificeNearbyBuffSelf"
-  @type: "ModifierOpeningGambitSacrificeNearbyBuffSelf"
+  type: "ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity"
+  @type: "ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity"
 
   @modifierName: "Opening Gambit"
   @description: "Destroy friendly minions around it and gain %X for each minion"
 
   targetEnemies: false
   targetAllies: true
+  cardDataOrIndexToSpawn: null
   fxResource: ["FX.Modifiers.ModifierOpeningGambit", "FX.Modifiers.ModifierGenericDamageNearbyShadow"]
 
   getPrivateDefaults: (gameSession) ->
@@ -24,11 +26,12 @@ class ModifierOpeningGambitSacrificeNearbyBuffSelf extends ModifierOpeningGambit
 
     return p
 
-  @createContextObject: (attackBuff = 0, maxHPBuff = 0, options = undefined) ->
+  @createContextObject: (attackBuff = 0, maxHPBuff = 0, cardDataOrIndexToSpawn, options = undefined) ->
     contextObject = super(options)
     statBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(attackBuff,maxHPBuff)
     statBuffContextObject.appliedName = "Consumed Strength"
     contextObject.modifiersContextObjects = [statBuffContextObject]
+    contextObject.cardDataOrIndexToSpawn = cardDataOrIndexToSpawn
     return contextObject
 
   @getDescription: (modifierContextObject) ->
@@ -56,7 +59,21 @@ class ModifierOpeningGambitSacrificeNearbyBuffSelf extends ModifierOpeningGambit
         damageAction.setTarget(entity)
         @getGameSession().executeAction(damageAction)
         @_private.numSacrificed++
-
+        @spawnEntityAtPosition(entity.getPosition())
     @applyManagedModifiersFromModifiersContextObjects(@modifiersContextObjects, @getCard())
+  
+  spawnEntityAtPosition: (position) ->
+    unless @cardDataOrIndexToSpawn?
+      return
+    action = new PlayCardAction(
+      @getGameSession(),
+      @getOwnerId(),
+      position.x,
+      position.y,
+      @cardDataOrIndexToSpawn,
+    )
+    action.setSource(@getCard())
+    @getGameSession().executeAction(action)
+    return
 
-module.exports = ModifierOpeningGambitSacrificeNearbyBuffSelf
+module.exports = ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity

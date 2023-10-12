@@ -7,6 +7,7 @@ class ModifierOpeningGambitPutCardInHand extends ModifierOpeningGambit
   @type:"ModifierOpeningGambitPutCardInHand"
 
   cardDataOrIndexToPutInHand: null
+  count: 1
 
   @createContextObject: (cardDataOrIndexToPutInHand, options) ->
     contextObject = super(options)
@@ -15,7 +16,9 @@ class ModifierOpeningGambitPutCardInHand extends ModifierOpeningGambit
 
   onOpeningGambit: (action) ->
     super(action)
-    a = new PutCardInHandAction(this.getGameSession(), @getCard().getOwnerId(), @cardDataOrIndexToPutInHand)
-    this.getGameSession().executeAction(a)
+    for [0...@count]
+      a = new PutCardInHandAction(this.getGameSession(), @getCard().getOwnerId(), @cardDataOrIndexToPutInHand)
+      this.getGameSession().executeAction(a)
+    return
 
 module.exports = ModifierOpeningGambitPutCardInHand

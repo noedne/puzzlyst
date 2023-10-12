@@ -41,7 +41,7 @@ class ModifierDealDamageWatchSpawnEntity extends ModifierDealDamageWatch
 
     if @getGameSession().getIsRunningAsAuthoritative()
       ownerId = @getSpawnOwnerId(action)
-      spawnPositions = UtilsGameSession.getRandomNonConflictingSmartSpawnPositionsForModifier(@, ModifierDealDamageWatchSpawnEntity)
+      spawnPositions = @getSpawnPositions(action)
       for spawnPosition in spawnPositions
         cardDataOrIndexToSpawn = @getCardDataOrIndexToSpawn()
         if @spawnSilently
@@ -50,6 +50,10 @@ class ModifierDealDamageWatchSpawnEntity extends ModifierDealDamageWatch
           spawnAction = new PlayCardAction(@getGameSession(), ownerId, spawnPosition.x, spawnPosition.y, cardDataOrIndexToSpawn)
         spawnAction.setSource(@getCard())
         @getGameSession().executeAction(spawnAction)
+    return
+  
+  getSpawnPositions: (_action) ->
+    return UtilsGameSession.getRandomNonConflictingSmartSpawnPositionsForModifier(@, ModifierDealDamageWatchSpawnEntity)
 
   getCardDataOrIndexToSpawn: () ->
     return @cardDataOrIndexToSpawn

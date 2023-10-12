@@ -37,7 +37,7 @@
 	"destructible_def":"Artifacts have 3 Durability. When your General takes damage, it loses 1 Durability. When an artifact has no durability, it is destroyed.",
 
 	"dying_wish_name":"Dying Wish",
-	"dying_wish_def":"Triggers an effect when this minion dies.",
+	"dying_wish_def":"Triggers an effect when destroyed.",
 
 	"exhuming_sand_name":"Exhuming Sand",
 	"exhuming_sand_def":"Summons a 2/2 Iron Dervish when its owner summons a minion from their action bar",
@@ -80,7 +80,7 @@
 	"sentinel_def":"Summoned as a 3/3 with no abilities. Will transform into its true form if a specific event occurs on opponent's turn.",
 
 	"shadow_creep_name":"Shadow Creep",
-	"shadow_creep_def":"Deals damage to enemy minions and Generals standing on it at the end of owner's turn",
+	"shadow_creep_def":"At the end of your turn, this deals damage equal to the number of allied Shadow Creep to the enemy on this space.",
 
 	"structure_name":"Structure",
 	"structure_def":"This minion cannot move or attack.",
@@ -344,7 +344,8 @@
 	"faction_4_skullprophet":"Prophetic Misfortune",
 	"faction_4_stygian_observer":"Deaths Observed",
 
-	"faction_4_followup_blood_siren_2":"Weakened Blood",
+	"faction_4_followup_blood_siren_1":"Weakened Blood",
+	"faction_4_followup_blood_siren_2":"Attack set to 0",
 	"faction_4_followup_blood_baronette_2":"Blood Surge",
 
 	"faction_4_spell_abyssal_scar_1":"Shadow Scar",

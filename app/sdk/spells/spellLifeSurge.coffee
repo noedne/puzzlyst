@@ -8,16 +8,20 @@ UtilsPosition = require 'app/common/utils/utils_position'
 
 class SpellLifeSurge extends SpellDamage
 
+  spellFilterType: SpellFilterType.NeutralDirect
+
   onApplyEffectToBoardTile: (board,x,y,sourceAction) ->
     entity = board.getCardAtPosition({x:x, y:y}, @targetType)
 
-    # the minion to deal damage to (SpellDamage default effect)
-    if !entity?.isGeneral
+    # the unit to deal damage to (SpellDamage default effect)
+    if !entity?.isGeneral or # minion
+        !entity.getIsSameTeamAs(@) or # enemy General
+        @getApplyEffectPositions().length is 1 # your General
       super(board,x,y,sourceAction)
 
     # your General, gets healed
-    else
-      general = @getGameSession().getGeneralForPlayerId(@getOwnerId())
+    general = @getGameSession().getGeneralForPlayerId(@getOwnerId())
+    if entity is general
       healAction = new HealAction(@getGameSession())
       healAction.setOwnerId(@getOwnerId())
       healAction.setTarget(general)

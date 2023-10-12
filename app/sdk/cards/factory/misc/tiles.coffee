@@ -28,6 +28,8 @@ ModifierSandPortal = require 'app/sdk/modifiers/modifierSandPortal'
 ModifierPrimalProtection = require 'app/sdk/modifiers/modifierPrimalProtection'
 ModifierPrimalTile = require 'app/sdk/modifiers/modifierPrimalTile'
 ModifierCollectableCard = require 'app/sdk/modifiers/modifierCollectableCard'
+Modifier = require 'app/sdk/modifiers/modifier'
+ModifierStackingShadowsBonusDamage = require 'app/sdk/modifiers/modifierStackingShadowsBonusDamage'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -74,13 +76,27 @@ class CardFactory_Tiles
 
     if (identifier == Cards.Tile.Shadow)
       card = new Tile(gameSession)
-      card.factionId = Factions.Neutral
+      card.factionId = Factions.Faction4
       card.id = Cards.Tile.Shadow
       card.name = i18next.t("modifiers.shadow_creep_name")
-      #      card.setDescription("Deals damage to enemy minion equal to the number of Shadow Creep tiles on the battlefield.")
+      card.setDescription(i18next.t("modifiers.shadow_creep_def"))
       card.setIsHiddenInCollection(true)
       card.manaCost = 0
-      card.setInherentModifiersContextObjects([ModifierStackingShadows.createContextObject(), ModifierStackingShadowsDebuff.createContextObject()])
+      card.setInherentModifiersContextObjects([
+        ModifierStackingShadows.createContextObject(),
+        ModifierStackingShadowsDebuff.createContextObject(),
+        Modifier.createContextObjectWithAuraForAllAllies(
+          [ModifierStackingShadowsBonusDamage.createContextObject(1)],
+          null,
+          [Cards.Tile.Shadow],
+          undefined,
+          undefined,
+          {
+            auraFilterByCardType: CardType.Tile,
+            isHiddenToUI: true,
+          },
+        ),
+      ])
       card.setFXResource(["FX.Cards.Tile.Shadow"])
       card.setSpriteOptions({
         scale: 1.3

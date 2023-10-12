@@ -992,7 +992,9 @@ CONFIG.ALL_BOARD_POSITIONS = (function () {
 }());
 
 // commonly used patterns
-
+CONFIG.PATTERN_DIRECTLY_BEHIND = [
+  { x: -1, y: 0, flipXForP2: true },
+];
 CONFIG.PATTERN_1x1 = [
   { x: 0, y: 0 },
 ];

@@ -106,8 +106,13 @@ UtilsGameSession.getSmartSpawnPositionsFromPattern = (gameSession, sourcePositio
   if !pattern? then pattern = CONFIG.PATTERN_1x1
 
   for offset in pattern
+    xOffset = offset.x
+    if offset.flipXForP2
+      unit = board.getUnitAtPosition(sourcePosition)
+      if unit? and unit.isOwnedByPlayer2()
+        xOffset *= -1
     # make sure the potential spawn location is on the board and spawn only when not obstructing or position is unobstructed
-    spawnPosition = {x: sourcePosition.x + offset.x, y: sourcePosition.y + offset.y}
+    spawnPosition = {x: sourcePosition.x + xOffset, y: sourcePosition.y + offset.y}
     if board.isOnBoard(spawnPosition) and !board.getObstructionAtPositionForEntity(spawnPosition, cardToSpawn)
       spawnPositions.push(spawnPosition)
 

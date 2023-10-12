@@ -620,6 +620,7 @@ class Cards
     SpiritoftheWild:           20502
     Cryogenesis:               20503
     FollowupTwinStrike:        20504
+    FollowupKillDamagedTarget: 20505
   }
 
   @Artifact: {

@@ -12,7 +12,7 @@ class SpellNetherSummoning extends SpellSpawnEntity
 
   targetType: CardType.Unit
   spawnSilently: true
-  numUnits: 2
+  numUnits: 8
   cardDataOrIndexToSpawn: {id: Cards.Faction4.Wraithling} # use Wraithling as default unit for checking spawn positions, etc
 
   getPrivateDefaults: (gameSession) ->
@@ -51,7 +51,7 @@ class SpellNetherSummoning extends SpellSpawnEntity
 
   getDeadUnits: () ->
     if !@_private.deadUnits?
-      @_private.deadUnits = @getGameSession().getDeadUnits(null, @getOwnerId())
+      @_private.deadUnits = @getGameSession().getDeadUnits(null, null, true)
     return @_private.deadUnits
 
   # nether summmoning picks its apply locations by itself, so don't set limits on where it can be cast

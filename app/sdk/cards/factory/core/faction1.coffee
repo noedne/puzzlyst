@@ -911,7 +911,6 @@ class CardFactory_CoreSet_Faction1
       card.rarityId = Rarity.Legendary
       card.damageAmount = 5
       card.healAmount = 5
-      card.spellFilterType = SpellFilterType.NeutralDirect
       card.setFXResource(["FX.Cards.Spell.CircleLife"])
       card.setBaseSoundResource(
         apply : RSX.sfx_neutral_spelljammer_attack_swing.audio

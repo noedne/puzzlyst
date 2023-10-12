@@ -28,44 +28,47 @@ SpellApplyModifiers = require 'app/sdk/spells/spellApplyModifiers'
 SpellKillTarget = require 'app/sdk/spells/spellKillTarget'
 SpellNetherSummoning = require 'app/sdk/spells/spellNetherSummoning'
 SpellChokingShadows = require 'app/sdk/spells/spellChokingShadows'
-SpellVoidPulse = require 'app/sdk/spells/spellVoidPulse'
 SpellDarkSacrifice = require 'app/sdk/spells/spellDarkSacrifice'
 SpellKillTargetSpawnEntity = require 'app/sdk/spells/spellKillTargetSpawnEntity'
 SpellSpawnEntity = require 'app/sdk/spells/spellSpawnEntity'
 SpellBreathOfTheUnborn = require 'app/sdk/spells/spellBreathOfTheUnborn'
 SpellRiteOfTheUndervault = require 'app/sdk/spells/spellRiteOfTheUndervault'
 SpellDarkSeed = require 'app/sdk/spells/spellDarkSeed'
-SpellConsumingRebirth = require 'app/sdk/spells/spellConsumingRebirth'
 SpellShadowspawn = require 'app/sdk/spells/spellShadowspawn'
 SpellAbyssalScar = require 'app/sdk/spells/spellAbyssalScar'
 SpellSacrificeBBS = require 'app/sdk/spells/spellSacrificeBBS'
+SpellLifeSurge = require 'app/sdk/spells/spellLifeSurge'
+SpellVoidSteal = require 'app/sdk/spells/spellVoidSteal'
+SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
 
 Modifier =           require 'app/sdk/modifiers/modifier'
 ModifierStackingShadows = require 'app/sdk/modifiers/modifierStackingShadows'
 ModifierFirstBlood =     require 'app/sdk/modifiers/modifierFirstBlood'
-ModifierFrenzy =     require 'app/sdk/modifiers/modifierFrenzy'
 ModifierOpeningGambit =     require 'app/sdk/modifiers/modifierOpeningGambit'
 ModifierDeathWatchBuffSelf = require 'app/sdk/modifiers/modifierDeathWatchBuffSelf'
 ModifierDeathWatchDamageEnemyGeneralHealMyGeneral = require 'app/sdk/modifiers/modifierDeathWatchDamageEnemyGeneralHealMyGeneral'
 ModifierFlying = require 'app/sdk/modifiers/modifierFlying'
 ModifierOpeningGambitSpawnEntity = require 'app/sdk/modifiers/modifierOpeningGambitSpawnEntity'
 ModifierDeathWatchSpawnEntity = require 'app/sdk/modifiers/modifierDeathWatchSpawnEntity'
-ModifierOpeningGambitSacrificeNearbyBuffSelf = require 'app/sdk/modifiers/modifierOpeningGambitSacrificeNearbyBuffSelf'
 ModifierDyingWishSpawnEntityAnywhere = require 'app/sdk/modifiers/modifierDyingWishSpawnEntityAnywhere'
 ModifierDamageGeneralOnAttack = require 'app/sdk/modifiers/modifierDamageGeneralOnAttack'
 ModifierTranscendance = require 'app/sdk/modifiers/modifierTranscendance'
 ModifierSummonWatchByEntityBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchByEntityBuffSelf'
-ModifierDyingWishSpawnUnitFromOpponentsDeck = require 'app/sdk/modifiers/modifierDyingWishSpawnUnitFromOpponentsDeck'
 ModifierDealDamageWatchSpawnEntity = require 'app/sdk/modifiers/modifierDealDamageWatchSpawnEntity'
 ModifierWraithlingFury = require 'app/sdk/modifiers/modifierWraithlingFury'
 ModifierDyingWishDamageNearbyAllies = require 'app/sdk/modifiers/modifierDyingWishDamageNearbyAllies'
 ModifierKillWatchHealSelf = require 'app/sdk/modifiers/modifierKillWatchHealSelf'
 ModifierShadowScar = require 'app/sdk/modifiers/modifierShadowScar'
-ModifierStackingShadowsBonusDamage = require 'app/sdk/modifiers/modifierStackingShadowsBonusDamage'
-ModifierDynamicCountModifySelfByShadowTilesOnBoard = require 'app/sdk/modifiers/modifierDynamicCountModifySelfByShadowTilesOnBoard'
-ModifierEndTurnWatchSpawnTile = require 'app/sdk/modifiers/modifierEndTurnWatchSpawnTile'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
-ModifierTokenCreator = require 'app/sdk/modifiers/modifierTokenCreator'
+ModifierDyingWishSpawnTile = require 'app/sdk/modifiers/modifierDyingWishSpawnTile'
+ModifierDealDamageWatchSpawnEntityOnTarget = require 'app/sdk/modifiers/modifierDealDamageWatchSpawnEntityOnTarget'
+ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity = require 'app/sdk/modifiers/modifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity'
+ModifierOpeningGambitApplyModifiersToGeneral = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiersToGeneral'
+ModifierDynamicCountModifySelfByShadowTilesOnBoard = require 'app/sdk/modifiers/modifierDynamicCountModifySelfByShadowTilesOnBoard'
+ModifierDyingWishTeleportEnemyGeneral = require 'app/sdk/modifiers/modifierDyingWishTeleportEnemyGeneral'
+ModifierOpeningGambitPutCardInHand = require 'app/sdk/modifiers/modifierOpeningGambitPutCardInHand'
+ModifierDyingWish = require 'app/sdk/modifiers/modifierDyingWish'
+PlayerModifierOnDeathWatchBonusMana = require 'app/sdk/playerModifiers/playerModifierOnDeathWatchBonusMana'
 
 WartechGeneralFaction4Achievement = require 'app/sdk/achievements/wartechAchievements/wartechGeneralFaction4Achievement'
 
@@ -90,7 +93,7 @@ class CardFactory_CoreSet_Faction4
       card.setIsGeneral(true)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_lilithe_name")
-      card.setDescription(i18next.t("cards.faction_4_unit_lilithe_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(90)
       card.setBoundingBoxHeight(90)
@@ -125,7 +128,6 @@ class CardFactory_CoreSet_Faction4
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.Shadowspawn}
 
     if (identifier == Cards.Faction4.AltGeneral)
       card = new Unit(gameSession)
@@ -134,7 +136,7 @@ class CardFactory_CoreSet_Faction4
       card.setIsGeneral(true)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_cassyva_name")
-      card.setDescription(i18next.t("cards.faction_4_unit_cassyva_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(75)
       card.setBoundingBoxHeight(75)
@@ -169,7 +171,6 @@ class CardFactory_CoreSet_Faction4
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.AbyssalScar}
 
     if (identifier == Cards.Faction4.ThirdGeneral)
       card = new Unit(gameSession)
@@ -179,7 +180,7 @@ class CardFactory_CoreSet_Faction4
         card.setIsUnlockedWithAchievementId(WartechGeneralFaction4Achievement.id)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_maehv_name")
-      card.setDescription(i18next.t("cards.faction_4_unit_maehv_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(75)
       card.setBoundingBoxHeight(75)
@@ -214,7 +215,6 @@ class CardFactory_CoreSet_Faction4
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.SacrificeBBS}
 
     if (identifier == Cards.Faction4.AbyssalCrawler)
       card = new Unit(gameSession)
@@ -245,8 +245,13 @@ class CardFactory_CoreSet_Faction4
       card.maxHP = 1
       card.atk = 2
       card.manaCost = 1
-      card.rarityId = Rarity.Fixed
-      card.setInherentModifiersContextObjects([ModifierEndTurnWatchSpawnTile.createContextObject({id: Cards.Tile.Shadow}, "Shadow Creep")])
+      card.rarityId = Rarity.Common
+      card.setInherentModifiersContextObjects([
+        ModifierDyingWishSpawnTile.createContextObject(
+          {id: Cards.Tile.Shadow},
+          "Shadow Creep",
+        ),
+      ])
       card.addKeywordClassToInclude(ModifierStackingShadows)
 
     if (identifier == Cards.Faction4.AbyssalJuggernaut)
@@ -275,11 +280,17 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4JuggernautDamage.name
         death : RSX.f4JuggernautDeath.name
       )
-      card.atk = 3
-      card.maxHP = 3
+      card.atk = 4
+      card.maxHP = 4
       card.manaCost = 4
-      card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([ModifierDynamicCountModifySelfByShadowTilesOnBoard.createContextObject(1,1,"+1/+1","Juggernaut")])
+      card.rarityId = Rarity.Rare
+      card.setInherentModifiersContextObjects([
+        ModifierDealDamageWatchSpawnEntityOnTarget.createContextObject(
+          { id: Cards.Tile.Shadow },
+          undefined,
+          { enemyOnly: true },
+        ),
+      ])
       card.addKeywordClassToInclude(ModifierStackingShadows)
 
     if (identifier == Cards.Faction4.BloodmoonPriestess)
@@ -309,11 +320,10 @@ class CardFactory_CoreSet_Faction4
       card.atk = 3
       card.maxHP = 3
       card.manaCost = 4
-      card.rarityId = Rarity.Rare
+      card.rarityId = Rarity.Epic
       card.setInherentModifiersContextObjects([
         ModifierDeathWatchSpawnEntity.createContextObject({id: Cards.Faction4.Wraithling}, "Wraithling")
       ])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
 
     if (identifier == Cards.Faction4.ShadowWatcher)
       card = new Unit(gameSession)
@@ -341,10 +351,10 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4EngulfingShadowDamage.name
         death : RSX.f4EngulfingShadowDeath.name
       )
-      card.atk = 2
+      card.atk = 3
       card.maxHP = 2
       card.manaCost = 3
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       deathWatchBuffSelf = ModifierDeathWatchBuffSelf.createContextObject(1,1)
       card.setInherentModifiersContextObjects([
         deathWatchBuffSelf
@@ -376,13 +386,14 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4DaemonDeepDamage.name
         death : RSX.f4DaemonDeepDeath.name
       )
-      card.atk = 4
-      card.maxHP = 4
+      card.atk = 3
+      card.maxHP = 3
       card.manaCost = 4
-      card.rarityId = Rarity.Common
+      card.rarityId = Rarity.Epic
       card.setInherentModifiersContextObjects([
-        ModifierFrenzy.createContextObject(),
-        ModifierOpeningGambitSacrificeNearbyBuffSelf.createContextObject(2,2)
+        ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity.createContextObject(2,2,{
+          id: Cards.Faction4.Wraithling,
+        }),
       ])
 
     if (identifier == Cards.Faction4.DarkSiren)
@@ -414,22 +425,20 @@ class CardFactory_CoreSet_Faction4
       card.manaCost = 2
       card.rarityId = Rarity.Common
       card.addKeywordClassToInclude(ModifierOpeningGambit)
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(-2,0)
+      statContextObject = Modifier.createContextObjectWithAttributeBuffs(0,0)
+      statContextObject.attributeBuffs.atk = 0
+      statContextObject.attributeBuffsAbsolute = ['atk']
       statContextObject.durationEndTurn = 1
-      statContextObject.appliedName = i18next.t("modifiers.faction_4_followup_blood_siren_2")
-      card.setFollowups([
-        {
-          id: Cards.Spell.ApplyModifiers
-          spellFilterType: SpellFilterType.EnemyDirect
-          canTargetGeneral: true
-          targetModifiersContextObjects: [
-            statContextObject
-          ]
-          _private: {
-            followupSourcePattern: CONFIG.PATTERN_3x3
-          }
-        }
-      ])
+      statContextObject.appliedName = i18next.t("modifiers.faction_4_followup_blood_siren_1")
+      statContextObject.appliedDescription = i18next.t("modifiers.faction_4_followup_blood_siren_2")
+      card.setInherentModifiersContextObjects([
+        ModifierOpeningGambitApplyModifiersToGeneral.createContextObject(
+          [statContextObject],
+          false,
+          true,
+          "This unit's Attack is set to 0 this turn.",
+        )],
+      )
 
     if (identifier == Cards.Faction4.VorpalReaver)
       card = new Unit(gameSession)
@@ -462,7 +471,6 @@ class CardFactory_CoreSet_Faction4
       card.manaCost = 6
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([ModifierTranscendance.createContextObject(), ModifierDyingWishSpawnEntityAnywhere.createContextObject({id: Cards.Faction4.Wraithling}, 6)])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
 
     if (identifier == Cards.Faction4.Wraithling)
       card = new Unit(gameSession)
@@ -492,7 +500,7 @@ class CardFactory_CoreSet_Faction4
       )
       card.atk = 1
       card.maxHP = 1
-      card.manaCost = 1
+      card.manaCost = 0
       card.rarityId = Rarity.TokenUnit
       card.addKeywordClassToInclude(ModifierToken)
 
@@ -523,12 +531,12 @@ class CardFactory_CoreSet_Faction4
         death : RSX.f4DarkspineDeath.name
       )
       card.atk = 1
-      card.maxHP = 4
+      card.maxHP = 1
       card.manaCost = 2
-      card.rarityId = Rarity.Rare
-      auraContextObject = Modifier.createContextObjectWithAuraForAllAllies([ModifierStackingShadowsBonusDamage.createContextObject(0,2)], null, [Cards.Tile.Shadow], null, "Double the damage dealt by friendly Shadow Creep")
-      auraContextObject.auraFilterByCardType = CardType.Tile
-      card.setInherentModifiersContextObjects([auraContextObject])
+      card.rarityId = Rarity.Common
+      card.setInherentModifiersContextObjects([
+        ModifierDynamicCountModifySelfByShadowTilesOnBoard.createContextObject(2, 2),
+      ])
       card.addKeywordClassToInclude(ModifierStackingShadows)
 
     if (identifier == Cards.Faction4.GloomChaser)
@@ -555,12 +563,18 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4GloomchaserDamage.name
         death : RSX.f4GloomchaserDeath.name
       )
-      card.atk = 2
-      card.maxHP = 2
+      card.atk = 3
+      card.maxHP = 1
       card.manaCost = 2
-      card.rarityId = Rarity.Fixed
-      card.setInherentModifiersContextObjects([ModifierOpeningGambitSpawnEntity.createContextObject({id: Cards.Faction4.Wraithling}, "1/1 Wraithling", 1, CONFIG.PATTERN_3x3)])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
+      card.rarityId = Rarity.Common
+      card.setInherentModifiersContextObjects([
+        ModifierOpeningGambitSpawnEntity.createContextObject(
+          {id: Cards.Faction4.Wraithling},
+          "1/1 Wraithling",
+          1,
+          CONFIG.PATTERN_DIRECTLY_BEHIND,
+        ),
+      ])
 
     if (identifier == Cards.Faction4.ReaperNineMoons)
       card = new Unit(gameSession)
@@ -588,11 +602,14 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4ReaperNineMoonsDamage.name
         death : RSX.f4ReaperNineMoonsDeath.name
       )
-      card.atk = 5
+      card.atk = 7
       card.maxHP = 3
       card.manaCost = 5
       card.rarityId = Rarity.Epic
-      card.setInherentModifiersContextObjects([ModifierFlying.createContextObject(), ModifierDyingWishSpawnUnitFromOpponentsDeck.createContextObject()])
+      card.setInherentModifiersContextObjects([
+        ModifierFlying.createContextObject(),
+        ModifierDyingWishTeleportEnemyGeneral.createContextObject(),
+      ])
 
     if (identifier == Cards.Faction4.SharianShadowdancer)
       card = new Unit(gameSession)
@@ -620,7 +637,7 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4ShadowdancerDamage.name
         death : RSX.f4ShadowdancerDeath.name
       )
-      card.atk = 4
+      card.atk = 5
       card.maxHP = 4
       card.manaCost = 5
       card.rarityId = Rarity.Rare
@@ -652,16 +669,15 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4NightsorrowDamage.name
         death : RSX.f4NightsorrowDeath.name
       )
-      card.atk = 2
-      card.maxHP = 1
+      card.atk = 4
+      card.maxHP = 2
       card.manaCost = 3
-      card.rarityId = Rarity.Common
+      card.rarityId = Rarity.Rare
       card.addKeywordClassToInclude(ModifierOpeningGambit)
       card.setFollowups([
         {
-          id: Cards.Spell.FollowupKillTargetByAttack
-          maxAttack: 2
-          spellFilterType: SpellFilterType.EnemyDirect
+          id: Cards.Spell.FollowupKillDamagedTarget
+          spellFilterType: SpellFilterType.NeutralDirect
           _private: {
             followupSourcePattern: CONFIG.PATTERN_3x3
           }
@@ -696,7 +712,7 @@ class CardFactory_CoreSet_Faction4
       )
       card.atk = 6
       card.maxHP = 6
-      card.manaCost = 8
+      card.manaCost = 7
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([  ModifierFirstBlood.createContextObject(), ModifierDamageGeneralOnAttack.createContextObject(4)  ])
 
@@ -727,113 +743,16 @@ class CardFactory_CoreSet_Faction4
         death : RSX.f4BlackSolusDeath.name
       )
       card.atk = 4
-      card.maxHP = 7
-      card.manaCost = 5
-      card.rarityId = Rarity.Epic
+      card.maxHP = 3
+      card.manaCost = 4
+      card.rarityId = Rarity.Rare
       customContextObject = ModifierSummonWatchByEntityBuffSelf.createContextObject(2,0,Cards.Faction4.Wraithling,"Wraithling")
       card.setInherentModifiersContextObjects([
-        customContextObject
+        ModifierOpeningGambitPutCardInHand.createContextObject(
+          { id: Cards.Faction4.Wraithling },
+          { count: 2 },
+        ),
       ])
-
-    if (identifier == Cards.Spell.Shadowspawn)
-      card = new SpellShadowspawn(gameSession)
-      card.factionId = Factions.Faction4
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.Shadowspawn
-      card.name = i18next.t("cards.faction_4_spell_shadowspawn_name")
-      card.setDescription(i18next.t("cards.faction_4_spell_shadowspawn_description"))
-      card.manaCost = 1
-      card.cardDataOrIndexToSpawn = {id: Cards.Faction4.Wraithling}
-      card.setFXResource(["FX.Cards.Spell.Shadowspawn"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_neutral_makantorwarbeast_attack_impact.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconShadowspawnIdle.name
-        active : RSX.iconShadowspawnActive.name
-      )
-
-    if (identifier == Cards.Spell.AbyssalScar)
-      card = new SpellAbyssalScar(gameSession)
-      card.factionId = Factions.Faction4
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.AbyssalScar
-      card.name = i18next.t("cards.faction_4_spell_abyssal_scar_name")
-      card.setDescription(i18next.t("cards.faction_4_spell_abyssal_scar_description"))
-      card.addKeywordClassToInclude(ModifierStackingShadows)
-      card.manaCost = 1
-      card.damageAmount = 1
-      dyingWishContextObject = ModifierShadowScar.createContextObject({id: Cards.Tile.Shadow})
-      dyingWishContextObject.durationEndTurn = 1
-      dyingWishContextObject.appliedName = i18next.t("modifiers.faction_4_spell_abyssal_scar_1")
-      dyingWishContextObject.isRemovable = false
-      card.setTargetModifiersContextObjects([dyingWishContextObject])
-      card.setFXResource(["FX.Cards.Spell.AbyssalScar"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_spell_shadowreflection.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconTaintIdle.name
-        active : RSX.iconTaintActive.name
-      )
-
-    if (identifier == Cards.Spell.SacrificeBBS)
-      card = new SpellSacrificeBBS(gameSession)
-      card.factionId = Factions.Faction4
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.SacrificeBBS
-      card.spellFilterType = SpellFilterType.AllyDirect
-      card.canTargetGeneral = false
-      card.name = i18next.t("cards.faction_4_spell_malice_name")
-      card.setDescription(i18next.t("cards.faction_4_spell_malice_desc"))
-      card.manaCost = 1
-      card.setFollowups([{
-        id: Cards.Spell.SpawnEntity
-        cardDataOrIndexToSpawn: {id: Cards.Faction4.Husk}
-        _private: {
-            followupSourcePattern: CONFIG.PATTERN_3x3
-          }
-      }])
-      card.setFXResource(["FX.Cards.Spell.Malice"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_spell_darkfiresacrifice.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconMaliceIdle.name
-        active : RSX.iconMaliceActive.name
-      )
-
-    if (identifier == Cards.Faction4.Husk)
-      card = new Unit(gameSession)
-      card.factionId = Factions.Faction4
-      card.name = i18next.t("cards.faction_4_unit_husk_name")
-      card.setIsHiddenInCollection(true)
-      card.rarityId = Rarity.TokenUnit
-      card.atk = 4
-      card.maxHP = 4
-      card.manaCost = 1
-      card.addKeywordClassToInclude(ModifierToken)
-      card.setFXResource(["FX.Cards.Neutral.Serpenti"])
-      card.setBoundingBoxWidth(105)
-      card.setBoundingBoxHeight(80)
-      card.setBaseSoundResource(
-        apply : RSX.sfx_unit_deploy.audio
-        walk : RSX.sfx_singe2.audio
-        attack : RSX.sfx_neutral_serpenti_attack_swing.audio
-        receiveDamage : RSX.sfx_neutral_serpenti_hit.audio
-        attackDamage : RSX.sfx_neutral_serpenti_attack_impact.audio
-        death : RSX.sfx_neutral_serpenti_death.audio
-      )
-      card.setBaseAnimResource(
-        breathing : RSX.f4HuskBreathing.name
-        idle : RSX.f4HuskIdle.name
-        walk : RSX.f4HuskRun.name
-        attack : RSX.f4HuskAttack.name
-        attackReleaseDelay: 0.0
-        attackDelay: 0.3
-        damage : RSX.f4HuskHit.name
-        death : RSX.f4HuskDeath.name
-      )
 
     if (identifier == Cards.Spell.AbyssianStrength)
       card = new SpellApplyModifiers(gameSession)
@@ -841,13 +760,15 @@ class CardFactory_CoreSet_Faction4
       card.id = Cards.Spell.AbyssianStrength
       card.name = i18next.t("cards.faction_4_spell_wraithling_fury_name")
       card.setDescription(i18next.t("cards.faction_4_spell_wraithling_fury_description"))
-      card.spellFilterType = SpellFilterType.AllyDirect
+      card.spellFilterType = SpellFilterType.NeutralDirect
       card.manaCost = 3
       card.rarityId = Rarity.Epic
       card.setTargetModifiersContextObjects([
-        ModifierWraithlingFury.createContextObject()
+        ModifierWraithlingFury.createContextObject(),
+        ModifierFlying.createContextObject(),
       ])
       card.filterCardIds = [Cards.Faction4.Wraithling]
+      card.addKeywordClassToInclude(ModifierFlying)
       card.setFXResource(["FX.Cards.Spell.AbyssianStrength"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_entropicdecay.audio
@@ -867,7 +788,7 @@ class CardFactory_CoreSet_Faction4
       card.setDescription(i18next.t("cards.faction_4_spell_daemonic_lure_description"))
       card.manaCost = 2
       card.spellFilterType = SpellFilterType.EnemyDirect
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.damageAmount = 1
       card.setFollowups([{
         id: Cards.Spell.FollowupTeleport
@@ -907,8 +828,8 @@ class CardFactory_CoreSet_Faction4
       card.name = i18next.t("cards.faction_4_spell_shadow_nova_name")
       card.setDescription(i18next.t("cards.faction_4_spell_shadow_nova_description"))
       card.addKeywordClassToInclude(ModifierStackingShadows)
-      card.manaCost = 4
-      card.rarityId = Rarity.Fixed
+      card.manaCost = 7
+      card.rarityId = Rarity.Rare
       card.setFXResource(["FX.Cards.Spell.ShadowNova"])
       card.setAffectPattern(CONFIG.PATTERN_2X2)
       card.cardDataOrIndexToSpawn = {id: Cards.Tile.Shadow}
@@ -921,14 +842,15 @@ class CardFactory_CoreSet_Faction4
       )
 
     if (identifier == Cards.Spell.VoidPulse)
-      card = new SpellVoidPulse(gameSession)
+      card = new SpellLifeSurge(gameSession)
       card.factionId = Factions.Faction4
       card.id = Cards.Spell.VoidPulse
       card.name = i18next.t("cards.faction_4_spell_void_pulse_name")
       card.setDescription(i18next.t("cards.faction_4_spell_void_pulse_description"))
       card.manaCost = 1
-      card.damageAmount = 2
-      card.healAmount = 3
+      card.damageAmount = 1
+      card.healAmount = 2
+      card.canTargetGeneral = true
       card.rarityId = Rarity.Common
       card.setFXResource(["FX.Cards.Spell.VoidPulse"])
       card.setBaseSoundResource(
@@ -948,7 +870,7 @@ class CardFactory_CoreSet_Faction4
       card.addKeywordClassToInclude(ModifierDeathWatchBuffSelf)
       card.manaCost = 3
       card.setTargetModifiersContextObjects([ModifierDeathWatchBuffSelf.createContextObject(2,2)])
-      card.spellFilterType = SpellFilterType.AllyDirect
+      card.spellFilterType = SpellFilterType.NeutralDirect
       card.rarityId = Rarity.Legendary
       card.setFXResource(["FX.Cards.Spell.DeathfireCrescendo"])
       card.setBaseSoundResource(
@@ -966,8 +888,7 @@ class CardFactory_CoreSet_Faction4
       card.name = i18next.t("cards.faction_4_spell_breath_of_the_unborn_name")
       card.setDescription(i18next.t("cards.faction_4_spell_breath_of_the_unborn_description"))
       card.manaCost = 4
-      card.damageAmount = 2
-      card.rarityId = Rarity.Common
+      card.rarityId = Rarity.Rare
       card.radius = CONFIG.WHOLE_BOARD_RADIUS
       card.setFXResource(["FX.Cards.Spell.BreathOfTheUnborn"])
       card.setBaseSoundResource(
@@ -984,7 +905,7 @@ class CardFactory_CoreSet_Faction4
       card.id = Cards.Spell.RiteOfTheUndervault
       card.name = i18next.t("cards.faction_4_spell_rite_of_the_undervault_name")
       card.setDescription(i18next.t("cards.faction_4_spell_rite_of_the_undervault_description"))
-      card.manaCost = 6
+      card.manaCost = 3
       card.rarityId = Rarity.Epic
       card.setFXResource(["FX.Cards.Spell.RiteOfTheUndervault"])
       card.setBaseSoundResource(
@@ -1043,11 +964,10 @@ class CardFactory_CoreSet_Faction4
       card.id = Cards.Spell.DarkTransformation
       card.name = i18next.t("cards.faction_4_spell_dark_transformation_name")
       card.setDescription(i18next.t("cards.faction_4_spell_dark_transformation_description"))
-      card.manaCost = 5
-      card.rarityId = Rarity.Fixed
+      card.manaCost = 4
+      card.rarityId = Rarity.Common
       card.cardDataOrIndexToSpawn = {id: Cards.Faction4.Wraithling}
-      card.spellFilterType = SpellFilterType.EnemyDirect
-      card.addKeywordClassToInclude(ModifierTokenCreator)
+      card.spellFilterType = SpellFilterType.NeutralDirect
       card.setFXResource(["FX.Cards.Spell.DarkTransformation"])
       card.setBaseAnimResource(
         idle: RSX.iconDarkTransformationIdle.name
@@ -1064,7 +984,7 @@ class CardFactory_CoreSet_Faction4
       card.name = i18next.t("cards.faction_4_spell_dark_seed_name")
       card.setDescription(i18next.t("cards.faction_4_spell_dark_seed_description"))
       card.manaCost = 4
-      card.rarityId = Rarity.Rare
+      card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.NeutralIndirect
       card.setFXResource(["FX.Cards.Spell.DarkSeed"])
       card.setBaseSoundResource(
@@ -1082,11 +1002,11 @@ class CardFactory_CoreSet_Faction4
       card.name = i18next.t("cards.faction_4_spell_grasp_of_agony_name")
       card.setDescription(i18next.t("cards.faction_4_spell_grasp_of_agony_description"))
       card.manaCost = 1
-      card.rarityId = Rarity.Common
-      card.spellFilterType = SpellFilterType.EnemyDirect
+      card.rarityId = Rarity.Rare
+      card.spellFilterType = SpellFilterType.NeutralDirect
       dyingWishContextObject = ModifierDyingWishDamageNearbyAllies.createContextObject(3)
-      dyingWishContextObject.isRemovable = false
       card.setTargetModifiersContextObjects([dyingWishContextObject])
+      card.addKeywordClassToInclude(ModifierDyingWish)
       card.setFXResource(["FX.Cards.Spell.CurseOfAgony"])
       card.setBaseAnimResource(
         idle : RSX.iconCurseOfAgonyIdle.name
@@ -1104,7 +1024,7 @@ class CardFactory_CoreSet_Faction4
       card.setDescription(i18next.t("cards.faction_4_spell_shadow_reflection_description"))
       card.manaCost = 3
       card.rarityId = Rarity.Common
-      card.spellFilterType = SpellFilterType.AllyDirect
+      card.spellFilterType = SpellFilterType.NeutralDirect
       attackBuff = Modifier.createContextObjectWithAttributeBuffs(5,0)
       attackBuff.appliedName = i18next.t("modifiers.faction_4_spell_shadow_reflection_1")
       card.setTargetModifiersContextObjects([attackBuff])
@@ -1119,7 +1039,7 @@ class CardFactory_CoreSet_Faction4
 
 
     if (identifier == Cards.Spell.SoulshatterPact)
-      card = new SpellApplyModifiers(gameSession)
+      card = new SpellVoidSteal(gameSession)
       card.factionId = Factions.Faction4
       if !config.get('allCardsAvailable')?
         card.setIsUnlockableBasic(true)
@@ -1127,14 +1047,13 @@ class CardFactory_CoreSet_Faction4
       card.name = i18next.t("cards.faction_4_spell_soulshatter_pact_name")
       card.setDescription(i18next.t("cards.faction_4_spell_soulshatter_pact_description"))
       card.manaCost = 2
-      card.rarityId = Rarity.Fixed
-      card.spellFilterType = SpellFilterType.AllyIndirect
-
-      customContextObject = Modifier.createContextObjectWithAttributeBuffs(2,0)
-      customContextObject.durationEndTurn = 1
-      customContextObject.appliedName = i18next.t("modifiers.faction_4_spell_soulshatter_pact_1")
+      card.rarityId = Rarity.Common
+      card.spellFilterType = SpellFilterType.EnemyDirect
+      customContextObject = Modifier.createContextObjectWithAttributeBuffs(-2,0)
       card.setTargetModifiersContextObjects([customContextObject])
-      card.radius = CONFIG.WHOLE_BOARD_RADIUS
+      card.allyBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(2, 0, {
+        appliedName: i18next.t("modifiers.faction_4_spell_soulshatter_pact_1"),
+      })
       card.setFXResource(["FX.Cards.Spell.SoulshatterPact"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_soulshatterpact.audio
@@ -1151,13 +1070,12 @@ class CardFactory_CoreSet_Faction4
       card.name = i18next.t("cards.faction_4_spell_wraithling_swarm_name")
       card.setDescription(i18next.t("cards.faction_4_spell_wraithling_swarm_description"))
       card.manaCost = 3
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.cardDataOrIndexToSpawn = {id: Cards.Faction4.Wraithling}
       card.spellFilterType = SpellFilterType.SpawnSource
       card.setFollowups([{
         id: Cards.Spell.CloneSourceEntity2X
       }])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setFXResource(["FX.Cards.Spell.WraithlingSwarm"])
       card.setBaseSoundResource(
         apply : RSX.sfx_neutral_makantorwarbeast_attack_impact.audio
@@ -1168,15 +1086,20 @@ class CardFactory_CoreSet_Faction4
       )
 
     if (identifier == Cards.Spell.ConsumingRebirth)
-      card = new SpellConsumingRebirth(gameSession)
+      card = new SpellApplyPlayerModifiers(gameSession)
       card.factionId = Factions.Faction4
       card.id = Cards.Spell.ConsumingRebirth
       card.name = i18next.t("cards.faction_4_spell_consuming_rebirth_name")
       card.setDescription(i18next.t("cards.faction_4_spell_consuming_rebirth_description"))
-      card.manaCost = 2
+      card.manaCost = 1
       card.rarityId = Rarity.Epic
       card.applyToOwnGeneral = true
-      card.spellFilterType = SpellFilterType.AllyDirect
+      card.spellFilterType = SpellFilterType.None
+      card.setTargetModifiersContextObjects([
+        PlayerModifierOnDeathWatchBonusMana.createContextObject({
+          durationEndTurn: 1,
+        }),
+      ])
       card.setFXResource(["FX.Cards.Spell.ConsumingRebirth"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_flashreincarnation.audio
@@ -1194,8 +1117,7 @@ class CardFactory_CoreSet_Faction4
       card.setDescription(i18next.t("cards.faction_4_artifact_soul_grimwar_description"))
       card.addKeywordClassToInclude(ModifierDeathWatchBuffSelf)
       card.manaCost = 3
-      card.rarityId = Rarity.Legendary
-      card.durability = 3
+      card.rarityId = Rarity.Epic
       card.setTargetModifiersContextObjects([
         ModifierDeathWatchBuffSelf.createContextObject(2,0,{
           name: i18next.t("cards.faction_4_artifact_soul_grimwar_name")
@@ -1213,12 +1135,11 @@ class CardFactory_CoreSet_Faction4
     if (identifier == Cards.Artifact.HornOfTheForsaken)
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction4
-      card.id = Cards.Artifact.SunstoneBracers
+      card.id = Cards.Artifact.HornOfTheForsaken
       card.name = i18next.t("cards.faction_4_artifact_horn_of_the_forsaken_name")
       card.setDescription(i18next.t("cards.faction_4_artifact_horn_of_the_forsaken_description"))
       card.manaCost = 1
-      card.rarityId = Rarity.Fixed
-      card.durability = 3
+      card.rarityId = Rarity.Common
       card.setTargetModifiersContextObjects([
         ModifierDealDamageWatchSpawnEntity.createContextObject({id: Cards.Faction4.Wraithling}, "1/1 Wraithling",1, CONFIG.PATTERN_3x3, true,{
           type: "ModifierDealDamageWatchSpawnEntity"
@@ -1226,7 +1147,6 @@ class CardFactory_CoreSet_Faction4
           description: i18next.t("cards.faction_4_artifact_horn_of_the_forsaken_description")
         })
       ])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setFXResource(["FX.Cards.Artifact.HornOfTheForsaken"])
       card.setBaseAnimResource(
         idle: RSX.iconHornForsakenIdle.name
@@ -1243,10 +1163,9 @@ class CardFactory_CoreSet_Faction4
       card.name = i18next.t("cards.faction_4_artifact_spectral_blade_name")
       card.setDescription(i18next.t("cards.faction_4_artifact_spectral_blade_description"))
       card.manaCost = 2
-      card.rarityId = Rarity.Epic
-      card.durability = 3
+      card.rarityId = Rarity.Rare
       card.setTargetModifiersContextObjects([
-        ModifierKillWatchHealSelf.createContextObject(2, false, true,
+        ModifierKillWatchHealSelf.createContextObject(1, false, true,
         {
           name: i18next.t("cards.faction_4_artifact_spectral_blade_name")
           description: i18next.t("modifiers.faction_4_artifact_spectral_blade_1")

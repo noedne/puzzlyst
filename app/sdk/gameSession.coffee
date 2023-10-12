@@ -3241,9 +3241,10 @@ class _GameSession extends SDKObject
    * NOTE: this is an expensive method, so it is recommended that the return value be cached whenever possible!
    * @param {String} [playerId=null] player that played the cards, or both if no playerId provided
    * @param {String} [searchUntilLastTurnOfPlayerId=null] whether to search only until last turn of a player id
+   * @param {Boolean} [onlyCurrentTurn=false] whether to search only the current turn
    * @returns {Array}
    ###
-  getDeadUnits: (playerId, searchUntilLastTurnOfPlayerId) ->
+  getDeadUnits: (playerId, searchUntilLastTurnOfPlayerId, onlyCurrentTurn = false) ->
     deadUnits = []
 
     # find actions to check
@@ -3251,6 +3252,8 @@ class _GameSession extends SDKObject
     currentTurn = @getGameSession().getCurrentTurn()
     turns = [].concat(@getGameSession().getTurns(), currentTurn)
     for turn, i in turns by -1
+      if onlyCurrentTurn and turn != currentTurn
+        break
       if searchUntilLastTurnOfPlayerId? and turn != currentTurn and turn.getPlayerId() is searchUntilLastTurnOfPlayerId
         break
       else

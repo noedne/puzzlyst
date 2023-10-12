@@ -44,7 +44,7 @@ ModifierDeathWatchDamageEnemyGeneralHealMyGeneral = require './modifierDeathWatc
 ModifierFlying = require './modifierFlying'
 ModifierOpeningGambitSpawnEntity = require './modifierOpeningGambitSpawnEntity'
 ModifierDeathWatchSpawnEntity = require './modifierDeathWatchSpawnEntity'
-ModifierOpeningGambitSacrificeNearbyBuffSelf = require './modifierOpeningGambitSacrificeNearbyBuffSelf'
+ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity = require './modifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity'
 ModifierKillWatchSpawnEntity = require './modifierKillWatchSpawnEntity'
 ModifierDyingWishBonusMana = require './modifierDyingWishBonusMana'
 ModifierDyingWishDrawCard = require './modifierDyingWishDrawCard'
@@ -131,7 +131,7 @@ ModifierMyMinionOrGeneralDamagedWatch = require './modifierMyMinionOrGeneralDama
 ModifierMyMinionOrGeneralDamagedWatchBuffSelf = require './modifierMyMinionOrGeneralDamagedWatchBuffSelf'
 ModifierAbsorbDamage = require './modifierAbsorbDamage'
 ModifierAbsorbDamageOnce = require './modifierAbsorbDamageOnce'
-ModifierDyingWishSpawnUnitFromOpponentsDeck = require './modifierDyingWishSpawnUnitFromOpponentsDeck'
+ModifierDyingWishTeleportEnemyGeneral = require './modifierDyingWishTeleportEnemyGeneral'
 ModifierTransformed = require './modifierTransformed'
 ModifierStunWhenAttacked = require './modifierStunWhenAttacked'
 ModifierWall = require './modifierWall'
@@ -150,6 +150,7 @@ ModifierReduceCostOfMinionsAndDamageThem = require './modifierReduceCostOfMinion
 ModifierStunnedVanar = require './modifierStunnedVanar'
 ModifierEndTurnWatchSpawnRandomEntity = require './modifierEndTurnWatchSpawnRandomEntity'
 ModifierDealDamageWatchSpawnEntity = require './modifierDealDamageWatchSpawnEntity'
+ModifierDealDamageWatchSpawnEntityOnTarget = require './modifierDealDamageWatchSpawnEntityOnTarget'
 ModifierSpellDamageWatch = require './modifierSpellDamageWatch'
 ModifierSpellDamageWatchPutCardInHand = require './modifierSpellDamageWatchPutCardInHand'
 ModifierOpeningGambitRemoveRandomArtifact = require './modifierOpeningGambitRemoveRandomArtifact'
@@ -725,6 +726,7 @@ PlayerModifierEmblemSummonWatchFromHandMagmarBuffQuest = require 'app/sdk/player
 PlayerModifierEmblemSummonWatchSonghaiMeltdownQuest = require 'app/sdk/playerModifiers/playerModifierEmblemSummonWatchSonghaiMeltdownQuest'
 PlayerModifierEmblemSummonWatchAbyssUndyingQuest = require 'app/sdk/playerModifiers/playerModifierEmblemSummonWatchAbyssUndyingQuest'
 PlayerModifierEmblemGainMinionOrLoseControlWatch = require 'app/sdk/playerModifiers/playerModifierEmblemGainMinionOrLoseControlWatch'
+PlayerModifierOnDeathWatchBonusMana = require 'app/sdk/playerModifiers/playerModifierOnDeathWatchBonusMana'
 
 GameSessionModifier = require 'app/sdk/gameSessionModifiers/gameSessionModifier'
 GameSessionModifierFestiveSpirit = require 'app/sdk/gameSessionModifiers/gameSessionModifierFestiveSpirit'
@@ -783,8 +785,8 @@ class ModifierFactory
       return ModifierOpeningGambitSpawnEntity
     if (modifierType == ModifierDeathWatchSpawnEntity.type)
       return ModifierDeathWatchSpawnEntity
-    if (modifierType == ModifierOpeningGambitSacrificeNearbyBuffSelf.type)
-      return ModifierOpeningGambitSacrificeNearbyBuffSelf
+    if (modifierType == ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity.type)
+      return ModifierOpeningGambitSacrificeNearbyBuffSelfSpawnEntity
     if (modifierType == ModifierOpeningGambitDamageMyGeneral.type)
       return ModifierOpeningGambitDamageMyGeneral
     if (modifierType == ModifierOpeningGambitDamageBothGenerals.type)
@@ -1009,8 +1011,8 @@ class ModifierFactory
       return ModifierAbsorbDamage
     if (modifierType == ModifierAbsorbDamageOnce.type)
       return ModifierAbsorbDamageOnce
-    if (modifierType == ModifierDyingWishSpawnUnitFromOpponentsDeck.type)
-      return ModifierDyingWishSpawnUnitFromOpponentsDeck
+    if (modifierType == ModifierDyingWishTeleportEnemyGeneral.type)
+      return ModifierDyingWishTeleportEnemyGeneral
     if (modifierType == ModifierTransformed.type)
       return ModifierTransformed
     if (modifierType == ModifierStunWhenAttacked.type)
@@ -1047,6 +1049,8 @@ class ModifierFactory
       return ModifierEndTurnWatchSpawnRandomEntity
     if (modifierType == ModifierDealDamageWatchSpawnEntity.type)
       return ModifierDealDamageWatchSpawnEntity
+    if (modifierType == ModifierDealDamageWatchSpawnEntityOnTarget.type)
+      return ModifierDealDamageWatchSpawnEntityOnTarget
     if (modifierType == ModifierSpellDamageWatch.type)
       return ModifierSpellDamageWatch
     if (modifierType == ModifierSpellDamageWatchPutCardInHand.type)
@@ -2192,6 +2196,8 @@ class ModifierFactory
       return PlayerModifierEmblemSummonWatchAbyssUndyingQuest
     if (modifierType == PlayerModifierEmblemGainMinionOrLoseControlWatch.type)
       return PlayerModifierEmblemGainMinionOrLoseControlWatch
+    if (modifierType == PlayerModifierOnDeathWatchBonusMana.type)
+      return PlayerModifierOnDeathWatchBonusMana
 
     if (modifierType == GameSessionModifier.type)
       return GameSessionModifier

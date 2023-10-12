@@ -38,7 +38,6 @@ SpellMindControlByAttackValue = require 'app/sdk/spells/spellMindControlByAttack
 SpellFollowupRandomTeleport = require 'app/sdk/spells/spellFollowupRandomTeleport'
 SpellFollowupKeeper = require 'app/sdk/spells/spellFollowupKeeper'
 SpellFollowupHollowGroveKeeper = require 'app/sdk/spells/spellFollowupHollowGroveKeeper'
-SpellFollowupKillTargetByAttack = require 'app/sdk/spells/spellFollowupKillTargetByAttack'
 SpellCloneSourceEntityNearbyGeneral = require 'app/sdk/spells/spellCloneSourceEntityNearbyGeneral'
 SpellDoubleAttackAndHealth = require 'app/sdk/spells/spellDoubleAttackAndHealth'
 SpellHatchAnEgg = require 'app/sdk/spells/spellHatchAnEgg'
@@ -57,6 +56,7 @@ SpellDuplicator = require 'app/sdk/spells/spellDuplicator'
 SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
 SpellFollowupSpawnEntityFromDeck = require 'app/sdk/spells/spellFollowupSpawnEntityFromDeck'
 SpellDamageOrHeal = require 'app/sdk/spells/spellDamageOrHeal'
+SpellKillDamagedMinion = require 'app/sdk/spells/spellKillDamagedMinion'
 
 PlayerModifierMechazorBuildProgress = require 'app/sdk/playerModifiers/playerModifierMechazorBuildProgress'
 PlayerModifierMechazorSummoned = require 'app/sdk/playerModifiers/playerModifierMechazorSummoned'
@@ -439,17 +439,17 @@ class CardFactory_Generic
         apply : RSX.sfx_spell_voidwalk.audio
       )
 
-    if (identifier == Cards.Spell.FollowupKillTargetByAttack)
-      card = new SpellFollowupKillTargetByAttack(gameSession)
+    if (identifier == Cards.Spell.FollowupKillDamagedTarget)
+      card = new SpellKillDamagedMinion(gameSession)
       card.factionId = Factions.Neutral
       card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.FollowupKillTargetByAttack
+      card.id = Cards.Spell.FollowupKillDamagedTarget
       card.name = "Assassinate"
-      card.setDescription("Kill target minion.")
+      card.setDescription("Kill target damaged minion.")
       card.manaCost = 0
       card.setFXResource(["FX.Factions.Neutral.UnitSpawnFX","FX.Cards.Spell.FollowupKillTargetByAttack"])
       card.setBaseSoundResource(
-        apply : RSX.sfx_spell_voidwalk.audio
+        apply : RSX.sfx_spell_darkfiresacrifice.audio
       )
 
     if (identifier == Cards.Spell.DoubleAttackAndHealth)
