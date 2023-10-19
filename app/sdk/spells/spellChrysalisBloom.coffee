@@ -1,70 +1,34 @@
-CONFIG = require 'app/common/config'
-SpellSpawnEntity =   require './spellSpawnEntity'
-SpellFilterType = require './spellFilterType'
-ModifierEgg = require 'app/sdk/modifiers/modifierEgg'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
-Factions = require 'app/sdk/cards/factionsLookup'
-Rarity = require 'app/sdk/cards/rarityLookup'
-CardType = require 'app/sdk/cards/cardType'
-UtilsGameSession = require 'app/common/utils/utils_game_session'
-GameFormat = require 'app/sdk/gameFormat'
-_ = require("underscore")
+ModifierEgg = require 'app/sdk/modifiers/modifierEgg'
+PlayCardSilentlyAction = require 'app/sdk/actions/playCardSilentlyAction'
+Spell = require './spell'
 
-class SpellChrysalisBloom extends SpellSpawnEntity
+class SpellChrysalisBloom extends Spell
 
-  cardDataOrIndexToSpawn: {id: Cards.Faction5.Egg}
-  numEggs: 4
+  onApplyOneEffectToBoard: () ->
 
-  timesApplied: 0 # we'll increment this each time we apply an egg to board, so that we can apply different egg types
+    ownerId = @getOwnerId()
 
-  spellFilterType: SpellFilterType.None
+    if @getGameSession().getIsRunningAsAuthoritative()
 
-  onApplyEffectToBoardTile: (board,x,y,sourceAction) ->
-    # get 1 common, 1 rare, 1 epic, and 1 legendary Magmar unit to put in the eggs
-    cardCache = []
-    cards = []
+      friendlyMinions = []
+      for unit in @getGameSession().getBoard().getUnits()
+        if unit?.getOwnerId() is ownerId and !unit.getIsGeneral()
+          friendlyMinions.push(unit)
 
-    if @getGameSession().getGameFormat() is GameFormat.Standard
-      cardCache = @getGameSession().getCardCaches().getIsLegacy(false).getFaction(Factions.Faction5).getIsHiddenInCollection(false).getIsGeneral(false).getIsPrismatic(false).getIsSkinned(false).getType(CardType.Unit)
-    else
-      cardCache = @getGameSession().getCardCaches().getFaction(Factions.Faction5).getIsHiddenInCollection(false).getIsGeneral(false).getIsPrismatic(false).getIsSkinned(false).getType(CardType.Unit)
+      playerOffset = 0
+      if @isOwnedByPlayer1() then playerOffset = -1 else playerOffset = 1
 
-    switch @timesApplied
-      when 0
-        cards = cardCache.getRarity(Rarity.Common).getCards()
-      when 1
-        cards = cardCache.getRarity(Rarity.Rare).getCards()
-      when 2
-        cards = cardCache.getRarity(Rarity.Epic).getCards()
-      when 3
-        cards = cardCache.getRarity(Rarity.Legendary).getCards()
+      for minion in friendlyMinions
+        spawnPosition = {x:minion.getPosition().x+playerOffset, y:minion.getPosition().y}
+        if !@getGameSession().getBoard().getObstructionAtPositionForEntity(spawnPosition, minion)
 
-    if cards?.length > 0
-      # get random card to spawn from egg
-      card = cards[@getGameSession().getRandomIntegerForExecution(cards.length)]
+          egg = {id: Cards.Faction5.Egg}
+          egg.additionalInherentModifiersContextObjects ?= []
+          egg.additionalInherentModifiersContextObjects.push(ModifierEgg.createContextObject(minion.createNewCardData(), minion.getName()))
 
-      # add modifiers to card data
-      cardDataOrIndexToSpawn = @getCardDataOrIndexToSpawn(x, y)
-      if cardDataOrIndexToSpawn? and !_.isObject(cardDataOrIndexToSpawn) then cardDataOrIndexToSpawn = @getGameSession().getCardByIndex(cardDataOrIndexToSpawn).createNewCardData()
-      cardDataOrIndexToSpawn.additionalInherentModifiersContextObjects ?= []
-      cardDataOrIndexToSpawn.additionalInherentModifiersContextObjects.push(ModifierEgg.createContextObject(card.createNewCardData(), card.getName()))
-
-      # spawn next egg
-      spawnAction = @getSpawnAction(x, y, cardDataOrIndexToSpawn)
-      if spawnAction?
-        @getGameSession().executeAction(spawnAction)
-
-    # increment
-    @timesApplied++
-
-  _findApplyEffectPositions: (position, sourceAction) ->
-    wholeBoardPattern = CONFIG.ALL_BOARD_POSITIONS
-    card = @getEntityToSpawn()
-    applyEffectPositions = UtilsGameSession.getRandomSmartSpawnPositionsFromPattern(@getGameSession(), {x:0, y:0}, wholeBoardPattern, card, @, @numEggs)
-
-    return applyEffectPositions
-
-  getAppliesSameEffectToMultipleTargets: () ->
-    return true
+          spawnAction = new PlayCardSilentlyAction(@getGameSession(), ownerId, spawnPosition.x, spawnPosition.y, egg)
+          spawnAction.setSource(@)
+          @getGameSession().executeAction(spawnAction)
 
 module.exports = SpellChrysalisBloom

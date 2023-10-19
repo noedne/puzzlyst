@@ -111,7 +111,9 @@ ModifierSummonWatchByRaceBuffSelf = require './modifierSummonWatchByRaceBuffSelf
 ModifierSummonWatchSpawnEntity = require './modifierSummonWatchSpawnEntity'
 ModifierTakeDamageWatch = require './modifierTakeDamageWatch'
 ModifierTakeDamageWatchHealMyGeneral = require './modifierTakeDamageWatchHealMyGeneral'
+ModifierTakeDamageWatchDamageMyGeneral = require './modifierTakeDamageWatchDamageMyGeneral'
 ModifierStartTurnWatchDamageRandom = require './modifierStartTurnWatchDamageRandom'
+ModifierEndTurnWatchDamageAndBuffRandom = require './modifierEndTurnWatchDamageAndBuffRandom'
 ModifierSummonWatchByRaceDamageEnemyMinion = require './modifierSummonWatchByRaceDamageEnemyMinion'
 ModifierEndTurnWatch = require './modifierEndTurnWatch'
 ModifierEndTurnWatchDamageNearbyEnemy = require './modifierEndTurnWatchDamageNearbyEnemy'
@@ -181,7 +183,7 @@ ModifierBandingHealSelfAndGeneral = require './modifierBandingHealSelfAndGeneral
 ModifierDeathWatchDrawToXCards = require './modifierDeathWatchDrawToXCards'
 ModifierDyingWishSpawnTile = require './modifierDyingWishSpawnTile'
 ModifierDyingWishReSpawnEntityAnywhere = require './modifierDyingWishReSpawnEntityAnywhere'
-ModifierSummonWatchNearbyApplyModifiersOncePerTurn = require './modifierSummonWatchNearbyApplyModifiersOncePerTurn'
+ModifierSummonWatchNearbyApplyModifiersOnce = require './modifierSummonWatchNearbyApplyModifiersOnce'
 ModifierHealWatch = require './modifierHealWatch'
 ModifierHealWatchBuffSelf = require './modifierHealWatchBuffSelf'
 ModifierHealWatchDamageNearbyEnemies = require './modifierHealWatchDamageNearbyEnemies'
@@ -486,7 +488,6 @@ ModifierStartTurnWatchSpawnTile = require './modifierStartTurnWatchSpawnTile'
 ModifierDealDamageWatchIfMinionHealMyGeneral = require './modifierDealDamageWatchIfMinionHealMyGeneral'
 ModifierSynergizeSummonMinionNearGeneral = require './modifierSynergizeSummonMinionNearGeneral'
 ModifierSpellWatchApplyModifiers = require './modifierSpellWatchApplyModifiers'
-ModifierOpeningGambitProgenitor = require './modifierOpeningGambitProgenitor'
 ModifierSpellWatchDrawCard = require './modifierSpellWatchDrawCard'
 ModifierSynergizeDrawBloodboundSpell = require './modifierSynergizeDrawBloodboundSpell'
 ModifierOpeningGambitDrawCopyFromDeck = require './modifierOpeningGambitDrawCopyFromDeck'
@@ -969,8 +970,12 @@ class ModifierFactory
       return ModifierTakeDamageWatch
     if (modifierType == ModifierTakeDamageWatchHealMyGeneral.type)
       return ModifierTakeDamageWatchHealMyGeneral
+    if (modifierType == ModifierTakeDamageWatchDamageMyGeneral.type)
+      return ModifierTakeDamageWatchDamageMyGeneral
     if (modifierType == ModifierStartTurnWatchDamageRandom.type)
       return ModifierStartTurnWatchDamageRandom
+    if (modifierType == ModifierEndTurnWatchDamageAndBuffRandom.type)
+      return ModifierEndTurnWatchDamageAndBuffRandom
     if (modifierType == ModifierSummonWatchByRaceDamageEnemyMinion.type)
       return ModifierSummonWatchByRaceDamageEnemyMinion
     if (modifierType == ModifierEndTurnWatch.type)
@@ -1111,8 +1116,8 @@ class ModifierFactory
       return ModifierDyingWishSpawnTile
     if (modifierType == ModifierDyingWishReSpawnEntityAnywhere.type)
       return ModifierDyingWishReSpawnEntityAnywhere
-    if (modifierType == ModifierSummonWatchNearbyApplyModifiersOncePerTurn.type)
-      return ModifierSummonWatchNearbyApplyModifiersOncePerTurn
+    if (modifierType == ModifierSummonWatchNearbyApplyModifiersOnce.type)
+      return ModifierSummonWatchNearbyApplyModifiersOnce
     if (modifierType == ModifierHealWatch.type)
       return ModifierHealWatch
     if (modifierType == ModifierHealWatchBuffSelf.type)
@@ -1729,8 +1734,6 @@ class ModifierFactory
       return ModifierSynergizeSummonMinionNearGeneral
     if (modifierType == ModifierSpellWatchApplyModifiers.type)
       return ModifierSpellWatchApplyModifiers
-    if (modifierType == ModifierOpeningGambitProgenitor.type)
-      return ModifierOpeningGambitProgenitor
     if (modifierType == ModifierSpellWatchDrawCard.type)
       return ModifierSpellWatchDrawCard
     if (modifierType == ModifierSynergizeDrawBloodboundSpell.type)

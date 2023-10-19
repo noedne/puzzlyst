@@ -72,5 +72,10 @@ class Artifact extends Card
       general.getArtifactModifiers(),
       @,
     )
+  
+  getDurability: () ->
+    for modifier in @getArtifactModifiers()
+      return modifier.getDurability()
+    return 0
 
 module.exports = Artifact

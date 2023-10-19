@@ -18,7 +18,7 @@ class ModifierEgg extends ModifierRemoveAndReplaceEntity
   maxStacks: 1
 
   cardDataOrIndexToSpawn: null
-  durationEndTurn: 2 # eggs placed on owner's turn take 2 turns to hatch (until end of enemy's next turn)
+  durationEndTurn: 3 # eggs placed on owner's turn take 3 turns to hatch (until end of owner's next turn)
 
   fxResource: ["FX.Modifiers.ModifierEgg"]
 
@@ -52,11 +52,11 @@ class ModifierEgg extends ModifierRemoveAndReplaceEntity
 
   updateDurationForOwner: () ->
     if !@getCard().isOwnersTurn()
-      # eggs placed during enemy turn will hatch at the end of that turn
-      @durationEndTurn = @numEndTurnsElapsed + 1
-    else
-      # eggs placed during owner's turn will hatch at end of enemy's next turn
+      # eggs placed during enemy turn will hatch at the end of owner's turn
       @durationEndTurn = @numEndTurnsElapsed + 2
+    else
+      # eggs placed during owner's turn will hatch at end of owner's next turn
+      @durationEndTurn = @numEndTurnsElapsed + 3
 
   replace: () ->
     if @cardDataOrIndexToSpawn? and !_.isObject(@cardDataOrIndexToSpawn) then @cardDataOrIndexToSpawn = @getGameSession().getCardByIndex(@cardDataOrIndexToSpawn).createNewCardData()

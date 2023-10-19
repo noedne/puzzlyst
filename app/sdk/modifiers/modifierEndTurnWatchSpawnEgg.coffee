@@ -2,7 +2,6 @@ CONFIG = require 'app/common/config'
 UtilsJavascript = require 'app/common/utils/utils_javascript'
 ModifierEndTurnWatchSpawnEntity = require './modifierEndTurnWatchSpawnEntity'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
-CardType = require 'app/sdk/cards/cardType'
 ModifierEgg = require 'app/sdk/modifiers/modifierEgg'
 _ = require("underscore")
 
@@ -17,7 +16,14 @@ class ModifierEndTurnWatchSpawnEgg extends ModifierEndTurnWatchSpawnEntity
   fxResource: ["FX.Modifiers.ModifierStartTurnWatch", "FX.Modifiers.ModifierGenericSpawn"]
 
   @createContextObject: (eggDescription, options) ->
-    contextObject = super({id: Cards.Faction5.Egg}, spawnDescription = "", spawnCount=1, spawnPattern=CONFIG.PATTERN_3x3, spawnSilently=true,options)
+    contextObject = super(
+      {id: Cards.Faction5.Egg},
+      spawnDescription = "",
+      spawnCount=1,
+      spawnPattern=CONFIG.PATTERN_DIRECTLY_BEHIND,
+      spawnSilently=true,
+      options,
+    )
     contextObject.eggDescription = eggDescription
     return contextObject
 

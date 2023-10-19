@@ -376,9 +376,14 @@ const PlayerLayer = BaseLayer.extend({
         } else if (action instanceof SDK.RestoreChargeToAllArtifactsAction) {
           durabilityChange = 1;
         }
-        for (var i = 0, il = artifactNodes.length; i < il; i++) {
-          showDuration = Math.max(showDuration, artifactNodes[i].showDurabilityChange(durabilityChange, showDelay, this._updateArtifactNodesLayout.bind(this)));
-        }
+        artifactNodes.forEach(artifactNode => {
+          if (
+            artifactNode.getSdkCard() === null
+            || artifactNode.getDurability() !== artifactNode.getSdkCard().getDurability()
+          ) {
+            showDuration = Math.max(showDuration, artifactNode.showDurabilityChange(durabilityChange, showDelay, this._updateArtifactNodesLayout.bind(this)));
+          }
+        });
       }
     }
 

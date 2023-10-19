@@ -2,14 +2,14 @@ ModifierSummonWatchNearbyApplyModifiers = require './modifierSummonWatchApplyMod
 UtilsGameSession = require 'app/common/utils/utils_game_session'
 Stringifiers = require 'app/sdk/helpers/stringifiers'
 
-class ModifierSummonWatchNearbyApplyModifiersOncePerTurn extends ModifierSummonWatchNearbyApplyModifiers
+class ModifierSummonWatchNearbyApplyModifiersOnce extends ModifierSummonWatchNearbyApplyModifiers
 
-  type:"ModifierSummonWatchNearbyApplyModifiersOncePerTurn"
-  @type:"ModifierSummonWatchNearbyApplyModifiersOncePerTurn"
+  type:"ModifierSummonWatchNearbyApplyModifiersOnce"
+  @type:"ModifierSummonWatchNearbyApplyModifiersOnce"
 
-  @description: "The first friendly minion summoned nearby this minion each turn %X"
+  @description: "The first friendly minion summoned nearby this minion %X"
 
-  canApplyModifier: true # can apply modifier once per turn
+  canApplyModifier: true # can apply modifier once
 
   fxResource: ["FX.Modifiers.ModifierSummonWatch", "FX.Modifiers.ModifierGenericBuff"]
 
@@ -35,9 +35,5 @@ class ModifierSummonWatchNearbyApplyModifiersOncePerTurn extends ModifierSummonW
         return false
     return false
 
-  onStartTurn: (actionEvent) ->
-    super(actionEvent)
-    @canApplyModifier = true
 
-
-module.exports = ModifierSummonWatchNearbyApplyModifiersOncePerTurn
+module.exports = ModifierSummonWatchNearbyApplyModifiersOnce

@@ -60,7 +60,7 @@ UtilsGameSession.groupModifiersBySourceCard = (modifiers) ->
   return modifiersGroupedBySourceCard
 
 UtilsGameSession.getModifiersBySourceCard = (modifiers, sourceCard) ->
-  return getGroupedModifiersBySourceCardIndex(modifiers)[sourceCard.getIndex()]
+  return getGroupedModifiersBySourceCardIndex(modifiers)[sourceCard.getIndex()] || []
 
 UtilsGameSession.getValidBoardPositionsFromPattern = (board, boardPosition, pattern, allowObstructions=true) ->
   if UtilsPosition.getArrayOfPositionsContainsArrayOfPositions(pattern, CONFIG.PATTERN_WHOLE_BOARD)

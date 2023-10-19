@@ -34,6 +34,7 @@ class Modifier extends SDKObject
   activeOnBoard: true # whether this modifier is active while applied to a card on board
   appliedByActionIndex: -1 # index of action that applied this modifier, where -1 is during game setup
   appliedByModifierIndex: null # index of modifier that applied this modifier, where -1 is during game setup
+  applyArtifactDamageOnYourTurn: true
   attributeBuffs: null
   attributeBuffsAbsolute: null #names of attributeBuffs to be treated as absolute values (instead of +- values)
   attributeBuffsRebased: null #names of attributeBuffs to be treated as new base stat values, applied before all other buffs
@@ -1903,6 +1904,8 @@ class Modifier extends SDKObject
     return @maxDurability
 
   applyDamage: (dmg) ->
+    if @getOwner().getIsCurrentPlayer() and not @applyArtifactDamageOnYourTurn
+      return
     if dmg > 0 # if damage amount was reduced to 0, do not reduce artifact durability
       #Logger.module("SDK").debug("[G:#{@.getGameSession().gameId}]", "#{@getLogName()}.applyDamage -> durability #{@getDurability()} -> #{@getDurability()-1}")
       durability = @getDurability()

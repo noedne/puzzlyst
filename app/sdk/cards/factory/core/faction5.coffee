@@ -29,7 +29,6 @@ SpellLavastorm = require 'app/sdk/spells/spellLavastorm'
 SpellChrysalisBloom = require 'app/sdk/spells/spellChrysalisBloom'
 SpellNaturalSelection = require 'app/sdk/spells/spellNaturalSelection'
 SpellHealYourGeneral = require 'app/sdk/spells/spellHealYourGeneral'
-SpellApplyModifiersToDamagedMinion = require 'app/sdk/spells/spellApplyModifiersToDamagedMinion'
 SpellMindSteal = require 'app/sdk/spells/spellMindSteal'
 SpellEggMorph = require 'app/sdk/spells/spellEggMorph'
 SpellDamageAndApplyModifiers = require 'app/sdk/spells/spellDamageAndApplyModifiers'
@@ -37,19 +36,20 @@ SpellTempTransform = require 'app/sdk/spells/spellTempTransform'
 SpellSeekingEye = require 'app/sdk/spells/spellSeekingEye'
 SpellApplyModifiersToGeneral = require 'app/sdk/spells/spellApplyModifiersToGeneral'
 SpellSpawnEntityNearbyGeneral = require 'app/sdk/spells/spellSpawnEntityNearbyGeneral'
+SpellSilenceAroundGeneral = require 'app/sdk/spells/spellSilenceAroundGeneral'
+SpellApplyModifiersAndActivateAlliedGrow = require 'app/sdk/spells/spellApplyModifiersAndActivateAlliedGrow'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierFirstBlood = require 'app/sdk/modifiers/modifierFirstBlood'
 ModifierFrenzy = require 'app/sdk/modifiers/modifierFrenzy'
 ModifierOpeningGambit = require 'app/sdk/modifiers/modifierOpeningGambit'
-ModifierOpeningGambitDamageMyGeneral = require 'app/sdk/modifiers/modifierOpeningGambitDamageMyGeneral'
 ModifierStunned = require 'app/sdk/modifiers/modifierStunned'
 ModifierStun = require 'app/sdk/modifiers/modifierStun'
 ModifierGrow = require 'app/sdk/modifiers/modifierGrow'
 ModifierRebirth = require 'app/sdk/modifiers/modifierRebirth'
 ModifierEndTurnWatchSpawnEgg = require 'app/sdk/modifiers/modifierEndTurnWatchSpawnEgg'
 ModifierEndTurnWatchDamageAllMinions = require 'app/sdk/modifiers/modifierEndTurnWatchDamageAllMinions'
-ModifierStartTurnWatchDamageRandom = require 'app/sdk/modifiers/modifierStartTurnWatchDamageRandom'
+ModifierEndTurnWatchDamageAndBuffRandom = require 'app/sdk/modifiers/modifierEndTurnWatchDamageAndBuffRandom'
 ModifierMyMinionOrGeneralDamagedWatchBuffSelf = require 'app/sdk/modifiers/modifierMyMinionOrGeneralDamagedWatchBuffSelf'
 ModifierReduceCostOfMinionsAndDamageThem = require 'app/sdk/modifiers/modifierReduceCostOfMinionsAndDamageThem'
 ModifierCannotStrikeback = require 'app/sdk/modifiers/modifierCannotStrikeback'
@@ -57,11 +57,12 @@ ModifierOpeningGambitApplyModifiersRandomly = require 'app/sdk/modifiers/modifie
 ModifierImmuneToSpellDamage = require 'app/sdk/modifiers/modifierImmuneToSpellDamage'
 ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchFromActionBarByOpeningGambitBuffSelf'
 ModifierOpeningGambitHealBothGenerals = require 'app/sdk/modifiers/modifierOpeningGambitHealBothGenerals'
-ModifierOpponentDrawCardWatchBuffSelf = require 'app/sdk/modifiers/modifierOpponentDrawCardWatchBuffSelf'
 ModifierTranscendance = require 'app/sdk/modifiers/modifierTranscendance'
 ModifierEgg = require 'app/sdk/modifiers/modifierEgg'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
-ModifierTokenCreator = require 'app/sdk/modifiers/modifierTokenCreator'
+ModifierTakeDamageWatchDamageMyGeneral = require 'app/sdk/modifiers/modifierTakeDamageWatchDamageMyGeneral'
+ModifierSummonWatchNearbyApplyModifiersOnce = require 'app/sdk/modifiers/modifierSummonWatchNearbyApplyModifiersOnce'
+ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 
 PlayerModifierFlashReincarnation = require 'app/sdk/playerModifiers/playerModifierFlashReincarnation'
 PlayerModifierMyDeathwatchDrawCard = require 'app/sdk/playerModifiers/playerModifierMyDeathwatchDrawCard'
@@ -89,7 +90,7 @@ class CardFactory_CoreSet_Faction5
       card.setIsGeneral(true)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_vaath_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_vaath_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(110)
       card.setBoundingBoxHeight(100)
@@ -124,7 +125,6 @@ class CardFactory_CoreSet_Faction5
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.Overload}
 
     if (identifier == Cards.Faction5.AltGeneral)
       card = new Unit(gameSession)
@@ -133,7 +133,7 @@ class CardFactory_CoreSet_Faction5
       card.setIsGeneral(true)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_starhorn_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_starhorn_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(110)
       card.setBoundingBoxHeight(105)
@@ -168,7 +168,6 @@ class CardFactory_CoreSet_Faction5
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.SeekingEye}
 
     if (identifier == Cards.Faction5.ThirdGeneral)
       card = new Unit(gameSession)
@@ -178,7 +177,7 @@ class CardFactory_CoreSet_Faction5
         card.setIsUnlockedWithAchievementId(WartechGeneralFaction5Achievement.id)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_ragnora_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_ragnora_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(110)
       card.setBoundingBoxHeight(105)
@@ -213,7 +212,6 @@ class CardFactory_CoreSet_Faction5
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.EggBBS}
 
     if (identifier == Cards.Faction5.EarthWalker)
       card = new Unit(gameSession)
@@ -241,10 +239,10 @@ class CardFactory_CoreSet_Faction5
         damage : RSX.f5EarthwalkerDamage.name
         death : RSX.f5EarthwalkerDeath.name
       )
-      card.atk = 3
-      card.maxHP = 3
+      card.atk = 2
+      card.maxHP = 4
       card.manaCost = 3
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierGrow.createContextObject(1)])
 
     if (identifier == Cards.Faction5.Grimrock)
@@ -273,8 +271,8 @@ class CardFactory_CoreSet_Faction5
         damage : RSX.f5GrimrockDamage.name
         death : RSX.f5GrimrockDeath.name
       )
-      card.atk = 3
-      card.maxHP = 4
+      card.atk = 2
+      card.maxHP = 5
       card.manaCost = 4
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierGrow.createContextObject(2)])
@@ -305,10 +303,10 @@ class CardFactory_CoreSet_Faction5
         damage : RSX.f5KolossusDamage.name
         death : RSX.f5KolossusDeath.name
       )
-      card.atk = 1
+      card.atk = 2
       card.maxHP = 7
       card.manaCost = 5
-      card.rarityId = Rarity.Common
+      card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([ModifierGrow.createContextObject(4)])
 
     if (identifier == Cards.Faction5.MakantorWarbeast)
@@ -347,6 +345,7 @@ class CardFactory_CoreSet_Faction5
       card = new Unit(gameSession)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_phalanxar_name")
+      card.setDescription(i18next.t("cards.faction_5_unit_phalanxar_desc"))
       card.setFXResource(["FX.Cards.Faction5.Phalanxar"])
       card.setBoundingBoxWidth(105)
       card.setBoundingBoxHeight(110)
@@ -368,10 +367,13 @@ class CardFactory_CoreSet_Faction5
         damage : RSX.f5TankDamage.name
         death : RSX.f5TankDeath.name
       )
-      card.atk = 6
-      card.maxHP = 1
+      card.atk = 4
+      card.maxHP = 4
       card.manaCost = 2
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
+      card.setInherentModifiersContextObjects([
+        Modifier.createContextObjectOnBoard({ attributeBuffs: { speed: -1 } }),
+      ])
 
     if (identifier == Cards.Faction5.Elucidator)
       card = new Unit(gameSession)
@@ -402,7 +404,10 @@ class CardFactory_CoreSet_Faction5
       card.atk = 5
       card.maxHP = 4
       card.manaCost = 4
-      card.setInherentModifiersContextObjects([ModifierOpeningGambitDamageMyGeneral.createContextObject(4), ModifierFirstBlood.createContextObject()])
+      card.setInherentModifiersContextObjects([
+        ModifierTakeDamageWatchDamageMyGeneral.createContextObject(2),
+        ModifierFirstBlood.createContextObject(),
+      ])
       card.rarityId = Rarity.Rare
 
     if (identifier == Cards.Faction5.UnstableLeviathan)
@@ -434,8 +439,10 @@ class CardFactory_CoreSet_Faction5
       card.atk = 11
       card.maxHP = 11
       card.manaCost = 7
-      card.setInherentModifiersContextObjects([ModifierStartTurnWatchDamageRandom.createContextObject(4)])
-      card.rarityId = Rarity.Rare
+      card.setInherentModifiersContextObjects([
+        ModifierEndTurnWatchDamageAndBuffRandom.createContextObject(4),
+      ])
+      card.rarityId = Rarity.Epic
 
     if (identifier == Cards.Faction5.Kujata)
       card = new Unit(gameSession)
@@ -499,17 +506,17 @@ class CardFactory_CoreSet_Faction5
         damage : RSX.f5PrimordialGazerDamage.name
         death : RSX.f5PrimordialGazerDeath.name
       )
-      card.atk = 2
+      card.atk = 4
       card.maxHP = 2
       card.manaCost = 3
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.addKeywordClassToInclude(ModifierOpeningGambit)
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,2)
+      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,1)
       statContextObject.appliedName = i18next.t("modifiers.faction_5_followup_primordial_gazer_2")
       card.setFollowups([
         {
           id: Cards.Spell.ApplyModifiers
-          spellFilterType: SpellFilterType.AllyDirect
+          spellFilterType: SpellFilterType.NeutralDirect
           targetModifiersContextObjects: [
             statContextObject
           ]
@@ -522,6 +529,7 @@ class CardFactory_CoreSet_Faction5
     if (identifier == Cards.Faction5.Egg)
       card = new Unit(gameSession)
       card.factionId = Factions.Faction5
+      card.raceId = Races.Chrysalis
       card.setIsHiddenInCollection(true)
       card.name = i18next.t("cards.faction_5_unit_egg_name")
       card.setFXResource(["FX.Cards.Faction5.Egg"])
@@ -611,9 +619,9 @@ class CardFactory_CoreSet_Faction5
         death : RSX.f5VeteranSilitharDeath.name
       )
       card.atk = 4
-      card.maxHP = 4
+      card.maxHP = 5
       card.manaCost = 4
-      card.rarityId = Rarity.Common
+      card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([ModifierRebirth.createContextObject()])
 
     if (identifier == Cards.Faction5.SilitharElder)
@@ -642,12 +650,11 @@ class CardFactory_CoreSet_Faction5
         damage : RSX.f5ElderSilitharDamage.name
         death : RSX.f5ElderSilitharDeath.name
       )
-      card.atk = 7
-      card.maxHP = 7
+      card.atk = 8
+      card.maxHP = 8
       card.manaCost = 7
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([ModifierRebirth.createContextObject(), ModifierEndTurnWatchSpawnEgg.createContextObject("a Silithar Elder Egg")])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
 
     if (identifier == Cards.Faction5.SpiritHarvester)
       card = new Unit(gameSession)
@@ -707,7 +714,7 @@ class CardFactory_CoreSet_Faction5
       )
       card.atk = 1
       card.maxHP = 1
-      card.manaCost = 1
+      card.manaCost = 0
       card.rarityId = Rarity.TokenUnit
       card.addKeywordClassToInclude(ModifierToken)
 
@@ -742,106 +749,12 @@ class CardFactory_CoreSet_Faction5
       card.manaCost = 3
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([
-        ModifierOpponentDrawCardWatchBuffSelf.createContextObject(2,2)
+        ModifierFirstBlood.createContextObject(),
+        ModifierSummonWatchNearbyApplyModifiersOnce.createContextObject(
+          [ModifierFirstBlood.createContextObject()],
+          'Give the first allied minion summoned nearby this Rush.',
+        ),
       ])
-
-    if (identifier == Cards.Spell.Overload)
-      card = new SpellApplyModifiersToGeneral(gameSession)
-      card.factionId = Factions.Faction5
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.Overload
-      card.name = i18next.t("cards.faction_5_spell_overload_name")
-      card.setDescription(i18next.t("cards.faction_5_spell_overload_description"))
-      card.manaCost = 1
-      card.spellFilterType = SpellFilterType.None
-      card.applyToOwnGeneral = true
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(1)
-      statContextObject.appliedName = i18next.t("modifiers.faction_5_spell_overload_1")
-      card.setTargetModifiersContextObjects([
-        statContextObject
-      ])
-      card.setFXResource(["FX.Cards.Spell.Overload"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_division_crest_outline_reveal.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconOverloadIdle.name
-        active : RSX.iconOverloadActive.name
-      )
-
-    if (identifier == Cards.Spell.SeekingEye)
-      card = new SpellSeekingEye(gameSession)
-      card.factionId = Factions.Faction5
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.SeekingEye
-      card.name = i18next.t("cards.faction_5_spell_seeking_eye_name")
-      card.setDescription(i18next.t("cards.faction_5_spell_seeking_eye_description"))
-      card.manaCost = 1
-      card.setFXResource(["FX.Cards.Spell.SeekingEye"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_spell_nethersummoning.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconSeekingEyeIdle.name
-        active : RSX.iconSeekingEyeActive.name
-      )
-
-    if (identifier == Cards.Spell.EggBBS)
-      card = new SpellSpawnEntityNearbyGeneral(gameSession)
-      card.factionId = Factions.Faction5
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.EggBBS
-      card.name = i18next.t("cards.faction_5_spell_propogate_rage_name")
-      card.setDescription(i18next.t("cards.faction_5_spell_propogate_rage_desc"))
-      card.manaCost = 1
-      card.spellFilterType = SpellFilterType.None
-      gibblegupEgg = {id: Cards.Faction5.Egg}
-      gibblegupEgg.additionalInherentModifiersContextObjects = [ModifierEgg.createContextObject({id: Cards.Faction5.Gibblegup}, i18next.t("cards.faction_5_unit_ripper_name"))]
-      card.cardDataOrIndexToSpawn = gibblegupEgg
-      card.filterNearGeneral = true
-      card.setFXResource(["FX.Cards.Spell.EggBBS"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_spell_boneswarm.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconPropogateRageIdle.name
-        active : RSX.iconPropogateRageActive.name
-      )
-
-    if (identifier == Cards.Faction5.Gibblegup)
-      card = new Unit(gameSession)
-      card.factionId = Factions.Faction5
-      card.name = i18next.t("cards.faction_5_unit_ripper_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_ripper_desc"))
-      card.setIsHiddenInCollection(true)
-      card.atk = 3
-      card.maxHP = 1
-      card.manaCost = 1
-      card.setInherentModifiersContextObjects([
-        ModifierRebirth.createContextObject(),
-        ModifierTranscendance.createContextObject()
-      ])
-      card.setFXResource(["FX.Cards.Faction5.MiniMagmar"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_screenshake.audio
-        walk : RSX.sfx_singe2.audio
-        attack : RSX.sfx_neutral_primordialgazer_attack_swing.audio
-        receiveDamage : RSX.sfx_neutral_serpenti_hit.audio
-        attackDamage : RSX.sfx_f5_vindicator_attack_impact.audio
-        death : RSX.sfx_f5_vindicator_death.audio
-      )
-      card.setBaseAnimResource(
-        breathing : RSX.f5RipperBreathing.name
-        idle : RSX.f5RipperIdle.name
-        walk : RSX.f5RipperRun.name
-        attack : RSX.f5RipperAttack.name
-        attackReleaseDelay: 0.0
-        attackDelay: 0.8
-        damage : RSX.f5RipperHit.name
-        death : RSX.f5RipperDeath.name
-      )
-      card.rarityId = Rarity.TokenUnit
-      card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Spell.FractalReplication)
       card = new Spell(gameSession)
@@ -874,9 +787,9 @@ class CardFactory_CoreSet_Faction5
       card.id = Cards.Spell.DampeningWave
       card.name = i18next.t("cards.faction_5_spell_dampening_wave_name")
       card.setDescription(i18next.t("cards.faction_5_spell_dampening_wave_description"))
-      card.spellFilterType = SpellFilterType.EnemyDirect
+      card.spellFilterType = SpellFilterType.NeutralDirect
       card.manaCost = 0
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.setTargetModifiersContextObjects([ModifierCannotStrikeback.createContextObject()])
       card.setFXResource(["FX.Cards.Spell.DampeningWave"])
       card.setBaseSoundResource(
@@ -918,7 +831,7 @@ class CardFactory_CoreSet_Faction5
       card.addKeywordClassToInclude(ModifierFrenzy)
       card.manaCost = 2
       card.rarityId = Rarity.Common
-      card.spellFilterType = SpellFilterType.AllyDirect
+      card.spellFilterType = SpellFilterType.NeutralDirect
       attackBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(1,0)
       attackBuffContextObject.appliedName = i18next.t("modifiers.faction_5_spell_diretide_frenzy_1")
       card.setTargetModifiersContextObjects([attackBuffContextObject,ModifierFrenzy.createContextObject()])
@@ -938,9 +851,10 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_spell_tremor_name")
       card.setDescription(i18next.t("cards.faction_5_spell_tremor_description"))
       card.addKeywordClassToInclude(ModifierStun)
-      card.manaCost = 1
+      card.manaCost = 2
       card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.EnemyIndirect
+      card.canTargetGeneral = true
       card.setTargetModifiersContextObjects([ModifierStunned.createContextObject()])
       card.setAffectPattern(CONFIG.PATTERN_2X2)
       card.setFXResource(["FX.Cards.Spell.Tremor"])
@@ -953,18 +867,16 @@ class CardFactory_CoreSet_Faction5
       )
 
     if (identifier == Cards.Spell.DanceOfDreams)
-      card = new SpellApplyPlayerModifiers(gameSession)
+      card = new SpellSilenceAroundGeneral(gameSession)
       card.factionId = Factions.Faction5
       if !config.get('allCardsAvailable')?
         card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.DanceOfDreams
       card.name = i18next.t("cards.faction_5_spell_dance_of_dreams_name")
       card.setDescription(i18next.t("cards.faction_5_spell_dance_of_dreams_description"))
-      card.spellFilterType = SpellFilterType.None
       card.manaCost = 1
-      card.applyToOwnGeneral = true
-      customContextObject = PlayerModifierMyDeathwatchDrawCard.createContextObject()
-      card.setTargetModifiersContextObjects([customContextObject])
+      card.rarityId = Rarity.Rare
+      card.addKeywordClassToInclude(ModifierDispels)
       card.setFXResource(["FX.Cards.Spell.DanceOfDreams"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_manaburn.audio
@@ -981,9 +893,9 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_spell_greater_fortitude_name")
       card.setDescription(i18next.t("cards.faction_5_spell_greater_fortitude_description"))
       card.manaCost = 1
-      card.rarityId = Rarity.Fixed
-      card.spellFilterType = SpellFilterType.AllyDirect
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,2)
+      card.rarityId = Rarity.Common
+      card.spellFilterType = SpellFilterType.NeutralDirect
+      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,1)
       statContextObject.appliedName = i18next.t("modifiers.faction_5_spell_greater_fortitude_1")
       card.setTargetModifiersContextObjects([
         statContextObject
@@ -1004,7 +916,7 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_spell_earth_sphere_name")
       card.setDescription(i18next.t("cards.faction_5_spell_earth_sphere_description"))
       card.manaCost = 4
-      card.healModifier = 8
+      card.healModifier = 9
       card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.AllyIndirect
       card.radius = CONFIG.WHOLE_BOARD_RADIUS
@@ -1025,7 +937,7 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_spell_bounded_lifeforce_name")
       card.setDescription(i18next.t("cards.faction_5_spell_bounded_lifeforce_description"))
       card.manaCost = 7
-      card.rarityId = Rarity.Epic
+      card.rarityId = Rarity.Legendary
       card.applyToOwnGeneral = true
       card.spellFilterType = SpellFilterType.None
       customContextObject = Modifier.createContextObjectWithRebasedAttributeBuffs(10, 10)
@@ -1043,16 +955,15 @@ class CardFactory_CoreSet_Faction5
       )
 
     if (identifier == Cards.Spell.Amplification)
-      card = new SpellApplyModifiersToDamagedMinion(gameSession)
+      card = new SpellApplyModifiersAndActivateAlliedGrow(gameSession)
       card.factionId = Factions.Faction5
       card.id = Cards.Spell.Amplification
       card.name = i18next.t("cards.faction_5_spell_amplification_name")
       card.setDescription(i18next.t("cards.faction_5_spell_amplification_description"))
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,4)
-      statContextObject.appliedName = i18next.t("modifiers.faction_5_spell_amplification_1")
-      card.manaCost = 1
+      statContextObject = ModifierGrow.createContextObject(2)
+      card.manaCost = 2
       card.rarityId = Rarity.Common
-      card.spellFilterType = SpellFilterType.AllyDirect
+      card.spellFilterType = SpellFilterType.NeutralDirect
       card.setTargetModifiersContextObjects([ statContextObject ])
       card.setFXResource(["FX.Cards.Spell.Amplification"])
       card.setBaseSoundResource(
@@ -1062,6 +973,7 @@ class CardFactory_CoreSet_Faction5
         idle : RSX.iconAmplificationIdle.name
         active : RSX.iconAmplificationActive.name
       )
+      card.addKeywordClassToInclude(ModifierGrow)
 
     if (identifier == Cards.Spell.Metamorphosis)
       card = new SpellTempTransform(gameSession)
@@ -1069,13 +981,12 @@ class CardFactory_CoreSet_Faction5
       card.id = Cards.Spell.Metamorphosis
       card.name = i18next.t("cards.faction_5_spell_metamorphosis_name")
       card.setDescription(i18next.t("cards.faction_5_spell_metamorphosis_description"))
-      card.manaCost = 6
+      card.manaCost = 5
       card.durationEndTurn = 2
-      card.rarityId = Rarity.Legendary
+      card.rarityId = Rarity.Epic
       card.spellFilterType = SpellFilterType.EnemyIndirect
       card.radius = CONFIG.WHOLE_BOARD_RADIUS
       card.cardDataOrIndexToSpawn = {id: Cards.Faction5.MiniMagmar}
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setFXResource(["FX.Cards.Spell.Metamorphosis"])
       card.setBaseAnimResource(
         idle : RSX.iconMetamorphosisIdle.name
@@ -1094,10 +1005,10 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_spell_plasma_storm_name")
       card.setDescription(i18next.t("cards.faction_5_spell_plasma_storm_description"))
       card.minAttackValue = 4
-      card.manaCost = 5
-      card.rarityId = Rarity.Fixed
+      card.manaCost = 4
+      card.rarityId = Rarity.Rare
       card.spellFilterType = SpellFilterType.None
-      card.radius = CONFIG.WHOLE_BOARD_RADIUS
+      card.setAffectPattern(CONFIG.PATTERN_3x3_INCLUDING_CENTER)
       card.setFXResource(["FX.Cards.Spell.PlasmaStorm"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_immolation_a.audio
@@ -1112,9 +1023,8 @@ class CardFactory_CoreSet_Faction5
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_spell_chrysalis_burst_name")
       card.setDescription(i18next.t("cards.faction_5_spell_chrysalis_burst_description"))
-      card.manaCost = 6
+      card.manaCost = 3
       card.rarityId = Rarity.Legendary
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setFXResource(["FX.Cards.Spell.ChrysalisBurst"])
       card.setBaseAnimResource(
         idle : RSX.iconChrysalisBurstIdle.name
@@ -1131,7 +1041,7 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_spell_natural_selection_name")
       card.setDescription(i18next.t("cards.faction_5_spell_natural_selection_description"))
       card.manaCost = 2
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.setFXResource(["FX.Cards.Spell.NaturalSelection"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_naturalselection.audio
@@ -1147,7 +1057,7 @@ class CardFactory_CoreSet_Faction5
       card.id = Cards.Spell.MindSteal
       card.name = i18next.t("cards.faction_5_spell_mind_steal_name")
       card.setDescription(i18next.t("cards.faction_5_spell_mind_steal_description"))
-      card.manaCost = 4
+      card.manaCost = 2
       card.rarityId = Rarity.Epic
       card.setFXResource(["FX.Cards.Spell.MindSteal"])
       card.setBaseSoundResource(
@@ -1166,7 +1076,6 @@ class CardFactory_CoreSet_Faction5
       card.setDescription(i18next.t("cards.faction_5_spell_egg_morph_description"))
       card.manaCost = 4
       card.rarityId = Rarity.Rare
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setFXResource(["FX.Cards.Spell.EggMorph"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_boneswarm.audio
@@ -1207,12 +1116,12 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_artifact_adamantite_claws_name")
       card.setDescription(i18next.t("cards.faction_5_artifact_adamantite_claws_description"))
       card.manaCost = 4
-      card.rarityId = Rarity.Fixed
-      card.durability = 3
+      card.rarityId = Rarity.Common
       card.setTargetModifiersContextObjects([
-        Modifier.createContextObjectWithAttributeBuffs(4,0,{
+        Modifier.createContextObjectWithAttributeBuffs(3,0,{
           name: i18next.t("cards.faction_5_artifact_adamantite_claws_name")
-          description: i18next.t("modifiers.plus_attack_key",{amount:4})
+          description: i18next.t("modifiers.plus_attack_key",{amount:3})
+          applyArtifactDamageOnYourTurn: false
         })
       ])
       card.setFXResource(["FX.Cards.Artifact.AdamantineClaws"])
@@ -1230,11 +1139,10 @@ class CardFactory_CoreSet_Faction5
       card.id = Cards.Artifact.TwinFang
       card.name = i18next.t("cards.faction_5_artifact_twin_fang_name")
       card.setDescription(i18next.t("cards.faction_5_artifact_twin_fang_description"))
-      card.manaCost = 3
-      card.rarityId = Rarity.Legendary
-      card.durability = 3
+      card.manaCost = 2
+      card.rarityId = Rarity.Epic
       card.setTargetModifiersContextObjects([
-        ModifierMyMinionOrGeneralDamagedWatchBuffSelf.createContextObject(2,0,{
+        ModifierMyMinionOrGeneralDamagedWatchBuffSelf.createContextObject(1,0,{
           name: i18next.t("cards.faction_5_artifact_twin_fang_name")
         })
       ])
@@ -1254,9 +1162,8 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_artifact_iridium_scale_name")
       card.setDescription(i18next.t("cards.faction_5_artifact_iridium_scale_description"))
       card.addKeywordClassToInclude(ModifierFrenzy)
-      card.manaCost = 2
-      card.rarityId = Rarity.Epic
-      card.durability = 3
+      card.manaCost = 1
+      card.rarityId = Rarity.Rare
       card.setTargetModifiersContextObjects([
         ModifierFrenzy.createContextObject({
           type: "ModifierFrenzy"

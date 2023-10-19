@@ -8,5 +8,6 @@ class Races
   @Vespyr: 5
   @Structure: 6
   @BattlePet: 7
+  @Chrysalis: 8
 
 module.exports = Races

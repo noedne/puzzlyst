@@ -74,7 +74,7 @@
 	"ranged_def":"Attack from anywhere on the battlefield.",
 
 	"rebirth_name":"Rebirth",
-	"rebirth_def":"When this dies, it leaves behind a 0/1 Egg that hatches into the same minion before your next turn.",
+	"rebirth_def":"When destroyed, summons an Egg on this space that hatches into a copy of it at the end of your next turn.",
 
 	"sentinel_name":"Sentinel",
 	"sentinel_def":"Summoned as a 3/3 with no abilities. Will transform into its true form if a specific event occurs on opponent's turn.",
