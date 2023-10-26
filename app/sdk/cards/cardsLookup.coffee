@@ -621,6 +621,7 @@ class Cards
     Cryogenesis:               20503
     FollowupTwinStrike:        20504
     FollowupKillDamagedTarget: 20505
+    FollowupDraugarLord:       20506
   }
 
   @Artifact: {

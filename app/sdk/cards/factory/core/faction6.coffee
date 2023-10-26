@@ -31,7 +31,6 @@ SpellStunAndDamage = require 'app/sdk/spells/spellStunAndDamage'
 SpellPermafrostShield = require 'app/sdk/spells/spellPermafrostShield'
 SpellAvalanche = require 'app/sdk/spells/spellAvalanche'
 SpellAspectBase = require 'app/sdk/spells/spellAspectBase'
-SpellAspectOfTheDrake = require 'app/sdk/spells/spellAspectOfTheDrake'
 SpellAspectOfTheMountains = require 'app/sdk/spells/spellAspectOfTheMountains'
 SpellBounceToActionbar = require 'app/sdk/spells/spellBounceToActionbar'
 SpellSpiritAnimalBlessing = require 'app/sdk/spells/spellSpiritAnimalBlessing'
@@ -39,6 +38,9 @@ SpellCryogenesis = require 'app/sdk/spells/spellCryogenesis'
 SpellApplyModifiersToUnitsInHand = require 'app/sdk/spells/spellApplyModifiersToUnitsInHand'
 SpellWarbird = require 'app/sdk/spells/spellWarbird'
 SpellKineticSurge = require 'app/sdk/spells/spellKineticSurge'
+SpellTempTransform = require 'app/sdk/spells/spellTempTransform'
+SpellDamageAndApplyModifiers = require 'app/sdk/spells/spellDamageAndApplyModifiers'
+SpellCopyToActionBarAndTransform = require 'app/sdk/spells/spellCopyToActionBarAndTransform'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierImmuneToDamage = require 'app/sdk/modifiers/modifierImmuneToDamage'
@@ -57,14 +59,19 @@ ModifierCannotAttackGeneral = require 'app/sdk/modifiers/modifierCannotAttackGen
 ModifierSummonWatchByRaceBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchByRaceBuffSelf'
 ModifierSummonWatchByRaceDamageEnemyMinion = require 'app/sdk/modifiers/modifierSummonWatchByRaceDamageEnemyMinion'
 ModifierEndTurnWatchDamageNearbyEnemy = require 'app/sdk/modifiers/modifierEndTurnWatchDamageNearbyEnemy'
-ModifierStunWhenAttacked = require 'app/sdk/modifiers/modifierStunWhenAttacked'
+ModifierStunWhenDamaged = require 'app/sdk/modifiers/modifierStunWhenDamaged'
 ModifierWall = require 'app/sdk/modifiers/modifierWall'
 ModifierDyingWishBonusManaCrystal = require 'app/sdk/modifiers/modifierDyingWishBonusManaCrystal'
 ModifierSummonWatchFromActionBarSpawnEntity = require 'app/sdk/modifiers/modifierSummonWatchFromActionBarSpawnEntity'
 ModifierDyingWishPutCardInHandClean = require 'app/sdk/modifiers/modifierDyingWishPutCardInHandClean'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
-ModifierTokenCreator = require 'app/sdk/modifiers/modifierTokenCreator'
-ModifierOnRemoveBuffGeneral = require('app/sdk/modifiers/modifierOnRemoveBuffGeneral');
+ModifierOpeningGambitPlaySpellAsFollowup = require 'app/sdk/modifiers/modifierOpeningGambitPlaySpellAsFollowup'
+ModifierDyingWish = require 'app/sdk/modifiers/modifierDyingWish'
+ModifierImmuneToDamageFromHighAttackUnits = require 'app/sdk/modifiers/modifierImmuneToDamageFromHighAttackUnits'
+ModifierDynamicCountModifySelfByWallsOnBoard = require 'app/sdk/modifiers/modifierDynamicCountModifySelfByWallsOnBoard'
+ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
+ModifierMyAttackMinionWatchDamageGeneral = require 'app/sdk/modifiers/modifierMyAttackMinionWatchDamageGeneral'
+ModifierOnRemoveBuffGeneral = require 'app/sdk/modifiers/modifierOnRemoveBuffGeneral'
 
 PlayerModifierSummonWatchApplyModifiers = require 'app/sdk/playerModifiers/playerModifierSummonWatchApplyModifiers'
 
@@ -95,7 +102,7 @@ class CardFactory_CoreSet_Faction6
       card.setIsGeneral(true)
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_faie_name")
-      card.setDescription(i18next.t("cards.faction_6_unit_faie_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(70)
       card.setBoundingBoxHeight(95)
@@ -130,7 +137,6 @@ class CardFactory_CoreSet_Faction6
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.Warbird}
 
     if (identifier == Cards.Faction6.AltGeneral)
       card = new Unit(gameSession)
@@ -139,7 +145,7 @@ class CardFactory_CoreSet_Faction6
       card.setIsGeneral(true)
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_kara_name")
-      card.setDescription(i18next.t("cards.faction_6_unit_kara_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(115)
       card.setBoundingBoxHeight(115)
@@ -174,7 +180,6 @@ class CardFactory_CoreSet_Faction6
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.KineticSurge}
 
     if (identifier == Cards.Faction6.ThirdGeneral)
       card = new Unit(gameSession)
@@ -184,7 +189,7 @@ class CardFactory_CoreSet_Faction6
         card.setIsUnlockedWithAchievementId(WartechGeneralFaction6Achievement.id)
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_ilena_name")
-      card.setDescription(i18next.t("cards.faction_6_unit_ilena_desc"))
+      card.setDescription('')
       card.manaCost = 0
       card.setBoundingBoxWidth(115)
       card.setBoundingBoxHeight(115)
@@ -219,8 +224,6 @@ class CardFactory_CoreSet_Faction6
       )
       card.atk = 2
       card.maxHP = 25
-      card.signatureCardData = {id: Cards.Spell.StunBBS}
-      card.addKeywordClassToInclude(ModifierStun)
 
     if (identifier == Cards.Faction6.FenrirWarmaster)
       card = new Unit(gameSession)
@@ -249,11 +252,10 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6FenrirWarmasterDeath.name
       )
       card.atk = 3
-      card.maxHP = 2
+      card.maxHP = 4
       card.manaCost = 3
-      card.rarityId = Rarity.Fixed
-      card.setInherentModifiersContextObjects([ ModifierDyingWishSpawnEntity.createContextObject({id: Cards.Faction6.GhostWolf}, "3/2 Ghost Wolf") ])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
+      card.rarityId = Rarity.Common
+      card.setInherentModifiersContextObjects([ ModifierDyingWishSpawnEntity.createContextObject({id: Cards.Faction6.GhostWolf}, "3/3 Ghost Wolf") ])
 
     if (identifier == Cards.Faction6.GhostWolf)
       card = new Unit(gameSession)
@@ -317,7 +319,7 @@ class CardFactory_CoreSet_Faction6
       card.atk = 2
       card.maxHP = 3
       card.manaCost = 2
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       attackBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(2)
       attackBuffContextObject.appliedName = i18next.t("modifiers.faction_6_infiltrated_attack_buff_name")
       card.setInherentModifiersContextObjects([ ModifierInfiltrate.createContextObject([attackBuffContextObject], "Gains +2 Attack") ])
@@ -352,7 +354,7 @@ class CardFactory_CoreSet_Faction6
       card.atk = 10
       card.maxHP = 4
       card.manaCost = 5
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierAirdrop.createContextObject()])
 
     if (identifier == Cards.Faction6.ArcticRhyno)
@@ -382,8 +384,8 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6ArcticRhynoDeath.name
       )
       card.atk = 6
-      card.maxHP = 5
-      card.manaCost = 5
+      card.maxHP = 8
+      card.manaCost = 6
       card.rarityId = Rarity.Epic
       attackBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(1)
       attackBuffContextObject.appliedName = i18next.t("modifiers.faction_6_infiltrated_attack_buff_name")
@@ -421,14 +423,26 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.f6DraugarLordDamage.name
         death : RSX.f6DraugarLordDeath.name
       )
-      card.atk = 4
-      card.maxHP = 8
-      card.manaCost = 6
+      card.atk = 6
+      card.maxHP = 5
+      card.manaCost = 5
       card.rarityId = Rarity.Epic
       card.setInherentModifiersContextObjects([
-        ModifierDyingWishSpawnEntity.createContextObject({id: Cards.Faction6.IceDrake},"4/8 Ice Drake")
+        ModifierOpeningGambitPlaySpellAsFollowup.createContextObject({
+          id: Cards.Spell.FollowupDraugarLord,
+        }),
       ])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
+    
+    if (identifier == Cards.Spell.FollowupDraugarLord)
+      card = new SpellTempTransform(gameSession)
+      card.factionId = Factions.Faction6
+      card.setIsHiddenInCollection(true)
+      card.id = Cards.Spell.FollowupDraugarLord
+      card.filterRaceIds = [Races.Vespyr]
+      card.spellFilterType = SpellFilterType.AllyIndirect
+      card.cardDataOrIndexToSpawn = { id: Cards.Faction6.IceDrake }
+      card.durationEndTurn = 2
+      card.radius = CONFIG.WHOLE_BOARD_RADIUS
 
     if (identifier == Cards.Faction6.IceDrake)
       card = new Unit(gameSession)
@@ -456,9 +470,9 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.f6FrostdrakeDamage.name
         death : RSX.f6FrostdrakeDeath.name
       )
-      card.atk = 4
-      card.maxHP = 8
-      card.manaCost = 4
+      card.atk = 2
+      card.maxHP = 6
+      card.manaCost = 3
       card.rarityId = Rarity.TokenUnit
       card.addKeywordClassToInclude(ModifierToken)
 
@@ -491,9 +505,10 @@ class CardFactory_CoreSet_Faction6
       card.maxHP = 1
       card.manaCost = 1
       card.rarityId = Rarity.Rare
-      returnContextObject = ModifierDyingWishPutCardInHandClean.createContextObject({id: Cards.Faction6.WyrBeast}, "a Snow Chaser")
+      returnContextObject = ModifierDyingWishPutCardInHandClean.createContextObject(null, card.name)
       returnContextObject.appliedName = i18next.t("modifiers.faction_6_infiltrated_replicate_buff_name")
       card.setInherentModifiersContextObjects([ModifierInfiltrate.createContextObject([returnContextObject], "When this minion dies, return it to your action bar")])
+      card.addKeywordClassToInclude(ModifierDyingWish)
 
     if (identifier == Cards.Faction6.WolfRaven)
       card = new Unit(gameSession)
@@ -521,13 +536,14 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.f6WolfravenDamage.name
         death : RSX.f6WolfravenDeath.name
       )
-      card.atk = 1
-      card.maxHP = 4
+      card.atk = 2
+      card.maxHP = 3
       card.manaCost = 3
-      card.rarityId = Rarity.Common
-      attackBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(3)
-      attackBuffContextObject.appliedName = i18next.t("modifiers.faction_6_infiltrated_attack_buff_name")
-      card.setInherentModifiersContextObjects([ModifierFlying.createContextObject(), ModifierInfiltrate.createContextObject([attackBuffContextObject], "Gains +3 Attack")])
+      card.rarityId = Rarity.Rare
+      card.setInherentModifiersContextObjects([
+        ModifierFlying.createContextObject(),
+        ModifierImmuneToDamageFromHighAttackUnits.createContextObject(3),
+      ])
 
     if (identifier == Cards.Faction6.BoreanBear)
       card = new Unit(gameSession)
@@ -557,10 +573,17 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6WaterBearDeath.name
       )
       card.atk = 1
-      card.maxHP = 3
+      card.maxHP = 4
       card.manaCost = 2
-      card.setInherentModifiersContextObjects([ModifierSummonWatchByRaceBuffSelf.createContextObject(1,0,Races.Vespyr,"Gathering Courage")])
-      card.rarityId = Rarity.Common
+      card.setInherentModifiersContextObjects([
+        ModifierDynamicCountModifySelfByWallsOnBoard.createContextObject(
+          1,
+          0,
+          '+1/+0',
+          i18next.t("modifiers.faction_6_borean_bear"),
+        )
+      ])
+      card.rarityId = Rarity.Epic
 
     if (identifier == Cards.Faction6.HearthSister)
       card = new Unit(gameSession)
@@ -628,10 +651,9 @@ class CardFactory_CoreSet_Faction6
       card.manaCost = 4
       card.rarityId = Rarity.Rare
       statContextObject = Modifier.createContextObjectWithAttributeBuffs(2)
-      statContextObject.durationEndTurn = 1
       statContextObject.appliedName = i18next.t("modifiers.faction_6_razorback_buff_name")
       card.setInherentModifiersContextObjects([
-        ModifierOpeningGambitApplyModifiers.createContextObjectForAllies([statContextObject], false, CONFIG.WHOLE_BOARD_RADIUS, "Give all friendly minions +2 Attack this turn")
+        ModifierOpeningGambitApplyModifiers.createContextObjectForAllies([statContextObject], false, CONFIG.WHOLE_BOARD_RADIUS, "Give all friendly minions +2 Attack.")
       ])
 
     if (identifier == Cards.Faction6.AncientGrove)
@@ -639,7 +661,6 @@ class CardFactory_CoreSet_Faction6
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_ancient_grove_name")
       card.setDescription(i18next.t("cards.faction_6_unit_ancient_grove_desc"))
-      card.raceId = Races.Vespyr
       card.setFXResource(["FX.Cards.Faction6.AncientGrove"])
       card.setBoundingBoxWidth(90)
       card.setBoundingBoxHeight(85)
@@ -661,8 +682,8 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.f6TreantDamage.name
         death : RSX.f6TreantDeath.name
       )
-      card.atk = 7
-      card.maxHP = 7
+      card.atk = 6
+      card.maxHP = 9
       card.manaCost = 7
       card.setInherentModifiersContextObjects([
         ModifierProvoke.createContextObject(),
@@ -672,7 +693,6 @@ class CardFactory_CoreSet_Faction6
         )
       ])
       card.addKeywordClassToInclude(ModifierDyingWishSpawnEntity)
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.rarityId = Rarity.Legendary
 
     if (identifier == Cards.Faction6.Treant)
@@ -681,6 +701,7 @@ class CardFactory_CoreSet_Faction6
       card.setIsHiddenInCollection(true)
       card.name = i18next.t("cards.faction_6_unit_treant_name")
       card.setDescription(i18next.t("cards.faction_6_unit_treant_desc"))
+      card.raceId = Races.Vespyr
       card.setFXResource(["FX.Cards.Faction6.Treant"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_amplification.audio
@@ -735,12 +756,11 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.f6VoiceoftheWindDamage.name
         death : RSX.f6VoiceoftheWindDeath.name
       )
-      card.atk = 4
+      card.atk = 5
       card.maxHP = 4
       card.manaCost = 4
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([ModifierSummonWatchFromActionBarSpawnEntity.createContextObject({id: Cards.Faction6.WaterBear}, "2/2 Vespyr Winter Maerid")])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
 
     if (identifier == Cards.Faction6.WaterBear)
       card = new Unit(gameSession)
@@ -802,8 +822,8 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.f6SnowElementalDamage.name
         death : RSX.f6SnowElementalDeath.name
       )
-      card.atk = 2
-      card.maxHP = 3
+      card.atk = 3
+      card.maxHP = 2
       card.manaCost = 3
       card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([ModifierSummonWatchByRaceDamageEnemyMinion.createContextObject(2, Races.Vespyr, "a Vespyr minion")])
@@ -867,9 +887,8 @@ class CardFactory_CoreSet_Faction6
       )
       card.atk = 4
       card.maxHP = 4
-      card.manaCost = 4
+      card.manaCost = 3
       card.rarityId = Rarity.TokenUnit
-      card.setInherentModifiersContextObjects([ModifierFlying.createContextObject()])
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Faction6.SeismicElemental)
@@ -900,7 +919,7 @@ class CardFactory_CoreSet_Faction6
       )
       card.atk = 5
       card.maxHP = 5
-      card.manaCost = 4
+      card.manaCost = 3
       card.rarityId = Rarity.TokenUnit
       card.addKeywordClassToInclude(ModifierToken)
 
@@ -931,7 +950,7 @@ class CardFactory_CoreSet_Faction6
       )
       card.atk = 0
       card.maxHP = 1
-      card.manaCost = 1
+      card.manaCost = 0
       card.rarityId = Rarity.TokenUnit
       card.setInherentModifiersContextObjects([ModifierWall.createContextObject(), ModifierProvoke.createContextObject()])
       card.addKeywordClassToInclude(ModifierToken)
@@ -962,8 +981,8 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6BlazingSpinesDeath.name
       )
       card.atk = 3
-      card.maxHP = 3
-      card.manaCost = 1
+      card.maxHP = 1
+      card.manaCost = 0
       card.rarityId = Rarity.TokenUnit
       card.setInherentModifiersContextObjects([ModifierWall.createContextObject()])
       card.addKeywordClassToInclude(ModifierToken)
@@ -996,9 +1015,9 @@ class CardFactory_CoreSet_Faction6
       )
       card.atk = 0
       card.maxHP = 2
-      card.manaCost = 1
+      card.manaCost = 0
       card.rarityId = Rarity.TokenUnit
-      card.setInherentModifiersContextObjects([ModifierWall.createContextObject(), ModifierStunWhenAttacked.createContextObject()])
+      card.setInherentModifiersContextObjects([ModifierWall.createContextObject(), ModifierStunWhenDamaged.createContextObject()])
       card.addKeywordClassToInclude(ModifierStunned)
       card.addKeywordClassToInclude(ModifierToken)
 
@@ -1028,76 +1047,11 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.neutralCrystalWispHit.name
         death : RSX.neutralCrystalWispDeath.name
       )
-      card.atk = 1
+      card.atk = 2
       card.maxHP = 1
       card.manaCost = 2
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierDyingWishBonusManaCrystal.createContextObject()])
-
-    if (identifier == Cards.Spell.KineticSurge)
-      card = new SpellKineticSurge(gameSession)
-      card.factionId = Factions.Faction6
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.KineticSurge
-      card.name = i18next.t("cards.faction_6_spell_kinetic_surge_name")
-      card.setDescription(i18next.t("cards.faction_6_spell_kinetic_surge_description"))
-      card.manaCost = 1
-      card.applyToOwnGeneral = true
-      card.spellFilterType = SpellFilterType.None
-      attackBuff = Modifier.createContextObjectWithAttributeBuffs(1,1)
-      attackBuff.appliedName = i18next.t("modifiers.faction_6_spell_kinetic_surge_1")
-      customContextObject = PlayerModifierSummonWatchApplyModifiers.createContextObject([attackBuff], i18next.t("modifiers.faction_6_spell_kinetic_surge_2"))
-      customContextObject.durationEndTurn = 1
-      card.setTargetModifiersContextObjects([customContextObject])
-      card.setFXResource(["FX.Cards.Spell.KineticSurge"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_loot_crate_card_reward_reveal_0.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconKineticCoilIdle.name
-        active : RSX.iconKineticCoilActive.name
-      )
-
-    if (identifier == Cards.Spell.Warbird)
-      card = new SpellWarbird(gameSession)
-      card.factionId = Factions.Faction6
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.Warbird
-      card.name = i18next.t("cards.faction_6_spell_warbird_name")
-      card.setDescription(i18next.t("cards.faction_6_spell_warbird_description"))
-      card.manaCost = 1
-      card.spellFilterType = SpellFilterType.None
-      card.canTargetGeneral = true
-      card.damageAmount = 2
-      card.setFXResource(["FX.Cards.Spell.Warbird"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_f6_icebeetle_death.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconWarbirdIdle.name
-        active : RSX.iconWarbirdActive.name
-      )
-
-    if (identifier == Cards.Spell.StunBBS)
-      card = new SpellApplyModifiers(gameSession)
-      card.factionId = Factions.Faction6
-      card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.StunBBS
-      card.name = i18next.t("cards.faction_6_spell_crystallize_name")
-      card.setDescription(i18next.t("cards.faction_6_spell_crystallize_desc"))
-      card.manaCost = 1
-      card.spellFilterType = SpellFilterType.EnemyDirect
-      card.filterNearGeneral = true
-      card.setTargetModifiersContextObjects([ModifierStunnedVanar.createContextObject()])
-      card.setFXResource(["FX.Cards.Spell.Crystallize"])
-      card.setBaseSoundResource(
-        apply : RSX.sfx_f6_icebeetle_death.audio
-      )
-      card.setBaseAnimResource(
-        idle : RSX.iconCrystallizeIdle.name
-        active : RSX.iconCrystallizeActive.name
-      )
-      card.addKeywordClassToInclude(ModifierStun)
 
     if (identifier == Cards.Spell.GravityWell)
       card = new SpellSpawnEntity(gameSession)
@@ -1105,8 +1059,8 @@ class CardFactory_CoreSet_Faction6
       card.id = Cards.Spell.GravityWell
       card.name = i18next.t("cards.faction_6_spell_gravity_well_name")
       card.setDescription(i18next.t("cards.faction_6_spell_gravity_well_description"))
-      card.manaCost = 2
-      card.rarityId = Rarity.Legendary
+      card.manaCost = 3
+      card.rarityId = Rarity.Epic
       card.cardDataOrIndexToSpawn = {id: Cards.Faction6.GravityWell}
       card.addKeywordClassToInclude(ModifierProvoke)
       card.setFXResource(["FX.Spell.FireTornado","FX.Cards.Spell.GravityWell"])
@@ -1114,7 +1068,6 @@ class CardFactory_CoreSet_Faction6
       card.setFollowups([{
         id: Cards.Spell.CloneSourceEntity3X
       }])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_manavortex.audio
       )
@@ -1138,7 +1091,6 @@ class CardFactory_CoreSet_Faction6
       card.setFollowups([{
         id: Cards.Spell.CloneSourceEntity2X
       }])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setBaseSoundResource(
         apply : RSX.sfx_neutral_spelljammer_attack_swing.audio
       )
@@ -1153,7 +1105,7 @@ class CardFactory_CoreSet_Faction6
       card.id = Cards.Spell.BlazingSpines
       card.name = i18next.t("cards.faction_6_spell_blazing_spines_name")
       card.setDescription(i18next.t("cards.faction_6_spell_blazing_spines_description"))
-      card.manaCost = 3
+      card.manaCost = 1
       card.rarityId = Rarity.Rare
       card.cardDataOrIndexToSpawn = {id: Cards.Faction6.BlazingSpines}
       card.setFXResource(["FX.Spell.FireTornado","FX.Cards.Spell.BlazingSpines"])
@@ -1161,7 +1113,6 @@ class CardFactory_CoreSet_Faction6
       card.setFollowups([{
         id: Cards.Spell.CloneSourceEntity
       }])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setBaseSoundResource(
         apply : RSX.sfx_f6_ancientgrove_attack_impact.audio
       )
@@ -1179,9 +1130,10 @@ class CardFactory_CoreSet_Faction6
       card.name = i18next.t("cards.faction_6_spell_chromatic_cold_name")
       card.setDescription(i18next.t("cards.faction_6_spell_chromatic_cold_description"))
       card.manaCost = 2
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.damageAmount = 2
       card.canTargetGeneral = true
+      card.addKeywordClassToInclude(ModifierDispels)
       card.setFXResource(["FX.Cards.Spell.ChromaticCold"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_icepillar.audio
@@ -1198,7 +1150,7 @@ class CardFactory_CoreSet_Faction6
       card.name = i18next.t("cards.faction_6_spell_flash_freeze_name")
       card.setDescription(i18next.t("cards.faction_6_spell_flash_freeze_description"))
       card.manaCost = 0
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.damageAmount = 1
       card.setTargetModifiersContextObjects([ModifierStunnedVanar.createContextObject()])
@@ -1219,8 +1171,8 @@ class CardFactory_CoreSet_Faction6
       card.name = i18next.t("cards.faction_6_spell_frostfire_name")
       card.setDescription(i18next.t("cards.faction_6_spell_frostfire_description"))
       card.manaCost = 2
-      card.rarityId = Rarity.Fixed
-      card.spellFilterType = SpellFilterType.AllyDirect
+      card.rarityId = Rarity.Common
+      card.spellFilterType = SpellFilterType.NeutralDirect
       card.attackBuff = 3
       card.healthBuff = 3
       card.setFXResource(["FX.Cards.Spell.IceCage"])
@@ -1242,7 +1194,7 @@ class CardFactory_CoreSet_Faction6
       card.setDescription(i18next.t("cards.faction_6_spell_avalanche_description"))
       card.manaCost = 4
       card.damageAmount = 4
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Rare
       card.canTargetGeneral = true
       card.spellFilterType = SpellFilterType.NeutralIndirect
       card.radius = CONFIG.WHOLE_BOARD_RADIUS
@@ -1283,24 +1235,22 @@ class CardFactory_CoreSet_Faction6
       )
 
     if (identifier == Cards.Spell.Numb)
-      card = new Spell(gameSession)
+      card = new SpellDamageAndApplyModifiers(gameSession)
       card.factionId = Factions.Faction6
       card.id = Cards.Spell.Numb
       card.name = i18next.t("cards.faction_6_spell_mesmerize_name")
       card.setDescription(i18next.t("cards.faction_6_spell_mesmerize_description"))
-      card.manaCost = 1
-      card.rarityId = Rarity.Rare
-      card.spellFilterType = SpellFilterType.EnemyDirect
-      card.canTargetGeneral = true
-      card.setFXResource(["FX.Cards.Spell.Mesmerize"])
-      card.setFollowups([
-        {
-          id: Cards.Spell.FollowupTeleport
-          _private: {
-            followupSourcePattern: CONFIG.PATTERN_1SPACE
-          }
-        }
+      card.manaCost = 2
+      card.rarityId = Rarity.Common
+      card.spellFilterType = SpellFilterType.EnemyIndirect
+      card.setAffectPattern(CONFIG.PATTERN_WHOLE_COLUMN)
+      card.damageAmount = 3
+      card.setTargetModifiersContextObjects([
+        ModifierStunnedVanar.createContextObject(),
       ])
+      card.addKeywordClassToInclude(ModifierStun)
+      card.applyToEnemy = true
+      card.setFXResource(["FX.Cards.Spell.Mesmerize"])
       card.setBaseSoundResource(
         apply : RSX.sfx_f6_icebeetle_death.audio
       )
@@ -1319,7 +1269,7 @@ class CardFactory_CoreSet_Faction6
       card.manaCost = 2
       card.rarityId = Rarity.Rare
       card.spellFilterType = SpellFilterType.NeutralDirect
-      customContextObject = Modifier.createContextObjectWithAttributeBuffs(5,5)
+      customContextObject = Modifier.createContextObjectWithAttributeBuffs(6,6)
       customContextObject.attributeBuffsAbsolute = ["atk", "maxHP"]
       customContextObject.resetsDamage = true
       customContextObject.isRemovable = false
@@ -1343,11 +1293,10 @@ class CardFactory_CoreSet_Faction6
       card.id = Cards.Spell.AspectOfTheWolf
       card.name = i18next.t("cards.faction_6_spell_aspect_of_the_fox_name")
       card.setDescription(i18next.t("cards.faction_6_spell_aspect_of_the_fox_description"))
-      card.manaCost = 2
-      card.rarityId = Rarity.Fixed
+      card.manaCost = 1
+      card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.cardDataOrIndexToSpawn = {id: Cards.Faction6.WolfAspect}
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setFXResource(["FX.Cards.Spell.AspectOfTheWolf"])
       card.setBaseSoundResource(
         apply : RSX.sfx_f6_ghostwolf_attack_swing.audio
@@ -1358,17 +1307,15 @@ class CardFactory_CoreSet_Faction6
       )
 
     if (identifier == Cards.Spell.AspectOfTheDrake)
-      card = new SpellAspectOfTheDrake(gameSession)
+      card = new SpellCopyToActionBarAndTransform(gameSession)
       card.factionId = Factions.Faction6
       card.id = Cards.Spell.AspectOfTheDrake
       card.name = i18next.t("cards.faction_6_spell_aspect_of_the_drake_name")
       card.setDescription(i18next.t("cards.faction_6_spell_aspect_of_the_drake_description"))
-      card.manaCost = 4
+      card.manaCost = 2
       card.rarityId = Rarity.Epic
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.cardDataOrIndexToSpawn = {id: Cards.Faction6.AzureDrake}
-      card.addKeywordClassToInclude(ModifierTokenCreator)
-      card.addKeywordClassToInclude(ModifierFlying)
       card.setFXResource(["FX.Cards.Spell.AspectOfTheDrake"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_amplification.audio
@@ -1389,7 +1336,6 @@ class CardFactory_CoreSet_Faction6
       card.damageAmount = 5
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.cardDataOrIndexToSpawn = {id: Cards.Faction6.SeismicElemental}
-      card.addKeywordClassToInclude(ModifierTokenCreator)
       card.setFXResource(["FX.Cards.Spell.AspectOfTheDrake"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_manavortex.audio
@@ -1406,7 +1352,7 @@ class CardFactory_CoreSet_Faction6
       card.name = i18next.t("cards.faction_6_spell_polarity_name")
       card.setDescription(i18next.t("cards.faction_6_spell_polarity_description"))
       card.manaCost = 0
-      card.rarityId = Rarity.Common
+      card.rarityId = Rarity.Rare
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.setFXResource(["FX.Cards.Spell.Polarity"])
       card.setBaseSoundResource(
@@ -1441,9 +1387,10 @@ class CardFactory_CoreSet_Faction6
       card.id = Cards.Spell.SpiritoftheWild
       card.name = i18next.t("cards.faction_6_spell_spirit_of_the_wild_name")
       card.setDescription(i18next.t("cards.faction_6_spell_spirit_of_the_wild_description"))
-      card.manaCost = 5
-      card.rarityId = Rarity.Epic
+      card.manaCost = 4
+      card.rarityId = Rarity.Legendary
       card.radius = CONFIG.WHOLE_BOARD_RADIUS
+      card.canTargetGeneral = true
       card.setFXResource(["FX.Cards.Spell.SpiritoftheWild"])
       card.setBaseAnimResource(
         idle: RSX.iconSpiritOfTheWildIdle.name
@@ -1459,9 +1406,10 @@ class CardFactory_CoreSet_Faction6
       card.id = Cards.Spell.Cryogenesis
       card.name = i18next.t("cards.faction_6_spell_cryogenesis_name")
       card.setDescription(i18next.t("cards.faction_6_spell_cryogenesis_description"))
-      card.manaCost = 4
+      card.manaCost = 3
       card.damageAmount = 4
-      card.rarityId = Rarity.Common
+      card.spellFilterType = SpellFilterType.NeutralDirect
+      card.rarityId = Rarity.Rare
       card.setFXResource(["FX.Cards.Spell.Cryogenesis"])
       card.setBaseAnimResource(
         idle: RSX.iconCryogenesisIdle.name
@@ -1478,13 +1426,13 @@ class CardFactory_CoreSet_Faction6
       card.name = i18next.t("cards.faction_6_artifact_snowpiercer_name")
       card.setDescription(i18next.t("cards.faction_6_artifact_snowpiercer_description"))
       card.manaCost = 3
-      card.rarityId = Rarity.Fixed
-      card.durability = 3
+      card.rarityId = Rarity.Common
       card.setTargetModifiersContextObjects([
         Modifier.createContextObjectWithAttributeBuffs(3,undefined, {
           name: i18next.t("cards.faction_6_artifact_snowpiercer_name")
           description: i18next.t("modifiers.plus_attack_key",{amount:3})
-        })
+        }),
+        ModifierMyAttackMinionWatchDamageGeneral.createContextObject(1),
       ])
       card.setFXResource(["FX.Cards.Artifact.Snowpiercer"])
       card.setBaseAnimResource(
@@ -1502,8 +1450,7 @@ class CardFactory_CoreSet_Faction6
       card.name = i18next.t("cards.faction_6_artifact_coldbiter_name")
       card.setDescription(i18next.t("cards.faction_6_artifact_coldbiter_description"))
       card.manaCost = 2
-      card.rarityId = Rarity.Legendary
-      card.durability = 3
+      card.rarityId = Rarity.Rare
       card.setTargetModifiersContextObjects([
         ModifierEndTurnWatchDamageNearbyEnemy.createContextObject(2,false,{
           type: "ModifierEndTurnWatchDamageNearbyEnemy"
@@ -1528,7 +1475,6 @@ class CardFactory_CoreSet_Faction6
       card.setDescription(i18next.t("cards.faction_6_artifact_winterblade_description"))
       card.manaCost = 1
       card.rarityId = Rarity.Epic
-      card.durability = 3
       immunityContextObject = contextObjects[0]
       card.setTargetModifiersContextObjects([
         Modifier.createContextObjectWithAttributeBuffs(1,0,{

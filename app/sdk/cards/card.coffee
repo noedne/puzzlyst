@@ -2382,4 +2382,32 @@ class Card extends SDKObject
 
   # endregion ### SERIALIZATION ###
 
+  #region ### ACTIONS ###
+
+  actionCopyToActionBar: (additionalModifiersContextObjects) ->
+    newCardData = @createNewCardData()
+    if additionalModifiersContextObjects
+      if newCardData.additionalModifiersContextObjects?
+        newCardData.additionalModifiersContextObjects.concat(
+          UtilsJavascript.deepCopy(additionalModifiersContextObjects)
+        )
+      else
+        newCardData.additionalModifiersContextObjects =
+          UtilsJavascript.deepCopy(additionalModifiersContextObjects)
+    putCardInHandAction = new PutCardInHandAction(
+      @getGameSession(),
+      @getOwnerId(),
+      newCardData,
+    )
+
+  actionPlaySpellAsFollowup: (cardDataOrIndexToCast, position) ->
+    @setFollowups([cardDataOrIndexToCast])
+    { x, y } = position
+    action = @getOwner().actionPlayFollowup(@getCurrentFollowupCard(), x, y)
+    @injectFollowupPropertiesIntoCard(action.getCard())
+    @clearFollowups()
+    return action
+
+  #endregion ### ACTIONS ###
+
 module.exports = Card

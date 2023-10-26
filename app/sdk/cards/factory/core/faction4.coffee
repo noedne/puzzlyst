@@ -535,7 +535,12 @@ class CardFactory_CoreSet_Faction4
       card.manaCost = 2
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([
-        ModifierDynamicCountModifySelfByShadowTilesOnBoard.createContextObject(2, 2),
+        ModifierDynamicCountModifySelfByShadowTilesOnBoard.createContextObject(
+          2,
+          2,
+          '+2/+2',
+          i18next.t("modifiers.faction_4_darkspine_elemental"),
+        ),
       ])
       card.addKeywordClassToInclude(ModifierStackingShadows)
 

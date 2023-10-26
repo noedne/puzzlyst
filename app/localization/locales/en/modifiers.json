@@ -86,7 +86,7 @@
 	"structure_def":"This minion cannot move or attack.",
 
 	"stunned_name":"Stunned",
-	"stunned_def":"Stunned minions lose their next action.",
+	"stunned_def":"Stunned units lose their next action.",
 
 	"summon_dervish_name":"Gateway",
 	"summon_dervish_def":"At the start of your turn, summon a Wind Dervish on a random nearby space.",
@@ -343,6 +343,7 @@
 	"faction_4_phantasm":"Phantasmal Power",
 	"faction_4_skullprophet":"Prophetic Misfortune",
 	"faction_4_stygian_observer":"Deaths Observed",
+	"faction_4_darkspine_elemental":"Gathering Darkness",
 
 	"faction_4_followup_blood_siren_1":"Weakened Blood",
 	"faction_4_followup_blood_siren_2":"Attack set to 0",
@@ -403,6 +404,7 @@
 	"faction_6_draugar_eyolith_2":"Enemies move 1 space.",
 	"faction_6_draugar_eyolith_3":"Snowed",
 	"faction_6_draugar_eyolith_4":"Moves 1 space.",
+	"faction_6_borean_bear":"Gathering Courage",
 
 	"faction_6_followup_iceblade_dryad_2":"Iceblade Aid",
 
@@ -410,7 +412,7 @@
 	"faction_6_spell_kinetic_surge_2":"gain +1/+1",
 	"faction_6_spell_boundless_courage_1":"Unstoppable",
 	"faction_6_spell_mark_of_solitude_1":"Solitude",
-	"faction_6_spell_mark_of_solitude_2":"Set to 5/5",
+	"faction_6_spell_mark_of_solitude_2":"Set to 6/6",
 	"faction_6_spell_lightning_blitz_1":"Blitz!",
 	"faction_6_spell_winters_wake_1":"Awoken",
 	"faction_6_spell_winters_wake_2":"+4/+4 and can move",

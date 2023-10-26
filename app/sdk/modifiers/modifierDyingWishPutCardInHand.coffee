@@ -24,7 +24,16 @@ class ModifierDyingWishPutCardInHand extends ModifierDyingWish
       return @description
 
   onDyingWish: () ->
-    a = new PutCardInHandAction(@getGameSession(), @getCard().getOwnerId(), @cardDataOrIndexToPutInHand)
+    a = new PutCardInHandAction(
+      @getGameSession(),
+      @getCard().getOwnerId(),
+      @getCardDataOrIndexToPutInHand(),
+    )
     this.getGameSession().executeAction(a)
+  
+  getCardDataOrIndexToPutInHand: () ->
+    if @cardDataOrIndexToPutInHand?
+      return @cardDataOrIndexToPutInHand
+    return @getCard().createNewCardData()
 
 module.exports = ModifierDyingWishPutCardInHand

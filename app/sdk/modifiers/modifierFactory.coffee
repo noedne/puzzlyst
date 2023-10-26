@@ -135,7 +135,7 @@ ModifierAbsorbDamage = require './modifierAbsorbDamage'
 ModifierAbsorbDamageOnce = require './modifierAbsorbDamageOnce'
 ModifierDyingWishTeleportEnemyGeneral = require './modifierDyingWishTeleportEnemyGeneral'
 ModifierTransformed = require './modifierTransformed'
-ModifierStunWhenAttacked = require './modifierStunWhenAttacked'
+ModifierStunWhenDamaged = require './modifierStunWhenDamaged'
 ModifierWall = require './modifierWall'
 ModifierOpeningGambitSpawnCopiesOfEntityAnywhere = require './modifierOpeningGambitSpawnCopiesOfEntityAnywhere'
 ModifierSummonWatchBuffSelf = require './modifierSummonWatchBuffSelf'
@@ -680,6 +680,10 @@ ModifierOnRemoveBuffGeneral = require './modifierOnRemoveBuffGeneral'
 ModifierDispels = require './modifierDispels'
 ModifierStartOpponentsTurnWatchApplyTempModifier = require './modifierStartOpponentsTurnWatchApplyTempModifier'
 ModifierOnRemoveShuffleCopyIntoDeck = require './modifierOnRemoveShuffleCopyIntoDeck'
+ModifierOpeningGambitPlaySpellAsFollowup = require './modifierOpeningGambitPlaySpellAsFollowup'
+ModifierImmuneToDamageFromHighAttackUnits = require './modifierImmuneToDamageFromHighAttackUnits'
+ModifierDynamicCountModifySelfByWallsOnBoard = require './modifierDynamicCountModifySelfByWallsOnBoard'
+ModifierMyAttackMinionWatchDamageGeneral = require './modifierMyAttackMinionWatchDamageGeneral'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -1020,8 +1024,8 @@ class ModifierFactory
       return ModifierDyingWishTeleportEnemyGeneral
     if (modifierType == ModifierTransformed.type)
       return ModifierTransformed
-    if (modifierType == ModifierStunWhenAttacked.type)
-      return ModifierStunWhenAttacked
+    if (modifierType == ModifierStunWhenDamaged.type)
+      return ModifierStunWhenDamaged
     if (modifierType == ModifierWall.type)
       return ModifierWall
     if (modifierType == ModifierOpeningGambitSpawnCopiesOfEntityAnywhere.type)
@@ -2104,6 +2108,14 @@ class ModifierFactory
       return ModifierStartOpponentsTurnWatchApplyTempModifier;
     if (modifierType == ModifierOnRemoveShuffleCopyIntoDeck.type)
       return ModifierOnRemoveShuffleCopyIntoDeck;
+    if (modifierType == ModifierOpeningGambitPlaySpellAsFollowup.type)
+      return ModifierOpeningGambitPlaySpellAsFollowup
+    if (modifierType == ModifierImmuneToDamageFromHighAttackUnits.type)
+      return ModifierImmuneToDamageFromHighAttackUnits
+    if (modifierType == ModifierDynamicCountModifySelfByWallsOnBoard.type)
+      return ModifierDynamicCountModifySelfByWallsOnBoard
+    if (modifierType == ModifierMyAttackMinionWatchDamageGeneral.type)
+      return ModifierMyAttackMinionWatchDamageGeneral
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier
