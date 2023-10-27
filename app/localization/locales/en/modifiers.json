@@ -170,6 +170,9 @@
 	"cannot_attack_general_name":"Avoids Generals",
 	"cannot_attack_general_def":"This minion may not attack Generals unless attacked.",
 	"cannot_attack_general_error":"[Not] a valid target.",
+	"cannot_attack_minions_name":"Avoids Minions",
+	"cannot_attack_minions_def":"This cannot attack minions.",
+	"cannot_attack_minions_error":"This cannot attack minions!",
 	"cost_change_if_my_general_damaged_last_turn_name":"Chakkram's Duty",
 	"cost_change_if_my_general_damaged_last_turn_name_def":"{{desc}} if your General took damage on your opponent's last turn",
 	"cost_change_if_my_general_damaged_last_turn_name_mod":"Costs 2 less",
@@ -431,6 +434,7 @@
 	"faction_6_artifact_animus_plate_1":"Animus Surge",
 
 	"neutral_owlbeast_sage_modifier":"Arcanyst Fortitude",
+	"neutral_primus_shieldmaster_modifier":"Shield of the Primus",
 	"neutral_primus_fist_modifier_2":"Fist of the Primus",
 	"neutral_dark_nemesis_modifier":"Siphon Power",
 	"neutral_mirkblood_devourer_modifier":"Mirkblood Aid",

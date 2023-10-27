@@ -19,11 +19,12 @@ class DamageAction extends Action
     p.damageChange = 0 # flat damage amount shift, set during modify_action_for_execution phase by modifiers (ex: deal 2 additional damage to target)
     p.damageMultiplier = 1 # multiplier to total damage, set during modify_action_for_execution phase by modifiers (ex: increase damage dealth by double)
     p.finalDamageChange = 0 # flat damage amount shift to be applied after initial total is calculated. (ex: reduce all damage dealt to this unit by 2 - after damage boost / multiplier effects)
+    p.isRedirected = false
     p.totalDamageAmount = null # cached total damage amount once action has been executed (in case game state changes)
 
     return p
 
-  getTotalDamageAmount: () ->
+  getTotalDamageAmountBeforeRedirection: () ->
     if !@_private.totalDamageAmount?
       # apply 3 levels of damage change in order, but never allow damage amounts to go negative (that would be a heal)
       totalDamageAmount = Math.max(@getDamageAmount() + @getDamageChange(), 0) # apply initial flat damage change
@@ -31,6 +32,11 @@ class DamageAction extends Action
       totalDamageAmount = Math.max(totalDamageAmount + @getFinalDamageChange(), 0) # apply final flat damage change
       @_private.totalDamageAmount = Math.floor(totalDamageAmount) # floor the damage
     return @_private.totalDamageAmount
+  
+  getTotalDamageAmount: () ->
+    if @getIsRedirected()
+      return 0
+    return @getTotalDamageAmountBeforeRedirection()
 
   # setters / getters
   getDamageAmount: () ->
@@ -53,6 +59,12 @@ class DamageAction extends Action
   setFinalDamageChange: (damageChange) ->
     @_private.finalDamageChange = damageChange
     @_private.totalDamageAmount = null
+  
+  getIsRedirected: () ->
+    return @_private.isRedirected
+  
+  setIsRedirected: (isRedirected) ->
+    @_private.isRedirected = isRedirected
 
   getDamageMultiplier: () ->
     return @_private.damageMultiplier

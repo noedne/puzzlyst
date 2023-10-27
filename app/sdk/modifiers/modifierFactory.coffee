@@ -684,6 +684,10 @@ ModifierOpeningGambitPlaySpellAsFollowup = require './modifierOpeningGambitPlayS
 ModifierImmuneToDamageFromHighAttackUnits = require './modifierImmuneToDamageFromHighAttackUnits'
 ModifierDynamicCountModifySelfByWallsOnBoard = require './modifierDynamicCountModifySelfByWallsOnBoard'
 ModifierMyAttackMinionWatchDamageGeneral = require './modifierMyAttackMinionWatchDamageGeneral'
+ModifierCannotAttackMinions = require './modifierCannotAttackMinions'
+ModifierDynamicCountModifySelfByAlliesNearby = require './modifierDynamicCountModifySelfByAlliesNearby'
+ModifierRedirectDamageFromAllyDirectlyInFront = require './modifierRedirectDamageFromAllyDirectlyInFront'
+ModifierTakeDamageWatchApplyModifiers = require './modifierTakeDamageWatchApplyModifiers'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -2116,6 +2120,14 @@ class ModifierFactory
       return ModifierDynamicCountModifySelfByWallsOnBoard
     if (modifierType == ModifierMyAttackMinionWatchDamageGeneral.type)
       return ModifierMyAttackMinionWatchDamageGeneral
+    if (modifierType == ModifierCannotAttackMinions.type)
+      return ModifierCannotAttackMinions
+    if (modifierType == ModifierDynamicCountModifySelfByAlliesNearby.type)
+      return ModifierDynamicCountModifySelfByAlliesNearby
+    if (modifierType == ModifierRedirectDamageFromAllyDirectlyInFront.type)
+      return ModifierRedirectDamageFromAllyDirectlyInFront
+    if (modifierType == ModifierTakeDamageWatchApplyModifiers.type)
+      return ModifierTakeDamageWatchApplyModifiers
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier

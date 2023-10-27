@@ -11,14 +11,16 @@ class ModifierDealDamageWatchHealMyGeneral extends ModifierDealDamageWatch
 
   fxResource: ["FX.Modifiers.ModifierDealDamageWatch", "FX.Modifiers.ModifierGenericHeal"]
 
-  @createContextObject: (healAmount=0, options) ->
+  @createContextObject: (healAmount, options) ->
     contextObject = super(options)
     contextObject.healAmount = healAmount
     return contextObject
 
   @getDescription: (modifierContextObject) ->
     if modifierContextObject
-      return @description.replace /%X/, modifierContextObject.healAmount
+      if modifierContextObject.healAmount?
+        return @description.replace /%X/, modifierContextObject.healAmount
+      return "When this deals damage, heal your General for the amount dealt"
     else
       return @description
 
@@ -28,7 +30,9 @@ class ModifierDealDamageWatchHealMyGeneral extends ModifierDealDamageWatch
     healAction = new HealAction(this.getGameSession())
     healAction.setOwnerId(@getCard().getOwnerId())
     healAction.setTarget(general)
-    healAction.setHealAmount(@healAmount)
+    healAction.setHealAmount(
+      if @healAmount? then @healAmount else action.getTotalDamageAmount()
+    )
     @getGameSession().executeAction(healAction)
 
 module.exports = ModifierDealDamageWatchHealMyGeneral

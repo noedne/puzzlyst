@@ -16,12 +16,10 @@ class ModifierEquipFriendlyArtifactWatchGainAttackEqualToCost extends ModifierEq
     return contextObject
 
   onEquipFriendlyArtifactWatch: (action, artifact) ->
-
-    if artifact?
-      manaCost = artifact.getManaCost()
-      if manaCost? and manaCost > 0
-        attackModifier = Modifier.createContextObjectWithAttributeBuffs(manaCost,0)
-        attackModifier.appliedName = @buffName
-        @getCard().getGameSession().applyModifierContextObject(attackModifier, @getCard())
+    manaCost = artifact.getManaCost()
+    attackModifier = Modifier.createContextObjectWithAttributeBuffs(manaCost,0)
+    attackModifier.appliedName = @buffName
+    @getCard().getGameSession().applyModifierContextObject(attackModifier, @getCard())
+    @getGameSession().removeModifier(@)
 
 module.exports = ModifierEquipFriendlyArtifactWatchGainAttackEqualToCost
