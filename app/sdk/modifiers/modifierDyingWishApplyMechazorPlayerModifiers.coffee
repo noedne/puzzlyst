@@ -21,13 +21,13 @@ class ModifierDyingWishApplyMechazorPlayerModifiers extends ModifierDyingWish
     numCanAdd = PlayerModifierMechazorBuildProgress.getNumberCompleted(owner)
     handSpace = CONFIG.MAX_HAND_SIZE - owner.getDeck().getNumCardsInHand()
     for [0...Math.min(numCanAdd, handSpace)]
-      @getGameSession().executeAction(
-        new PutCardInHandAction(
-          @getGameSession(),
-          @getOwnerId(),
-          { id: Cards.Neutral.Mechaz0r },
-        )
+      action = new PutCardInHandAction(
+        @getGameSession(),
+        @getOwnerId(),
+        { id: Cards.Neutral.Mechaz0r },
       )
+      action.setIsDepthFirst(true)
+      @getGameSession().executeAction(action)
       @getGameSession().applyModifierContextObject(
         PlayerModifierMechazorSummoned.createContextObject(),
         general,
