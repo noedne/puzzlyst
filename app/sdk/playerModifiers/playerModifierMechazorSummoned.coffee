@@ -7,6 +7,7 @@ class PlayerModifierMechazorSummoned extends PlayerModifier
 
   @modifierName:"MECHAZ0R Built"
   @description: "MECHAZ0R"
+  @percentForCompletion: 100
 
   isRemovable: false
 

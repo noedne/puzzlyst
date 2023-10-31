@@ -23,7 +23,6 @@ SpellFilterType = require 'app/sdk/spells/spellFilterType'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierRanged = require 'app/sdk/modifiers/modifierRanged'
-ModifierImmuneToDamageByGeneral = require 'app/sdk/modifiers/modifierImmuneToDamageByGeneral'
 ModifierFirstBlood = require 'app/sdk/modifiers/modifierFirstBlood'
 ModifierProvoke = require 'app/sdk/modifiers/modifierProvoke'
 ModifierAirdrop = require 'app/sdk/modifiers/modifierAirdrop'
@@ -44,7 +43,7 @@ ModifierDyingWishApplyModifiers = require 'app/sdk/modifiers/modifierDyingWishAp
 ModifierOpeningGambitDamageBothGenerals = require 'app/sdk/modifiers/modifierOpeningGambitDamageBothGenerals'
 ModifierOpeningGambitDamageInFront = require 'app/sdk/modifiers/modifierOpeningGambitDamageInFront'
 ModifierOpeningGambitApplyPlayerModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyPlayerModifiers'
-ModifierOpeningGambitApplyMechazorPlayerModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyMechazorPlayerModifiers'
+ModifierDyingWishApplyMechazorPlayerModifiers = require 'app/sdk/modifiers/modifierDyingWishApplyMechazorPlayerModifiers'
 ModifierMyGeneralDamagedWatchBuffSelf = require 'app/sdk/modifiers/modifierMyGeneralDamagedWatchBuffSelf'
 ModifierMyGeneralDamagedWatchHealSelf = require 'app/sdk/modifiers/modifierMyGeneralDamagedWatchHealSelf'
 ModifierMyGeneralDamagedWatchDamageNearby = require 'app/sdk/modifiers/modifierMyGeneralDamagedWatchDamageNearby'
@@ -77,11 +76,9 @@ ModifierDyingWishReSpawnEntityAnywhere = require 'app/sdk/modifiers/modifierDyin
 ModifierOpeningGambitApplyModifiersRandomly = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiersRandomly'
 ModifierImmuneToSpellDamage = require 'app/sdk/modifiers/modifierImmuneToSpellDamage'
 ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchFromActionBarByOpeningGambitBuffSelf'
-ModifierOpeningGambitDrawCardBothPlayers = require 'app/sdk/modifiers/modifierOpeningGambitDrawCardBothPlayers'
 ModifierSurviveDamageWatchReturnToHand = require 'app/sdk/modifiers/modifierSurviveDamageWatchReturnToHand'
 ModifierDoubleDamageToGenerals = require 'app/sdk/modifiers/modifierDoubleDamageToGenerals'
 ModifierOpeningGambitHealBothGenerals = require 'app/sdk/modifiers/modifierOpeningGambitHealBothGenerals'
-ModifierForcefield = require 'app/sdk/modifiers/modifierForcefield'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierCannotAttackMinions = require 'app/sdk/modifiers/modifierCannotAttackMinions'
 ModifierEquipFriendlyArtifactWatchGainAttackEqualToCost = require 'app/sdk/modifiers/modifierEquipFriendlyArtifactWatchGainAttackEqualToCost'
@@ -92,13 +89,18 @@ ModifierEndTurnWatchApplyModifiers = require 'app/sdk/modifiers/modifierEndTurnW
 ModifierImmuneToSpells = require 'app/sdk/modifiers/modifierImmuneToSpells'
 ModifierTakeDamageWatchApplyModifiers = require 'app/sdk/modifiers/modifierTakeDamageWatchApplyModifiers'
 ModifierStartTurnWatchDamageGenerals = require 'app/sdk/modifiers/modifierStartTurnWatchDamageGenerals'
+ModifierDyingWishDamageNearbyEnemies = require 'app/sdk/modifiers/modifierDyingWishDamageNearbyEnemies'
+ModifierMyAttackWatchAreaDamage = require 'app/sdk/modifiers/modifierMyAttackWatchAreaDamage'
+ModifierCostChangeIfEnemyGeneralDamagedThisTurn = require 'app/sdk/modifiers/modifierCostChangeIfEnemyGeneralDamagedThisTurn'
+ModifierImmuneToAttacksIfFullHealth = require 'app/sdk/modifiers/modifierImmuneToAttacksIfFullHealth'
+ModifierDealDamageWatchStealCards = require 'app/sdk/modifiers/modifierDealDamageWatchStealCards'
+ModifierOpeningGambitApplyModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiers'
 
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
 PlayerModifierMechazorBuildProgress = require 'app/sdk/playerModifiers/playerModifierMechazorBuildProgress'
 PlayerModifierCardDrawModifier = require 'app/sdk/playerModifiers/playerModifierCardDrawModifier'
 PlayerModifierSummonWatchApplyModifiers = require 'app/sdk/playerModifiers/playerModifierSummonWatchApplyModifiers'
 PlayerModifierReplaceCardModifier = require 'app/sdk/playerModifiers/playerModifierReplaceCardModifier'
-PlayerModifierManaModifierOncePerTurn = require 'app/sdk/playerModifiers/playerModifierManaModifierOncePerTurn'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -1009,7 +1011,7 @@ class CardFactory_CoreSet_Neutral
       card.atk = 10
       card.maxHP = 10
       card.manaCost = 7
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
 
     if (identifier == Cards.Neutral.StormmetalGolem)
       card = new Unit(gameSession)
@@ -1040,7 +1042,7 @@ class CardFactory_CoreSet_Neutral
       card.atk = 8
       card.maxHP = 8
       card.manaCost = 6
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
 
     if (identifier == Cards.Neutral.BrightmossGolem)
       card = new Unit(gameSession)
@@ -1071,7 +1073,7 @@ class CardFactory_CoreSet_Neutral
       card.atk = 4
       card.maxHP = 9
       card.manaCost = 5
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
 
     if (identifier == Cards.Neutral.Mechaz0rHelm)
       card = new Unit(gameSession)
@@ -1098,17 +1100,14 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralMechaz0rHelmHit.name
         death : RSX.neutralMechaz0rHelmDeath.name
       )
-      card.atk = 2
-      card.maxHP = 2
+      card.atk = 3
+      card.maxHP = 1
       card.manaCost = 1
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([
-        ModifierOpeningGambitApplyMechazorPlayerModifiers.createContextObject()
+        ModifierDyingWishApplyMechazorPlayerModifiers.createContextObject()
       ])
       card.addKeywordClassToInclude(PlayerModifierMechazorBuildProgress)
-      card.setFollowups([{
-        id: Cards.Spell.DeployMechaz0r
-      }])
 
     if (identifier == Cards.Neutral.Mechaz0rWings)
       card = new Unit(gameSession)
@@ -1141,13 +1140,9 @@ class CardFactory_CoreSet_Neutral
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([
         ModifierAirdrop.createContextObject(),
-        ModifierOpeningGambitApplyMechazorPlayerModifiers.createContextObject()
+        ModifierDyingWishApplyMechazorPlayerModifiers.createContextObject()
       ])
       card.addKeywordClassToInclude(PlayerModifierMechazorBuildProgress)
-      card.setFollowups([{
-        id: Cards.Spell.DeployMechaz0r
-      }])
-    #      card.setDescription("MECHAZ0R progress +20%.")
 
     if (identifier == Cards.Neutral.Mechaz0rCannon)
       card = new Unit(gameSession)
@@ -1180,13 +1175,9 @@ class CardFactory_CoreSet_Neutral
       card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([
         ModifierRanged.createContextObject(),
-        ModifierOpeningGambitApplyMechazorPlayerModifiers.createContextObject()
+        ModifierDyingWishApplyMechazorPlayerModifiers.createContextObject()
       ])
       card.addKeywordClassToInclude(PlayerModifierMechazorBuildProgress)
-      card.setFollowups([{
-        id: Cards.Spell.DeployMechaz0r
-      }])
-    #      card.setDescription("MECHAZ0R progress +20%.")
 
     if (identifier == Cards.Neutral.Mechaz0rSword)
       card = new Unit(gameSession)
@@ -1219,13 +1210,9 @@ class CardFactory_CoreSet_Neutral
       card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([
         ModifierFrenzy.createContextObject(),
-        ModifierOpeningGambitApplyMechazorPlayerModifiers.createContextObject()
+        ModifierDyingWishApplyMechazorPlayerModifiers.createContextObject()
       ])
       card.addKeywordClassToInclude(PlayerModifierMechazorBuildProgress)
-      card.setFollowups([{
-        id: Cards.Spell.DeployMechaz0r
-      }])
-    #      card.setDescription("MECHAZ0R progress +20%.")
 
     if (identifier == Cards.Neutral.Mechaz0rChassis)
       card = new Unit(gameSession)
@@ -1254,19 +1241,15 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralMechaz0rChassisHit.name
         death : RSX.neutralMechaz0rChassisDeath.name
       )
-      card.atk = 2
+      card.atk = 5
       card.maxHP = 4
       card.manaCost = 4
-      card.rarityId = Rarity.Epic
+      card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([
-        ModifierForcefield.createContextObject(),
-        ModifierOpeningGambitApplyMechazorPlayerModifiers.createContextObject()
+        ModifierImmuneToSpells.createContextObject(),
+        ModifierDyingWishApplyMechazorPlayerModifiers.createContextObject()
       ])
       card.addKeywordClassToInclude(PlayerModifierMechazorBuildProgress)
-      card.setFollowups([{
-        id: Cards.Spell.DeployMechaz0r
-      }])
-    #      card.setDescription("MECHAZ0R progress +20%.")
 
     if (identifier == Cards.Neutral.Mechaz0r)
       card = new Unit(gameSession)
@@ -1296,15 +1279,15 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralMechaz0rSuperHit.name
         death : RSX.neutralMechaz0rSuperDeath.name
       )
-      card.atk = 6
-      card.maxHP = 6
-      card.manaCost = 4
+      card.atk = 8
+      card.maxHP = 8
+      card.manaCost = 0
       card.rarityId = Rarity.TokenUnit
       card.setInherentModifiersContextObjects([
         ModifierFrenzy.createContextObject(),
         ModifierRanged.createContextObject(),
         ModifierAirdrop.createContextObject(),
-        ModifierForcefield.createContextObject()
+        ModifierImmuneToSpells.createContextObject()
       ])
       card.addKeywordClassToInclude(ModifierToken)
 
@@ -1337,7 +1320,7 @@ class CardFactory_CoreSet_Neutral
       card.maxHP = 1
       card.atk = 2
       card.manaCost = 1
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierFlying.createContextObject()])
 
     if (identifier == Cards.Neutral.PutridMindflayer)
@@ -1364,11 +1347,14 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralPutridDreadflayerHit.name
         death : RSX.neutralPutridDreadflayerDeath.name
       )
-      card.atk = 2
-      card.maxHP = 4
+      card.atk = 1
+      card.maxHP = 5
       card.manaCost = 3
-      card.rarityId = Rarity.Fixed
-      card.setInherentModifiersContextObjects([ModifierFlying.createContextObject()])
+      card.rarityId = Rarity.Common
+      card.setInherentModifiersContextObjects([
+        ModifierFlying.createContextObject(),
+        ModifierDyingWishDamageNearbyEnemies.createContextObject(1),
+      ])
 
     if (identifier == Cards.Neutral.FlameWing)
       card = new Unit(gameSession)
@@ -1397,7 +1383,7 @@ class CardFactory_CoreSet_Neutral
       card.atk = 5
       card.maxHP = 4
       card.manaCost = 4
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierFlying.createContextObject()])
 
     if (identifier == Cards.Neutral.LightningBeetle)
@@ -1429,8 +1415,11 @@ class CardFactory_CoreSet_Neutral
       card.atk = 6
       card.maxHP = 5
       card.manaCost = 6
-      card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([ModifierFlying.createContextObject()])
+      card.rarityId = Rarity.Rare
+      card.setInherentModifiersContextObjects([
+        ModifierFlying.createContextObject(),
+        ModifierMyAttackWatchAreaDamage.createContextObject(3),
+      ])
 
     if (identifier == Cards.Neutral.PhaseHound)
       card = new Unit(gameSession)
@@ -1459,8 +1448,13 @@ class CardFactory_CoreSet_Neutral
       card.atk = 4
       card.maxHP = 3
       card.manaCost = 3
-      card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([ModifierOpeningGambitDrawCardBothPlayers.createContextObject()])
+      card.rarityId = Rarity.Rare
+      card.setInherentModifiersContextObjects([
+        ModifierCostChangeIfEnemyGeneralDamagedThisTurn.createContextObject(
+          -1,
+          i18next.t("modifiers.neutral_blaze_hound_modifier"),
+        )
+      ])
 
     if (identifier == Cards.Neutral.BlackSandBurrower)
       card = new Unit(gameSession)
@@ -1487,11 +1481,13 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralBlackSandBurrowerHit.name
         death : RSX.neutralBlackSandBurrowerDeath.name
       )
-      card.atk = 2
-      card.maxHP = 4
+      card.atk = 3
+      card.maxHP = 3
       card.manaCost = 3
-      card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([ModifierSurviveDamageWatchReturnToHand.createContextObject()])
+      card.rarityId = Rarity.Rare
+      card.setInherentModifiersContextObjects([
+        ModifierImmuneToAttacksIfFullHealth.createContextObject()
+      ])
 
     if (identifier == Cards.Neutral.MiniJax)
       card = new Unit(gameSession)
@@ -1555,9 +1551,9 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralJaxTruesightHit.name
         death : RSX.neutralJaxTruesightDeath.name
       )
-      card.atk = 1
-      card.maxHP = 1
-      card.manaCost = 6
+      card.atk = 3
+      card.maxHP = 2
+      card.manaCost = 7
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([
         ModifierRanged.createContextObject(),
@@ -1593,7 +1589,7 @@ class CardFactory_CoreSet_Neutral
       card.atk = 2
       card.maxHP = 2
       card.manaCost = 3
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.addKeywordClassToInclude(ModifierOpeningGambit)
       card.setFollowups([
         {
@@ -1629,11 +1625,14 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralMercPirateHit.name
         death : RSX.neutralMercPirateDeath.name
       )
-      card.atk = 3
-      card.maxHP = 3
-      card.manaCost = 3
-      card.rarityId = Rarity.Rare
-      card.setInherentModifiersContextObjects([ModifierImmuneToDamageByGeneral.createContextObject()])
+      card.atk = 1
+      card.maxHP = 4
+      card.manaCost = 2
+      card.rarityId = Rarity.Epic
+      contextObject = ModifierDealDamageWatchStealCards.createContextObject()
+      contextObject.enemyOnly = true
+      contextObject.generalOnly = true
+      card.setInherentModifiersContextObjects([contextObject])
 
     if (identifier == Cards.Neutral.SaberspineTiger)
       card = new Unit(gameSession)
@@ -1661,8 +1660,8 @@ class CardFactory_CoreSet_Neutral
       )
       card.atk = 3
       card.maxHP = 2
-      card.manaCost = 4
-      card.rarityId = Rarity.Fixed
+      card.manaCost = 3
+      card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierFirstBlood.createContextObject()])
 
     if (identifier == Cards.Neutral.PiercingMantis)
@@ -1689,15 +1688,16 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralPiercingMantisHit.name
         death : RSX.neutralPiercingMantisDeath.name
       )
-      card.atk = 2
-      card.maxHP = 2
+      card.atk = 1
+      card.maxHP = 3
       card.manaCost = 2
-      card.rarityId = Rarity.Fixed
+      card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierFrenzy.createContextObject()])
 
     if (identifier == Cards.Neutral.TwilightMage)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
+      card.raceId = Races.Arcanyst
       card.name = i18next.t("cards.neutral_twilight_sorcerer_name")
       card.setDescription(i18next.t("cards.neutral_twilight_sorcerer_desc"))
       card.setFXResource(["FX.Cards.Neutral.TwilightMage"])
@@ -1722,10 +1722,10 @@ class CardFactory_CoreSet_Neutral
         death : RSX.neutralTwilightMageDeath.name
       )
       card.atk = 3
-      card.maxHP = 6
+      card.maxHP = 7
       card.manaCost = 5
       card.setInherentModifiersContextObjects([ModifierOpeningGambitRetrieveRandomSpell.createContextObject()])
-      card.rarityId = Rarity.Epic
+      card.rarityId = Rarity.Rare
 
     if (identifier == Cards.Neutral.PrimusFist)
       card = new Unit(gameSession)
@@ -1757,21 +1757,14 @@ class CardFactory_CoreSet_Neutral
       card.maxHP = 3
       card.manaCost = 2
       card.rarityId = Rarity.Common
-      card.addKeywordClassToInclude(ModifierOpeningGambit)
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,0)
+      statContextObject = Modifier.createContextObjectWithAttributeBuffs(1,0)
       statContextObject.appliedName = i18next.t("modifiers.neutral_primus_fist_modifier_2")
-      statContextObject.durationEndTurn = 1
-      card.setFollowups([
-        {
-          id: Cards.Spell.ApplyModifiers
-          spellFilterType: SpellFilterType.AllyDirect
-          targetModifiersContextObjects: [
-            statContextObject
-          ]
-          _private: {
-            followupSourcePattern: CONFIG.PATTERN_3x3
-          }
-        }
+      card.setInherentModifiersContextObjects([
+        ModifierOpeningGambitApplyModifiers.createContextObjectForNearbyAllies(
+          [statContextObject],
+          false,
+          'Give nearby allied minions +1/+0.',
+        )
       ])
 
     if (identifier == Cards.Neutral.GolemMetallurgist)
@@ -1805,11 +1798,11 @@ class CardFactory_CoreSet_Neutral
       card.maxHP = 3
       card.manaCost = 2
       card.rarityId = Rarity.Rare
-      contextObject = PlayerModifierManaModifierOncePerTurn.createCostChangeContextObject(-1, CardType.Unit, [Races.Golem])
+      contextObject = PlayerModifierManaModifier.createCostChangeContextObject(-1, CardType.Unit, [Races.Golem])
       contextObject.activeInHand = contextObject.activeInDeck = contextObject.activeInSignatureCards = false
       contextObject.activeOnBoard = true
       card.setInherentModifiersContextObjects([
-        ModifierCardControlledPlayerModifiers.createContextObjectOnBoardToTargetOwnPlayer([contextObject], "The first Golem you summon each turn costs 1 less")
+        ModifierCardControlledPlayerModifiers.createContextObjectOnBoardToTargetOwnPlayer([contextObject], "Your Golems cost 1 less.")
       ])
 
     if (identifier == Cards.Neutral.GolemVanquisher)
@@ -1839,10 +1832,10 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralGolemStoneDamage.name
         death : RSX.neutralGolemStoneDeath.name
       )
-      card.atk = 2
+      card.atk = 3
       card.maxHP = 4
       card.manaCost = 3
-      card.rarityId = Rarity.Legendary
+      card.rarityId = Rarity.Epic
       card.setInherentModifiersContextObjects([
         ModifierProvoke.createContextObject(),
         Modifier.createContextObjectWithAuraForAllAllies([ModifierProvoke.createContextObject()], [Races.Golem], null, null, "Your other Golem minions have Provoke")

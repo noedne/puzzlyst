@@ -7,11 +7,9 @@ class ModifierOnRemoveShuffleCopyIntoDeck extends Modifier
   @type: "ModifierOnRemoveShuffleCopyIntoDeck"
 
   onRemoveFromCard: () ->
-    @getGameSession().executeAction(new PutCardInDeckAction(
-      @getGameSession(),
-      @getOwnerId(),
-      @getSourceCard().createNewCardData(),
-    ))
+    cardDataOrIndex = @getSourceCard().createNewCardData()
+    action = @getOwner().getDeck().actionPutCardInDeck(cardDataOrIndex)
+    @getGameSession().executeAction(action)
     super()
 
 module.exports = ModifierOnRemoveShuffleCopyIntoDeck

@@ -16,6 +16,7 @@ class ModifierDealDamageWatch extends Modifier
   activeOnBoard: true
 
   enemyOnly: false # whether this should trigger ONLY on damage dealt to enemies, or on ANY damage dealt
+  generalOnly: false
 
   fxResource: ["FX.Modifiers.ModifierDealDamageWatch"]
 
@@ -36,6 +37,8 @@ class ModifierDealDamageWatch extends Modifier
     isRelevant = a instanceof DamageAction and a.getSource() == @getCard() and @willDealDamage(a)
     if @enemyOnly # check that target of damage action is an enemy
       isRelevant = isRelevant and a.getTarget().getOwnerId() isnt @getCard().getOwnerId()
+    if @generalOnly
+      isRelevant = isRelevant and a.getTarget().getIsGeneral()
     return isRelevant
 
   willDealDamage: (action) ->

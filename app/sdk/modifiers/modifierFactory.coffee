@@ -79,7 +79,7 @@ ModifierCardControlledPlayerModifiers = require './modifierCardControlledPlayerM
 ModifierOpeningGambitApplyModifiers = require './modifierOpeningGambitApplyModifiers'
 ModifierOpeningGambitApplyModifiersToDeck = require './modifierOpeningGambitApplyModifiersToDeck'
 ModifierOpeningGambitApplyPlayerModifier = require './modifierOpeningGambitApplyPlayerModifiers'
-ModifierOpeningGambitApplyMechazorPlayerModifiers = require './modifierOpeningGambitApplyMechazorPlayerModifiers'
+ModifierDyingWishApplyMechazorPlayerModifiers = require './modifierDyingWishApplyMechazorPlayerModifiers'
 ModifierRangedProvoked = require './modifierRangedProvoked'
 ModifierRangedProvoke = require './modifierRangedProvoke'
 ModifierDealDamageWatchModifyTarget = require './modifierDealDamageWatchModifyTarget'
@@ -594,7 +594,7 @@ ModifierBandingFlying = require './modifierBandingFlying'
 ModifierBandedFlying = require './modifierBandedFlying'
 ModifierDyingWishApplyModifiersToGenerals = require './modifierDyingWishApplyModifiersToGenerals'
 ModifierEnemySpellWatchHealMyGeneral = require './modifierEnemySpellWatchHealMyGeneral'
-ModifierMyAttackWatchAreaAttack = require './modifierMyAttackWatchAreaAttack'
+ModifierMyAttackWatchAreaDamage = require './modifierMyAttackWatchAreaDamage'
 ModifierReplaceWatchApplyModifiersToReplaced = require './modifierReplaceWatchApplyModifiersToReplaced'
 ModifierImmuneToDamageByWeakerEnemies = require './modifierImmuneToDamageByWeakerEnemies'
 ModifierMyOtherMinionsDamagedWatch = require './modifierMyOtherMinionsDamagedWatch'
@@ -688,6 +688,9 @@ ModifierCannotAttackMinions = require './modifierCannotAttackMinions'
 ModifierDynamicCountModifySelfByAlliesNearby = require './modifierDynamicCountModifySelfByAlliesNearby'
 ModifierRedirectDamageFromAllyDirectlyInFront = require './modifierRedirectDamageFromAllyDirectlyInFront'
 ModifierTakeDamageWatchApplyModifiers = require './modifierTakeDamageWatchApplyModifiers'
+ModifierCostChangeIfEnemyGeneralDamagedThisTurn = require './modifierCostChangeIfEnemyGeneralDamagedThisTurn'
+ModifierImmuneToAttacksIfFullHealth = require './modifierImmuneToAttacksIfFullHealth'
+ModifierDealDamageWatchStealCards = require './modifierDealDamageWatchStealCards'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -914,8 +917,8 @@ class ModifierFactory
       return ModifierOpeningGambitApplyModifiersToDeck
     if (modifierType == ModifierOpeningGambitApplyPlayerModifier.type)
       return ModifierOpeningGambitApplyPlayerModifier
-    if (modifierType == ModifierOpeningGambitApplyMechazorPlayerModifiers.type)
-      return ModifierOpeningGambitApplyMechazorPlayerModifiers
+    if (modifierType == ModifierDyingWishApplyMechazorPlayerModifiers.type)
+      return ModifierDyingWishApplyMechazorPlayerModifiers
     if (modifierType == ModifierRangedProvoke.type)
       return ModifierRangedProvoke
     if (modifierType == ModifierRangedProvoked.type)
@@ -1942,8 +1945,8 @@ class ModifierFactory
       return ModifierDyingWishApplyModifiersToGenerals
     if (modifierType == ModifierEnemySpellWatchHealMyGeneral.type)
       return ModifierEnemySpellWatchHealMyGeneral
-    if (modifierType == ModifierMyAttackWatchAreaAttack.type)
-      return ModifierMyAttackWatchAreaAttack
+    if (modifierType == ModifierMyAttackWatchAreaDamage.type)
+      return ModifierMyAttackWatchAreaDamage
     if (modifierType == ModifierReplaceWatchApplyModifiersToReplaced.type)
       return ModifierReplaceWatchApplyModifiersToReplaced
     if (modifierType == ModifierImmuneToDamageByWeakerEnemies.type)
@@ -2128,6 +2131,12 @@ class ModifierFactory
       return ModifierRedirectDamageFromAllyDirectlyInFront
     if (modifierType == ModifierTakeDamageWatchApplyModifiers.type)
       return ModifierTakeDamageWatchApplyModifiers
+    if (modifierType == ModifierCostChangeIfEnemyGeneralDamagedThisTurn.type)
+      return ModifierCostChangeIfEnemyGeneralDamagedThisTurn
+    if (modifierType == ModifierImmuneToAttacksIfFullHealth.type)
+      return ModifierImmuneToAttacksIfFullHealth
+    if (modifierType == ModifierDealDamageWatchStealCards.type)
+      return ModifierDealDamageWatchStealCards
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier

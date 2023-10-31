@@ -13,10 +13,9 @@ class ModifierCounterMechazorBuildProgress extends ModifierCounter
 
   maxStacks: 1
 
-  @createContextObject: (mechazorProgressType, mechazorsBuiltType) ->
+  @createContextObject: (mechazorProgressType) ->
     contextObject = super()
     contextObject.mechazorProgressType = mechazorProgressType
-    contextObject.mechazorsBuiltType = mechazorsBuiltType
     return contextObject
 
   getModifierContextObjectToApply: () ->
@@ -27,14 +26,6 @@ class ModifierCounterMechazorBuildProgress extends ModifierCounter
 
   getCurrentCount: () ->
     modifierMechazorProgress = @getGameSession().getModifierClassForType(@mechazorProgressType)
-    modifierMechazorsSummoned = @getGameSession().getModifierClassForType(@mechazorsBuiltType)
-
-    mechazorProgressMods = @getCard().getActiveModifiersByClass(modifierMechazorProgress)
-    numMechazorsSummoned = @getCard().getActiveModifiersByClass(modifierMechazorsSummoned).length
-    mechazorProgress = 0
-    for mod in mechazorProgressMods
-      mechazorProgress += mod.getProgressContribution()
-    return (mechazorProgress - (numMechazorsSummoned * 5)) * 20
-
+    return modifierMechazorProgress.getPercentComplete(@getOwner())
 
 module.exports = ModifierCounterMechazorBuildProgress

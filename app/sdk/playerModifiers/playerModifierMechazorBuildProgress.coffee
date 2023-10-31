@@ -17,6 +17,8 @@ class PlayerModifierMechazorBuildProgress extends PlayerModifier
 
   @isHiddenToUI: true
 
+  @percentPerProgress: 20
+
   progressContribution: 0 # amount that this tracker contributes to the mechaz0r build, 1 = 20%, 2 = 40%, etc
 
   @createContextObject: (progressContribution=1, options) ->
@@ -28,21 +30,27 @@ class PlayerModifierMechazorBuildProgress extends PlayerModifier
     # apply a mechaz0r counter to the General when first mechaz0r progress is added
     # once a counter is there, don't need to keep adding - original counter will update on further modifier additions
     if !@getCard().hasActiveModifierClass(ModifierCounterMechazorBuildProgress)
-      @getGameSession().applyModifierContextObject(ModifierCounterMechazorBuildProgress.createContextObject("PlayerModifierMechazorBuildProgress","PlayerModifierMechazorSummoned"), @getCard())
+      @getGameSession().applyModifierContextObject(ModifierCounterMechazorBuildProgress.createContextObject(@type), @getCard())
 
   @followupConditionIsMechazorComplete: (cardWithFollowup, followupCard) ->
 
     # can we build him?
+    return @getNumberCompleted(cardWithFollowup.getOwner()) >= 1
 
+  @getNumberCompleted: (owner) ->
+    return Math.floor(@getPercentComplete(owner) / PlayerModifierMechazorSummoned.percentForCompletion)
+
+  @getPercentComplete: (owner) ->
     #get how far progress is
     mechazorProgress = 0
-    for modifier in cardWithFollowup.getOwner().getPlayerModifiersByClass(PlayerModifierMechazorBuildProgress)
+    for modifier in owner.getPlayerModifiersByClass(PlayerModifierMechazorBuildProgress)
       mechazorProgress += modifier.getProgressContribution()
 
     # check how many times mechaz0r has already been built
-    numMechazorsSummoned = cardWithFollowup.getOwner().getPlayerModifiersByClass(PlayerModifierMechazorSummoned).length
+    numMechazorsSummoned = owner.getPlayerModifiersByClass(PlayerModifierMechazorSummoned).length
 
-    return (mechazorProgress - (numMechazorsSummoned * 5)) >= 5
+    return mechazorProgress * @percentPerProgress -
+      numMechazorsSummoned * PlayerModifierMechazorSummoned.percentForCompletion
 
   getProgressContribution: () ->
     return @progressContribution
