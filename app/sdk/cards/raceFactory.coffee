@@ -43,6 +43,10 @@ class RaceFactory
       race =
         name: i18next.t("races.chrysalis")
 
+    if identifier == Races.Spirit
+      race =
+        name: i18next.t("races.spirit")
+
     # no faction found
     if race
       return race

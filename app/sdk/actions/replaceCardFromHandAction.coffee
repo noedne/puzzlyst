@@ -17,17 +17,17 @@ class ReplaceCardFromHandAction extends PutCardInHandAction
     super(gameSession, ownerId, null, indexOfCardInHand)
 
   _execute: () ->
-    player = @getGameSession().getPlayerById(@getOwnerId())
-    deck = player.getDeck()
-    drawPile = deck.getDrawPile()
+    ownerDeck = @getOwner().getDeck()
+    replaceDeck = ownerDeck.getReplaceDeck()
+    drawPile = replaceDeck.getDrawPile()
 
     if !@getIsForcedReplace()
       # increase replaced card count
-      deck.setNumCardsReplacedThisTurn(deck.getNumCardsReplacedThisTurn() + 1)
+      ownerDeck.setNumCardsReplacedThisTurn(ownerDeck.getNumCardsReplacedThisTurn() + 1)
 
     if @getGameSession().getIsRunningAsAuthoritative() and drawPile.length > 0
       # get replaced card before doing anything
-      @replacedCardIndex = deck.getCardIndexInHandAtIndex(@indexOfCardInHand)
+      @replacedCardIndex = ownerDeck.getCardIndexInHandAtIndex(@indexOfCardInHand)
 
       # make a copy of indices
       indices = _.range(drawPile.length)
@@ -58,7 +58,7 @@ class ReplaceCardFromHandAction extends PutCardInHandAction
         @cardDataOrIndex = drawPile[indexOfCardInDeck]
 
     # put replaced card back into deck
-    @getGameSession().applyCardToDeck(deck, @replacedCardIndex, @getGameSession().getCardByIndex(@replacedCardIndex), @)
+    @getGameSession().applyCardToDeck(replaceDeck, @replacedCardIndex, @getGameSession().getCardByIndex(@replacedCardIndex), @)
 
     # add the new card to hand
     super()

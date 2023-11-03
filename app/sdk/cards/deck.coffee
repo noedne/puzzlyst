@@ -8,6 +8,7 @@ DrawCardAction = require 'app/sdk/actions/drawCardAction'
 PlayerModifierCardDrawModifier = require 'app/sdk/playerModifiers/playerModifierCardDrawModifier'
 PlayerModifierReplaceCardModifier = require 'app/sdk/playerModifiers/playerModifierReplaceCardModifier'
 PlayerModifierCannotReplace = require 'app/sdk/playerModifiers/playerModifierCannotReplace'
+PlayerModifierReplaceFromOpponentDeck = require 'app/sdk/playerModifiers/playerModifierReplaceFromOpponentDeck'
 _ = require 'underscore'
 
 class Deck extends SDKObject
@@ -340,7 +341,17 @@ class Deck extends SDKObject
       for replaceCardModifier in @getOwner().getPlayerModifiersByClass(PlayerModifierReplaceCardModifier)
         replaceCardChange += replaceCardModifier.getReplaceCardChange()
       replacesAllowedThisTurn += replaceCardChange # final number of cards allowed to be replaced
-      return @numCardsReplacedThisTurn < replacesAllowedThisTurn and @drawPile.length > 0
+      return @numCardsReplacedThisTurn < replacesAllowedThisTurn and
+        @getReplaceDeck().getDrawPile().length > 0
+
+  getReplaceDeck: () ->
+    if @getOwner()
+        .getPlayerModifiersByClass(PlayerModifierReplaceFromOpponentDeck)
+        .length is 0
+      return @
+    return @getGameSession()
+      .getOpponentPlayerOfPlayerId(@getOwnerId())
+      .getDeck()
 
   # endregion REPLACE
 

@@ -9,5 +9,6 @@ class Races
   @Structure: 6
   @BattlePet: 7
   @Chrysalis: 8
+  @Spirit: 9
 
 module.exports = Races

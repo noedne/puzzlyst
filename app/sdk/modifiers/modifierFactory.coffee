@@ -691,6 +691,8 @@ ModifierTakeDamageWatchApplyModifiers = require './modifierTakeDamageWatchApplyM
 ModifierCostChangeIfEnemyGeneralDamagedThisTurn = require './modifierCostChangeIfEnemyGeneralDamagedThisTurn'
 ModifierImmuneToAttacksIfFullHealth = require './modifierImmuneToAttacksIfFullHealth'
 ModifierDealDamageWatchStealCards = require './modifierDealDamageWatchStealCards'
+ModifierOpeningGambitPutRandomCardInHand = require './modifierOpeningGambitPutRandomCardInHand'
+ModifierOpeningGambitBuffSelfByEnemiesNearby = require './modifierOpeningGambitBuffSelfByEnemiesNearby'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -739,6 +741,7 @@ PlayerModifierEmblemSummonWatchSonghaiMeltdownQuest = require 'app/sdk/playerMod
 PlayerModifierEmblemSummonWatchAbyssUndyingQuest = require 'app/sdk/playerModifiers/playerModifierEmblemSummonWatchAbyssUndyingQuest'
 PlayerModifierEmblemGainMinionOrLoseControlWatch = require 'app/sdk/playerModifiers/playerModifierEmblemGainMinionOrLoseControlWatch'
 PlayerModifierOnDeathWatchBonusMana = require 'app/sdk/playerModifiers/playerModifierOnDeathWatchBonusMana'
+PlayerModifierReplaceFromOpponentDeck = require 'app/sdk/playerModifiers/playerModifierReplaceFromOpponentDeck'
 
 GameSessionModifier = require 'app/sdk/gameSessionModifiers/gameSessionModifier'
 GameSessionModifierFestiveSpirit = require 'app/sdk/gameSessionModifiers/gameSessionModifierFestiveSpirit'
@@ -2137,6 +2140,10 @@ class ModifierFactory
       return ModifierImmuneToAttacksIfFullHealth
     if (modifierType == ModifierDealDamageWatchStealCards.type)
       return ModifierDealDamageWatchStealCards
+    if (modifierType == ModifierOpeningGambitPutRandomCardInHand.type)
+      return ModifierOpeningGambitPutRandomCardInHand
+    if (modifierType == ModifierOpeningGambitBuffSelfByEnemiesNearby.type)
+      return ModifierOpeningGambitBuffSelfByEnemiesNearby
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier
@@ -2234,6 +2241,8 @@ class ModifierFactory
       return PlayerModifierEmblemGainMinionOrLoseControlWatch
     if (modifierType == PlayerModifierOnDeathWatchBonusMana.type)
       return PlayerModifierOnDeathWatchBonusMana
+    if (modifierType == PlayerModifierReplaceFromOpponentDeck.type)
+      return PlayerModifierReplaceFromOpponentDeck
 
     if (modifierType == GameSessionModifier.type)
       return GameSessionModifier
