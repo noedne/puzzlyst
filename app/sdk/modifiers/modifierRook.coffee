@@ -1,49 +1,72 @@
-Modifier = require './modifier'
-ModifierEndTurnWatch = require './modifierEndTurnWatch'
+EVENTS = require 'app/common/event_types'
 CardType = require 'app/sdk/cards/cardType'
-UtilsGameSession = require 'app/common/utils/utils_game_session'
-ModifierBlastAttack = require './modifierBlastAttack'
-ModifierBackstab = require './modifierBackstab'
-ModifierInfiltrate = require './modifierInfiltrate'
-ModifierGrow = require './modifierGrow'
-ModifierBandingHealSelfAndGeneral = require './modifierBandingHealSelfAndGeneral'
-ModifierDeathWatchDrawToXCards = require './modifierDeathWatchDrawToXCards'
-i18next = require 'i18next'
+DamageAction = require 'app/sdk/actions/damageAction'
+Modifier = require './modifier'
+PlayCardAction = require 'app/sdk/actions/playCardAction'
 
-class ModifierRook extends ModifierEndTurnWatch
+class ModifierRook extends Modifier
 
   type:"ModifierRook"
   @type:"ModifierRook"
 
-  @description: "At the end of your turn, this minion gains a random Faction ability"
+  onEvent: (event) ->
+    super(event)
 
-  activeInHand: false
-  activeInDeck: false
-  activeInSignatureCards: false
-  activeOnBoard: true
+    if @getIsListeningToEvents() and event.type is EVENTS.after_step
+      action = event.step.action
+      if action instanceof PlayCardAction and action.getCard() is @getCard()
+        @charge(action)
 
-  fxResource: ["FX.Modifiers.ModifierGenericBuff"]
+  charge: (parentAction) ->
+    board = @getGameSession().getBoard()
+    card = @getCard()
+    distance = @getMaxDistance(board, card)
+    if distance is 0
+      return
 
-  @createContextObject: () ->
-    contextObject = super()
-    contextObject.allModifierContextObjects = [
-      ModifierBlastAttack.createContextObject(),
-      ModifierBackstab.createContextObject(5),
-      ModifierInfiltrate.createContextObject([
-        Modifier.createContextObjectWithAttributeBuffs(5, 0, {appliedName: i18next.t("modifiers.rook_infiltrate_name")})
-      ], i18next.t("modifiers.rook_infiltrate_def")),
-      ModifierGrow.createContextObject(5),
-      ModifierBandingHealSelfAndGeneral.createContextObject(5)
-      ModifierDeathWatchDrawToXCards.createContextObject(5)
-    ]
-    return contextObject
+    for unit in board.getEntitiesInfrontOf(card, CardType.Unit)
+      currentDistance = Math.abs(unit.getPositionX() - card.getPositionX()) - 1
+      if currentDistance is 0
+        return
 
-  onTurnWatch: (action) ->
-    super(action)
+      if currentDistance < distance
+        target = unit
+        distance = currentDistance
 
-    if @getGameSession().getIsRunningAsAuthoritative() and @allModifierContextObjects.length > 0
-      # pick one modifier from the remaining list and splice it out of the set of choices
-      modifierContextObject = @allModifierContextObjects.splice(@getGameSession().getRandomIntegerForExecution(@allModifierContextObjects.length), 1)[0]
-      @getGameSession().applyModifierContextObject(modifierContextObject, @getCard())
+    moveAction = @doMove(card, distance, parentAction)
+    if moveAction.getIsValid() and target?
+      @doDamage(target, distance, moveAction, parentAction)
+    
+  doMove: (card, distance, parentAction) ->
+    offset = if card.isOwnedByPlayer1() then distance else -distance
+    moveAction = card.actionMove({
+      x: card.getPositionX() + offset,
+      y: card.getPositionY(),
+    })
+    moveAction.setParentAction(parentAction)
+    @getGameSession().executeAction(moveAction)
+    return moveAction
+
+  doDamage: (target, damage, parentAction, resolveParentAction) ->
+    damageAction = new DamageAction(@getGameSession())
+    damageAction.setSource(@getCard())
+    damageAction.setOwnerId(@getOwnerId())
+    damageAction.setTarget(target)
+    damageAction.setDamageAmount(damage)
+
+    # index needed to set as parent
+    parentAction.setIndex(@getGameSession().generateIndex())
+    damageAction.setParentAction(parentAction)
+
+    # needed for attack animation
+    damageAction.setResolveParentAction(resolveParentAction)
+    damageAction.setTriggeringModifier(@)
+
+    @getGameSession().executeAction(damageAction)
+    
+  getMaxDistance: (board, card) ->
+    if card.isOwnedByPlayer1()
+      return board.getColumnCount() - 1 - card.getPositionX()
+    return card.getPositionX()
 
 module.exports = ModifierRook

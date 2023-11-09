@@ -57,6 +57,7 @@ SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
 SpellFollowupSpawnEntityFromDeck = require 'app/sdk/spells/spellFollowupSpawnEntityFromDeck'
 SpellDamageOrHeal = require 'app/sdk/spells/spellDamageOrHeal'
 SpellKillDamagedMinion = require 'app/sdk/spells/spellKillDamagedMinion'
+SpellFollowupDamageAndBuffSelf = require 'app/sdk/spells/spellFollowupDamageAndBuffSelf'
 
 PlayerModifierMechazorBuildProgress = require 'app/sdk/playerModifiers/playerModifierMechazorBuildProgress'
 PlayerModifierMechazorSummoned = require 'app/sdk/playerModifiers/playerModifierMechazorSummoned'
@@ -333,6 +334,19 @@ class CardFactory_Generic
       card.id = Cards.Spell.FollowupDamage
       card.name = "Deal Damage"
       card.setDescription("Deal Damage")
+      card.spellFilterType = SpellFilterType.NeutralDirect
+      card.setFXResource(["FX.Cards.Spell.FollowupDamage"])
+      card.setBaseSoundResource(
+        apply : RSX.sfx_spell_immolation_a.audio
+      )
+
+    if (identifier == Cards.Spell.FollowupDamageAndBuffSelf)
+      card = new SpellFollowupDamageAndBuffSelf(gameSession)
+      card.factionId = Factions.Neutral
+      card.setIsHiddenInCollection(true)
+      card.id = Cards.Spell.FollowupDamageAndBuffSelf
+      card.name = "Deal Damage and Buff Self"
+      card.setDescription("Deal Damage and Buff Self")
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.setFXResource(["FX.Cards.Spell.FollowupDamage"])
       card.setBaseSoundResource(

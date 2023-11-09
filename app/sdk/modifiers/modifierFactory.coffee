@@ -219,7 +219,7 @@ ModifierOpeningGambitApplyModifiersToDeckAndHand = require './modifierOpeningGam
 ModifierOpeningGambitApplyModifiersToHand = require './modifierOpeningGambitApplyModifiersToHand'
 ModifierMechazorWatchPutMechazorInHand = require './modifierMechazorWatchPutMechazorInHand.coffee'
 ModifierHealWatchPutCardInHand = require './modifierHealWatchPutCardInHand'
-ModifierEnemyCannotHeal = require './modifierEnemyCannotHeal'
+ModifierPreventAnyHeal = require './modifierPreventAnyHeal'
 ModifierEnemyTakeDamageWatchHealMyGeneral = require './modifierEnemyTakeDamageWatchHealMyGeneral'
 ModifierTakeDamageWatchDamageNearbyForSame = require './modifierTakeDamageWatchDamageNearbyEnemiesForSame'
 ModifierImmuneToDamageFromEnemyMinions = require './modifierImmuneToDamageFromEnemyMinions'
@@ -693,6 +693,9 @@ ModifierImmuneToAttacksIfFullHealth = require './modifierImmuneToAttacksIfFullHe
 ModifierDealDamageWatchStealCards = require './modifierDealDamageWatchStealCards'
 ModifierOpeningGambitPutRandomCardInHand = require './modifierOpeningGambitPutRandomCardInHand'
 ModifierOpeningGambitBuffSelfByEnemiesNearby = require './modifierOpeningGambitBuffSelfByEnemiesNearby'
+ModifierOpeningGambitBuffSelfByRemainingMana = require './modifierOpeningGambitBuffSelfByRemainingMana'
+ModifierMyAttackOrCounterattackWatchHealOrDamageGeneral = require './modifierMyAttackOrCounterattackWatchHealOrDamageGeneral'
+ModifierSongweaver = require './modifierSongweaver'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -1200,8 +1203,8 @@ class ModifierFactory
       return ModifierMechazorWatchPutMechazorInHand
     if (modifierType == ModifierHealWatchPutCardInHand.type)
       return ModifierHealWatchPutCardInHand
-    if (modifierType == ModifierEnemyCannotHeal.type)
-      return ModifierEnemyCannotHeal
+    if (modifierType == ModifierPreventAnyHeal.type)
+      return ModifierPreventAnyHeal
     if (modifierType == ModifierEnemyTakeDamageWatchHealMyGeneral.type)
       return ModifierEnemyTakeDamageWatchHealMyGeneral
     if (modifierType == ModifierTakeDamageWatchDamageNearbyForSame.type)
@@ -2144,6 +2147,12 @@ class ModifierFactory
       return ModifierOpeningGambitPutRandomCardInHand
     if (modifierType == ModifierOpeningGambitBuffSelfByEnemiesNearby.type)
       return ModifierOpeningGambitBuffSelfByEnemiesNearby
+    if (modifierType == ModifierOpeningGambitBuffSelfByRemainingMana.type)
+      return ModifierOpeningGambitBuffSelfByRemainingMana
+    if (modifierType == ModifierMyAttackOrCounterattackWatchHealOrDamageGeneral.type)
+      return ModifierMyAttackOrCounterattackWatchHealOrDamageGeneral
+    if (modifierType == ModifierSongweaver.type)
+      return ModifierSongweaver
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier

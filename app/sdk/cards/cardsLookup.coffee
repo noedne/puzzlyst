@@ -622,6 +622,7 @@ class Cards
     FollowupTwinStrike:        20504
     FollowupKillDamagedTarget: 20505
     FollowupDraugarLord:       20506
+    FollowupDamageAndBuffSelf: 20507
   }
 
   @Artifact: {

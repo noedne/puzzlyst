@@ -3242,9 +3242,10 @@ class _GameSession extends SDKObject
    * @param {String} [playerId=null] player that played the cards, or both if no playerId provided
    * @param {String} [searchUntilLastTurnOfPlayerId=null] whether to search only until last turn of a player id
    * @param {Boolean} [onlyCurrentTurn=false] whether to search only the current turn
+   * @param {Boolean} [includeTokens=false] whether to include tokens
    * @returns {Array}
    ###
-  getDeadUnits: (playerId, searchUntilLastTurnOfPlayerId, onlyCurrentTurn = false) ->
+  getDeadUnits: (playerId, searchUntilLastTurnOfPlayerId, onlyCurrentTurn = false, includeTokens = false) ->
     deadUnits = []
 
     # find actions to check
@@ -3263,7 +3264,11 @@ class _GameSession extends SDKObject
     for action in actions
       if action instanceof DieAction
         card = action.getTarget()
-        if card instanceof Unit and card.getIsRemoved() and (!playerId? or card.getOwnerId() == playerId) and !(card.getRarityId() is Rarity.TokenUnit) and !card.getWasGeneral()
+        if card instanceof Unit and
+            card.getIsRemoved() and
+            (!playerId? or card.getOwnerId() == playerId) and
+            (includeTokens or !(card.getRarityId() is Rarity.TokenUnit)) and
+            !card.getWasGeneral()
           deadUnits.push(card)
 
     return deadUnits
