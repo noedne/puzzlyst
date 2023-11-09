@@ -24,7 +24,7 @@ class ModifierRook extends Modifier
     if distance is 0
       return
 
-    for unit in board.getEntitiesInfrontOf(card, CardType.Unit)
+    for unit in board.getEntitiesInfrontOf(card, CardType.Unit, true)
       currentDistance = Math.abs(unit.getPositionX() - card.getPositionX()) - 1
       if currentDistance is 0
         return
