@@ -107,7 +107,6 @@ class CardFactory_Monthly_M5_Provoke
 
     if (identifier == Cards.Neutral.Tethermancer)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_tethermancer_name")
       card.setDescription(i18next.t("cards.neutral_tethermancer_desc"))

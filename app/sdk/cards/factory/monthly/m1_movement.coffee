@@ -76,7 +76,6 @@ class CardFactory_Monthly_M1_Movement
 
     if (identifier == Cards.Neutral.WindRunner)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_wind_runner_name")
       card.setDescription(i18next.t("cards.neutral_wind_runner_desc"))
@@ -111,7 +110,6 @@ class CardFactory_Monthly_M1_Movement
 
     if (identifier == Cards.Neutral.Mogwai)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_mogwai_name")
       card.setDescription(i18next.t("cards.neutral_mogwai_desc"))

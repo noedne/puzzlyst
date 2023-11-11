@@ -1449,7 +1449,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.BlackSandBurrower)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_sand_burrower_name")
       card.setDescription(i18next.t("cards.neutral_sand_burrower_desc"))
@@ -2712,7 +2711,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.LuxIgnis)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_lux_ignis_name")
       card.setDescription(i18next.t("cards.neutral_lux_ignis_desc"))
@@ -2746,7 +2744,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.SyvrelTheExile)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_syvrel_the_exile_name")
       card.setDescription(i18next.t("cards.neutral_syvrel_the_exile_desc"))
@@ -2812,7 +2809,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.Dilotas)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_dioltas_name")
       card.setDescription(i18next.t("cards.neutral_dioltas_desc"))
@@ -3127,7 +3123,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.TheHighHand)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_the_high_hand_name")
       card.setDescription(i18next.t("cards.neutral_the_high_hand_desc"))
@@ -3161,7 +3156,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.Eclipse)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.raceId = Races.Arcanyst
       card.name = i18next.t("cards.neutral_eclipse_name")
@@ -3266,7 +3260,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.HankHart)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_captain_hank_hart_name")
       card.setDescription(i18next.t("cards.neutral_captain_hank_hart_desc"))
@@ -3297,7 +3290,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.Rook)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_rook_name")
       card.setDescription(i18next.t("cards.neutral_rook_desc"))
@@ -3437,7 +3429,6 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.ZenRui)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_zenrui_name")
       card.setDescription(i18next.t("cards.neutral_zenrui_desc"))

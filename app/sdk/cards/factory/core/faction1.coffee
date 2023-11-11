@@ -460,7 +460,6 @@ class CardFactory_CoreSet_Faction1
 
     if (identifier == Cards.Faction1.SunstoneTemplar)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Faction1
       card.name = i18next.t("cards.faction_1_unit_sunstone_templar_name")
       card.setBoundingBoxWidth(85)

@@ -73,7 +73,6 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
 
     if (identifier == Cards.Neutral.ProphetWhitePalm)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_prophet_of_the_white_palm_name")
       card.setDescription(i18next.t("cards.neutral_prophet_of_the_white_palm_desc"))

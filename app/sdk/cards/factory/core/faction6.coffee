@@ -1232,7 +1232,6 @@ class CardFactory_CoreSet_Faction6
 
     if (identifier == Cards.Spell.MarkOfSolitude)
       card = new SpellApplyModifiers(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Faction6
       card.id = Cards.Spell.MarkOfSolitude
       card.name = i18next.t("cards.faction_6_spell_mark_of_solitude_name")

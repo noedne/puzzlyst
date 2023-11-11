@@ -98,7 +98,6 @@ class CardFactory_Monthly_M4_Replace
 
     if (identifier == Cards.Neutral.AstralCrusader)
       card = new Unit(gameSession)
-      card.setIsLegacy(true)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_astral_crusader_name")
       card.setDescription(i18next.t("cards.neutral_astral_crusader_desc"))
