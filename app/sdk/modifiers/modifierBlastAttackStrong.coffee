@@ -7,4 +7,7 @@ class ModifierBlastAttackStrong extends ModifierBlastAttack
 
   cardFXResource: ["FX.Cards.Faction3.BlastStrong"]
 
+  getStackType: () ->
+    return ModifierBlastAttack.type
+
 module.exports = ModifierBlastAttackStrong
