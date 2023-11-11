@@ -8,6 +8,7 @@ class DrawCardAction extends PutCardInHandAction
   @type:"DrawCardAction"
 
   cardIndexFromDeck: null # when set, card draw will not be random but will be a specific card from deck instead
+  wasSkipped: false
 
   constructor: () ->
     @type ?= DrawCardAction.type
@@ -17,6 +18,10 @@ class DrawCardAction extends PutCardInHandAction
     if @getGameSession().getIsRunningAsAuthoritative()
       player = @getGameSession().getPlayerById(@getOwnerId())
       deck = player.getDeck()
+      if deck.getNumCardsInHand() is CONFIG.MAX_HAND_SIZE
+        @wasSkipped = true
+        return
+
       drawPile = deck.getDrawPile()
 
       # attempt to draw next card data from the deck.
@@ -46,7 +51,7 @@ class DrawCardAction extends PutCardInHandAction
    * NOTE: this will only return reliable values POST EXECUTION
    ###
   getIsDrawFromEmptyDeck: () ->
-    return !@cardDataOrIndex? and @getGameSession().getAreDecksRandomized()
+    return !@cardDataOrIndex? and !@wasSkipped
 
   ###*
    * Set a specific card index to be drawn.

@@ -213,7 +213,7 @@ class Deck extends SDKObject
       cardDrawChange += cardDrawModifier.getCardDrawChange()
     numRemainingActions += cardDrawChange # final number of actions to create after modifiers
 
-    # first try to re-fill empty slots in action bar with cards
+    # only try to re-fill empty slots in action bar with cards
     for i in [0...CONFIG.MAX_HAND_SIZE]
       if numRemainingActions is 0 # stop producing draw card actions when per turn limit is reached
         break
@@ -221,12 +221,6 @@ class Deck extends SDKObject
       if !@hand[i]?
         actions.push(@actionDrawCard())
         numRemainingActions--
-
-    # if action bar is already full but we haven't drawn enough cards yet
-    # then burn cards from deck (draw and immediately discard without playing)
-    while numRemainingActions > 0 and !@getGameSession().getIsDeveloperMode()
-      actions.push(@actionDrawCard())
-      numRemainingActions--
 
     return actions
 

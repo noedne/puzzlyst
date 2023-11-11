@@ -367,7 +367,7 @@ CONFIG.FORMATTING_ENGINE = {
 CONFIG.HAND_OFFSET_X = -CONFIG.HAND_CARD_SIZE * 0.3;
 CONFIG.HAND_OFFSET_Y = 10.0;
 // players draw up to CARD_DRAW_PER_TURN cards each turn (until hand is full)
-CONFIG.CARD_DRAW_PER_TURN = 1;
+CONFIG.CARD_DRAW_PER_TURN = 2;
 // max number of cards a player may replace per turn
 CONFIG.MAX_REPLACE_PER_TURN = 1;
 // time in seconds to show a tip
