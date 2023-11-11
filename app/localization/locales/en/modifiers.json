@@ -13,13 +13,13 @@
 	"mana_shift_set":"Mana cost changed to {{amount}}",
 
 	"egg_text":"Will hatch into {{unit_name}}",
-	"temp_transformed":"{{unit_name}} has temporarily changed form",
+	"temp_transformed":"{{unit_name}} has temporarily transformed",
 
 	"flying_name":"Flying",
-	"flying_def":"Move anywhere on the battlefield.",
+	"flying_def":"Can anywhere on the battlefield.",
 
 	"blast_name":"Blast",
-	"blast_def":"Attack all enemy minions and Generals in one straight line.",
+	"blast_def":"Can attack any enemy in front, behind, above, or below it. If it does, it attacks all enemies in that direction.",
 
 	"blood_surge_name":"Blood Surge",
 	"blood_surge_def":"Triggers an effect after you activate your Bloodbound Spell.",
@@ -28,10 +28,10 @@
 	"bond_def":"Triggers an effect when summoned if you have another minion from the same tribe.",
 
 	"celerity_name":"Celerity",
-	"celerity_def":"This minion may activate twice per turn.",
+	"celerity_def":"Can activate twice per turn.",
 
 	"deathwatch_name":"Deathwatch",
-	"deathwatch_def":"Triggers effect whenever ANY minion dies.",
+	"deathwatch_def":"Triggers effect when a unit is destroyed.",
 
 	"destructible_name":"Destructible",
 	"destructible_def":"Artifacts have 3 Durability. When your General takes damage, it loses 1 Durability. When an artifact has no durability, it is destroyed.",
@@ -46,35 +46,35 @@
 	"forcefield_def":"Cancel the first damage taken each turn.",
 
 	"frenzy_name":"Frenzy",
-	"frenzy_def":"When attacking in melee range, simultaneously strike all other nearby enemies.",
+	"frenzy_def":"When attacking a nearby enemy, deals its Attack damage to other nearby enemies.",
 
 	"grow_name":"Grow",
-	"grow_def":"Gets bigger at the start of your turn.",
+	"grow_def":"Gains Attack and Health at the start of your turn.",
 
 	"hallowed_ground_name":"Hallowed Ground",
 	"hallowed_ground_def":"Restores 1 Health to friendly minions and Generals standing on it at the end of owner's turn",
 
 	"infiltrate_name":"Infiltrate",
-	"infiltrate_def":"Gains a bonus while on the enemy side of the battlefield.",
+	"infiltrate_def":"Has an additional effect while on the enemy side of the battlefield.",
 
 	"mana_spring_name":"Mana Spring",
 	"bonus_mana_name": "Bonus Mana",
 	"bonus_mana_def": "Gain +1 Mana this turn",
 
 	"mechaz0r_name":"MECHAZ0R Progress",
-	"mechaz0r_def":"When MECHAZ0R is complete, lookout!",
+	"mechaz0r_def":"When fully assembled, MECHAZ0R will arrive in your action bar!",
 
 	"opening_gambit_name":"Opening Gambit",
-	"opening_gambit_def":"Triggers an effect when summoned from your action bar.",
+	"opening_gambit_def":"Triggers an effect when played.",
 
 	"primal_flourish_name":"Primal Flourish",
 	"primal_flourish_def":"Friendly minions standing on it have \"Grow: +2/+2\"",
 
 	"ranged_name":"Ranged",
-	"ranged_def":"Attack from anywhere on the battlefield.",
+	"ranged_def":"Can attack any enemy, regardless of distance.",
 
 	"rebirth_name":"Rebirth",
-	"rebirth_def":"When destroyed, summons an Egg on this space that hatches into a copy of it at the end of your next turn.",
+	"rebirth_def":"When this is destroyed, it leaves behind an Egg that hatches into the same minion before your next turn.",
 
 	"sentinel_name":"Sentinel",
 	"sentinel_def":"Summoned as a 3/3 with no abilities. Will transform into its true form if a specific event occurs on opponent's turn.",
@@ -83,7 +83,7 @@
 	"shadow_creep_def":"At the end of your turn, this deals damage equal to the number of allied Shadow Creep to the enemy on this space.",
 
 	"structure_name":"Structure",
-	"structure_def":"This minion cannot move or attack.",
+	"structure_def":"This cannot move or attack.",
 
 	"stunned_name":"Stunned",
 	"stunned_def":"Stunned units lose their next action.",
@@ -99,13 +99,13 @@
 	"antimagic_field_def":"Cannot be targeted or damaged by spells.",
 
 	"wall_name":"Wall",
-	"wall_def":"This minion cannot move, and is immediately removed from the battlefield if dispelled.",
+	"wall_def":"This cannot move and disappears if dispelled.",
 
 	"zeal_name":"Zeal",
 	"zeal_def":"Gains a bonus effect when nearby your General.",
 
 	"backstab_name":"Backstab",
-	"backstab_def":"When attacking from behind, this deals extra damage and can’t be counterattacked.",
+	"backstab_def":"When attacking from behind, this deals extra damage and cannot be counterattacked.",
 
 	"invulnerable_name":"Invulnerable",
     "invulnerable_def":"Cannot die or be affected by ANYTHING",
@@ -196,11 +196,11 @@
 	"immune_to_attacks_error":"[Not] a valid target.",
 	"immune_to_damage_by_general_name":"General Immunity",
 	"immune_to_damage_by_general_def":"Takes no damage from Generals",
-	"immune_to_damage_by_spells_def":"This minion takes no damage from spells",
+	"immune_to_damage_by_spells_def":"This unit takes no damage from spells",
 	"immune_to_damage_from_minions_and_generals_name":"Minion and General damage Immunity",
 	"immune_to_damage_from_minions_and_generals_def":"Takes no damage from minions or Generals",
 	"immune_to_spell_damage_name":"Immune to Spells",
-	"immune_to_spell_damage_def":"This minion takes no damage from spells",
+	"immune_to_spell_damage_def":"This unit takes no damage from spells",
 	"immune_to_spells_name":"Veil",
 	"immune_to_spells_def":"Cannot be targeted by spells",
 	"immune_to_spells_by_enemy_def":"Cannot be targeted by enemy spells",
