@@ -22,8 +22,8 @@ Unit = require 'app/sdk/entities/unit'
 ModifierFlying = require 'app/sdk/modifiers/modifierFlying'
 ModifierReplaceWatchDamageEnemy = require 'app/sdk/modifiers/modifierReplaceWatchDamageEnemy'
 ModifierReplaceWatchBuffSelf = require 'app/sdk/modifiers/modifierReplaceWatchBuffSelf'
-ModifierBuffSelfOnReplace = require 'app/sdk/modifiers/modifierBuffSelfOnReplace'
 ModifierSummonSelfOnReplace = require 'app/sdk/modifiers/modifierSummonSelfOnReplace'
+ModifierStartTurnWatchSwapGeneralPositions = require 'app/sdk/modifiers/modifierStartTurnWatchSwapGeneralPositions'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -44,7 +44,6 @@ class CardFactory_Monthly_M4_Replace
     if (identifier == Cards.Neutral.WhiteWidow)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1454284800000)
       card.name = i18next.t("cards.neutral_white_widow_name")
       card.setDescription(i18next.t("cards.neutral_white_widow_desc"))
       card.setFXResource(["FX.Cards.Neutral.WhiteWidow"])
@@ -66,16 +65,17 @@ class CardFactory_Monthly_M4_Replace
         damage : RSX.neutralWhiteWidowHit.name
         death : RSX.neutralWhiteWidowDeath.name
       )
-      card.setInherentModifiersContextObjects([ModifierReplaceWatchDamageEnemy.createContextObject(2)])
+      card.setInherentModifiersContextObjects([
+        ModifierReplaceWatchDamageEnemy.createContextObject(1)
+      ])
       card.atk = 3
       card.maxHP = 4
       card.manaCost = 4
-      card.rarityId = Rarity.Rare
+      card.rarityId = Rarity.Epic
 
     if (identifier == Cards.Neutral.WingsOfParadise)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1454284800000)
       card.name = i18next.t("cards.neutral_wings_of_paradise_name")
       card.setDescription(i18next.t("cards.neutral_wings_of_paradise_desc"))
       card.setFXResource(["FX.Cards.Neutral.WingsOfParadise"])
@@ -104,13 +104,12 @@ class CardFactory_Monthly_M4_Replace
       card.atk = 3
       card.maxHP = 3
       card.manaCost = 3
-      card.rarityId = Rarity.Common
+      card.rarityId = Rarity.Rare
 
     if (identifier == Cards.Neutral.AstralCrusader)
       card = new Unit(gameSession)
       card.setIsLegacy(true)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1454284800000)
       card.name = i18next.t("cards.neutral_astral_crusader_name")
       card.setDescription(i18next.t("cards.neutral_astral_crusader_desc"))
       card.setFXResource(["FX.Cards.Neutral.AstralCrusader"])
@@ -134,16 +133,17 @@ class CardFactory_Monthly_M4_Replace
         damage : RSX.neutralAstralCrusaderHit.name
         death : RSX.neutralAstralCrusaderDeath.name
       )
-      card.setInherentModifiersContextObjects([ModifierBuffSelfOnReplace.createContextObject(3,3,-3,"it costs 3 less and gains +3/+3")])
-      card.atk = 7
-      card.maxHP = 6
+      card.setInherentModifiersContextObjects(
+        [ModifierStartTurnWatchSwapGeneralPositions.createContextObject()]
+      )
+      card.atk = 6
+      card.maxHP = 12
       card.manaCost = 7
       card.rarityId = Rarity.Legendary
 
     if (identifier == Cards.Neutral.Dreamgazer)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1454284800000)
       card.name = i18next.t("cards.neutral_dreamgazer_name")
       card.setDescription(i18next.t("cards.neutral_dreamgazer_desc"))
       card.setFXResource(["FX.Cards.Neutral.Dreamgazer"])
@@ -165,10 +165,12 @@ class CardFactory_Monthly_M4_Replace
         damage : RSX.neutralDreamgazerHit.name
         death : RSX.neutralDreamgazerDeath.name
       )
-      card.setInherentModifiersContextObjects([ModifierSummonSelfOnReplace.createContextObject()])
-      card.atk = 1
-      card.maxHP = 1
-      card.manaCost = 1
+      card.setInherentModifiersContextObjects([
+        ModifierSummonSelfOnReplace.createContextObject()
+      ])
+      card.atk = 2
+      card.maxHP = 2
+      card.manaCost = 2
       card.rarityId = Rarity.Epic
 
     return card

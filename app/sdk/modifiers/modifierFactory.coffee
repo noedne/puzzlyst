@@ -696,6 +696,11 @@ ModifierOpeningGambitBuffSelfByEnemiesNearby = require './modifierOpeningGambitB
 ModifierOpeningGambitBuffSelfByRemainingMana = require './modifierOpeningGambitBuffSelfByRemainingMana'
 ModifierMyAttackOrCounterattackWatchHealOrDamageGeneral = require './modifierMyAttackOrCounterattackWatchHealOrDamageGeneral'
 ModifierSongweaver = require './modifierSongweaver'
+ModifierOpeningGambitGainHighestAttack = require './modifierOpeningGambitGainHighestAttack'
+ModifierEndTurnWatchBuffSelf = require './modifierEndTurnWatchBuffSelf'
+ModifierStartTurnWatchSwapGeneralPositions = require './modifierStartTurnWatchSwapGeneralPositions'
+ModifierOpeningGambitRefreshManaTiles = require './modifierOpeningGambitRefreshManaTiles'
+ModifierWarTalon = require './modifierWarTalon'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -2153,6 +2158,16 @@ class ModifierFactory
       return ModifierMyAttackOrCounterattackWatchHealOrDamageGeneral
     if (modifierType == ModifierSongweaver.type)
       return ModifierSongweaver
+    if (modifierType == ModifierOpeningGambitGainHighestAttack.type)
+      return ModifierOpeningGambitGainHighestAttack
+    if (modifierType == ModifierEndTurnWatchBuffSelf.type)
+      return ModifierEndTurnWatchBuffSelf
+    if (modifierType == ModifierStartTurnWatchSwapGeneralPositions.type)
+      return ModifierStartTurnWatchSwapGeneralPositions
+    if (modifierType == ModifierOpeningGambitRefreshManaTiles.type)
+      return ModifierOpeningGambitRefreshManaTiles
+    if (modifierType == ModifierWarTalon.type)
+      return ModifierWarTalon
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier

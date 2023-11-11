@@ -1,44 +1,38 @@
-CONFIG = require 'app/common/config'
-SpellSpawnEntity = require './spellSpawnEntity'
-DieAction = require 'app/sdk/actions/dieAction'
+Modifier = require 'app/sdk/modifiers/modifier'
+ModifierManaCostChange = require 'app/sdk/modifiers/modifierManaCostChange'
+Spell = require './spell'
 CardType = require 'app/sdk/cards/cardType'
-Cards = require 'app/sdk/cards/cardsLookupComplete'
-Rarity = require 'app/sdk/cards/rarityLookup'
+PutCardInHandAction = require 'app/sdk/actions/putCardInHandAction'
 
-class SpellFollowupKeeper extends SpellSpawnEntity
+class SpellFollowupKeeper extends Spell
 
-  canBeAppliedAnywhere: false
-  spawnSilently: true
-  cardDataOrIndexToSpawn: {id: Cards.Neutral.KeeperOfTheVale} # default unit for spell positioning
-
-  getPrivateDefaults: (gameSession) ->
-    p = super(gameSession)
-
-    p.followupSourcePattern = CONFIG.PATTERN_3x3 # only allow spawns within a 3x3 area of source position
-    p.deadUnits = null
-
-    return p
-
-  getDeadUnits: () ->
-    if !@_private.deadUnits?
-      @_private.deadUnits = @getGameSession().getDeadUnits(@getOwnerId())
-    return @_private.deadUnits
+  atkValue: 1
+  hpValue: 1
+  costValue: 1
 
   onApplyEffectToBoardTile: (board,x,y,sourceAction) ->
-    entities = @getDeadUnits()
-    # find and spawn a dead unit
-    if entities.length > 0
-      entityToSpawn = entities[@getGameSession().getRandomIntegerForExecution(entities.length)]
-      if entityToSpawn?
-        @cardDataOrIndexToSpawn = entityToSpawn.createNewCardData()
-        super(board,x,y,sourceAction)
+    super(board,x,y,sourceAction)
 
-  _postFilterPlayPositions: (validPositions) ->
-    # don't allow followup if there's nothing to re-summon
-    if @getDeadUnits().length > 0
-      return super(validPositions)
-    else
-      return []
+    entity = board.getCardAtPosition({x: x, y: y}, CardType.Unit)
+    newCardData = entity.createNewCardData()
 
+    statContextObject = Modifier.createContextObjectWithAbsoluteAttributeBuffs(
+      @atkValue,
+      @hpValue,
+    )
+    statContextObject.isRemovable = false
+
+    costChangeContextObject = ModifierManaCostChange.createContextObject(
+      @costValue
+    )
+    costChangeContextObject.attributeBuffsAbsolute = ['manaCost']
+    costChangeContextObject.isRemovable = false
+
+    newCardData.additionalModifiersContextObjects = [
+      statContextObject,
+      costChangeContextObject,
+    ]
+    putCardInHandAction = new PutCardInHandAction(@getGameSession(), entity.getOwnerId(), newCardData)
+    @getGameSession().executeAction(putCardInHandAction)
 
 module.exports = SpellFollowupKeeper

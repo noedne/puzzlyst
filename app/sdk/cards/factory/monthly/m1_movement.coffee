@@ -19,14 +19,14 @@ Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'
 
-SpellFilterType = require 'app/sdk/spells/spellFilterType'
-
 Modifier =           require 'app/sdk/modifiers/modifier'
-ModifierOpeningGambit =     require 'app/sdk/modifiers/modifierOpeningGambit'
 ModifierFlying = require 'app/sdk/modifiers/modifierFlying'
-ModifierMyMoveWatchSpawnEntity = require 'app/sdk/modifiers/modifierMyMoveWatchSpawnEntity'
 ModifierMyMoveWatchApplyModifiers = require 'app/sdk/modifiers/modifierMyMoveWatchApplyModifiers'
-ModifierMyMoveWatchDrawCard = require 'app/sdk/modifiers/modifierMyMoveWatchDrawCard'
+ModifierEndTurnWatchSpawnEntity = require 'app/sdk/modifiers/modifierEndTurnWatchSpawnEntity'
+ModifierOpeningGambitGainHighestAttack = require 'app/sdk/modifiers/modifierOpeningGambitGainHighestAttack'
+ModifierOpeningGambitApplyPlayerModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyPlayerModifiers'
+
+PlayerModifierCardDrawModifier = require 'app/sdk/playerModifiers/playerModifierCardDrawModifier'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -47,7 +47,6 @@ class CardFactory_Monthly_M1_Movement
     if (identifier == Cards.Neutral.BlackLocust)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1446336000000)
       card.name = i18next.t("cards.neutral_black_locust_name")
       card.setDescription(i18next.t("cards.neutral_black_locust_desc"))
       card.setFXResource(["FX.Cards.Neutral.BlackLocust"])
@@ -70,16 +69,24 @@ class CardFactory_Monthly_M1_Movement
         death : RSX.neutralBlackLocustDeath.name
       )
       card.atk = 2
-      card.maxHP = 2
+      card.maxHP = 1
       card.manaCost = 4
       card.rarityId = Rarity.Legendary
-      card.setInherentModifiersContextObjects([ModifierFlying.createContextObject(), ModifierMyMoveWatchSpawnEntity.createContextObject({id: Cards.Neutral.BlackLocust}, "Black Locust")])
+      card.setInherentModifiersContextObjects([
+        ModifierFlying.createContextObject(),
+        ModifierEndTurnWatchSpawnEntity.createContextObject(
+          { id: Cards.Neutral.BlackLocust },
+          "Black Locust",
+          1,
+          CONFIG.PATTERN_3x3,
+          true,
+        ),
+      ])
 
     if (identifier == Cards.Neutral.WindRunner)
       card = new Unit(gameSession)
       card.setIsLegacy(true)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1446336000000)
       card.name = i18next.t("cards.neutral_wind_runner_name")
       card.setDescription(i18next.t("cards.neutral_wind_runner_desc"))
       card.setFXResource(["FX.Cards.Neutral.WindRunner"])
@@ -104,7 +111,7 @@ class CardFactory_Monthly_M1_Movement
       card.atk = 3
       card.maxHP = 3
       card.manaCost = 3
-      card.rarityId = Rarity.Rare
+      card.rarityId = Rarity.Epic
       statContextObject = Modifier.createContextObjectWithAttributeBuffs(1,1)
       statContextObject.appliedName = i18next.t("modifiers.neutral_wind_runner_modifier")
       card.setInherentModifiersContextObjects([
@@ -115,7 +122,6 @@ class CardFactory_Monthly_M1_Movement
       card = new Unit(gameSession)
       card.setIsLegacy(true)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1446336000000)
       card.name = i18next.t("cards.neutral_mogwai_name")
       card.setDescription(i18next.t("cards.neutral_mogwai_desc"))
       card.setFXResource(["FX.Cards.Neutral.Mogwai"])
@@ -137,16 +143,19 @@ class CardFactory_Monthly_M1_Movement
         damage : RSX.neutralMogwaiHit.name
         death : RSX.neutralMogwaiDeath.name
       )
-      card.atk = 2
-      card.maxHP = 3
+      card.atk = 0
+      card.maxHP = 5
       card.manaCost = 3
       card.rarityId = Rarity.Epic
-      card.setInherentModifiersContextObjects([ModifierMyMoveWatchDrawCard.createContextObject()])
+      card.setInherentModifiersContextObjects([
+        ModifierOpeningGambitGainHighestAttack.createContextObject(
+          i18next.t("modifiers.neutral_mogwai_modifier")
+        )
+      ])
 
     if (identifier == Cards.Neutral.GhostLynx)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1446336000000)
       card.name = i18next.t("cards.neutral_ghost_lynx_name")
       card.setDescription(i18next.t("cards.neutral_ghost_lynx_desc"))
       card.setFXResource(["FX.Cards.Neutral.GhostLynx"])
@@ -168,19 +177,14 @@ class CardFactory_Monthly_M1_Movement
         damage : RSX.neutralGhostLynxHit.name
         death : RSX.neutralGhostLynxDeath.name
       )
-      card.atk = 2
-      card.maxHP = 1
+      card.atk = 1
+      card.maxHP = 3
       card.manaCost = 2
       card.rarityId = Rarity.Common
-      card.addKeywordClassToInclude(ModifierOpeningGambit)
-      card.setFollowups([
-        {
-          id: Cards.Spell.FollowupRandomTeleport
-          spellFilterType: SpellFilterType.NeutralDirect
-          _private: {
-            followupSourcePattern: CONFIG.PATTERN_3x3
-          }
-        }
+      card.setInherentModifiersContextObjects([
+        ModifierOpeningGambitApplyPlayerModifiers.createContextObjectToTargetOwnPlayer(
+          [PlayerModifierCardDrawModifier.createContextObject(1, 1)]
+        )
       ])
 
     return card

@@ -19,12 +19,13 @@ Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'
 
-Modifier = require 'app/sdk/modifiers/modifier'
+SpellFilterType = require 'app/sdk/spells/spellFilterType'
+
 ModifierOpeningGambit = require 'app/sdk/modifiers/modifierOpeningGambit'
-ModifierOpeningGambitApplyPlayerModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyPlayerModifiers'
-ModifierOpeningGambitApplyModifiersRandomly = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiersRandomly'
 ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchFromActionBarByOpeningGambitBuffSelf'
-PlayerModifierPreventSpellDamage = require 'app/sdk/playerModifiers/playerModifierPreventSpellDamage'
+ModifierEndTurnWatchBuffSelf = require 'app/sdk/modifiers/modifierEndTurnWatchBuffSelf'
+ModifierImmuneToSpellDamage = require 'app/sdk/modifiers/modifierImmuneToSpellDamage'
+ModifierOpeningGambitApplyModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiers'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -45,7 +46,6 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
     if (identifier == Cards.Neutral.SunElemental)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1451606400000)
       card.name = i18next.t("cards.neutral_sun_elemental_name")
       card.setDescription(i18next.t("cards.neutral_sun_elemental_desc"))
       card.setFXResource(["FX.Cards.Neutral.SunElemental"])
@@ -69,22 +69,22 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
         damage : RSX.neutralSunElementalHit.name
         death : RSX.neutralSunElementalDeath.name
       )
-      card.atk = 3
-      card.maxHP = 3
+      card.atk = 2
+      card.maxHP = 7
       card.manaCost = 4
-      card.rarityId = Rarity.Common
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(0,2)
-      statContextObject.appliedName = i18next.t("modifiers.neutral_sun_elemental_modifier")
+      card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([
-        ModifierOpeningGambitApplyModifiersRandomly.createContextObject([statContextObject],
-          false, false, true, false, false, CONFIG.WHOLE_BOARD_RADIUS, 2, "Give two random friendly minions +2 Health")
+        ModifierEndTurnWatchBuffSelf.createContextObject(
+          2,
+          -1,
+          { appliedName: i18next.t("modifiers.neutral_sun_elemental_modifier") },
+        )
       ])
 
     if (identifier == Cards.Neutral.ProphetWhitePalm)
       card = new Unit(gameSession)
       card.setIsLegacy(true)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1451606400000)
       card.name = i18next.t("cards.neutral_prophet_of_the_white_palm_name")
       card.setDescription(i18next.t("cards.neutral_prophet_of_the_white_palm_desc"))
       card.setFXResource(["FX.Cards.Neutral.ProphetWhitePalm"])
@@ -108,20 +108,22 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
         damage : RSX.neutralProphetWhitePalmHit.name
         death : RSX.neutralProphetWhitePalmDeath.name
       )
-      card.atk = 1
-      card.maxHP = 1
+      card.atk = 2
+      card.maxHP = 2
       card.manaCost = 1
-      immunityContextObject = PlayerModifierPreventSpellDamage.createContextObject()
+      immunityContextObject = ModifierImmuneToSpellDamage.createContextObject()
       immunityContextObject.durationEndTurn = 2
       card.setInherentModifiersContextObjects([
-        ModifierOpeningGambitApplyPlayerModifiers.createContextObjectToTargetOwnPlayer([immunityContextObject], false, "Prevent ALL spell damage until your next turn")
+        ModifierOpeningGambitApplyModifiers.createContextObjectForAllUnitsAndGenerals(
+          [immunityContextObject],
+          false,
+        )
       ])
       card.rarityId = Rarity.Rare
 
     if (identifier == Cards.Neutral.ArakiHeadhunter)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1451606400000)
       card.name = i18next.t("cards.neutral_araki_headhunter_name")
       card.setDescription(i18next.t("cards.neutral_araki_headhunter_desc"))
       card.setFXResource(["FX.Cards.Neutral.ArakiHeadhunter"])
@@ -146,13 +148,16 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
       card.atk = 1
       card.maxHP = 3
       card.manaCost = 2
-      card.rarityId = Rarity.Epic
-      card.setInherentModifiersContextObjects([ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf.createContextObject(2)])
+      card.rarityId = Rarity.Rare
+      card.setInherentModifiersContextObjects([
+        ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf.createContextObject(
+          2
+        )
+      ])
 
     if (identifier == Cards.Neutral.KeeperOfTheVale)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1451606400000)
       card.name = i18next.t("cards.neutral_keeper_of_the_vale_name")
       card.setDescription(i18next.t("cards.neutral_keeper_of_the_vale_desc"))
       card.setFXResource(["FX.Cards.Neutral.KeeperOfTheVale"])
@@ -176,13 +181,13 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
       )
       card.atk = 3
       card.maxHP = 4
-      card.manaCost = 5
+      card.manaCost = 4
       card.rarityId = Rarity.Legendary
-#      card.setFollowupNameAndDescription(ModifierOpeningGambit.modifierName,"Summon a friendly non-token minion destroyed this game nearby")
       card.addKeywordClassToInclude(ModifierOpeningGambit)
       card.setFollowups([
         {
-          id: Cards.Spell.FollowupKeeper
+          id: Cards.Spell.FollowupKeeper,
+          spellFilterType: SpellFilterType.AllyDirect,
         }
       ])
 

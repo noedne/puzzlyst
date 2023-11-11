@@ -6,7 +6,6 @@ moment = require 'moment'
 
 Logger = require 'app/common/logger'
 
-CONFIG = require('app/common/config')
 RSX = require('app/data/resources')
 
 Card = require 'app/sdk/cards/card'
@@ -19,13 +18,12 @@ Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'
 
-SpellFilterType = require 'app/sdk/spells/spellFilterType'
-
 ModifierProvoke =       require 'app/sdk/modifiers/modifierProvoke'
 ModifierFrenzy =     require 'app/sdk/modifiers/modifierFrenzy'
-ModifierOpeningGambit =     require 'app/sdk/modifiers/modifierOpeningGambit'
 ModifierEndTurnWatchDamageNearbyEnemy = require 'app/sdk/modifiers/modifierEndTurnWatchDamageNearbyEnemy'
-ModifierTakeDamageWatchDispel = require 'app/sdk/modifiers/modifierTakeDamageWatchDispel'
+ModifierOpeningGambitApplyModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiers'
+ModifierOpeningGambitRefreshManaTiles = require 'app/sdk/modifiers/modifierOpeningGambitRefreshManaTiles'
+ModifierWarTalon = require 'app/sdk/modifiers/modifierWarTalon'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -46,7 +44,6 @@ class CardFactory_Monthly_M5_Provoke
     if (identifier == Cards.Neutral.Bonereaper)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1456790400000)
       card.name = i18next.t("cards.neutral_bonereaper_name")
       card.setDescription(i18next.t("cards.neutral_bonereaper_desc"))
       card.setFXResource(["FX.Cards.Neutral.Bonereaper"])
@@ -70,16 +67,18 @@ class CardFactory_Monthly_M5_Provoke
         damage : RSX.neutralBonereaperHit.name
         death : RSX.neutralBonereaperDeath.name
       )
-      card.setInherentModifiersContextObjects([ModifierProvoke.createContextObject(), ModifierEndTurnWatchDamageNearbyEnemy.createContextObject(2,false)])
+      card.setInherentModifiersContextObjects([
+        ModifierProvoke.createContextObject(),
+        ModifierEndTurnWatchDamageNearbyEnemy.createContextObject(2,false),
+      ])
       card.atk = 2
-      card.maxHP = 9
+      card.maxHP = 10
       card.manaCost = 6
       card.rarityId = Rarity.Epic
 
     if (identifier == Cards.Neutral.HollowGrovekeeper)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1456790400000)
       card.name = i18next.t("cards.neutral_hollow_grovekeeper_name")
       card.setDescription(i18next.t("cards.neutral_hollow_grovekeeper_desc"))
       card.setFXResource(["FX.Cards.Neutral.HollowGrovekeeper"])
@@ -103,26 +102,22 @@ class CardFactory_Monthly_M5_Provoke
         damage : RSX.neutralHollowGrovekeeperHit.name
         death : RSX.neutralHollowGrovekeeperDeath.name
       )
-      card.atk = 3
+      card.atk = 5
       card.maxHP = 4
-      card.manaCost = 5
-      card.rarityId = Rarity.Legendary
-      card.addKeywordClassToInclude(ModifierOpeningGambit)
-      card.setFollowups([
-        {
-          id: Cards.Spell.FollowupHollowGroveKeeper
-          spellFilterType: SpellFilterType.NeutralDirect
-          _private: {
-            followupSourcePattern: CONFIG.PATTERN_3x3
-          }
-        }
+      card.manaCost = 4
+      card.rarityId = Rarity.Epic
+      card.setInherentModifiersContextObjects([
+        ModifierFrenzy.createContextObject(),
+        ModifierOpeningGambitApplyModifiers.createContextObjectForNearbyAllies(
+          [ModifierProvoke.createContextObject()],
+          false,
+        ),
       ])
 
     if (identifier == Cards.Neutral.Tethermancer)
       card = new Unit(gameSession)
       card.setIsLegacy(true)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1456790400000)
       card.name = i18next.t("cards.neutral_tethermancer_name")
       card.setDescription(i18next.t("cards.neutral_tethermancer_desc"))
       card.setFXResource(["FX.Cards.Neutral.Tethermancer"])
@@ -146,16 +141,17 @@ class CardFactory_Monthly_M5_Provoke
         damage : RSX.neutralTethermancerHit.name
         death : RSX.neutralTethermancerDeath.name
       )
-      card.atk = 1
+      card.atk = 2
       card.maxHP = 6
       card.manaCost = 4
       card.rarityId = Rarity.Rare
-      card.setInherentModifiersContextObjects([ModifierProvoke.createContextObject(), ModifierTakeDamageWatchDispel.createContextObject()])
+      card.setInherentModifiersContextObjects([
+        ModifierOpeningGambitRefreshManaTiles.createContextObject()
+      ])
 
     if (identifier == Cards.Neutral.WarTalon)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1456790400000)
       card.name = i18next.t("cards.neutral_war_talon_name")
       card.setDescription(i18next.t("cards.neutral_war_talon_desc"))
       card.setFXResource(["FX.Cards.Neutral.WarTalon"])
@@ -179,11 +175,13 @@ class CardFactory_Monthly_M5_Provoke
         damage : RSX.neutralWarTalonHit.name
         death : RSX.neutralWarTalonDeath.name
       )
-      card.atk = 4
-      card.maxHP = 9
-      card.manaCost = 7
-      card.setInherentModifiersContextObjects([ModifierProvoke.createContextObject(), ModifierFrenzy.createContextObject()])
-      card.rarityId = Rarity.Common
+      card.atk = 8
+      card.maxHP = 6
+      card.manaCost = 6
+      card.setInherentModifiersContextObjects(
+        [ModifierWarTalon.createContextObject()]
+      )
+      card.rarityId = Rarity.Epic
 
     return card
 

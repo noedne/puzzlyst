@@ -432,11 +432,9 @@ class CardFactory_Generic
       card = new SpellFollowupKeeper(gameSession)
       card.factionId = Factions.Neutral
       card.setIsHiddenInCollection(true)
-      card.id = Cards.Spell.FollwupKeeper
-      card.name = "Revive Dead minion"
-      card.setDescription("Revive a dead minion in a nearby space.")
+      card.id = Cards.Spell.FollowupKeeper
       card.manaCost = 0
-      card.setFXResource(["FX.Factions.Neutral.UnitSpawnFX","FX.Cards.Spell.FollowupKeeper"])
+      card.setFXResource(["FX.Cards.Spell.FollowupKeeper"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_voidwalk.audio
       )

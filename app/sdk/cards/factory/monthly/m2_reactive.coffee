@@ -21,11 +21,15 @@ Unit = require 'app/sdk/entities/unit'
 
 ModifierFirstBlood =     require 'app/sdk/modifiers/modifierFirstBlood'
 ModifierSpellWatchSpawnEntity = require 'app/sdk/modifiers/modifierSpellWatchSpawnEntity'
-ModifierDyingWishSpawnEntityInCorner = require 'app/sdk/modifiers/modifierDyingWishSpawnEntityInCorner'
 ModifierSpiritScribe = require 'app/sdk/modifiers/modifierSpiritScribe'
 ModifierTakeDamageWatchSpawnRandomToken = require 'app/sdk/modifiers/modifierTakeDamageWatchSpawnRandomToken'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
-ModifierTokenCreator = require 'app/sdk/modifiers/modifierTokenCreator'
+ModifierTranscendance = require 'app/sdk/modifiers/modifierTranscendance'
+ModifierFlying = require 'app/sdk/modifiers/modifierFlying'
+ModifierFrenzy = require 'app/sdk/modifiers/modifierFrenzy'
+ModifierProvoke = require 'app/sdk/modifiers/modifierProvoke'
+ModifierRanged = require 'app/sdk/modifiers/modifierRanged'
+ModifierDyingWishSpawnEntity = require 'app/sdk/modifiers/modifierDyingWishSpawnEntity'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -46,7 +50,6 @@ class CardFactory_Monthly_M2_Reactive
     if (identifier == Cards.Neutral.Grailmaster)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1448928000000)
       card.name = i18next.t("cards.neutral_grailmaster_name")
       card.setDescription(i18next.t("cards.neutral_grailmaster_desc"))
       card.setFXResource(["FX.Cards.Neutral.Grailmaster"])
@@ -70,11 +73,18 @@ class CardFactory_Monthly_M2_Reactive
         damage : RSX.neutralSpiritscribeHit.name
         death : RSX.neutralSpiritscribeDeath.name
       )
-      card.atk = 6
-      card.maxHP = 6
+      card.atk = 7
+      card.maxHP = 7
       card.manaCost = 7
       card.rarityId = Rarity.Epic
-      card.setInherentModifiersContextObjects([ModifierSpiritScribe.createContextObject()])
+      card.setInherentModifiersContextObjects([
+        ModifierSpiritScribe.createContextObject()
+      ])
+      card.addKeywordClassToInclude(ModifierTranscendance)
+      card.addKeywordClassToInclude(ModifierFlying)
+      card.addKeywordClassToInclude(ModifierFrenzy)
+      card.addKeywordClassToInclude(ModifierProvoke)
+      card.addKeywordClassToInclude(ModifierRanged)
 
     if (identifier == Cards.Neutral.Firestarter)
       card = new Unit(gameSession)
@@ -109,13 +119,11 @@ class CardFactory_Monthly_M2_Reactive
       card.rarityId = Rarity.Epic
       card.addKeywordClassToInclude(ModifierFirstBlood)
       card.setInherentModifiersContextObjects([ModifierSpellWatchSpawnEntity.createContextObject({id: Cards.Neutral.Spellspark}, "1/1 Spellspark with Rush")])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
 
     if (identifier == Cards.Neutral.Spellspark)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.setIsHiddenInCollection(true)
-      card.setAvailableAt(1448928000000)
       card.name = i18next.t("cards.neutral_spellspark_name")
       card.setDescription(i18next.t("cards.neutral_spellspark_desc"))
       card.setFXResource(["FX.Cards.Neutral.Spellspark"])
@@ -147,7 +155,6 @@ class CardFactory_Monthly_M2_Reactive
     if (identifier == Cards.Neutral.Khymera)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1448928000000)
       card.name = i18next.t("cards.neutral_khymera_name")
       card.setDescription(i18next.t("cards.neutral_khymera_desc"))
       card.setFXResource(["FX.Cards.Neutral.Khymera"])
@@ -175,13 +182,13 @@ class CardFactory_Monthly_M2_Reactive
       card.maxHP = 12
       card.manaCost = 8
       card.rarityId = Rarity.Legendary
-      card.setInherentModifiersContextObjects([ModifierTakeDamageWatchSpawnRandomToken.createContextObject()])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
+      card.setInherentModifiersContextObjects([
+        ModifierTakeDamageWatchSpawnRandomToken.createContextObject()
+      ])
 
     if (identifier == Cards.Neutral.Jaxi)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
-      card.setAvailableAt(1448928000000)
       card.name = i18next.t("cards.neutral_jaxi_name")
       card.setDescription(i18next.t("cards.neutral_jaxi_desc"))
       card.setFXResource(["FX.Cards.Neutral.Jaxi"])
@@ -203,12 +210,16 @@ class CardFactory_Monthly_M2_Reactive
         damage : RSX.neutralJaxiHit.name
         death : RSX.neutralJaxiDeath.name
       )
-      card.atk = 1
-      card.maxHP = 1
+      card.atk = 2
+      card.maxHP = 2
       card.manaCost = 2
-      card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([ModifierDyingWishSpawnEntityInCorner.createContextObject({id: Cards.Neutral.MiniJax}, "a 1/1 Ranged Mini-Jax")])
-      card.addKeywordClassToInclude(ModifierTokenCreator)
+      card.rarityId = Rarity.Rare
+      card.setInherentModifiersContextObjects([
+        ModifierDyingWishSpawnEntity.createContextObject(
+          {id: Cards.Neutral.MiniJax},
+          "a 1/1 Ranged Mini-Jax",
+        )
+      ])
 
     return card
 

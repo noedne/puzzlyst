@@ -11,7 +11,7 @@ class ModifierSummonSelfOnReplace extends Modifier
   @type:"ModifierSummonSelfOnReplace"
 
   @modifierName:"Summon Self On Replace"
-  @description: "When you replace this card, summon it nearby.  Your General takes 2 damage"
+  @description: "When you replace this card, summon it behind.  Your General takes 2 damage"
 
   activeInHand: true
   activeInDeck: true
@@ -36,10 +36,15 @@ class ModifierSummonSelfOnReplace extends Modifier
     if action instanceof ReplaceCardFromHandAction and action.getOwnerId() is @getCard().getOwnerId()
       replacedCard = @getGameSession().getExistingCardFromIndexOrCreateCardFromData(action.replacedCardIndex)
       if replacedCard is @getCard()
-        # and play this card in a random space nearby owner's General
+        # and play this card behind owner's General
         general = @getGameSession().getGeneralForPlayerId(@getCard().getOwnerId())
         generalPosition = general.getPosition()
-        spawnLocations = UtilsGameSession.getRandomSmartSpawnPositionsFromPattern(@getGameSession(), generalPosition, CONFIG.PATTERN_3x3, @getCard(), @getCard())
+        spawnLocations = UtilsGameSession.getSmartSpawnPositionsFromPattern(
+          @getGameSession(),
+          generalPosition,
+          CONFIG.PATTERN_DIRECTLY_BEHIND,
+          @getCard(),
+        )
         if spawnLocations.length > 0
           playCardAction = new PlayCardSilentlyAction(@getGameSession(), @getCard().getOwnerId(), spawnLocations[0].x, spawnLocations[0].y, @getCard().getIndex())
           @getGameSession().executeAction(playCardAction)

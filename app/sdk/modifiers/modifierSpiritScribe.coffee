@@ -13,7 +13,7 @@ class ModifierSpiritScribe extends ModifierSummonWatch
   type:"ModifierSpiritScribe"
   @type:"ModifierSpiritScribe"
 
-  @description: "Whenever you summon a minion, this minion gains a random keyword ability"
+  @description: "Whenever you summon a minion, this minion gains a new random keyword ability"
 
   @createContextObject: () ->
     contextObject = super()
@@ -31,9 +31,17 @@ class ModifierSpiritScribe extends ModifierSummonWatch
   onSummonWatch: (action) ->
     super(action)
 
-    if @getGameSession().getIsRunningAsAuthoritative() and @allModifierContextObjects.length > 0
-      # pick one modifier from the remaining list and splice it out of the set of choices
-      modifierContextObject = @allModifierContextObjects.splice(@getGameSession().getRandomIntegerForExecution(@allModifierContextObjects.length), 1)[0]
+    missingModifierContextObjects = @getMissingModifierContextObjects()
+    numMissing = missingModifierContextObjects.length
+    if @getGameSession().getIsRunningAsAuthoritative() and numMissing > 0
+      randomIndex = @getGameSession().getRandomIntegerForExecution(numMissing)
+      modifierContextObject = missingModifierContextObjects[randomIndex]
+      indexInAll = @allModifierContextObjects.indexOf(modifierContextObject)
+      @allModifierContextObjects.splice(indexInAll, 1)
       @getGameSession().applyModifierContextObject(modifierContextObject, @getCard())
+
+  getMissingModifierContextObjects: () ->
+    @allModifierContextObjects.filter (modifierContextObject) =>
+      !@getCard().hasModifierType(modifierContextObject.type)
 
 module.exports = ModifierSpiritScribe

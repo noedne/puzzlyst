@@ -1,6 +1,6 @@
 ModifierReplaceWatch = require './modifierReplaceWatch'
+DamageAction = require 'app/sdk/actions/damageAction'
 RandomDamageAction = require 'app/sdk/actions/randomDamageAction'
-CardType = require 'app/sdk/cards/cardType'
 
 class ModifierReplaceWatchDamageEnemy extends ModifierReplaceWatch
 
@@ -8,7 +8,7 @@ class ModifierReplaceWatchDamageEnemy extends ModifierReplaceWatch
   @type:"ModifierReplaceWatchDamageEnemy"
 
   @modifierName:"Replace Watch (damage random enemy)"
-  @description: "Whenever you replace a card, deal %X damage to a random enemy"
+  @description: "Whenever you replace a card, deal %X damage to the enemy General and a random enemy minion"
 
   fxResource: ["FX.Modifiers.ModifierReplaceWatch", "FX.Modifiers.ModifierGenericDamageSmall"]
 
@@ -24,11 +24,20 @@ class ModifierReplaceWatchDamageEnemy extends ModifierReplaceWatch
       return @description
 
   onReplaceWatch: (action) ->
+    damageAction = new DamageAction(@getGameSession())
+    damageAction.setOwnerId(@getCard().getOwnerId())
+    damageAction.setSource(@getCard())
+    damageAction.setTarget(
+      @getGameSession().getGeneralForOpponentOfPlayerId(@getOwnerId())
+    )
+    damageAction.setDamageAmount(@damageAmount)
+    @getGameSession().executeAction(damageAction)
+
     randomDamageAction = new RandomDamageAction(@getGameSession())
     randomDamageAction.setOwnerId(@getCard().getOwnerId())
     randomDamageAction.setSource(@getCard())
     randomDamageAction.setDamageAmount(@damageAmount)
-    randomDamageAction.canTargetGenerals = true
+    randomDamageAction.canTargetGenerals = false
     @getGameSession().executeAction(randomDamageAction)
 
 module.exports = ModifierReplaceWatchDamageEnemy

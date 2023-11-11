@@ -17,6 +17,7 @@ class ModifierDealDamageWatch extends Modifier
 
   enemyOnly: false # whether this should trigger ONLY on damage dealt to enemies, or on ANY damage dealt
   generalOnly: false
+  minionOnly: false
 
   fxResource: ["FX.Modifiers.ModifierDealDamageWatch"]
 
@@ -39,6 +40,8 @@ class ModifierDealDamageWatch extends Modifier
       isRelevant = isRelevant and a.getTarget().getOwnerId() isnt @getCard().getOwnerId()
     if @generalOnly
       isRelevant = isRelevant and a.getTarget().getIsGeneral()
+    if @minionOnly
+      isRelevant = isRelevant and not a.getTarget().getIsGeneral()
     return isRelevant
 
   willDealDamage: (action) ->
