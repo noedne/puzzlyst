@@ -2,7 +2,6 @@
 # it is specifically parsed by the package generation script
 
 CONFIG = require('app/common/config')
-config = require('config/config')
 RSX = require('app/data/resources')
 
 Cards = require 'app/sdk/cards/cardsLookupComplete'
@@ -48,8 +47,6 @@ ModifierGeneralDealsDoubleDamage = require 'app/sdk/modifiers/modifierGeneralDea
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 ModifierAbsorbDamage = require 'app/sdk/modifiers/modifierAbsorbDamage'
 ModifierOnRemoveShuffleCopyIntoDeck = require 'app/sdk/modifiers/modifierOnRemoveShuffleCopyIntoDeck'
-
-WartechGeneralFaction3Achievement = require 'app/sdk/achievements/wartechAchievements/wartechGeneralFaction3Achievement'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -110,8 +107,6 @@ class CardFactory_CoreSet_Faction3
 
     if (identifier == Cards.Faction3.AltGeneral)
       card = new Unit(gameSession)
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.setIsGeneral(true)
       card.factionId = Factions.Faction3
       card.name = i18next.t("cards.faction_3_unit_sajj_name")
@@ -154,9 +149,6 @@ class CardFactory_CoreSet_Faction3
     if (identifier == Cards.Faction3.ThirdGeneral)
       card = new Unit(gameSession)
       card.setIsGeneral(true)
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableWithAchievement(true)
-        card.setIsUnlockedWithAchievementId(WartechGeneralFaction3Achievement.id)
       card.factionId = Factions.Faction3
       card.name = i18next.t("cards.faction_3_unit_ciphyron_name")
       card.setDescription('')
@@ -419,8 +411,6 @@ class CardFactory_CoreSet_Faction3
     if (identifier == Cards.Faction3.BrazierRedSand)
       card = new Unit(gameSession)
       card.factionId = Factions.Faction3
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.name = i18next.t("cards.faction_3_unit_ethereal_obelysk_name")
       card.setDescription(i18next.t("cards.faction_3_unit_ethereal_obelysk_desc"))
       card.raceId = Races.Structure
@@ -791,8 +781,6 @@ class CardFactory_CoreSet_Faction3
     if (identifier == Cards.Spell.CosmicFlesh)
       card = new SpellApplyModifiers(gameSession)
       card.factionId = Factions.Faction3
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.CosmicFlesh
       card.name = i18next.t("cards.faction_3_spell_cosmic_flesh_name")
       card.setDescription(i18next.t("cards.faction_3_spell_cosmic_flesh_description"))
@@ -826,8 +814,6 @@ class CardFactory_CoreSet_Faction3
     if (identifier == Cards.Spell.Blindscorch)
       card = new SpellApplyModifiers(gameSession)
       card.factionId = Factions.Faction3
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.Blindscorch
       card.name = i18next.t("cards.faction_3_spell_blindscorch_name")
       card.setDescription(i18next.t("cards.faction_3_spell_blindscorch_description"))
@@ -976,8 +962,6 @@ class CardFactory_CoreSet_Faction3
     if (identifier == Cards.Spell.ScionsSecondWish)
       card = new SpellHealYourGeneral(gameSession)
       card.factionId = Factions.Faction3
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.ScionsSecondWish
       card.name = i18next.t("cards.faction_3_spell_scions_second_wish_name")
       card.setDescription(i18next.t("cards.faction_3_spell_scions_second_wish_description"))

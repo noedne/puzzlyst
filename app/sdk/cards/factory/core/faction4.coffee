@@ -2,7 +2,6 @@
 # it is specifically parsed by the package generation script
 
 CONFIG = require('app/common/config')
-config = require('config/config')
 RSX = require('app/data/resources')
 
 Cards = require 'app/sdk/cards/cardsLookupComplete'
@@ -55,8 +54,6 @@ ModifierDyingWishTeleportEnemyGeneral = require 'app/sdk/modifiers/modifierDying
 ModifierOpeningGambitPutCardInHand = require 'app/sdk/modifiers/modifierOpeningGambitPutCardInHand'
 ModifierDyingWish = require 'app/sdk/modifiers/modifierDyingWish'
 PlayerModifierOnDeathWatchBonusMana = require 'app/sdk/playerModifiers/playerModifierOnDeathWatchBonusMana'
-
-WartechGeneralFaction4Achievement = require 'app/sdk/achievements/wartechAchievements/wartechGeneralFaction4Achievement'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -117,8 +114,6 @@ class CardFactory_CoreSet_Faction4
 
     if (identifier == Cards.Faction4.AltGeneral)
       card = new Unit(gameSession)
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.setIsGeneral(true)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_cassyva_name")
@@ -161,9 +156,6 @@ class CardFactory_CoreSet_Faction4
     if (identifier == Cards.Faction4.ThirdGeneral)
       card = new Unit(gameSession)
       card.setIsGeneral(true)
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableWithAchievement(true)
-        card.setIsUnlockedWithAchievementId(WartechGeneralFaction4Achievement.id)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_maehv_name")
       card.setDescription('')
@@ -205,8 +197,6 @@ class CardFactory_CoreSet_Faction4
     if (identifier == Cards.Faction4.AbyssalCrawler)
       card = new Unit(gameSession)
       card.factionId = Factions.Faction4
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.name = i18next.t("cards.faction_4_unit_abyssal_crawler_name")
       card.setDescription(i18next.t("cards.faction_4_unit_abyssal_crawler_desc"))
       card.setFXResource(["FX.Cards.Faction4.AbyssalCrawler"])
@@ -772,8 +762,6 @@ class CardFactory_CoreSet_Faction4
     if (identifier == Cards.Spell.DaemonicLure)
       card = new SpellDamage(gameSession)
       card.factionId = Factions.Faction4
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.DaemonicLure
       card.name = i18next.t("cards.faction_4_spell_daemonic_lure_name")
       card.setDescription(i18next.t("cards.faction_4_spell_daemonic_lure_description"))
@@ -813,8 +801,6 @@ class CardFactory_CoreSet_Faction4
     if (identifier == Cards.Spell.ShadowNova)
       card = new SpellChokingShadows(gameSession)
       card.factionId = Factions.Faction4
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.ShadowNova
       card.name = i18next.t("cards.faction_4_spell_shadow_nova_name")
       card.setDescription(i18next.t("cards.faction_4_spell_shadow_nova_description"))
@@ -1032,8 +1018,6 @@ class CardFactory_CoreSet_Faction4
     if (identifier == Cards.Spell.SoulshatterPact)
       card = new SpellVoidSteal(gameSession)
       card.factionId = Factions.Faction4
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.SoulshatterPact
       card.name = i18next.t("cards.faction_4_spell_soulshatter_pact_name")
       card.setDescription(i18next.t("cards.faction_4_spell_soulshatter_pact_description"))

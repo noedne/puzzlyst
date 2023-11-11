@@ -2,7 +2,6 @@
 # it is specifically parsed by the package generation script
 
 CONFIG = require('app/common/config')
-config = require('config/config')
 RSX = require('app/data/resources')
 
 Cards = require 'app/sdk/cards/cardsLookupComplete'
@@ -54,8 +53,6 @@ PlayerModifierManaModifierSingleUse = require 'app/sdk/playerModifiers/playerMod
 PlayerModifierSpellDamageModifier = require 'app/sdk/playerModifiers/playerModifierSpellDamageModifier'
 PlayerModifierCardDrawModifier = require 'app/sdk/playerModifiers/playerModifierCardDrawModifier'
 PlayerModifierAncestralPact = require 'app/sdk/playerModifiers/playerModifierAncestralPact'
-
-WartechGeneralFaction2Achievement = require 'app/sdk/achievements/wartechAchievements/wartechGeneralFaction2Achievement'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -116,8 +113,6 @@ class CardFactory_CoreSet_Faction2
 
     if (identifier == Cards.Faction2.AltGeneral)
       card = new Unit(gameSession)
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.setIsGeneral(true)
       card.factionId = Factions.Faction2
       card.name = i18next.t("cards.faction_2_unit_reva_name")
@@ -160,9 +155,6 @@ class CardFactory_CoreSet_Faction2
     if (identifier == Cards.Faction2.ThirdGeneral)
       card = new Unit(gameSession)
       card.setIsGeneral(true)
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableWithAchievement(true)
-        card.setIsUnlockedWithAchievementId(WartechGeneralFaction2Achievement.id)
       card.factionId = Factions.Faction2
       card.name = i18next.t("cards.faction_2_unit_shidai_name")
       card.setDescription('')
@@ -523,8 +515,6 @@ class CardFactory_CoreSet_Faction2
       card = new Unit(gameSession)
       card.factionId = Factions.Faction2
       card.raceId = Races.Arcanyst
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.name = i18next.t("cards.faction_2_unit_chakri_avatar_name")
       card.setFXResource(["FX.Cards.Faction2.ChakriAvatar"])
       card.setBaseSoundResource(
@@ -724,8 +714,6 @@ class CardFactory_CoreSet_Faction2
     if (identifier == Cards.Spell.SaberspineSeal)
       card = new SpellApplyModifiers(gameSession)
       card.factionId = Factions.Faction2
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.SaberspineSeal
       card.name = i18next.t("cards.faction_2_spell_saberspine_seal_name")
       card.setDescription(i18next.t("cards.faction_2_spell_saberspine_seal_description"))
@@ -910,8 +898,6 @@ class CardFactory_CoreSet_Faction2
     if (identifier == Cards.Spell.InnerFocus)
       card = new SpellInnerFocus(gameSession)
       card.factionId = Factions.Faction2
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.InnerFocus
       card.name = i18next.t("cards.faction_2_spell_inner_focus_name")
       card.setDescription(i18next.t("cards.faction_2_spell_inner_focus_description"))
@@ -949,8 +935,6 @@ class CardFactory_CoreSet_Faction2
     if (identifier == Cards.Spell.GhostLightning)
       card = new SpellDamage(gameSession)
       card.factionId = Factions.Faction2
-      if !config.get('allCardsAvailable')?
-        card.setIsUnlockableBasic(true)
       card.id = Cards.Spell.GhostLightning
       card.name = i18next.t("cards.faction_2_spell_ghost_lightning_name")
       card.setDescription(i18next.t("cards.faction_2_spell_ghost_lightning_description"))
