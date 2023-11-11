@@ -1,19 +1,10 @@
 # do not add this file to a package
 # it is specifically parsed by the package generation script
 
-_ = require 'underscore'
-moment = require 'moment'
-
-Logger = require 'app/common/logger'
-
 RSX = require('app/data/resources')
 
-Card = require 'app/sdk/cards/card'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
-CardType = require 'app/sdk/cards/cardType'
 Factions = require 'app/sdk/cards/factionsLookup'
-FactionFactory = require 'app/sdk/cards/factionFactory'
-Races = require 'app/sdk/cards/racesLookup'
 Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'

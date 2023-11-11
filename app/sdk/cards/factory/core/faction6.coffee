@@ -1,27 +1,18 @@
 # do not add this file to a package
 # it is specifically parsed by the package generation script
 
-_ = require 'underscore'
-moment = require 'moment'
-
-Logger = require 'app/common/logger'
-
 CONFIG = require('app/common/config')
 config = require('config/config')
 RSX = require('app/data/resources')
 
-Card = require 'app/sdk/cards/card'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
-CardType = require 'app/sdk/cards/cardType'
 Factions = require 'app/sdk/cards/factionsLookup'
-FactionFactory = require 'app/sdk/cards/factionFactory'
 Races = require 'app/sdk/cards/racesLookup'
 Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'
 Artifact = require 'app/sdk/artifacts/artifact'
 
-Spell = require 'app/sdk/spells/spell'
 SpellFilterType = require 'app/sdk/spells/spellFilterType'
 SpellApplyModifiers = require 'app/sdk/spells/spellApplyModifiers'
 SpellSpawnEntity = require 'app/sdk/spells/spellSpawnEntity'
@@ -35,9 +26,6 @@ SpellAspectOfTheMountains = require 'app/sdk/spells/spellAspectOfTheMountains'
 SpellBounceToActionbar = require 'app/sdk/spells/spellBounceToActionbar'
 SpellSpiritAnimalBlessing = require 'app/sdk/spells/spellSpiritAnimalBlessing'
 SpellCryogenesis = require 'app/sdk/spells/spellCryogenesis'
-SpellApplyModifiersToUnitsInHand = require 'app/sdk/spells/spellApplyModifiersToUnitsInHand'
-SpellWarbird = require 'app/sdk/spells/spellWarbird'
-SpellKineticSurge = require 'app/sdk/spells/spellKineticSurge'
 SpellTempTransform = require 'app/sdk/spells/spellTempTransform'
 SpellDamageAndApplyModifiers = require 'app/sdk/spells/spellDamageAndApplyModifiers'
 SpellCopyToActionBarAndTransform = require 'app/sdk/spells/spellCopyToActionBarAndTransform'
@@ -56,7 +44,6 @@ ModifierStunnedVanar = require 'app/sdk/modifiers/modifierStunnedVanar'
 ModifierStun = require 'app/sdk/modifiers/modifierStun'
 ModifierInfiltrate = require 'app/sdk/modifiers/modifierInfiltrate'
 ModifierCannotAttackGeneral = require 'app/sdk/modifiers/modifierCannotAttackGeneral'
-ModifierSummonWatchByRaceBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchByRaceBuffSelf'
 ModifierSummonWatchByRaceDamageEnemyMinion = require 'app/sdk/modifiers/modifierSummonWatchByRaceDamageEnemyMinion'
 ModifierEndTurnWatchDamageNearbyEnemy = require 'app/sdk/modifiers/modifierEndTurnWatchDamageNearbyEnemy'
 ModifierStunWhenDamaged = require 'app/sdk/modifiers/modifierStunWhenDamaged'
@@ -72,8 +59,6 @@ ModifierDynamicCountModifySelfByWallsOnBoard = require 'app/sdk/modifiers/modifi
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 ModifierMyAttackMinionWatchDamageGeneral = require 'app/sdk/modifiers/modifierMyAttackMinionWatchDamageGeneral'
 ModifierOnRemoveBuffGeneral = require 'app/sdk/modifiers/modifierOnRemoveBuffGeneral'
-
-PlayerModifierSummonWatchApplyModifiers = require 'app/sdk/playerModifiers/playerModifierSummonWatchApplyModifiers'
 
 WartechGeneralFaction6Achievement = require 'app/sdk/achievements/wartechAchievements/wartechGeneralFaction6Achievement'
 

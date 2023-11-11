@@ -1,20 +1,13 @@
 # do not add this file to a package
 # it is specifically parsed by the package generation script
 
-_ = require 'underscore'
-moment = require 'moment'
-
-Logger = require 'app/common/logger'
-
 CONFIG = require('app/common/config')
 config = require('config/config')
 RSX = require('app/data/resources')
 
-Card = require 'app/sdk/cards/card'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
 CardType = require 'app/sdk/cards/cardType'
 Factions = require 'app/sdk/cards/factionsLookup'
-FactionFactory = require 'app/sdk/cards/factionFactory'
 Races = require 'app/sdk/cards/racesLookup'
 Rarity = require 'app/sdk/cards/rarityLookup'
 
@@ -33,9 +26,6 @@ SpellMindSteal = require 'app/sdk/spells/spellMindSteal'
 SpellEggMorph = require 'app/sdk/spells/spellEggMorph'
 SpellDamageAndApplyModifiers = require 'app/sdk/spells/spellDamageAndApplyModifiers'
 SpellTempTransform = require 'app/sdk/spells/spellTempTransform'
-SpellSeekingEye = require 'app/sdk/spells/spellSeekingEye'
-SpellApplyModifiersToGeneral = require 'app/sdk/spells/spellApplyModifiersToGeneral'
-SpellSpawnEntityNearbyGeneral = require 'app/sdk/spells/spellSpawnEntityNearbyGeneral'
 SpellSilenceAroundGeneral = require 'app/sdk/spells/spellSilenceAroundGeneral'
 SpellApplyModifiersAndActivateAlliedGrow = require 'app/sdk/spells/spellApplyModifiersAndActivateAlliedGrow'
 
@@ -53,19 +43,12 @@ ModifierEndTurnWatchDamageAndBuffRandom = require 'app/sdk/modifiers/modifierEnd
 ModifierMyMinionOrGeneralDamagedWatchBuffSelf = require 'app/sdk/modifiers/modifierMyMinionOrGeneralDamagedWatchBuffSelf'
 ModifierReduceCostOfMinionsAndDamageThem = require 'app/sdk/modifiers/modifierReduceCostOfMinionsAndDamageThem'
 ModifierCannotStrikeback = require 'app/sdk/modifiers/modifierCannotStrikeback'
-ModifierOpeningGambitApplyModifiersRandomly = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiersRandomly'
-ModifierImmuneToSpellDamage = require 'app/sdk/modifiers/modifierImmuneToSpellDamage'
-ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchFromActionBarByOpeningGambitBuffSelf'
-ModifierOpeningGambitHealBothGenerals = require 'app/sdk/modifiers/modifierOpeningGambitHealBothGenerals'
-ModifierTranscendance = require 'app/sdk/modifiers/modifierTranscendance'
-ModifierEgg = require 'app/sdk/modifiers/modifierEgg'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierTakeDamageWatchDamageMyGeneral = require 'app/sdk/modifiers/modifierTakeDamageWatchDamageMyGeneral'
 ModifierSummonWatchNearbyApplyModifiersOnce = require 'app/sdk/modifiers/modifierSummonWatchNearbyApplyModifiersOnce'
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 
 PlayerModifierFlashReincarnation = require 'app/sdk/playerModifiers/playerModifierFlashReincarnation'
-PlayerModifierMyDeathwatchDrawCard = require 'app/sdk/playerModifiers/playerModifierMyDeathwatchDrawCard'
 
 WartechGeneralFaction5Achievement = require 'app/sdk/achievements/wartechAchievements/wartechGeneralFaction5Achievement'
 

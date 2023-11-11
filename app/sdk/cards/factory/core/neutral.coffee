@@ -1,20 +1,13 @@
 # do not add this file to a package
 # it is specifically parsed by the package generation script
 
-_ = require 'underscore'
-moment = require 'moment'
-
-Logger = require 'app/common/logger'
-
 CONFIG = require('app/common/config')
 RSX = require('app/data/resources')
 UtilsJavascript = require 'app/common/utils/utils_javascript'
 
-Card = require 'app/sdk/cards/card'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
 CardType = require 'app/sdk/cards/cardType'
 Factions = require 'app/sdk/cards/factionsLookup'
-FactionFactory = require 'app/sdk/cards/factionFactory'
 Races = require 'app/sdk/cards/racesLookup'
 Rarity = require 'app/sdk/cards/rarityLookup'
 
@@ -67,11 +60,6 @@ ModifierOpeningGambitLifeGive = require 'app/sdk/modifiers/modifierOpeningGambit
 ModifierOpeningGambitTeleportAllNearby = require 'app/sdk/modifiers/modifierOpeningGambitTeleportAllNearby'
 ModifierRook = require 'app/sdk/modifiers/modifierRook'
 ModifierDyingWishReSpawnEntityAnywhere = require 'app/sdk/modifiers/modifierDyingWishReSpawnEntityAnywhere'
-ModifierOpeningGambitApplyModifiersRandomly = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiersRandomly'
-ModifierImmuneToSpellDamage = require 'app/sdk/modifiers/modifierImmuneToSpellDamage'
-ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchFromActionBarByOpeningGambitBuffSelf'
-ModifierSurviveDamageWatchReturnToHand = require 'app/sdk/modifiers/modifierSurviveDamageWatchReturnToHand'
-ModifierDoubleDamageToGenerals = require 'app/sdk/modifiers/modifierDoubleDamageToGenerals'
 ModifierOpeningGambitHealMyGeneral = require 'app/sdk/modifiers/modifierOpeningGambitHealMyGeneral'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierCannotAttackMinions = require 'app/sdk/modifiers/modifierCannotAttackMinions'

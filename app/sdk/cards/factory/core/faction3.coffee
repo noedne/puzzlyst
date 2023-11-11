@@ -1,27 +1,18 @@
 # do not add this file to a package
 # it is specifically parsed by the package generation script
 
-_ = require 'underscore'
-moment = require 'moment'
-
-Logger = require 'app/common/logger'
-
 CONFIG = require('app/common/config')
 config = require('config/config')
 RSX = require('app/data/resources')
 
-Card = require 'app/sdk/cards/card'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
-CardType = require 'app/sdk/cards/cardType'
 Factions = require 'app/sdk/cards/factionsLookup'
-FactionFactory = require 'app/sdk/cards/factionFactory'
 Races = require 'app/sdk/cards/racesLookup'
 Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'
 Artifact = require 'app/sdk/artifacts/artifact'
 
-Spell = require 'app/sdk/spells/spell'
 SpellFilterType = require 'app/sdk/spells/spellFilterType'
 SpellApplyModifiers = require 'app/sdk/spells/spellApplyModifiers'
 SpellEnslave = require 'app/sdk/spells/spellEnslave'
@@ -32,14 +23,12 @@ SpellAurorasTears = require 'app/sdk/spells/spellAurorasTears'
 SpellTimeMaelstrom = require 'app/sdk/spells/spellTimeMaelstrom'
 SpellBoneSwarm = require 'app/sdk/spells/spellBoneSwarm'
 SpellFountainOfYouth = require 'app/sdk/spells/spellFountainOfYouth'
-SpellWindShroud = require 'app/sdk/spells/spellWindShroud'
 SpellApplyModifiersToGeneral = require 'app/sdk/spells/spellApplyModifiersToGeneral'
 SpellEntropicDecay = require 'app/sdk/spells/spellEntropicDecay'
 SpellHealYourGeneral = require 'app/sdk/spells/spellHealYourGeneral'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierSilence = require 'app/sdk/modifiers/modifierSilence'
-ModifierImmuneToDamageByGeneral = require 'app/sdk/modifiers/modifierImmuneToDamageByGeneral'
 ModifierPortal = require 'app/sdk/modifiers/modifierPortal'
 ModifierFirstBlood = require 'app/sdk/modifiers/modifierFirstBlood'
 ModifierProvoke = require 'app/sdk/modifiers/modifierProvoke'
@@ -53,7 +42,6 @@ ModifierDyingWishDamageEnemyGeneralHealGeneral = require 'app/sdk/modifiers/modi
 ModifierDealDamageWatchModifyTarget = require 'app/sdk/modifiers/modifierDealDamageWatchModifyTarget'
 ModifierStartTurnWatchSummonDervish = require 'app/sdk/modifiers/modifierStartTurnWatchSummonDervish'
 ModifierEphemeral = require 'app/sdk/modifiers/modifierEphemeral'
-ModifierDoubleDamageToMinions = require 'app/sdk/modifiers/modifierDoubleDamageToMinions'
 ModifierSummonWatchBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchBuffSelf'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierGeneralDealsDoubleDamage = require 'app/sdk/modifiers/modifierGeneralDealsDoubleDamage'

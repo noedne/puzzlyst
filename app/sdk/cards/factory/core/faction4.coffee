@@ -1,27 +1,17 @@
 # do not add this file to a package
 # it is specifically parsed by the package generation script
 
-_ = require 'underscore'
-moment = require 'moment'
-
-Logger = require 'app/common/logger'
-
 CONFIG = require('app/common/config')
 config = require('config/config')
 RSX = require('app/data/resources')
 
-Card = require 'app/sdk/cards/card'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
-CardType = require 'app/sdk/cards/cardType'
 Factions = require 'app/sdk/cards/factionsLookup'
-FactionFactory = require 'app/sdk/cards/factionFactory'
-Races = require 'app/sdk/cards/racesLookup'
 Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'
 Artifact = require 'app/sdk/artifacts/artifact'
 
-Spell = require 'app/sdk/spells/spell'
 SpellFilterType = require 'app/sdk/spells/spellFilterType'
 SpellDamage = require 'app/sdk/spells/spellDamage'
 SpellApplyModifiers = require 'app/sdk/spells/spellApplyModifiers'
@@ -34,9 +24,6 @@ SpellSpawnEntity = require 'app/sdk/spells/spellSpawnEntity'
 SpellBreathOfTheUnborn = require 'app/sdk/spells/spellBreathOfTheUnborn'
 SpellRiteOfTheUndervault = require 'app/sdk/spells/spellRiteOfTheUndervault'
 SpellDarkSeed = require 'app/sdk/spells/spellDarkSeed'
-SpellShadowspawn = require 'app/sdk/spells/spellShadowspawn'
-SpellAbyssalScar = require 'app/sdk/spells/spellAbyssalScar'
-SpellSacrificeBBS = require 'app/sdk/spells/spellSacrificeBBS'
 SpellLifeSurge = require 'app/sdk/spells/spellLifeSurge'
 SpellVoidSteal = require 'app/sdk/spells/spellVoidSteal'
 SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
@@ -58,7 +45,6 @@ ModifierDealDamageWatchSpawnEntity = require 'app/sdk/modifiers/modifierDealDama
 ModifierWraithlingFury = require 'app/sdk/modifiers/modifierWraithlingFury'
 ModifierDyingWishDamageNearbyAllies = require 'app/sdk/modifiers/modifierDyingWishDamageNearbyAllies'
 ModifierKillWatchHealSelf = require 'app/sdk/modifiers/modifierKillWatchHealSelf'
-ModifierShadowScar = require 'app/sdk/modifiers/modifierShadowScar'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierDyingWishSpawnTile = require 'app/sdk/modifiers/modifierDyingWishSpawnTile'
 ModifierDealDamageWatchSpawnEntityOnTarget = require 'app/sdk/modifiers/modifierDealDamageWatchSpawnEntityOnTarget'

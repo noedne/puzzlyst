@@ -1,33 +1,24 @@
 # do not add this file to a package
 # it is specifically parsed by the package generation script
 
-_ = require 'underscore'
-moment = require 'moment'
-
-Logger = require 'app/common/logger'
-
 CONFIG = require('app/common/config')
 config = require('config/config')
 RSX = require('app/data/resources')
 
-Card = require 'app/sdk/cards/card'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
 CardType = require 'app/sdk/cards/cardType'
 Factions = require 'app/sdk/cards/factionsLookup'
-FactionFactory = require 'app/sdk/cards/factionFactory'
 Races = require 'app/sdk/cards/racesLookup'
 Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'
 Artifact = require 'app/sdk/artifacts/artifact'
 
-Spell = require 'app/sdk/spells/spell'
 SpellFilterType = require 'app/sdk/spells/spellFilterType'
 SpellDamage = require 'app/sdk/spells/spellDamage'
 SpellApplyModifiers = require 'app/sdk/spells/spellApplyModifiers'
 SpellTwinStrike = require 'app/sdk/spells/spellTwinStrike'
 SpellRemoveAndReplaceEntity = require 'app/sdk/spells/spellRemoveAndReplaceEntity'
-SpellMartyrdom = require 'app/sdk/spells/spellMartyrdom'
 SpellRemoveArtifacts = require 'app/sdk/spells/spellRemoveArtifacts'
 SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
 SpellHeavensEclipse = require 'app/sdk/spells/spellHeavensEclipse'
@@ -35,10 +26,6 @@ SpellInnerFocus = require 'app/sdk/spells/spellInnerFocus'
 SpellMistWalking = require 'app/sdk/spells/spellMistWalking'
 SpellKillingEdge = require 'app/sdk/spells/spellKillingEdge'
 SpellJuxtaposition = require 'app/sdk/spells/spellJuxtaposition'
-SpellSpawnEntityNearbyGeneral = require 'app/sdk/spells/spellSpawnEntityNearbyGeneral'
-SpellSwordsBBS = require 'app/sdk/spells/spellSwordsBBS'
-SpellApplyModifiersToGeneral = require 'app/sdk/spells/spellApplyModifiersToGeneral'
-SpellDrawCardEndOfTurn = require 'app/sdk/spells/spellDrawCardEndOfTurn'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierRanged = require 'app/sdk/modifiers/modifierRanged'

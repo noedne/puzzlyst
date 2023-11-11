@@ -1,28 +1,17 @@
 # do not add this file to a package
 # it is specifically parsed by the package generation script
 
-_ = require 'underscore'
-moment = require 'moment'
-
-Logger = require 'app/common/logger'
-
 CONFIG = require('app/common/config')
 config = require('config/config')
 RSX = require('app/data/resources')
 
-Card = require 'app/sdk/cards/card'
 Cards = require 'app/sdk/cards/cardsLookupComplete'
-CardType = require 'app/sdk/cards/cardType'
 Factions = require 'app/sdk/cards/factionsLookup'
-FactionFactory = require 'app/sdk/cards/factionFactory'
-Races = require 'app/sdk/cards/racesLookup'
 Rarity = require 'app/sdk/cards/rarityLookup'
-MovementRange = require 'app/sdk/entities/movementRange'
 
 Unit = require 'app/sdk/entities/unit'
 Artifact = require 'app/sdk/artifacts/artifact'
 
-Spell = require 'app/sdk/spells/spell'
 SpellFilterType = require 'app/sdk/spells/spellFilterType'
 SpellDamage = require 'app/sdk/spells/spellDamage'
 SpellBuffAttributeByOtherAttribute = require 'app/sdk/spells/spellBuffAttributeByOtherAttribute'
@@ -31,11 +20,9 @@ SpellHeal = require 'app/sdk/spells/spellHeal'
 SpellSilence = require 'app/sdk/spells/spellSilence'
 SpellHolyImmolation = require 'app/sdk/spells/spellHolyImmolation'
 SpellMartyrdom = require 'app/sdk/spells/spellMartyrdom'
-SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
 SpellLifeSurge = require 'app/sdk/spells/spellLifeSurge'
 SpellDecimate = require 'app/sdk/spells/spellDecimate'
 SpellKneel = require 'app/sdk/spells/spellKneel'
-SpellSpawnEntityInFrontOfGeneral = require 'app/sdk/spells/spellSpawnEntityInFrontOfGeneral'
 SpellDejaVu = require 'app/sdk/spells/spellDejaVu'
 
 Modifier = require 'app/sdk/modifiers/modifier'
@@ -46,7 +33,6 @@ ModifierBandingAttack = require 'app/sdk/modifiers/modifierBandingAttack'
 ModifierBandingHeal = require 'app/sdk/modifiers/modifierBandingHeal'
 ModifierAirdrop = require 'app/sdk/modifiers/modifierAirdrop'
 ModifierOpeningGambit = require 'app/sdk/modifiers/modifierOpeningGambit'
-ModifierDispelOnAttack = require 'app/sdk/modifiers/modifierDispelOnAttack'
 ModifierTranscendance = require 'app/sdk/modifiers/modifierTranscendance'
 ModifierStunned = require 'app/sdk/modifiers/modifierStunned'
 ModifierStun = require 'app/sdk/modifiers/modifierStun'
@@ -55,8 +41,6 @@ ModifierAbsorbDamageOnce = require 'app/sdk/modifiers/modifierAbsorbDamageOnce'
 ModifierBandingDealDamageWatchDrawCard = require 'app/sdk/modifiers/modifierBandingDealDamageWatchDrawCard'
 ModifierHealWatchBuffSelf = require 'app/sdk/modifiers/modifierHealWatchBuffSelf'
 ModifierHealWatchDamageNearbyEnemies = require 'app/sdk/modifiers/modifierHealWatchDamageNearbyEnemies'
-ModifierBandingProvoke = require 'app/sdk/modifiers/modifierBandingProvoke'
-ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 ModifierStartOpponentsTurnWatchApplyTempModifier = require 'app/sdk/modifiers/modifierStartOpponentsTurnWatchApplyTempModifier'
 
