@@ -1865,11 +1865,35 @@ class CardFactory_CoreSet_Neutral
       card.setInherentModifiersContextObjects([ModifierOpeningGambitDamageNearby.createContextObject(2)])
 
     if (identifier == Cards.Neutral.ArchonSpellbinder)
+      if version is 0
+        description = i18next.t("cards.neutral_archon_spellbinder_desc_0")
+        atk = 7
+        maxHP = 9
+        manaCost = 6
+        createContextObject = ModifierCardControlledPlayerModifiers
+          .createContextObjectOnBoardToTargetEnemyPlayer
+          .bind(ModifierCardControlledPlayerModifiers)
+      else if version is 1
+        description = i18next.t("cards.neutral_archon_spellbinder_desc_1")
+        atk = 5
+        maxHP = 6
+        manaCost = 5
+        createContextObject = ModifierCardControlledPlayerModifiers
+          .createContextObjectOnBoardToTargetBothPlayers
+          .bind(ModifierCardControlledPlayerModifiers)
+      else
+        description = i18next.t("cards.neutral_archon_spellbinder_desc_0")
+        atk = 8
+        maxHP = 8
+        manaCost = 6
+        createContextObject = ModifierCardControlledPlayerModifiers
+          .createContextObjectOnBoardToTargetEnemyPlayer
+          .bind(ModifierCardControlledPlayerModifiers)
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.raceId = Races.Arcanyst
       card.name = i18next.t("cards.neutral_archon_spellbinder_name")
-      card.setDescription(i18next.t("cards.neutral_archon_spellbinder_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.ArchonSpellbinder"])
       card.setBoundingBoxWidth(55)
       card.setBoundingBoxHeight(85)
@@ -1891,16 +1915,14 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralArchonSpellbinderHit.name
         death : RSX.neutralArchonSpellbinderDeath.name
       )
-      card.atk = 8
-      card.maxHP = 8
-      card.manaCost = 6
+      card.atk = atk
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.Epic
       contextObject = PlayerModifierManaModifier.createCostChangeContextObject(1, CardType.Spell)
       contextObject.activeInHand = contextObject.activeInDeck = contextObject.activeInSignatureCards = false
       contextObject.activeOnBoard = true
-      card.setInherentModifiersContextObjects([
-        ModifierCardControlledPlayerModifiers.createContextObjectOnBoardToTargetEnemyPlayer([contextObject], "Your opponent's spells cost 1 more to play.")
-      ])
+      card.setInherentModifiersContextObjects([createContextObject([contextObject])])
 
     if (identifier == Cards.Neutral.SilhoutteTracer)
       card = new Unit(gameSession)
@@ -3187,10 +3209,16 @@ class CardFactory_CoreSet_Neutral
       card.rarityId = Rarity.Legendary
 
     if (identifier == Cards.Neutral.LadyLocke)
+      if version is 0
+        description = i18next.t("cards.neutral_lady_locke_desc_0")
+        includeTokens = true
+      else
+        description = i18next.t("cards.neutral_lady_locke_desc_1")
+        includeTokens = false
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_lady_locke_name")
-      card.setDescription(i18next.t("cards.neutral_lady_locke_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.LadyLocke"])
       card.setBaseSoundResource(
         apply : RSX.sfx_summonlegendary.audio
@@ -3217,7 +3245,7 @@ class CardFactory_CoreSet_Neutral
       statBuffContextObject.appliedName = i18next.t("modifiers.neutral_lady_locke_modifier")
       customContextObject = PlayerModifierSummonWatchApplyModifiers.createContextObject([ModifierProvoke.createContextObject(), statBuffContextObject], "gain +1/+1 and Provoke")
       customContextObject.durationEndTurn = 1
-      customContextObject.includeTokens = false
+      customContextObject.includeTokens = includeTokens
       card.setInherentModifiersContextObjects([
         ModifierOpeningGambitApplyPlayerModifiers.createContextObjectToTargetOwnPlayer([customContextObject], false, "Other non-token minions you summon this turn gain +1/+1 and Provoke"),
         ModifierProvoke.createContextObject()

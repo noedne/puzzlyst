@@ -204,6 +204,10 @@ class CardFactory_CoreSet_Faction6
       card.maxHP = 25
 
     if (identifier == Cards.Faction6.FenrirWarmaster)
+      if version is 0
+        maxHP = 3
+      else
+        maxHP = 4
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_fenrir_warmaster_name")
@@ -228,12 +232,16 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6FenrirWarmasterDeath.name
       )
       card.atk = 3
-      card.maxHP = 4
+      card.maxHP = maxHP
       card.manaCost = 3
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ ModifierDyingWishSpawnEntity.createContextObject({id: Cards.Faction6.GhostWolf}, "3/3 Ghost Wolf") ])
 
     if (identifier == Cards.Faction6.GhostWolf)
+      if version is 0
+        maxHP = 3
+      else
+        maxHP = 2
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.setIsHiddenInCollection(true)
@@ -260,7 +268,7 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6GhostwolfDeath.name
       )
       card.atk = 3
-      card.maxHP = 2
+      card.maxHP = maxHP
       card.manaCost = 2
       card.rarityId = Rarity.TokenUnit
       card.addKeywordClassToInclude(ModifierToken)

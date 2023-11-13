@@ -17,6 +17,7 @@ SpellFilterType = require 'app/sdk/spells/spellFilterType'
 SpellDamage = require 'app/sdk/spells/spellDamage'
 SpellApplyModifiers = require 'app/sdk/spells/spellApplyModifiers'
 SpellTwinStrike = require 'app/sdk/spells/spellTwinStrike'
+SpellTwinStrike2 = require 'app/sdk/spells/spellTwinStrike2'
 SpellRemoveAndReplaceEntity = require 'app/sdk/spells/spellRemoveAndReplaceEntity'
 SpellRemoveArtifacts = require 'app/sdk/spells/spellRemoveArtifacts'
 SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
@@ -405,6 +406,12 @@ class CardFactory_CoreSet_Faction2
       
 
     if (identifier == Cards.Faction2.TuskBoar)
+      if version is 0
+        description = i18next.t("cards.faction_2_unit_tuskboar_desc_0")
+        generalDamage = 0
+      else
+        description = i18next.t("cards.faction_2_unit_tuskboar_desc_1")
+        generalDamage = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Faction2
       card.name = i18next.t("cards.faction_2_unit_tuskboar_name")
@@ -435,10 +442,12 @@ class CardFactory_CoreSet_Faction2
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([
         ModifierFirstBlood.createContextObject(),
-        ModifierStartTurnWatchDamageGenerals.createContextObject(1),
+        (if generalDamage is 0 then [] else [
+          ModifierStartTurnWatchDamageGenerals.createContextObject(generalDamage),
+        ])...,
         ModifierStartTurnWatchBounceToActionBar.createContextObject(),
       ])
-      card.setDescription(i18next.t("cards.faction_2_unit_tuskboar_desc"))
+      card.setDescription(description)
 
     if (identifier == Cards.Faction2.LanternFox)
       card = new Unit(gameSession)
@@ -798,16 +807,29 @@ class CardFactory_CoreSet_Faction2
       )
 
     if (identifier == Cards.Spell.TwinStrike)
-      card = new SpellTwinStrike(gameSession)
+      if version is 0
+        spell = SpellTwinStrike
+        description = i18next.t("cards.faction_2_spell_twin_strike_description_0")
+        spellFilterType = SpellFilterType.EnemyIndirect
+        radius = CONFIG.WHOLE_BOARD_RADIUS
+        followups = []
+      else
+        spell = SpellTwinStrike2
+        description = i18next.t("cards.faction_2_spell_twin_strike_description_1")
+        spellFilterType = SpellFilterType.EnemyDirect
+        radius = 0
+        followups = [{ id: Cards.Spell.FollowupTwinStrike }]
+      card = new spell(gameSession)
       card.factionId = Factions.Faction2
       card.id = Cards.Spell.TwinStrike
       card.name = i18next.t("cards.faction_2_spell_twin_strike_name")
-      card.setDescription(i18next.t("cards.faction_2_spell_twin_strike_description"))
+      card.setDescription(description)
       card.manaCost = 3
       card.rarityId = Rarity.Common
       card.damageAmount = 2
-      card.spellFilterType = SpellFilterType.EnemyDirect
-      card.setFollowups([{ id: Cards.Spell.FollowupTwinStrike }])
+      card.spellFilterType = spellFilterType
+      card.radius = radius
+      card.setFollowups(followups)
       card.setFXResource(["FX.Cards.Spell.TwinStrike"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_twinstrike.audio
@@ -818,12 +840,12 @@ class CardFactory_CoreSet_Faction2
       )
 
     if (identifier == Cards.Spell.FollowupTwinStrike)
-      card = new SpellTwinStrike(gameSession)
+      card = new SpellTwinStrike2(gameSession)
       card.factionId = Factions.Faction2
       card.id = Cards.Spell.TwinStrike
       card.setIsHiddenInCollection(true)
       card.name = i18next.t("cards.faction_2_spell_twin_strike_name")
-      card.setDescription(i18next.t("cards.faction_2_spell_twin_strike_description"))
+      card.setDescription(i18next.t("cards.faction_2_spell_twin_strike_description_1"))
       card.manaCost = 0
       card.damageAmount = 2
       card.spellFilterType = SpellFilterType.EnemyDirect
@@ -1096,17 +1118,33 @@ class CardFactory_CoreSet_Faction2
       )
 
     if (identifier == Cards.Artifact.MaskOfShadows)
+      if version is 0
+        manaCost = 2
+        description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_0")
+        atk = 0
+        backstab = 5
+      else
+        manaCost = 1
+        backstab = 3
+        if version is 1
+          description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_1")
+          atk = 0
+        else
+          description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_2")
+          atk = 1
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction2
       card.id = Cards.Artifact.MaskOfShadows
       card.name = i18next.t("cards.faction_2_artifact_mask_of_shadows_name")
-      card.setDescription(i18next.t("cards.faction_2_artifact_mask_of_shadows_description"))
+      card.setDescription(description)
       card.addKeywordClassToInclude(ModifierBackstab)
-      card.manaCost = 1
+      card.manaCost = manaCost
       card.rarityId = Rarity.Epic
       card.setTargetModifiersContextObjects([
-        Modifier.createContextObjectWithAttributeBuffs(1,undefined),
-        ModifierBackstab.createContextObject(3,undefined,{
+        (if atk is 0 then [] else [
+          Modifier.createContextObjectWithAttributeBuffs(atk,undefined),
+        ])...,
+        ModifierBackstab.createContextObject(backstab,undefined,{
           name: i18next.t("cards.faction_2_artifact_mask_of_shadows_name")
         })
       ])
@@ -1143,12 +1181,16 @@ class CardFactory_CoreSet_Faction2
       )
 
     if (identifier == Cards.Artifact.MaskOfBloodLeech)
+      if version is 0
+        manaCost = 1
+      else
+        manaCost = 2
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction2
       card.id = Cards.Artifact.MaskOfBloodLeech
       card.name = i18next.t("cards.faction_2_artifact_bloodrage_mask_name")
       card.setDescription(i18next.t("cards.faction_2_artifact_bloodrage_mask_description"))
-      card.manaCost = 2
+      card.manaCost = manaCost
       card.rarityId = Rarity.Common
       card.setTargetModifiersContextObjects([
         ModifierSpellWatchDamageGeneral.createContextObject(1,{

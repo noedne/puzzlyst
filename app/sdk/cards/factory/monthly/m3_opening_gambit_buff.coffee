@@ -35,6 +35,10 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
     card = null
 
     if (identifier == Cards.Neutral.SunElemental)
+      if version is 0
+        atk = 1
+      else
+        atk = 2
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_sun_elemental_name")
@@ -60,7 +64,7 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
         damage : RSX.neutralSunElementalHit.name
         death : RSX.neutralSunElementalDeath.name
       )
-      card.atk = 2
+      card.atk = atk
       card.maxHP = 7
       card.manaCost = 4
       card.rarityId = Rarity.Rare

@@ -693,10 +693,21 @@ class CardFactory_CoreSet_Faction5
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Faction5.Vindicator)
+      if version is 0
+        description = i18next.t("cards.faction_5_unit_vindicator_desc_0")
+        atk = 1
+        canApplyOncePerTurn = true
+      else
+        description = i18next.t("cards.faction_5_unit_vindicator_desc_1")
+        canApplyOncePerTurn = false
+        if version is 1
+          atk = 2
+        else
+          atk = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_vindicator_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_vindicator_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction5.Vindicator"])
       card.setBoundingBoxWidth(80)
       card.setBoundingBoxHeight(75)
@@ -718,7 +729,7 @@ class CardFactory_CoreSet_Faction5
         damage : RSX.f5VindicatorDamage.name
         death : RSX.f5VindicatorDeath.name
       )
-      card.atk = 1
+      card.atk = atk
       card.maxHP = 3
       card.manaCost = 3
       card.rarityId = Rarity.Legendary
@@ -726,7 +737,8 @@ class CardFactory_CoreSet_Faction5
         ModifierFirstBlood.createContextObject(),
         ModifierSummonWatchNearbyApplyModifiersOnce.createContextObject(
           [ModifierFirstBlood.createContextObject()],
-          'Give the first allied minion summoned nearby this Rush.',
+          'Give the first allied minion summoned nearby this each turn Rush.',
+          { canApplyOncePerTurn },
         ),
       ])
 
