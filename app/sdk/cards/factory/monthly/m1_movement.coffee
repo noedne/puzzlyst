@@ -30,9 +30,10 @@ class CardFactory_Monthly_M1_Movement
    * Returns a card that matches the identifier.
    * @param {Number|String} identifier
    * @param {GameSession} gameSession
+   * @param {Number} version
    * @returns {Card}
    ###
-  @cardForIdentifier: (identifier,gameSession) ->
+  @cardForIdentifier: (identifier,gameSession,version) ->
     card = null
 
     if (identifier == Cards.Neutral.BlackLocust)

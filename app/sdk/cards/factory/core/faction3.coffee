@@ -59,9 +59,10 @@ class CardFactory_CoreSet_Faction3
    * Returns a card that matches the identifier.
    * @param {Number|String} identifier
    * @param {GameSession} gameSession
+   * @param {Number} version
    * @returns {Card}
    ###
-  @cardForIdentifier: (identifier,gameSession) ->
+  @cardForIdentifier: (identifier,gameSession,version) ->
     card = null
 
     if (identifier == Cards.Faction3.General)

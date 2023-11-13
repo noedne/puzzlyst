@@ -374,7 +374,11 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   setupPuzzleForString,
 } = require('./gameSessionEditor')
 
+{ getCardVersion } = require('./gameVersion')
+
 class _GameSession extends SDKObject
+  getCardVersion: getCardVersion
+
   copyCard: copyCard
   setCardDamage: setCardDamage
   setArtifactDurability: setArtifactDurability

@@ -46,23 +46,25 @@ class CardFactory
     # get base card identifier
     identifier = Cards.getBaseCardId(cardId)
 
+    version = gameSession.getCardVersion(identifier)
+
     # core set
 
-    if !card? then card = CardFactory_CoreSet_Faction1.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreSet_Faction2.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreSet_Faction3.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreSet_Faction4.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreSet_Faction5.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreSet_Faction6.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_CoreSet_Neutral.cardForIdentifier(identifier, gameSession)
+    if !card? then card = CardFactory_CoreSet_Faction1.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_CoreSet_Faction2.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_CoreSet_Faction3.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_CoreSet_Faction4.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_CoreSet_Faction5.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_CoreSet_Faction6.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_CoreSet_Neutral.cardForIdentifier(identifier, gameSession, version)
 
     # monthly
 
-    if !card? then card = CardFactory_Monthly_M1_Movement.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_Monthly_M2_Reactive.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_Monthly_M3_OpeningGambitBuff.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_Monthly_M4_Replace.cardForIdentifier(identifier, gameSession)
-    if !card? then card = CardFactory_Monthly_M5_Provoke.cardForIdentifier(identifier, gameSession)
+    if !card? then card = CardFactory_Monthly_M1_Movement.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_Monthly_M2_Reactive.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_Monthly_M3_OpeningGambitBuff.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_Monthly_M4_Replace.cardForIdentifier(identifier, gameSession, version)
+    if !card? then card = CardFactory_Monthly_M5_Provoke.cardForIdentifier(identifier, gameSession, version)
 
     # misc
 
