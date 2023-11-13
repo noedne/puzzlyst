@@ -677,12 +677,7 @@ var CardNode = SdkNode.extend({
         const race = SDK.RaceFactory.raceForIdentifier(raceId);
         let raceName = race && race.name;
         const cardType = sdkCard.getType();
-        let cardTypeColor;
-        if (SDK.CardType.getIsArtifactCardType(cardType)) {
-          cardTypeColor = { r: 237, g: 209, b: 68 };
-        } else {
-          cardTypeColor = { r: 144, g: 202, b: 207 };
-        }
+        const cardTypeColor = { r: 144, g: 202, b: 207 };
         if (!raceName) {
           if (SDK.CardType.getIsArtifactCardType(cardType)) {
             raceName = i18next.t('common.artifact_label');

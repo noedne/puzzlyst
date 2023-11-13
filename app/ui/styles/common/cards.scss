@@ -617,9 +617,6 @@
 		.bg {
 			@include backgroundImage("resources/card_backgrounds/neutral_artifact.png");
 		}
-		.type {
-			color: rgb(237,209,68);
-		}
 		&.prismatic {
 			.bg {
 				@include backgroundImage("resources/card_backgrounds/neutral_prismatic_artifact.png");
