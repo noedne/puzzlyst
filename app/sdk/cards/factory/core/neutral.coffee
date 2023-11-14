@@ -1682,6 +1682,12 @@ class CardFactory_CoreSet_Neutral
       card.setInherentModifiersContextObjects([ModifierFirstBlood.createContextObject()])
 
     if (identifier == Cards.Neutral.PiercingMantis)
+      if version is 0
+        atk = 2
+        maxHP = 2
+      else
+        atk = 1
+        maxHP = 3
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_piercing_mantis_name")
@@ -1705,8 +1711,8 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralPiercingMantisHit.name
         death : RSX.neutralPiercingMantisDeath.name
       )
-      card.atk = 1
-      card.maxHP = 3
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 2
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierFrenzy.createContextObject()])

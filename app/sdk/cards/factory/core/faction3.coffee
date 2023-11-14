@@ -292,6 +292,10 @@ class CardFactory_CoreSet_Faction3
       card.setInherentModifiersContextObjects([ModifierBlastAttack.createContextObject()])
 
     if (identifier == Cards.Faction3.SandHowler)
+      if version is 0
+        atk = 3
+      else
+        atk = 4
       card = new Unit(gameSession)
       card.factionId = Factions.Faction3
       card.name = i18next.t("cards.faction_3_unit_sand_howler_name")
@@ -318,7 +322,7 @@ class CardFactory_CoreSet_Faction3
         damage : RSX.f3SandhowlerDamage.name
         death : RSX.f3SandhowlerDeath.name
       )
-      card.atk = 4
+      card.atk = atk
       card.maxHP = 4
       card.manaCost = 4
       card.rarityId = Rarity.Epic
@@ -818,22 +822,30 @@ class CardFactory_CoreSet_Faction3
         card.addKeywordClassToInclude(ModifierProvoke)
       else
         if version is 1
+          description = i18next.t("cards.faction_3_spell_cosmic_flesh_description_1")
           manaCost = 4
-        else
+          buffAmount = 3
+        else if version is 2
+          description = i18next.t("cards.faction_3_spell_cosmic_flesh_description_2")
           manaCost = 3
+          buffAmount = 2
+        else
+          description = i18next.t("cards.faction_3_spell_cosmic_flesh_description_1")
+          manaCost = 3
+          buffAmount = 3
         card.name = i18next.t("cards.faction_3_spell_cosmic_flesh_name_1")
-        card.setDescription(i18next.t("cards.faction_3_spell_cosmic_flesh_description_1"))
+        card.setDescription(description)
         card.manaCost = manaCost
         card.rarityId = Rarity.Epic
         card.spellFilterType = SpellFilterType.AllyDirect
         card.setTargetModifiersContextObjects([
-          Modifier.createContextObjectWithAttributeBuffs(3, 0)
+          Modifier.createContextObjectWithAttributeBuffs(buffAmount, 0)
         ])
         card.setFollowups([{
           id: Cards.Spell.ApplyModifiers,
           spellFilterType: SpellFilterType.AllyDirect,
           targetModifiersContextObjects: [
-            Modifier.createContextObjectWithAttributeBuffs(0, 3)
+            Modifier.createContextObjectWithAttributeBuffs(0, buffAmount)
           ],
           _private: {
             followups: [{

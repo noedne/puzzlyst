@@ -6,22 +6,32 @@ class SpellDamageAndApplyModifiers extends SpellApplyModifiers
 
   applyToAllies: false
   applyToEnemy: false
+  applyToGeneral: true
 
   onApplyEffectToBoardTile: (board,x,y,sourceAction) ->
     applyEffectPosition = {x: x, y: y}
     unit = board.getUnitAtPosition(applyEffectPosition)
-    if unit? and (!unit.getIsGeneral() or (unit.getIsGeneral() and @canTargetGeneral))
-      # deal damage
-      damageAction = new DamageAction(@getGameSession())
-      damageAction.setOwnerId(@getOwnerId())
-      damageAction.setTarget(unit)
-      damageAction.setDamageAmount(@damageAmount)
-      @getGameSession().executeAction(damageAction)
+    unless unit?
+      return
 
-      # apply modifiers
-      if unit.getOwnerId() is @getOwnerId() and @applyToAllies
-        super(board,x,y,sourceAction)
-      if unit.getOwnerId() isnt @getOwnerId() and @applyToEnemy
-        super(board,x,y,sourceAction)
+    isGeneral = unit.getIsGeneral()
+    if isGeneral and not @canTargetGeneral
+      return
+
+    # deal damage
+    damageAction = new DamageAction(@getGameSession())
+    damageAction.setOwnerId(@getOwnerId())
+    damageAction.setTarget(unit)
+    damageAction.setDamageAmount(@damageAmount)
+    @getGameSession().executeAction(damageAction)
+
+    if isGeneral and not @applyToGeneral
+      return
+
+    # apply modifiers
+    if unit.getOwnerId() is @getOwnerId() and @applyToAllies
+      super(board,x,y,sourceAction)
+    if unit.getOwnerId() isnt @getOwnerId() and @applyToEnemy
+      super(board,x,y,sourceAction)
 
 module.exports = SpellDamageAndApplyModifiers

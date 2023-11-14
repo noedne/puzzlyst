@@ -947,15 +947,25 @@ class CardFactory_CoreSet_Faction1
       )
 
     if (identifier == Cards.Spell.DivineBond)
+      isSetBuff = false
+      if version is 0
+        description = i18next.t("cards.faction_1_spell_divine_bond_description_0")
+        appliedDescription = i18next.t("modifiers.faction_1_spell_divine_bond_2a")
+        manaCost = 3
+      else
+        description = i18next.t("cards.faction_1_spell_divine_bond_description_1")
+        appliedDescription = i18next.t("modifiers.faction_1_spell_divine_bond_2b")
+        manaCost = 2
+        isSetBuff = true
       card = new SpellBuffAttributeByOtherAttribute(gameSession)
       card.factionId = Factions.Faction1
       card.id = Cards.Spell.DivineBond
       card.name = i18next.t("cards.faction_1_spell_divine_bond_name")
-      card.setDescription(i18next.t("cards.faction_1_spell_divine_bond_description"))
+      card.setDescription(description)
       card.appliedName = i18next.t("modifiers.faction_1_spell_divine_bond_1")
-      card.appliedDescription = i18next.t("modifiers.faction_1_spell_divine_bond_2")
-      card.manaCost = 2
-      card.isSetBuff = true
+      card.appliedDescription = appliedDescription
+      card.manaCost = manaCost
+      card.isSetBuff = isSetBuff
       card.rarityId = Rarity.Rare
       card.attributeTarget = "atk"
       card.attributeSource = "hp"

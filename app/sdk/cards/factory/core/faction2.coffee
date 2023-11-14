@@ -377,6 +377,10 @@ class CardFactory_CoreSet_Faction2
       card.addKeywordClassToInclude(ModifierBackstab)
 
     if (identifier == Cards.Faction2.OnyxBear)
+      if version is 0
+        maxHP = 2
+      else
+        maxHP = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Faction2
       card.setIsHiddenInCollection(true)
@@ -403,7 +407,7 @@ class CardFactory_CoreSet_Faction2
         death : RSX.f2PanddoDeath.name
       )
       card.atk = 0
-      card.maxHP = 1
+      card.maxHP = maxHP
       card.manaCost = 0
       card.rarityId = Rarity.TokenUnit
       card.setInherentModifiersContextObjects([
@@ -671,6 +675,12 @@ class CardFactory_CoreSet_Faction2
       card.setDescription(i18next.t("cards.faction_2_unit_storm_kage_desc"))
 
     if (identifier == Cards.Faction2.HamonBlademaster)
+      if version is 0
+        description = i18next.t("cards.faction_2_unit_hamon_bladeseeker_desc_0")
+        generalDamage = 2
+      else
+        description = i18next.t("cards.faction_2_unit_hamon_bladeseeker_desc_1")
+        generalDamage = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Faction2
       card.name = i18next.t("cards.faction_2_unit_hamon_bladeseeker_name")
@@ -696,9 +706,11 @@ class CardFactory_CoreSet_Faction2
       card.maxHP = 8
       card.atk = 8
       card.manaCost = 5
-      card.setInherentModifiersContextObjects([ModifierStartTurnWatchDamageGenerals.createContextObject(1)])
+      card.setInherentModifiersContextObjects([
+        ModifierStartTurnWatchDamageGenerals.createContextObject(generalDamage)
+      ])
       card.rarityId = Rarity.Epic
-      card.setDescription(i18next.t("cards.faction_2_unit_hamon_bladeseeker_desc"))
+      card.setDescription(description)
 
     if (identifier == Cards.Faction2.KeshraiFanblade)
       card = new Unit(gameSession)

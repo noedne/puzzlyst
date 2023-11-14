@@ -15,12 +15,12 @@ class ModifierEndTurnWatchSpawnEgg extends ModifierEndTurnWatchSpawnEntity
 
   fxResource: ["FX.Modifiers.ModifierStartTurnWatch", "FX.Modifiers.ModifierGenericSpawn"]
 
-  @createContextObject: (eggDescription, options) ->
+  @createContextObject: (spawnPattern, eggDescription, options) ->
     contextObject = super(
       {id: Cards.Faction5.Egg},
       spawnDescription = "",
       spawnCount=1,
-      spawnPattern=CONFIG.PATTERN_DIRECTLY_BEHIND,
+      spawnPattern,
       spawnSilently=true,
       options,
     )

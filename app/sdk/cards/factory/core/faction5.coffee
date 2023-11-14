@@ -625,10 +625,16 @@ class CardFactory_CoreSet_Faction5
       card.setInherentModifiersContextObjects([ModifierRebirth.createContextObject()])
 
     if (identifier == Cards.Faction5.SilitharElder)
+      if version is 0
+        description = i18next.t("cards.faction_5_unit_silithar_elder_desc_0")
+        spawnPattern = CONFIG.PATTERN_3x3
+      else
+        description = i18next.t("cards.faction_5_unit_silithar_elder_desc_1")
+        spawnPattern = CONFIG.PATTERN_DIRECTLY_BEHIND
       card = new Unit(gameSession)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_silithar_elder_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_silithar_elder_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction5.SilitharElder"])
       card.setBoundingBoxWidth(105)
       card.setBoundingBoxHeight(80)
@@ -654,7 +660,13 @@ class CardFactory_CoreSet_Faction5
       card.maxHP = 8
       card.manaCost = 7
       card.rarityId = Rarity.Legendary
-      card.setInherentModifiersContextObjects([ModifierRebirth.createContextObject(), ModifierEndTurnWatchSpawnEgg.createContextObject("a Silithar Elder Egg")])
+      card.setInherentModifiersContextObjects([
+        ModifierRebirth.createContextObject(),
+        ModifierEndTurnWatchSpawnEgg.createContextObject(
+          spawnPattern,
+          "a Silithar Elder Egg",
+        ),
+      ])
 
     if (identifier == Cards.Faction5.SpiritHarvester)
       card = new Unit(gameSession)
@@ -1011,16 +1023,34 @@ class CardFactory_CoreSet_Faction5
       )
 
     if (identifier == Cards.Spell.PlasmaStorm)
+      if version is 0
+        description = i18next.t("cards.faction_5_spell_plasma_storm_description_0")
+        minAttackValue = 4
+        manaCost = 5
+        radius = CONFIG.WHOLE_BOARD_RADIUS
+      else if version is 1
+        description = i18next.t("cards.faction_5_spell_plasma_storm_description_1")
+        minAttackValue = 3
+        manaCost = 4
+        radius = CONFIG.WHOLE_BOARD_RADIUS
+      else
+        description = i18next.t("cards.faction_5_spell_plasma_storm_description_2")
+        minAttackValue = 4
+        manaCost = 4
+        affectPattern = CONFIG.PATTERN_3x3_INCLUDING_CENTER
       card = new SpellLavastorm(gameSession)
       card.factionId = Factions.Faction5
       card.id = Cards.Spell.PlasmaStorm
       card.name = i18next.t("cards.faction_5_spell_plasma_storm_name")
-      card.setDescription(i18next.t("cards.faction_5_spell_plasma_storm_description"))
-      card.minAttackValue = 4
-      card.manaCost = 4
+      card.setDescription(description)
+      card.minAttackValue = minAttackValue
+      card.manaCost = manaCost
       card.rarityId = Rarity.Rare
       card.spellFilterType = SpellFilterType.None
-      card.setAffectPattern(CONFIG.PATTERN_3x3_INCLUDING_CENTER)
+      if radius?
+        card.radius = radius
+      if affectPattern?
+        card.setAffectPattern(affectPattern)
       card.setFXResource(["FX.Cards.Spell.PlasmaStorm"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_immolation_a.audio

@@ -232,10 +232,20 @@ class CardFactory_CoreSet_Faction4
       card.addKeywordClassToInclude(ModifierStackingShadows)
 
     if (identifier == Cards.Faction4.AbyssalJuggernaut)
+      minionOnly = false
+      if version is 0
+        description = i18next.t("cards.faction_4_unit_abyssal_juggernaut_desc_0")
+        atk = 3
+        maxHP = 5
+        minionOnly = true
+      else
+        description = i18next.t("cards.faction_4_unit_abyssal_juggernaut_desc_1")
+        atk = 4
+        maxHP = 4
       card = new Unit(gameSession)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_abyssal_juggernaut_name")
-      card.setDescription(i18next.t("cards.faction_4_unit_abyssal_juggernaut_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction4.AbyssalJuggernaut"])
       card.setBoundingBoxWidth(110)
       card.setBoundingBoxHeight(95)
@@ -257,15 +267,15 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4JuggernautDamage.name
         death : RSX.f4JuggernautDeath.name
       )
-      card.atk = 4
-      card.maxHP = 4
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 4
       card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([
         ModifierDealDamageWatchSpawnEntityOnTarget.createContextObject(
           { id: Cards.Tile.Shadow },
           undefined,
-          { enemyOnly: true },
+          { enemyOnly: true, minionOnly },
         ),
       ])
       card.addKeywordClassToInclude(ModifierStackingShadows)

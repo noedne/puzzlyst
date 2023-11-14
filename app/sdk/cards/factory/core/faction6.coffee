@@ -1265,18 +1265,26 @@ class CardFactory_CoreSet_Faction6
         card.manaCost = 1
         card.rarityId = Rarity.Common
       else
-        card = new SpellDamageAndApplyModifiers(gameSession)
-        card.factionId = Factions.Faction6
-        card.id = Cards.Spell.Numb
-        card.name = i18next.t("cards.faction_6_spell_mesmerize_name")
+        canTargetGeneral = false
+        applyToGeneral = true
         if version is 1
           description = i18next.t("cards.faction_6_spell_mesmerize_description_1")
           damageAmount = 2
           affectPattern = CONFIG.PATTERN_WHOLE_ROW
-        else
+        else if version is 2
           description = i18next.t("cards.faction_6_spell_mesmerize_description_2")
+          damageAmount = 2
+          affectPattern = CONFIG.PATTERN_WHOLE_ROW
+          canTargetGeneral = true
+          applyToGeneral = false
+        else
+          description = i18next.t("cards.faction_6_spell_mesmerize_description_3")
           damageAmount = 3
           affectPattern = CONFIG.PATTERN_WHOLE_COLUMN
+        card = new SpellDamageAndApplyModifiers(gameSession)
+        card.factionId = Factions.Faction6
+        card.id = Cards.Spell.Numb
+        card.name = i18next.t("cards.faction_6_spell_mesmerize_name")
         card.setDescription(description)
         card.manaCost = 2
         card.rarityId = Rarity.Common
@@ -1288,6 +1296,8 @@ class CardFactory_CoreSet_Faction6
         ])
         card.addKeywordClassToInclude(ModifierStun)
         card.applyToEnemy = true
+        card.canTargetGeneral = canTargetGeneral
+        card.applyToGeneral = applyToGeneral
       card.setFXResource(["FX.Cards.Spell.Mesmerize"])
       card.setBaseSoundResource(
         apply : RSX.sfx_f6_icebeetle_death.audio
@@ -1417,15 +1427,21 @@ class CardFactory_CoreSet_Faction6
       )
 
     if (identifier == Cards.Spell.SpiritoftheWild)
+      canTargetGeneral = false
+      if version is 0
+        description = i18next.t("cards.faction_6_spell_spirit_of_the_wild_description_0")
+      else
+        description = i18next.t("cards.faction_6_spell_spirit_of_the_wild_description_1")
+        canTargetGeneral = true
       card = new SpellSpiritAnimalBlessing(gameSession)
       card.factionId = Factions.Faction6
       card.id = Cards.Spell.SpiritoftheWild
       card.name = i18next.t("cards.faction_6_spell_spirit_of_the_wild_name")
-      card.setDescription(i18next.t("cards.faction_6_spell_spirit_of_the_wild_description"))
+      card.setDescription(description)
       card.manaCost = 4
       card.rarityId = Rarity.Legendary
       card.radius = CONFIG.WHOLE_BOARD_RADIUS
-      card.canTargetGeneral = true
+      card.canTargetGeneral = canTargetGeneral
       card.setFXResource(["FX.Cards.Spell.SpiritoftheWild"])
       card.setBaseAnimResource(
         idle: RSX.iconSpiritOfTheWildIdle.name

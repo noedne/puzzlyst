@@ -142,10 +142,16 @@ class CardFactory_Monthly_M5_Provoke
       ])
 
     if (identifier == Cards.Neutral.WarTalon)
+      if version is 0
+        description = i18next.t("cards.neutral_war_talon_desc_0")
+        attackOnly = true
+      else
+        description = i18next.t("cards.neutral_war_talon_desc_1")
+        attackOnly = false
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_war_talon_name")
-      card.setDescription(i18next.t("cards.neutral_war_talon_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.WarTalon"])
       card.setBoundingBoxWidth(80)
       card.setBoundingBoxHeight(95)
@@ -171,7 +177,7 @@ class CardFactory_Monthly_M5_Provoke
       card.maxHP = 6
       card.manaCost = 6
       card.setInherentModifiersContextObjects(
-        [ModifierWarTalon.createContextObject()]
+        [ModifierWarTalon.createContextObject(attackOnly)]
       )
       card.rarityId = Rarity.Epic
 
