@@ -46,6 +46,7 @@ ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierTakeDamageWatchDamageMyGeneral = require 'app/sdk/modifiers/modifierTakeDamageWatchDamageMyGeneral'
 ModifierSummonWatchNearbyApplyModifiersOnce = require 'app/sdk/modifiers/modifierSummonWatchNearbyApplyModifiersOnce'
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
+ModifierOpeningGambitDamageMyGeneral = require 'app/sdk/modifiers/modifierOpeningGambitDamageMyGeneral'
 
 PlayerModifierFlashReincarnation = require 'app/sdk/playerModifiers/playerModifierFlashReincarnation'
 
@@ -352,10 +353,18 @@ class CardFactory_CoreSet_Faction5
       ])
 
     if (identifier == Cards.Faction5.Elucidator)
+      if version is 0
+        description = i18next.t("cards.faction_5_unit_elucidator_desc_0")
+        modifierContextObject = 
+          ModifierOpeningGambitDamageMyGeneral.createContextObject(4)
+      else
+        description = i18next.t("cards.faction_5_unit_elucidator_desc_1")
+        modifierContextObject = 
+          ModifierTakeDamageWatchDamageMyGeneral.createContextObject(2)
       card = new Unit(gameSession)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_elucidator_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_elucidator_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction5.Elucidator"])
       card.setBoundingBoxWidth(115)
       card.setBoundingBoxHeight(60)
@@ -381,7 +390,7 @@ class CardFactory_CoreSet_Faction5
       card.maxHP = 4
       card.manaCost = 4
       card.setInherentModifiersContextObjects([
-        ModifierTakeDamageWatchDamageMyGeneral.createContextObject(2),
+        modifierContextObject,
         ModifierFirstBlood.createContextObject(),
       ])
       card.rarityId = Rarity.Rare
@@ -455,10 +464,16 @@ class CardFactory_CoreSet_Faction5
       ])
 
     if (identifier == Cards.Faction5.PrimordialGazer)
+      if version is 0
+        description = i18next.t("cards.faction_5_unit_primordial_gazer_desc_0")
+        hpBuff = 2
+      else
+        description = i18next.t("cards.faction_5_unit_primordial_gazer_desc_1")
+        hpBuff = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_primordial_gazer_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_primordial_gazer_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction5.PrimordialGazer"])
       card.setBoundingBoxWidth(90)
       card.setBoundingBoxHeight(75)
@@ -485,7 +500,7 @@ class CardFactory_CoreSet_Faction5
       card.manaCost = 3
       card.rarityId = Rarity.Common
       card.addKeywordClassToInclude(ModifierOpeningGambit)
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,1)
+      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,hpBuff)
       statContextObject.appliedName = i18next.t("modifiers.faction_5_followup_primordial_gazer_2")
       card.setFollowups([
         {
@@ -869,15 +884,21 @@ class CardFactory_CoreSet_Faction5
       )
 
     if (identifier == Cards.Spell.GreaterFortitude)
+      if version is 0
+        description = i18next.t("cards.faction_5_spell_greater_fortitude_description_0")
+        hpBuff = 2
+      else
+        description = i18next.t("cards.faction_5_spell_greater_fortitude_description_1")
+        hpBuff = 1
       card = new SpellApplyModifiers(gameSession)
       card.factionId = Factions.Faction5
       card.id = Cards.Spell.GreaterFortitude
       card.name = i18next.t("cards.faction_5_spell_greater_fortitude_name")
-      card.setDescription(i18next.t("cards.faction_5_spell_greater_fortitude_description"))
+      card.setDescription(description)
       card.manaCost = 1
       card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.NeutralDirect
-      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,1)
+      statContextObject = Modifier.createContextObjectWithAttributeBuffs(2,hpBuff)
       statContextObject.appliedName = i18next.t("modifiers.faction_5_spell_greater_fortitude_1")
       card.setTargetModifiersContextObjects([
         statContextObject

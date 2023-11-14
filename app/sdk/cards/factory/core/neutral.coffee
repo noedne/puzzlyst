@@ -111,6 +111,14 @@ class CardFactory_CoreSet_Neutral
     card = null
 
     if (identifier == Cards.Neutral.FireSpitter)
+      if version is 0
+        atk = 3
+        maxHP = 2
+        manaCost = 3
+      else
+        atk = 2
+        maxHP = 1
+        manaCost = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_fire_spitter_name")
@@ -134,9 +142,9 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralMercGrenadierHit.name
         death : RSX.neutralMercGrenadierDeath.name
       )
-      card.atk = 2
-      card.maxHP = 1
-      card.manaCost = 1
+      card.atk = atk
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([
         ModifierRanged.createContextObject(),
@@ -613,6 +621,10 @@ class CardFactory_CoreSet_Neutral
       card.setInherentModifiersContextObjects([ModifierProvoke.createContextObject()])
 
     if (identifier == Cards.Neutral.WindStopper)
+      if version is 0
+        atk = 0
+      else
+        atk = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_wind_stopper_name")
@@ -636,7 +648,7 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralShieldOracleHit.name
         death : RSX.neutralShieldOracleDeath.name
       )
-      card.atk = 1
+      card.atk = atk
       card.maxHP = 5
       card.manaCost = 3
       card.rarityId = Rarity.Epic

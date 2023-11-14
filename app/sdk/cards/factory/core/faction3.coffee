@@ -25,6 +25,7 @@ SpellFountainOfYouth = require 'app/sdk/spells/spellFountainOfYouth'
 SpellApplyModifiersToGeneral = require 'app/sdk/spells/spellApplyModifiersToGeneral'
 SpellEntropicDecay = require 'app/sdk/spells/spellEntropicDecay'
 SpellHealYourGeneral = require 'app/sdk/spells/spellHealYourGeneral'
+SpellKillTarget = require 'app/sdk/spells/spellKillTarget'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierSilence = require 'app/sdk/modifiers/modifierSilence'
@@ -880,13 +881,32 @@ class CardFactory_CoreSet_Faction3
       )
 
     if (identifier == Cards.Spell.EntropicDecay)
-      card = new SpellEntropicDecay(gameSession)
+      spell = SpellKillTarget
+      manaCost = 4
+      spellFilterType = SpellFilterType.NeutralDirect
+      filterNearGeneral = false
+      filterNearAlly = false
+      if version is 0
+        description = i18next.t("cards.faction_3_spell_entropic_decay_description_0")
+        filterNearGeneral = true
+      else if version is 1
+        description = i18next.t("cards.faction_3_spell_entropic_decay_description_1")
+        filterNearAlly = true
+      else
+        spell = SpellEntropicDecay
+        manaCost = 3
+        description = i18next.t("cards.faction_3_spell_entropic_decay_description_2")
+        spellFilterType = SpellFilterType.NeutralIndirect
+      card = new spell(gameSession)
       card.factionId = Factions.Faction3
       card.id = Cards.Spell.EntropicDecay
       card.name = i18next.t("cards.faction_3_spell_entropic_decay_name")
-      card.setDescription(i18next.t("cards.faction_3_spell_entropic_decay_description"))
-      card.manaCost = 3
+      card.setDescription(description)
+      card.manaCost = manaCost
       card.rarityId = Rarity.Common
+      card.spellFilterType = spellFilterType
+      card.filterNearGeneral = filterNearGeneral
+      card.filterNearAlly = filterNearAlly
       card.setFXResource(["FX.Cards.Spell.EntropicDecay"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_entropicdecay.audio

@@ -42,6 +42,7 @@ ModifierHealWatchBuffSelf = require 'app/sdk/modifiers/modifierHealWatchBuffSelf
 ModifierHealWatchDamageNearbyEnemies = require 'app/sdk/modifiers/modifierHealWatchDamageNearbyEnemies'
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 ModifierStartOpponentsTurnWatchApplyTempModifier = require 'app/sdk/modifiers/modifierStartOpponentsTurnWatchApplyTempModifier'
+ModifierOpeningGambitApplyPlayerModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyPlayerModifiers'
 
 PlayerModiferCanSummonAnywhere = require 'app/sdk/playerModifiers/playerModiferCanSummonAnywhere'
 ModifierCardControlledPlayerModifiers = require 'app/sdk/modifiers/modifierCardControlledPlayerModifiers'
@@ -460,6 +461,24 @@ class CardFactory_CoreSet_Faction1
       card.setInherentModifiersContextObjects([ModifierHealWatchBuffSelf.createContextObject(2,0)])
 
     if (identifier == Cards.Faction1.SunstoneTemplar)
+      if version is 0
+        atk = 3
+        maxHP = 2
+        description = i18next.t("cards.faction_1_unit_sunstone_templar_desc_0")
+        modifierContextObject =
+          ModifierOpeningGambitApplyPlayerModifiers.createContextObjectToTargetOwnPlayer([
+            PlayerModiferCanSummonAnywhere.createContextObject({
+              durationEndTurn: 1
+            })
+          ])
+      else
+        atk = 1
+        maxHP = 3
+        description = i18next.t("cards.faction_1_unit_sunstone_templar_desc_1")
+        modifierContextObject = 
+          ModifierCardControlledPlayerModifiers.createContextObjectOnBoardToTargetOwnPlayer([
+            PlayerModiferCanSummonAnywhere.createContextObject()
+          ])
       card = new Unit(gameSession)
       card.factionId = Factions.Faction1
       card.name = i18next.t("cards.faction_1_unit_sunstone_templar_name")
@@ -484,15 +503,13 @@ class CardFactory_CoreSet_Faction1
         damage : RSX.f1SunstoneTemplarDamage.name
         death : RSX.f1SunstoneTemplarDeath.name
       )
-      card.atk = 1
-      card.maxHP = 3
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 2
       card.rarityId = Rarity.Epic
-      card.setDescription(i18next.t("cards.faction_1_unit_sunstone_templar_desc"))
+      card.setDescription(description)
       card.setInherentModifiersContextObjects([
-        ModifierCardControlledPlayerModifiers.createContextObjectOnBoardToTargetOwnPlayer([
-          PlayerModiferCanSummonAnywhere.createContextObject(),
-        ]),
+        modifierContextObject,
         ModifierAirdrop.createContextObject(),
       ])
 

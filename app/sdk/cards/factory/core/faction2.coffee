@@ -264,6 +264,12 @@ class CardFactory_CoreSet_Faction2
       ])
 
     if (identifier == Cards.Faction2.KaidoAssassin)
+      if version is 0
+        backstab = 1
+        description = i18next.t("cards.faction_2_unit_kaido_assassin_desc_0")
+      else
+        backstab = 2
+        description = i18next.t("cards.faction_2_unit_kaido_assassin_desc_1")
       card = new Unit(gameSession)
       card.factionId = Factions.Faction2
       card.name = i18next.t("cards.faction_2_unit_kaido_assassin_name")
@@ -290,8 +296,10 @@ class CardFactory_CoreSet_Faction2
       card.maxHP = 3
       card.manaCost = 2
       card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([ModifierBackstab.createContextObject(2)])
-      card.setDescription(i18next.t("cards.faction_2_unit_kaido_assassin_desc"))
+      card.setInherentModifiersContextObjects([
+        ModifierBackstab.createContextObject(backstab)
+      ])
+      card.setDescription(description)
       card.addKeywordClassToInclude(ModifierBackstab)
 
     if (identifier == Cards.Faction2.ScarletViper)
@@ -482,6 +490,12 @@ class CardFactory_CoreSet_Faction2
       card.setDescription(i18next.t("cards.faction_2_unit_lantern_fox_desc"))
 
     if (identifier == Cards.Faction2.JadeOgre)
+      if version is 0
+        maxHP = 4
+        manaCost = 4
+      else
+        maxHP = 3
+        manaCost = 3
       card = new Unit(gameSession)
       card.factionId = Factions.Faction2
       card.name = i18next.t("cards.faction_2_unit_jade_monk_name")
@@ -507,8 +521,8 @@ class CardFactory_CoreSet_Faction2
         death : RSX.f2JadeOgreDeath.name
       )
       card.atk = 4
-      card.maxHP = 3
-      card.manaCost = 3
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([
         ModifierSpellWatchAnywhereApplyModifiers.createContextObject([

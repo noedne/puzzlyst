@@ -18,6 +18,7 @@ class Spell extends Card
   filterCardIds: null # array of card ids to filter for
   filterRaceIds: null # array of race ids to filter for
   filterNearGeneral: false # whether to only allow targets near general
+  filterNearAlly: false # whether to only allow targets near an ally
   canTargetGeneral: false
   radius: 0 # when multi-target, if radius > 0 it will get all targets in a radius around target position
   drawCardsPostPlay: 0 # if non-zero, will immediately draw X cards for the player who played this spell (cantrips)
@@ -327,16 +328,25 @@ class Spell extends Card
 
   _getEntitiesForFilter: (allowUntargetable=false) ->
     board = @getGameSession().getBoard()
+    filterNearbyEntities = @_getEntitiesForNearbyFilter(board)
+    if filterNearbyEntities? and
+        (@spellFilterType == SpellFilterType.AllyDirect or
+        @spellFilterType == SpellFilterType.EnemyDirect or
+        @spellFilterType == SpellFilterType.NeutralDirect)
+      return filterNearbyEntities.flatMap (entity) =>
+        board.getEntitiesAroundEntity(entity, @targetType, 1, allowUntargetable)
+
+    return board.getCards(@targetType, allowUntargetable)
+
+  _getEntitiesForNearbyFilter: (board) ->
     if @filterNearGeneral
-      general = @getGameSession().getGeneralForPlayerId(@getOwnerId())
-      if @spellFilterType == SpellFilterType.AllyDirect
-        return board.getEntitiesAroundEntity(general, @targetType, 1)
-      else if @spellFilterType == SpellFilterType.EnemyDirect
-        return board.getEntitiesAroundEntity(general, @targetType, 1)
-      else if @spellFilterType == SpellFilterType.NeutralDirect
-        return board.getEntitiesAroundEntity(general, @targetType, 1)
-    else
-      return board.getCards(@targetType, allowUntargetable)
+      return [@getGameSession().getGeneralForPlayerId(@getOwnerId())]
+
+    if @filterNearAlly
+      return board.getUnits(true).filter (unit) =>
+        unit.getOwnerId() is @getOwnerId()
+
+    return null
 
   _entityPassesFilter: (spellPositions, entity) ->
     if entity.getIsGeneral() and !@canTargetGeneral then return false
