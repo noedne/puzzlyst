@@ -52,6 +52,9 @@ class ModifierOpeningGambitApplyModifiers extends ModifierOpeningGambit
   @createContextObjectForAllAllies: (modifiersContextObjects, managedByCard, description, options) ->
     return @createContextObject(modifiersContextObjects, managedByCard, false, true, false, false, CONFIG.WHOLE_BOARD_RADIUS, description, options)
 
+  @createContextObjectForAllAlliesAndSelf: (modifiersContextObjects, managedByCard, description, options) ->
+    return @createContextObject(modifiersContextObjects, managedByCard, true, true, false, false, CONFIG.WHOLE_BOARD_RADIUS, description, options)
+
   @createContextObjectForEnemies: (modifiersContextObjects, managedByCard, auraRadius, description, options) ->
     return @createContextObject(modifiersContextObjects, managedByCard, false, false, true, false, auraRadius, description, options)
 

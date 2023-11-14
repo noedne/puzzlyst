@@ -28,6 +28,7 @@ SpellCryogenesis = require 'app/sdk/spells/spellCryogenesis'
 SpellTempTransform = require 'app/sdk/spells/spellTempTransform'
 SpellDamageAndApplyModifiers = require 'app/sdk/spells/spellDamageAndApplyModifiers'
 SpellCopyToActionBarAndTransform = require 'app/sdk/spells/spellCopyToActionBarAndTransform'
+SpellRemoveManaCores = require 'app/sdk/spells/spellRemoveManaCores'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierImmuneToDamage = require 'app/sdk/modifiers/modifierImmuneToDamage'
@@ -495,10 +496,21 @@ class CardFactory_CoreSet_Faction6
       card.addKeywordClassToInclude(ModifierDyingWish)
 
     if (identifier == Cards.Faction6.WolfRaven)
+      immunityContextObject =
+        ModifierImmuneToDamageFromHighAttackUnits.createContextObject(3)
+      if version is 0
+        description = i18next.t("cards.faction_6_unit_wolfraven_desc_0")
+        maxHP = 4
+        modifierContextObject =
+          ModifierInfiltrate.createContextObject(immunityContextObject)
+      else
+        description = i18next.t("cards.faction_6_unit_wolfraven_desc_1")
+        maxHP = 3
+        modifierContextObject = immunityContextObject
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_wolfraven_name")
-      card.setDescription(i18next.t("cards.faction_6_unit_wolfraven_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction6.WolfRaven"])
       card.setBoundingBoxWidth(65)
       card.setBoundingBoxHeight(85)
@@ -521,12 +533,12 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6WolfravenDeath.name
       )
       card.atk = 2
-      card.maxHP = 3
+      card.maxHP = maxHP
       card.manaCost = 3
       card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([
         ModifierFlying.createContextObject(),
-        ModifierImmuneToDamageFromHighAttackUnits.createContextObject(3),
+        modifierContextObject,
       ])
 
     if (identifier == Cards.Faction6.BoreanBear)
@@ -641,10 +653,18 @@ class CardFactory_CoreSet_Faction6
       ])
 
     if (identifier == Cards.Faction6.AncientGrove)
+      if version is 0
+        description = i18next.t("cards.faction_6_unit_ancient_grove_desc_0")
+        createContextObject = ModifierOpeningGambitApplyModifiers
+          .createContextObjectForAllAlliesAndSelf
+      else
+        description = i18next.t("cards.faction_6_unit_ancient_grove_desc_1")
+        createContextObject = ModifierOpeningGambitApplyModifiers
+          .createContextObjectForAllAllies
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_ancient_grove_name")
-      card.setDescription(i18next.t("cards.faction_6_unit_ancient_grove_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction6.AncientGrove"])
       card.setBoundingBoxWidth(90)
       card.setBoundingBoxHeight(85)
@@ -671,7 +691,7 @@ class CardFactory_CoreSet_Faction6
       card.manaCost = 7
       card.setInherentModifiersContextObjects([
         ModifierProvoke.createContextObject(),
-        ModifierOpeningGambitApplyModifiers.createContextObjectForAllAllies(
+        createContextObject.bind(ModifierOpeningGambitApplyModifiers)(
           [ModifierDyingWishSpawnEntity.createContextObject({id: Cards.Faction6.Treant}, "1/1 Treant with Provoke")],
           false, "Your minions gain \"Dying Wish: Summon a 1/1 Treant with Provoke\""
         )
@@ -780,11 +800,32 @@ class CardFactory_CoreSet_Faction6
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Faction6.SnowElemental)
+      atk = 2
+      maxHP = 3
+      description = i18next.t("cards.faction_6_unit_glacial_elemental_desc_0")
+      modifiersContextObjects = [
+        ModifierSummonWatchByRaceDamageEnemyMinion.createContextObject(
+          2,
+          Races.Vespyr,
+          "a Vespyr minion",
+        )
+      ]
+      if version is 0
+        inherentModifiersContextObjects = modifiersContextObjects
+      else if version is 1
+        description = i18next.t("cards.faction_6_unit_glacial_elemental_desc_1")
+        inherentModifiersContextObjects = [
+          ModifierInfiltrate.createContextObject(modifiersContextObjects)
+        ]
+      else if version is 2
+        atk = 3
+        maxHP = 2
+        inherentModifiersContextObjects = modifiersContextObjects
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.raceId = Races.Vespyr
       card.name = i18next.t("cards.faction_6_unit_glacial_elemental_name")
-      card.setDescription(i18next.t("cards.faction_6_unit_glacial_elemental_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction6.SnowElemental"])
       card.setBoundingBoxWidth(95)
       card.setBoundingBoxHeight(90)
@@ -806,11 +847,11 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.f6SnowElementalDamage.name
         death : RSX.f6SnowElementalDeath.name
       )
-      card.atk = 3
-      card.maxHP = 2
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 3
       card.rarityId = Rarity.Rare
-      card.setInherentModifiersContextObjects([ModifierSummonWatchByRaceDamageEnemyMinion.createContextObject(2, Races.Vespyr, "a Vespyr minion")])
+      card.setInherentModifiersContextObjects(inherentModifiersContextObjects)
 
     if (identifier == Cards.Faction6.WolfAspect)
       card = new Unit(gameSession)
@@ -1215,21 +1256,38 @@ class CardFactory_CoreSet_Faction6
       )
 
     if (identifier == Cards.Spell.Numb)
-      card = new SpellDamageAndApplyModifiers(gameSession)
-      card.factionId = Factions.Faction6
-      card.id = Cards.Spell.Numb
-      card.name = i18next.t("cards.faction_6_spell_mesmerize_name")
-      card.setDescription(i18next.t("cards.faction_6_spell_mesmerize_description"))
-      card.manaCost = 2
-      card.rarityId = Rarity.Common
-      card.spellFilterType = SpellFilterType.EnemyIndirect
-      card.setAffectPattern(CONFIG.PATTERN_WHOLE_COLUMN)
-      card.damageAmount = 3
-      card.setTargetModifiersContextObjects([
-        ModifierStunnedVanar.createContextObject(),
-      ])
-      card.addKeywordClassToInclude(ModifierStun)
-      card.applyToEnemy = true
+      if version is 0
+        card = new SpellRemoveManaCores(gameSession)
+        card.factionId = Factions.Faction6
+        card.id = Cards.Spell.Numb
+        card.name = i18next.t("cards.faction_6_spell_mesmerize_name")
+        card.setDescription(i18next.t("cards.faction_6_spell_mesmerize_description_0"))
+        card.manaCost = 1
+        card.rarityId = Rarity.Common
+      else
+        card = new SpellDamageAndApplyModifiers(gameSession)
+        card.factionId = Factions.Faction6
+        card.id = Cards.Spell.Numb
+        card.name = i18next.t("cards.faction_6_spell_mesmerize_name")
+        if version is 1
+          description = i18next.t("cards.faction_6_spell_mesmerize_description_1")
+          damageAmount = 2
+          affectPattern = CONFIG.PATTERN_WHOLE_ROW
+        else
+          description = i18next.t("cards.faction_6_spell_mesmerize_description_2")
+          damageAmount = 3
+          affectPattern = CONFIG.PATTERN_WHOLE_COLUMN
+        card.setDescription(description)
+        card.manaCost = 2
+        card.rarityId = Rarity.Common
+        card.spellFilterType = SpellFilterType.EnemyIndirect
+        card.setAffectPattern(affectPattern)
+        card.damageAmount = damageAmount
+        card.setTargetModifiersContextObjects([
+          ModifierStunnedVanar.createContextObject(),
+        ])
+        card.addKeywordClassToInclude(ModifierStun)
+        card.applyToEnemy = true
       card.setFXResource(["FX.Cards.Spell.Mesmerize"])
       card.setBaseSoundResource(
         apply : RSX.sfx_f6_icebeetle_death.audio

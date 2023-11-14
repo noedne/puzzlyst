@@ -1137,15 +1137,21 @@ class CardFactory_CoreSet_Faction2
         description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_0")
         atk = 0
         backstab = 5
-      else
+      else if version is 1
         manaCost = 1
+        description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_1")
+        atk = 0
         backstab = 3
-        if version is 1
-          description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_1")
-          atk = 0
-        else
-          description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_2")
-          atk = 1
+      else if version is 2
+        manaCost = 1
+        description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_2")
+        atk = 1
+        backstab = 2
+      else if version is 3
+        manaCost = 1
+        description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_3")
+        atk = 1
+        backstab = 3
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction2
       card.id = Cards.Artifact.MaskOfShadows
@@ -1172,13 +1178,17 @@ class CardFactory_CoreSet_Faction2
       )
 
     if (identifier == Cards.Artifact.MaskOfTranscendance)
+      if version is 0
+        manaCost = 3
+      else
+        manaCost = 4
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction2
       card.id = Cards.Artifact.MaskOfTranscendance
       card.name = i18next.t("cards.faction_2_artifact_cyclone_mask_name")
       card.setDescription(i18next.t("cards.faction_2_artifact_cyclone_mask_description"))
       card.addKeywordClassToInclude(ModifierRanged)
-      card.manaCost = 3
+      card.manaCost = manaCost
       card.rarityId = Rarity.Rare
       card.setTargetModifiersContextObjects([
         ModifierRanged.createContextObject({

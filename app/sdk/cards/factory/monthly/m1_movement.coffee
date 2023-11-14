@@ -10,12 +10,15 @@ Rarity = require 'app/sdk/cards/rarityLookup'
 
 Unit = require 'app/sdk/entities/unit'
 
+SpellFilterType = require 'app/sdk/spells/spellFilterType'
+
 Modifier =           require 'app/sdk/modifiers/modifier'
 ModifierFlying = require 'app/sdk/modifiers/modifierFlying'
 ModifierMyMoveWatchApplyModifiers = require 'app/sdk/modifiers/modifierMyMoveWatchApplyModifiers'
 ModifierEndTurnWatchSpawnEntity = require 'app/sdk/modifiers/modifierEndTurnWatchSpawnEntity'
 ModifierOpeningGambitGainHighestAttack = require 'app/sdk/modifiers/modifierOpeningGambitGainHighestAttack'
 ModifierOpeningGambitApplyPlayerModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyPlayerModifiers'
+ModifierOpeningGambit = require 'app/sdk/modifiers/modifierOpeningGambit'
 
 PlayerModifierCardDrawModifier = require 'app/sdk/playerModifiers/playerModifierCardDrawModifier'
 
@@ -144,10 +147,31 @@ class CardFactory_Monthly_M1_Movement
       ])
 
     if (identifier == Cards.Neutral.GhostLynx)
+      if version is 0
+        description = i18next.t("cards.neutral_ghost_lynx_desc_0")
+        atk = 2
+        maxHP = 2
+        keywordClass = ModifierOpeningGambit
+        followup = {
+          id: Cards.Spell.FollowupRandomTeleport
+          spellFilterType: SpellFilterType.NeutralDirect
+          _private: {
+            followupSourcePattern: CONFIG.PATTERN_3x3
+          }
+        }
+      else
+        description = i18next.t("cards.neutral_ghost_lynx_desc_1")
+        atk = 1
+        maxHP = 3
+        inherentModifiersContextObjects = [
+          ModifierOpeningGambitApplyPlayerModifiers.createContextObjectToTargetOwnPlayer(
+            [PlayerModifierCardDrawModifier.createContextObject(1, 1)]
+          )
+        ]
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_ghost_lynx_name")
-      card.setDescription(i18next.t("cards.neutral_ghost_lynx_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.GhostLynx"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_diretidefrenzy.audio
@@ -167,15 +191,16 @@ class CardFactory_Monthly_M1_Movement
         damage : RSX.neutralGhostLynxHit.name
         death : RSX.neutralGhostLynxDeath.name
       )
-      card.atk = 1
-      card.maxHP = 3
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 2
       card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([
-        ModifierOpeningGambitApplyPlayerModifiers.createContextObjectToTargetOwnPlayer(
-          [PlayerModifierCardDrawModifier.createContextObject(1, 1)]
-        )
-      ])
+      if keywordClass?
+        card.addKeywordClassToInclude(keywordClass)
+      if followup?
+        card.setFollowups([followup])
+      if inherentModifiersContextObjects?
+        card.setInherentModifiersContextObjects(inherentModifiersContextObjects)
 
     return card
 

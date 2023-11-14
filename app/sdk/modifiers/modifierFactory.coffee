@@ -633,7 +633,7 @@ ModifierStartTurnWatchImmolateDamagedMinions = require './modifierStartTurnWatch
 ModifierTakeDamageWatchOpponentDrawCard = require './modifierTakeDamageWatchOpponentDrawCard'
 ModifierMyAttackWatchScarabBlast = require './modifierMyAttackWatchScarabBlast'
 ModifierEquipFriendlyArtifactWatch = require './modifierEquipFriendlyArtifactWatch'
-ModifierEquipFriendlyArtifactWatchGainAttackEqualToCost = require './modifierEquipFriendlyArtifactWatchGainAttackEqualToCost'
+ModifierEquipFriendlyArtifactWatchGainStatsEqualToCost = require './modifierEquipFriendlyArtifactWatchGainStatsEqualToCost'
 ModifierOpponentSummonWatchSummonMinionInFront = require './modifierOpponentSummonWatchSummonMinionInFront'
 ModifierIntensifyTempBuffNearbyMinion = require './modifierIntensifyTempBuffNearbyMinion'
 ModifierEndTurnWatchGainLastSpellPlayedThisTurn = require './modifierEndTurnWatchGainLastSpellPlayedThisTurn'
@@ -2032,8 +2032,8 @@ class ModifierFactory
       return ModifierMyAttackWatchScarabBlast
     if (modifierType == ModifierEquipFriendlyArtifactWatch.type)
       return ModifierEquipFriendlyArtifactWatch
-    if (modifierType == ModifierEquipFriendlyArtifactWatchGainAttackEqualToCost.type)
-      return ModifierEquipFriendlyArtifactWatchGainAttackEqualToCost
+    if (modifierType == ModifierEquipFriendlyArtifactWatchGainStatsEqualToCost.type)
+      return ModifierEquipFriendlyArtifactWatchGainStatsEqualToCost
     if (modifierType == ModifierOpponentSummonWatchSummonMinionInFront.type)
       return ModifierOpponentSummonWatchSummonMinionInFront
     if (modifierType == ModifierIntensifyTempBuffNearbyMinion.type)

@@ -16,6 +16,9 @@ ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf = require 'app/sdk/modif
 ModifierEndTurnWatchBuffSelf = require 'app/sdk/modifiers/modifierEndTurnWatchBuffSelf'
 ModifierImmuneToSpellDamage = require 'app/sdk/modifiers/modifierImmuneToSpellDamage'
 ModifierOpeningGambitApplyModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiers'
+ModifierOpeningGambitApplyPlayerModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyPlayerModifiers'
+
+PlayerModifierPreventSpellDamage = require 'app/sdk/playerModifiers/playerModifierPreventSpellDamage'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -77,10 +80,26 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
       ])
 
     if (identifier == Cards.Neutral.ProphetWhitePalm)
+      if version is 0
+        description = i18next.t("cards.neutral_prophet_of_the_white_palm_desc_0")
+        atk = 1
+        maxHP = 3
+        immunityContextObject = PlayerModifierPreventSpellDamage.createContextObject()
+        immunityContextObject.durationEndTurn = 2
+        modifierContextObject = ModifierOpeningGambitApplyPlayerModifiers
+          .createContextObjectToTargetOwnPlayer([immunityContextObject])
+      else
+        description = i18next.t("cards.neutral_prophet_of_the_white_palm_desc_1")
+        atk = 2
+        maxHP = 2
+        immunityContextObject = ModifierImmuneToSpellDamage.createContextObject()
+        immunityContextObject.durationEndTurn = 2
+        modifierContextObject = ModifierOpeningGambitApplyModifiers
+          .createContextObjectForAllUnitsAndGenerals([immunityContextObject])
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_prophet_of_the_white_palm_name")
-      card.setDescription(i18next.t("cards.neutral_prophet_of_the_white_palm_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.ProphetWhitePalm"])
       card.setBoundingBoxWidth(55)
       card.setBoundingBoxHeight(115)
@@ -102,17 +121,10 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
         damage : RSX.neutralProphetWhitePalmHit.name
         death : RSX.neutralProphetWhitePalmDeath.name
       )
-      card.atk = 2
-      card.maxHP = 2
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 1
-      immunityContextObject = ModifierImmuneToSpellDamage.createContextObject()
-      immunityContextObject.durationEndTurn = 2
-      card.setInherentModifiersContextObjects([
-        ModifierOpeningGambitApplyModifiers.createContextObjectForAllUnitsAndGenerals(
-          [immunityContextObject],
-          false,
-        )
-      ])
+      card.setInherentModifiersContextObjects([modifierContextObject])
       card.rarityId = Rarity.Rare
 
     if (identifier == Cards.Neutral.ArakiHeadhunter)

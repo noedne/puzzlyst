@@ -48,6 +48,7 @@ ModifierGeneralDealsDoubleDamage = require 'app/sdk/modifiers/modifierGeneralDea
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 ModifierAbsorbDamage = require 'app/sdk/modifiers/modifierAbsorbDamage'
 ModifierOnRemoveShuffleCopyIntoDeck = require 'app/sdk/modifiers/modifierOnRemoveShuffleCopyIntoDeck'
+ModifierOpeningGambitRefreshArtifacts = require 'app/sdk/modifiers/modifierOpeningGambitRefreshArtifacts'
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -368,10 +369,36 @@ class CardFactory_CoreSet_Faction3
       }])
 
     if (identifier == Cards.Faction3.NightfallMechanyst)
+      if version is 0
+        name = i18next.t("cards.faction_3_unit_imperial_mechanyst_name_0")
+        description = i18next.t("cards.faction_3_unit_imperial_mechanyst_desc_0")
+        atk = 1
+        maxHP = 4
+        inherentModifierContextObject =
+          ModifierOpeningGambitRefreshArtifacts.createContextObject()
+      else
+        name = i18next.t("cards.faction_3_unit_imperial_mechanyst_name_1")
+        description = i18next.t("cards.faction_3_unit_imperial_mechanyst_desc_1")
+        atk = 2
+        maxHP = 3
+        keywordClass = ModifierOpeningGambit
+        followup = {
+          id: Cards.Spell.ApplyModifiers,
+          spellFilterType: SpellFilterType.NeutralDirect,
+          targetModifiersContextObjects: [
+            Modifier.createContextObjectWithAttributeBuffs(-2, 0, {
+              appliedName: i18next.t("modifiers.faction_3_imperial_mechanyst"),
+              durationEndTurn: 2,
+            }),
+          ],
+          _private: {
+            followupSourcePattern: CONFIG.PATTERN_3x3,
+          },
+        }
       card = new Unit(gameSession)
       card.factionId = Factions.Faction3
-      card.name = i18next.t("cards.faction_3_unit_imperial_mechanyst_name")
-      card.setDescription(i18next.t("cards.faction_3_unit_imperial_mechanyst_desc"))
+      card.name = name
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction3.NightfallMechanyst"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_ghostlightning.audio
@@ -391,24 +418,16 @@ class CardFactory_CoreSet_Faction3
         damage : RSX.f3NighfallMechanistDamage.name
         death : RSX.f3NighfallMechanistDeath.name
       )
-      card.atk = 2
-      card.maxHP = 3
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 2
       card.rarityId = Rarity.Rare
-      card.addKeywordClassToInclude(ModifierOpeningGambit)
-      card.setFollowups([{
-        id: Cards.Spell.ApplyModifiers,
-        spellFilterType: SpellFilterType.NeutralDirect,
-        targetModifiersContextObjects: [
-          Modifier.createContextObjectWithAttributeBuffs(-2, 0, {
-            appliedName: i18next.t("modifiers.faction_3_imperial_mechanyst"),
-            durationEndTurn: 2,
-          }),
-        ],
-        _private: {
-          followupSourcePattern: CONFIG.PATTERN_3x3,
-        },
-      }])
+      if inherentModifierContextObject?
+        card.setInherentModifiersContextObjects([inherentModifierContextObject])
+      if keywordClass?
+        card.addKeywordClassToInclude(keywordClass)
+      if followup?
+        card.setFollowups([followup])
 
     if (identifier == Cards.Faction3.BrazierRedSand)
       card = new Unit(gameSession)
@@ -784,27 +803,49 @@ class CardFactory_CoreSet_Faction3
       card = new SpellApplyModifiers(gameSession)
       card.factionId = Factions.Faction3
       card.id = Cards.Spell.CosmicFlesh
-      card.name = i18next.t("cards.faction_3_spell_cosmic_flesh_name")
-      card.setDescription(i18next.t("cards.faction_3_spell_cosmic_flesh_description"))
-      card.manaCost = 3
-      card.rarityId = Rarity.Epic
-      card.spellFilterType = SpellFilterType.AllyDirect
-      card.setTargetModifiersContextObjects([Modifier.createContextObjectWithAttributeBuffs(3, 0)])
-      card.setFollowups([{
-        id: Cards.Spell.ApplyModifiers,
-        spellFilterType: SpellFilterType.AllyDirect,
-        targetModifiersContextObjects: [Modifier.createContextObjectWithAttributeBuffs(0, 3)],
-        _private: {
-          followups: [{
-            id: Cards.Spell.ApplyModifiers,
-            spellFilterType: SpellFilterType.AllyDirect,
-            targetModifiersContextObjects: [ModifierBlastAttack.createContextObject({
-              durationEndTurn: 1,
-            })],
-          }],
-        },
-      }])
-      card.addKeywordClassToInclude(ModifierBlastAttack)
+      if version is 0
+        card.name = i18next.t("cards.faction_3_spell_cosmic_flesh_name_0")
+        card.setDescription(i18next.t("cards.faction_3_spell_cosmic_flesh_description_0"))
+        card.manaCost = 2
+        card.rarityId = Rarity.Common
+        card.spellFilterType = SpellFilterType.NeutralDirect
+        card.setTargetModifiersContextObjects([
+          ModifierProvoke.createContextObject(),
+          Modifier.createContextObjectWithAttributeBuffs(1, 3, {
+            appliedName: i18next.t("modifiers.faction_3_spell_cosmic_flesh_1")
+          }),
+        ])
+        card.addKeywordClassToInclude(ModifierProvoke)
+      else
+        if version is 1
+          manaCost = 4
+        else
+          manaCost = 3
+        card.name = i18next.t("cards.faction_3_spell_cosmic_flesh_name_1")
+        card.setDescription(i18next.t("cards.faction_3_spell_cosmic_flesh_description_1"))
+        card.manaCost = manaCost
+        card.rarityId = Rarity.Epic
+        card.spellFilterType = SpellFilterType.AllyDirect
+        card.setTargetModifiersContextObjects([
+          Modifier.createContextObjectWithAttributeBuffs(3, 0)
+        ])
+        card.setFollowups([{
+          id: Cards.Spell.ApplyModifiers,
+          spellFilterType: SpellFilterType.AllyDirect,
+          targetModifiersContextObjects: [
+            Modifier.createContextObjectWithAttributeBuffs(0, 3)
+          ],
+          _private: {
+            followups: [{
+              id: Cards.Spell.ApplyModifiers,
+              spellFilterType: SpellFilterType.AllyDirect,
+              targetModifiersContextObjects: [
+                ModifierBlastAttack.createContextObject({ durationEndTurn: 1 })
+              ],
+            }],
+          },
+        }])
+        card.addKeywordClassToInclude(ModifierBlastAttack)
       card.setFXResource(["FX.Cards.Spell.CosmicFlesh"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_cosmicflesh.audio
@@ -815,13 +856,17 @@ class CardFactory_CoreSet_Faction3
       )
 
     if (identifier == Cards.Spell.Blindscorch)
+      if version is 0
+        rarityId = Rarity.Rare
+      else
+        rarityId = Rarity.Common
       card = new SpellApplyModifiers(gameSession)
       card.factionId = Factions.Faction3
       card.id = Cards.Spell.Blindscorch
       card.name = i18next.t("cards.faction_3_spell_blindscorch_name")
       card.setDescription(i18next.t("cards.faction_3_spell_blindscorch_description"))
       card.manaCost = 1
-      card.rarityId = Rarity.Common
+      card.rarityId = rarityId
       customContextObject = Modifier.createContextObjectWithAttributeBuffs(0,0)
       customContextObject.attributeBuffs.atk = 0
       customContextObject.attributeBuffsAbsolute = ["atk"]
@@ -864,13 +909,17 @@ class CardFactory_CoreSet_Faction3
       )
 
     if (identifier == Cards.Spell.AurorasTears)
+      if version is 0
+        rarityId = Rarity.Epic
+      else
+        rarityId = Rarity.Rare
       card = new SpellAurorasTears(gameSession)
       card.factionId = Factions.Faction3
       card.id = Cards.Spell.AurorasTears
       card.name = i18next.t("cards.faction_3_spell_auroras_tears_name")
       card.setDescription(i18next.t("cards.faction_3_spell_auroras_tears_description"))
       card.manaCost = 1
-      card.rarityId = Rarity.Rare
+      card.rarityId = rarityId
       card.spellFilterType = SpellFilterType.NeutralIndirect
       card.setFXResource(["FX.Cards.Spell.AurorasTears"])
       card.setBaseSoundResource(

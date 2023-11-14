@@ -628,10 +628,27 @@ class CardFactory_CoreSet_Faction4
       ])
 
     if (identifier == Cards.Faction4.NightsorrowAssassin)
+      if version is 0
+        description = i18next.t("cards.faction_4_unit_nightsorrow_assassin_desc_0")
+        atk = 3
+        maxHP = 1
+        followupId = Cards.Spell.FollowupKillTargetByAttack
+        followupOptions = {
+          maxAttack: 3
+        }
+      else
+        description = i18next.t("cards.faction_4_unit_nightsorrow_assassin_desc_1")
+        followupId = Cards.Spell.FollowupKillDamagedTarget
+        if version is 1
+          atk = 3
+          maxHP = 3
+        else
+          atk = 4
+          maxHP = 2
       card = new Unit(gameSession)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_nightsorrow_assassin_name")
-      card.setDescription(i18next.t("cards.faction_4_unit_nightsorrow_assassin_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction4.NightsorrowAssassin"])
       card.setBaseSoundResource(
         apply : RSX.sfx_f4_blacksolus_attack_swing.audio
@@ -651,20 +668,21 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4NightsorrowDamage.name
         death : RSX.f4NightsorrowDeath.name
       )
-      card.atk = 4
-      card.maxHP = 2
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 3
       card.rarityId = Rarity.Rare
       card.addKeywordClassToInclude(ModifierOpeningGambit)
-      card.setFollowups([
-        {
-          id: Cards.Spell.FollowupKillDamagedTarget
-          spellFilterType: SpellFilterType.NeutralDirect
-          _private: {
-            followupSourcePattern: CONFIG.PATTERN_3x3
-          }
+      followup = {
+        id: followupId
+        spellFilterType: SpellFilterType.NeutralDirect
+        _private: {
+          followupSourcePattern: CONFIG.PATTERN_3x3
         }
-      ])
+      }
+      if followupOptions?
+        Object.assign(followup, followupOptions)
+      card.setFollowups([followup])
 
     if (identifier == Cards.Faction4.SpectralRevenant)
       card = new Unit(gameSession)
@@ -937,15 +955,25 @@ class CardFactory_CoreSet_Faction4
       )
 
     if (identifier == Cards.Spell.DarkTransformation)
+      description = i18next.t("cards.faction_4_spell_dark_transformation_description_0")
+      spawnForOwner = false
+      if version is 0
+        manaCost = 5
+      else
+        manaCost = 4
+        if version is 1
+          description = i18next.t("cards.faction_4_spell_dark_transformation_description_1")
+          spawnForOwner = true
       card = new SpellKillTargetSpawnEntity(gameSession)
       card.factionId = Factions.Faction4
       card.id = Cards.Spell.DarkTransformation
       card.name = i18next.t("cards.faction_4_spell_dark_transformation_name")
-      card.setDescription(i18next.t("cards.faction_4_spell_dark_transformation_description"))
-      card.manaCost = 4
+      card.setDescription(description)
+      card.manaCost = manaCost
       card.rarityId = Rarity.Common
       card.cardDataOrIndexToSpawn = {id: Cards.Faction4.Wraithling}
       card.spellFilterType = SpellFilterType.NeutralDirect
+      card.spawnForOwner = spawnForOwner
       card.setFXResource(["FX.Cards.Spell.DarkTransformation"])
       card.setBaseAnimResource(
         idle: RSX.iconDarkTransformationIdle.name
@@ -1133,15 +1161,21 @@ class CardFactory_CoreSet_Faction4
       )
 
     if (identifier == Cards.Artifact.SpectralBlade)
+      if version is 0
+        healAmount = 2
+        description = i18next.t("cards.faction_4_artifact_spectral_blade_description_0")
+      else
+        healAmount = 1
+        description = i18next.t("cards.faction_4_artifact_spectral_blade_description_1")
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction4
       card.id = Cards.Artifact.SpectralBlade
       card.name = i18next.t("cards.faction_4_artifact_spectral_blade_name")
-      card.setDescription(i18next.t("cards.faction_4_artifact_spectral_blade_description"))
+      card.setDescription(description)
       card.manaCost = 2
       card.rarityId = Rarity.Rare
       card.setTargetModifiersContextObjects([
-        ModifierKillWatchHealSelf.createContextObject(1, false, true,
+        ModifierKillWatchHealSelf.createContextObject(healAmount, false, true,
         {
           name: i18next.t("cards.faction_4_artifact_spectral_blade_name")
           description: i18next.t("modifiers.faction_4_artifact_spectral_blade_1")

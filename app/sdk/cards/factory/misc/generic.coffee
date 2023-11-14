@@ -58,6 +58,7 @@ SpellFollowupSpawnEntityFromDeck = require 'app/sdk/spells/spellFollowupSpawnEnt
 SpellDamageOrHeal = require 'app/sdk/spells/spellDamageOrHeal'
 SpellKillDamagedMinion = require 'app/sdk/spells/spellKillDamagedMinion'
 SpellFollowupDamageAndBuffSelf = require 'app/sdk/spells/spellFollowupDamageAndBuffSelf'
+SpellFollowupKillTargetByAttack = require 'app/sdk/spells/spellFollowupKillTargetByAttack'
 
 PlayerModifierMechazorBuildProgress = require 'app/sdk/playerModifiers/playerModifierMechazorBuildProgress'
 PlayerModifierMechazorSummoned = require 'app/sdk/playerModifiers/playerModifierMechazorSummoned'
@@ -447,6 +448,19 @@ class CardFactory_Generic
       card.name = "Kill Target"
       card.setDescription("Kill target unit with Provoke or Frenzy")
       card.setFXResource(["FX.Cards.Spell.FollowupHollowGroveKeeper"])
+      card.setBaseSoundResource(
+        apply : RSX.sfx_spell_voidwalk.audio
+      )
+
+    if (identifier == Cards.Spell.FollowupKillTargetByAttack)
+      card = new SpellFollowupKillTargetByAttack(gameSession)
+      card.factionId = Factions.Neutral
+      card.setIsHiddenInCollection(true)
+      card.id = Cards.Spell.FollowupKillTargetByAttack
+      card.name = "Assassinate"
+      card.setDescription("Kill target minion.")
+      card.manaCost = 0
+      card.setFXResource(["FX.Factions.Neutral.UnitSpawnFX","FX.Cards.Spell.FollowupKillTargetByAttack"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_voidwalk.audio
       )

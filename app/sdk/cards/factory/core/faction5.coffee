@@ -319,10 +319,22 @@ class CardFactory_CoreSet_Faction5
       card.setInherentModifiersContextObjects([ModifierFrenzy.createContextObject(), ModifierFirstBlood.createContextObject()])
 
     if (identifier == Cards.Faction5.Phalanxar)
+      if version is 0
+        atk = 7
+        maxHP = 2
+        manaCost = 3
+      else
+        description = i18next.t("cards.faction_5_unit_phalanxar_desc")
+        atk = 4
+        maxHP = 4
+        manaCost = 2
+        modifierContextObject =
+          Modifier.createContextObjectOnBoard({ attributeBuffs: { speed: -1 } })
       card = new Unit(gameSession)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_phalanxar_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_phalanxar_desc"))
+      if description?
+        card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction5.Phalanxar"])
       card.setBoundingBoxWidth(105)
       card.setBoundingBoxHeight(110)
@@ -344,13 +356,12 @@ class CardFactory_CoreSet_Faction5
         damage : RSX.f5TankDamage.name
         death : RSX.f5TankDeath.name
       )
-      card.atk = 4
-      card.maxHP = 4
-      card.manaCost = 2
+      card.atk = atk
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.Common
-      card.setInherentModifiersContextObjects([
-        Modifier.createContextObjectOnBoard({ attributeBuffs: { speed: -1 } }),
-      ])
+      if modifierContextObject?
+        card.setInherentModifiersContextObjects([modifierContextObject])
 
     if (identifier == Cards.Faction5.Elucidator)
       if version is 0
@@ -1135,17 +1146,27 @@ class CardFactory_CoreSet_Faction5
       )
 
     if (identifier == Cards.Artifact.TwinFang)
+      if version is 0
+        manaCost = 3
+        atkBuff = 2
+        description = i18next.t("cards.faction_5_artifact_twin_fang_description_0")
+      else
+        manaCost = 2
+        atkBuff = 1
+        description = i18next.t("cards.faction_5_artifact_twin_fang_description_1")
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction5
       card.id = Cards.Artifact.TwinFang
       card.name = i18next.t("cards.faction_5_artifact_twin_fang_name")
-      card.setDescription(i18next.t("cards.faction_5_artifact_twin_fang_description"))
-      card.manaCost = 2
+      card.setDescription(description)
+      card.manaCost = manaCost
       card.rarityId = Rarity.Epic
       card.setTargetModifiersContextObjects([
-        ModifierMyMinionOrGeneralDamagedWatchBuffSelf.createContextObject(1,0,{
-          name: i18next.t("cards.faction_5_artifact_twin_fang_name")
-        })
+        ModifierMyMinionOrGeneralDamagedWatchBuffSelf.createContextObject(
+          atkBuff,
+          0,
+          { name: i18next.t("cards.faction_5_artifact_twin_fang_name") },
+        )
       ])
       card.setFXResource(["FX.Cards.Artifact.TwinFang"])
       card.setBaseAnimResource(

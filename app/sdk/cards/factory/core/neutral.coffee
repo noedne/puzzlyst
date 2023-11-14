@@ -63,7 +63,7 @@ ModifierDyingWishReSpawnEntityAnywhere = require 'app/sdk/modifiers/modifierDyin
 ModifierOpeningGambitHealMyGeneral = require 'app/sdk/modifiers/modifierOpeningGambitHealMyGeneral'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierCannotAttackMinions = require 'app/sdk/modifiers/modifierCannotAttackMinions'
-ModifierEquipFriendlyArtifactWatchGainAttackEqualToCost = require 'app/sdk/modifiers/modifierEquipFriendlyArtifactWatchGainAttackEqualToCost'
+ModifierEquipFriendlyArtifactWatchGainStatsEqualToCost = require 'app/sdk/modifiers/modifierEquipFriendlyArtifactWatchGainStatsEqualToCost'
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 ModifierDynamicCountModifySelfByAlliesNearby = require 'app/sdk/modifiers/modifierDynamicCountModifySelfByAlliesNearby'
 ModifierRedirectDamageFromAllyDirectlyInFront = require 'app/sdk/modifiers/modifierRedirectDamageFromAllyDirectlyInFront'
@@ -152,10 +152,22 @@ class CardFactory_CoreSet_Neutral
       ])
 
     if (identifier == Cards.Neutral.KomodoCharger)
+      buffAttack = false
+      buffHealth = false
+      if version is 0
+        description = i18next.t("cards.neutral_komodo_charger_desc_0")
+        atk = 2
+        maxHP = 2
+        buffHealth = true
+      else
+        description = i18next.t("cards.neutral_komodo_charger_desc_1")
+        atk = 1
+        maxHP = 3
+        buffAttack = true
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_komodo_charger_name")
-      card.setDescription(i18next.t("cards.neutral_komodo_charger_desc"))
+      card.setDescription(description)
       card.setBoundingBoxHeight(40)
       card.setFXResource(["FX.Cards.Neutral.KomodoCharger"])
       card.setBoundingBoxWidth(90)
@@ -178,13 +190,15 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralBeastCavernHit.name
         death : RSX.neutralBeastCavernDeath.name
       )
-      card.atk = 1
-      card.maxHP = 3
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 1
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([
-        ModifierEquipFriendlyArtifactWatchGainAttackEqualToCost.createContextObject(
-          'Lucky Find'
+        ModifierEquipFriendlyArtifactWatchGainStatsEqualToCost.createContextObject(
+          buffAttack,
+          buffHealth,
+          'Lucky Find',
         )
       ])
 
@@ -1893,6 +1907,14 @@ class CardFactory_CoreSet_Neutral
         createContextObject = ModifierCardControlledPlayerModifiers
           .createContextObjectOnBoardToTargetBothPlayers
           .bind(ModifierCardControlledPlayerModifiers)
+      else if version is 2
+        description = i18next.t("cards.neutral_archon_spellbinder_desc_1")
+        atk = 6
+        maxHP = 6
+        manaCost = 5
+        createContextObject = ModifierCardControlledPlayerModifiers
+          .createContextObjectOnBoardToTargetBothPlayers
+          .bind(ModifierCardControlledPlayerModifiers)
       else
         description = i18next.t("cards.neutral_archon_spellbinder_desc_0")
         atk = 8
@@ -1937,10 +1959,16 @@ class CardFactory_CoreSet_Neutral
       card.setInherentModifiersContextObjects([createContextObject([contextObject])])
 
     if (identifier == Cards.Neutral.SilhoutteTracer)
+      if version is 0
+        description = i18next.t("cards.neutral_silhouette_tracer_desc_0")
+        pattern = CONFIG.PATTERN_4SPACES_WITHOUT_CENTER
+      else
+        description = i18next.t("cards.neutral_silhouette_tracer_desc_1")
+        pattern = CONFIG.PATTERN_3SPACES_WITHOUT_CENTER
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_silhouette_tracer_name")
-      card.setDescription(i18next.t("cards.neutral_silhouette_tracer_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.SilhoutteTracer"])
       card.setBaseSoundResource(
         apply : RSX.sfx_unit_deploy_3.audio
@@ -1968,7 +1996,7 @@ class CardFactory_CoreSet_Neutral
       card.setFollowups([
         {
           id: Cards.Spell.FollowupTeleportMyGeneral
-          pattern: CONFIG.PATTERN_3SPACES_WITHOUT_CENTER
+          pattern
         }
       ])
 
@@ -3330,6 +3358,10 @@ class CardFactory_CoreSet_Neutral
       card.rarityId = Rarity.Epic
 
     if (identifier == Cards.Neutral.Rook)
+      if version is 0
+        manaCost = 7
+      else
+        manaCost = 6
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_rook_name")
@@ -3357,7 +3389,7 @@ class CardFactory_CoreSet_Neutral
       )
       card.atk = 7
       card.maxHP = 7
-      card.manaCost = 6
+      card.manaCost = manaCost
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([
         ModifierRook.createContextObject()
