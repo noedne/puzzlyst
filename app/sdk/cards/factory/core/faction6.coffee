@@ -502,7 +502,7 @@ class CardFactory_CoreSet_Faction6
         description = i18next.t("cards.faction_6_unit_wolfraven_desc_0")
         maxHP = 4
         modifierContextObject =
-          ModifierInfiltrate.createContextObject(immunityContextObject)
+          ModifierInfiltrate.createContextObject([immunityContextObject])
       else
         description = i18next.t("cards.faction_6_unit_wolfraven_desc_1")
         maxHP = 3

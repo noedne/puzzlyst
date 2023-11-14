@@ -70,6 +70,7 @@ const patches = [
       [Cards.Faction5.Phalanxar]: 1,
       [Cards.Spell.Numb]: 1,
       [Cards.Faction6.SnowElemental]: 1,
+      [Cards.Faction6.WolfRaven]: 1,
       [Cards.Faction6.AncientGrove]: 1,
       [Cards.Neutral.ProphetWhitePalm]: 1,
       [Cards.Neutral.KomodoCharger]: 1,
