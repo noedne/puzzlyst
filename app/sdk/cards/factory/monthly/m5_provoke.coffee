@@ -105,6 +105,7 @@ class CardFactory_Monthly_M5_Provoke
           false,
         ),
       ])
+      card.addKeywordClassToInclude(ModifierProvoke)
 
     if (identifier == Cards.Neutral.Tethermancer)
       card = new Unit(gameSession)

@@ -148,6 +148,7 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
           2
         )
       ])
+      card.addKeywordClassToInclude(ModifierOpeningGambit)
 
     if (identifier == Cards.Neutral.KeeperOfTheVale)
       card = new Unit(gameSession)

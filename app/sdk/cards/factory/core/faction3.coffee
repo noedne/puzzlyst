@@ -804,6 +804,7 @@ class CardFactory_CoreSet_Faction3
           }],
         },
       }])
+      card.addKeywordClassToInclude(ModifierBlastAttack)
       card.setFXResource(["FX.Cards.Spell.CosmicFlesh"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_cosmicflesh.audio
