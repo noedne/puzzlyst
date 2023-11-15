@@ -36,6 +36,8 @@ class DamageAction extends Action
   getTotalDamageAmount: () ->
     if @getIsRedirected()
       return 0
+    if @getIsTrueDamage()
+      return @getDamageAmount()
     return @getTotalDamageAmountBeforeRedirection()
 
   # setters / getters
@@ -65,6 +67,9 @@ class DamageAction extends Action
   
   setIsRedirected: (isRedirected) ->
     @_private.isRedirected = isRedirected
+
+  getIsTrueDamage: () ->
+    return false
 
   getDamageMultiplier: () ->
     return @_private.damageMultiplier

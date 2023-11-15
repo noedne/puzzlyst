@@ -1,7 +1,6 @@
 DamageAction = require 'app/sdk/actions/damageAction'
 EVENTS = require 'app/common/event_types'
 Modifier = require './modifier'
-TrueDamageAction = require 'app/sdk/actions/trueDamageAction'
 
 class ModifierRedirectDamageFromAllyDirectlyInFront extends Modifier
 
@@ -51,7 +50,7 @@ class ModifierRedirectDamageFromAllyDirectlyInFront extends Modifier
     xOffset = if @getCard().isOwnedByPlayer1() then 1 else -1
     return @getCard()? and
       action instanceof DamageAction and
-      not (action instanceof TrueDamageAction) and
+      not action.getIsTrueDamage() and
       target? and
       action.getTotalDamageAmountBeforeRedirection() > 0 and
       target.getIsSameTeamAs(@getCard()) and

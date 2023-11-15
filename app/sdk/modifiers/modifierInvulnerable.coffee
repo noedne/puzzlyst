@@ -2,7 +2,6 @@ ModifierUntargetable = require './modifierUntargetable'
 DieAction = require 'app/sdk/actions/dieAction'
 DamageAction = require 'app/sdk/actions/damageAction'
 HealAction = require 'app/sdk/actions/healAction'
-TrueDamageAction = require 'app/sdk/actions/trueDamageAction'
 AttackAction = require 'app/sdk/actions/attackAction'
 MoveAction = require 'app/sdk/actions/moveAction'
 ResignAction = require 'app/sdk/actions/resignAction'
@@ -36,7 +35,7 @@ class ModifierInvulnerable extends ModifierUntargetable
     if action instanceof DieAction and !(action instanceof ResignAction) and action.getTarget() is @getCard()
       @invalidateAction(action)
     # invalidate any damage actions against this, EXCEPT from true damage
-    else if action instanceof DamageAction and action.getTarget() is @getCard() and !(action instanceof TrueDamageAction)
+    else if action instanceof DamageAction and action.getTarget() is @getCard() and !action.getIsTrueDamage()
       @invalidateAction(action)
     # invalidate any heal actions that target this
     else if action instanceof HealAction and action.getTarget() is @getCard()

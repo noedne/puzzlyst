@@ -10,6 +10,10 @@ export function getCardVersion(identifier: number): number {
   return 0;
 }
 
+export function getIsHurtingDamageTrueDamage(): boolean {
+  return currentVersion < Version.Patch__0_2_7;
+}
+
 const currentVersion = Version.Latest;
 
 const enum Version {

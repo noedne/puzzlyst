@@ -12,7 +12,7 @@ class TrueDamageAction extends DamageAction
     @type ?= TrueDamageAction.type
     super
 
-  getTotalDamageAmount: () ->
-    return @getDamageAmount()
+  getIsTrueDamage: () ->
+    return true
 
 module.exports = TrueDamageAction

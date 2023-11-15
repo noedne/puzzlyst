@@ -14,4 +14,7 @@ class HurtingDamageAction extends DamageAction
     @type ?= HurtingDamageAction.type
     super
 
+  getIsTrueDamage: () ->
+    return @getGameSession().getIsHurtingDamageTrueDamage()
+
 module.exports = HurtingDamageAction
