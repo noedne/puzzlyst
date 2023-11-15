@@ -684,13 +684,19 @@ class CardFactory_CoreSet_Faction1
       card.rarityId = Rarity.Common
 
     if (identifier == Cards.Spell.SundropElixir)
+      if version is 0
+        description = i18next.t("cards.faction_1_spell_sundrop_elixir_description_0")
+        healModifier = 5
+      else
+        description = i18next.t("cards.faction_1_spell_sundrop_elixir_description_1")
+        healModifier = 4
       card = new SpellHeal(gameSession)
       card.factionId = Factions.Faction1
       card.id = Cards.Spell.SundropElixir
       card.name = i18next.t("cards.faction_1_spell_sundrop_elixir_name")
-      card.setDescription(i18next.t("cards.faction_1_spell_sundrop_elixir_description"))
+      card.setDescription(description)
       card.manaCost = 1
-      card.healModifier = 4
+      card.healModifier = healModifier
       card.canTargetGeneral = true
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.rarityId = Rarity.Common

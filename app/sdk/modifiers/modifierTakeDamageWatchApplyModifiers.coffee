@@ -7,10 +7,9 @@ class ModifierTakeDamageWatchApplyModifiers extends ModifierTakeDamageWatch
 
   fxResource: ["FX.Modifiers.ModifierGenericBuff"]
 
-  @createContextObject: (modifiersContextObjects, description, options) ->
+  @createContextObject: (modifiersContextObjects, options) ->
     contextObject = super(options)
     contextObject.modifiersContextObjects = modifiersContextObjects
-    contextObject.description = description
     return contextObject
 
   onDamageTaken: (action) ->

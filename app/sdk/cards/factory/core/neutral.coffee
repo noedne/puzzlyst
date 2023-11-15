@@ -844,10 +844,16 @@ class CardFactory_CoreSet_Neutral
       ])
 
     if (identifier == Cards.Neutral.ThornNeedler)
+      durationIsUntilYourNextTurn = false
+      if version is 0
+        description = i18next.t("cards.neutral_thorn_needler_desc_0")
+        durationIsUntilYourNextTurn = true
+      else
+        description = i18next.t("cards.neutral_thorn_needler_desc_1")
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_thorn_needler_name")
-      card.setDescription(i18next.t("cards.neutral_thorn_needler_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.ThornNeedler"])
       card.setBaseSoundResource(
         apply : RSX.sfx_unit_deploy_3.audio
@@ -872,10 +878,11 @@ class CardFactory_CoreSet_Neutral
       card.manaCost = 4
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([
-        ModifierTakeDamageWatchApplyModifiers.createContextObject(
-          [Modifier.createContextObjectWithAttributeBuffs(2, 0)],
-          i18next.t("cards.neutral_thorn_needler_desc"),
-        )
+        ModifierTakeDamageWatchApplyModifiers.createContextObject([
+          Modifier.createContextObjectWithAttributeBuffs(2, 0, {
+            durationIsUntilYourNextTurn
+          })
+        ])
       ])
 
     if (identifier == Cards.Neutral.Serpenti)
@@ -1543,6 +1550,14 @@ class CardFactory_CoreSet_Neutral
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Neutral.JaxTruesight)
+      if version is 0
+        atk = 1
+        maxHP = 1
+        manaCost = 6
+      else
+        atk = 3
+        maxHP = 2
+        manaCost = 7
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_jax_truesight_name")
@@ -1568,9 +1583,9 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralJaxTruesightHit.name
         death : RSX.neutralJaxTruesightDeath.name
       )
-      card.atk = 3
-      card.maxHP = 2
-      card.manaCost = 7
+      card.atk = atk
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([
         ModifierRanged.createContextObject(),
@@ -1718,6 +1733,12 @@ class CardFactory_CoreSet_Neutral
       card.setInherentModifiersContextObjects([ModifierFrenzy.createContextObject()])
 
     if (identifier == Cards.Neutral.TwilightMage)
+      if version is 0
+        atk = 4
+        maxHP = 6
+      else
+        atk = 3
+        maxHP = 7
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.raceId = Races.Arcanyst
@@ -1744,8 +1765,8 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralTwilightMageHit.name
         death : RSX.neutralTwilightMageDeath.name
       )
-      card.atk = 3
-      card.maxHP = 7
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 5
       card.setInherentModifiersContextObjects([ModifierOpeningGambitRetrieveRandomSpell.createContextObject()])
       card.rarityId = Rarity.Rare

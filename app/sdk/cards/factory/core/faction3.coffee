@@ -784,14 +784,20 @@ class CardFactory_CoreSet_Faction3
       )
 
     if (identifier == Cards.Spell.SiphonEnergy)
+      if version is 0
+        description = i18next.t("cards.faction_3_spell_siphon_energy_description_0")
+        spellFilterType = SpellFilterType.EnemyDirect
+      else
+        description = i18next.t("cards.faction_3_spell_siphon_energy_description_1")
+        spellFilterType = SpellFilterType.NeutralDirect
       card = new SpellApplyModifiers(gameSession)
       card.factionId = Factions.Faction3
       card.id = Cards.Spell.SiphonEnergy
       card.name = i18next.t("cards.faction_3_spell_siphon_energy_name")
-      card.setDescription(i18next.t("cards.faction_3_spell_siphon_energy_description"))
+      card.setDescription(description)
       card.manaCost = 0
       card.rarityId = Rarity.Common
-      card.spellFilterType = SpellFilterType.NeutralDirect
+      card.spellFilterType = spellFilterType
       card.setTargetModifiersContextObjects([ModifierSilence.createContextObject()])
       card.addKeywordClassToInclude(ModifierDispels)
       card.setFXResource(["FX.Cards.Spell.SiphonEnergy"])

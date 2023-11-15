@@ -179,6 +179,10 @@ class CardFactory_Monthly_M2_Reactive
       ])
 
     if (identifier == Cards.Neutral.Jaxi)
+      if version is 0
+        maxHP = 1
+      else
+        maxHP = 2
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_jaxi_name")
@@ -203,7 +207,7 @@ class CardFactory_Monthly_M2_Reactive
         death : RSX.neutralJaxiDeath.name
       )
       card.atk = 2
-      card.maxHP = 2
+      card.maxHP = maxHP
       card.manaCost = 2
       card.rarityId = Rarity.Rare
       card.setInherentModifiersContextObjects([

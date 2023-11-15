@@ -343,6 +343,12 @@ class CardFactory_CoreSet_Faction6
       card.setInherentModifiersContextObjects([ModifierAirdrop.createContextObject()])
 
     if (identifier == Cards.Faction6.ArcticRhyno)
+      if version is 0
+        maxHP = 5
+        manaCost = 5
+      else
+        maxHP = 8
+        manaCost = 6
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_frosthorn_rhyno_name")
@@ -369,8 +375,8 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6ArcticRhynoDeath.name
       )
       card.atk = 6
-      card.maxHP = 8
-      card.manaCost = 6
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.Epic
       attackBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(1)
       attackBuffContextObject.appliedName = i18next.t("modifiers.faction_6_infiltrated_attack_buff_name")
@@ -382,6 +388,14 @@ class CardFactory_CoreSet_Faction6
       card.addKeywordClassToInclude(ModifierTranscendance)
 
     if (identifier == Cards.Faction6.PrismaticGiant)
+      if version is 0
+        atk = 7
+        maxHP = 6
+        manaCost = 6
+      else
+        atk = 6
+        maxHP = 5
+        manaCost = 5
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.name = i18next.t("cards.faction_6_unit_draugar_lord_name")
@@ -408,9 +422,9 @@ class CardFactory_CoreSet_Faction6
         damage : RSX.f6DraugarLordDamage.name
         death : RSX.f6DraugarLordDeath.name
       )
-      card.atk = 6
-      card.maxHP = 5
-      card.manaCost = 5
+      card.atk = atk
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.Epic
       card.setInherentModifiersContextObjects([
         ModifierOpeningGambitPlaySpellAsFollowup.createContextObject({
@@ -430,6 +444,10 @@ class CardFactory_CoreSet_Faction6
       card.radius = CONFIG.WHOLE_BOARD_RADIUS
 
     if (identifier == Cards.Faction6.IceDrake)
+      if version is 0
+        maxHP = 7
+      else
+        maxHP = 6
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.setIsHiddenInCollection(true)
@@ -456,7 +474,7 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6FrostdrakeDeath.name
       )
       card.atk = 2
-      card.maxHP = 6
+      card.maxHP = maxHP
       card.manaCost = 3
       card.rarityId = Rarity.TokenUnit
       card.addKeywordClassToInclude(ModifierToken)

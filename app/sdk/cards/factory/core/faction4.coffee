@@ -26,6 +26,7 @@ SpellDarkSeed = require 'app/sdk/spells/spellDarkSeed'
 SpellLifeSurge = require 'app/sdk/spells/spellLifeSurge'
 SpellVoidSteal = require 'app/sdk/spells/spellVoidSteal'
 SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
+SpellVoidPulse = require 'app/sdk/spells/spellVoidPulse'
 
 Modifier =           require 'app/sdk/modifiers/modifier'
 ModifierStackingShadows = require 'app/sdk/modifiers/modifierStackingShadows'
@@ -848,15 +849,27 @@ class CardFactory_CoreSet_Faction4
       )
 
     if (identifier == Cards.Spell.VoidPulse)
-      card = new SpellLifeSurge(gameSession)
+      canTargetGeneral = false
+      if version is 0
+        spell = SpellVoidPulse
+        description = i18next.t("cards.faction_4_spell_void_pulse_description_0")
+        damageAmount = 2
+        healAmount = 3
+      else
+        spell = SpellLifeSurge
+        description = i18next.t("cards.faction_4_spell_void_pulse_description_1")
+        damageAmount = 1
+        healAmount = 2
+        canTargetGeneral = true
+      card = new spell(gameSession)
       card.factionId = Factions.Faction4
       card.id = Cards.Spell.VoidPulse
       card.name = i18next.t("cards.faction_4_spell_void_pulse_name")
-      card.setDescription(i18next.t("cards.faction_4_spell_void_pulse_description"))
+      card.setDescription(description)
       card.manaCost = 1
-      card.damageAmount = 1
-      card.healAmount = 2
-      card.canTargetGeneral = true
+      card.damageAmount = damageAmount
+      card.healAmount = healAmount
+      card.canTargetGeneral = canTargetGeneral
       card.rarityId = Rarity.Common
       card.setFXResource(["FX.Cards.Spell.VoidPulse"])
       card.setBaseSoundResource(
@@ -1053,21 +1066,29 @@ class CardFactory_CoreSet_Faction4
         active : RSX.iconShadowReflectionActive.name
       )
 
-
     if (identifier == Cards.Spell.SoulshatterPact)
-      card = new SpellVoidSteal(gameSession)
+      allyBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(2, 0, {
+        appliedName: i18next.t("modifiers.faction_4_spell_soulshatter_pact_1"),
+      })
+      if version is 0
+        card = new SpellApplyModifiers(gameSession)
+        card.setDescription(i18next.t("cards.faction_4_spell_soulshatter_pact_description_0"))
+        card.spellFilterType = SpellFilterType.AllyIndirect
+        allyBuffContextObject.durationEndTurn = 2
+        card.setTargetModifiersContextObjects([allyBuffContextObject])
+        card.radius = CONFIG.WHOLE_BOARD_RADIUS
+      else
+        card = new SpellVoidSteal(gameSession)
+        card.setDescription(i18next.t("cards.faction_4_spell_soulshatter_pact_description_1"))
+        card.spellFilterType = SpellFilterType.EnemyDirect
+        customContextObject = Modifier.createContextObjectWithAttributeBuffs(-2,0)
+        card.setTargetModifiersContextObjects([customContextObject])
+        card.allyBuffContextObject = allyBuffContextObject
       card.factionId = Factions.Faction4
       card.id = Cards.Spell.SoulshatterPact
       card.name = i18next.t("cards.faction_4_spell_soulshatter_pact_name")
-      card.setDescription(i18next.t("cards.faction_4_spell_soulshatter_pact_description"))
       card.manaCost = 2
       card.rarityId = Rarity.Common
-      card.spellFilterType = SpellFilterType.EnemyDirect
-      customContextObject = Modifier.createContextObjectWithAttributeBuffs(-2,0)
-      card.setTargetModifiersContextObjects([customContextObject])
-      card.allyBuffContextObject = Modifier.createContextObjectWithAttributeBuffs(2, 0, {
-        appliedName: i18next.t("modifiers.faction_4_spell_soulshatter_pact_1"),
-      })
       card.setFXResource(["FX.Cards.Spell.SoulshatterPact"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_soulshatterpact.audio

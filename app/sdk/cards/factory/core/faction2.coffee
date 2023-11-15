@@ -1159,7 +1159,7 @@ class CardFactory_CoreSet_Faction2
         description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_2")
         atk = 1
         backstab = 2
-      else if version is 3
+      else
         manaCost = 1
         description = i18next.t("cards.faction_2_artifact_mask_of_shadows_description_3")
         atk = 1

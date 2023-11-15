@@ -22,6 +22,7 @@ const enum Version {
   Patch__0_2_5,
   Patch__0_2_6,
   Patch__0_2_7,
+  Patch__0_2_8,
   Latest,
 }
 
@@ -29,15 +30,31 @@ const patches = [
   {
     version: Version.Latest,
     changes: {
-      [Cards.Artifact.MaskOfShadows]: 3,
       [Cards.Neutral.ArchonSpellbinder]: 3,
-      [Cards.Spell.EntropicDecay]: 2,
       [Cards.Spell.CosmicFlesh]: 3,
-      [Cards.Faction4.NightsorrowAssassin]: 2,
-      [Cards.Spell.DarkTransformation]: 2,
       [Cards.Spell.Numb]: 3,
       [Cards.Faction6.SnowElemental]: 2,
+    },
+  },
+  {
+    version: Version.Patch__0_2_8,
+    changes: {
+      [Cards.Spell.SundropElixir]: 1,
+      [Cards.Artifact.MaskOfShadows]: 3,
+      [Cards.Spell.SiphonEnergy]: 1,
+      [Cards.Spell.EntropicDecay]: 2,
+      [Cards.Spell.VoidPulse]: 1,
+      [Cards.Spell.SoulshatterPact]: 1,
+      [Cards.Faction4.NightsorrowAssassin]: 2,
+      [Cards.Spell.DarkTransformation]: 2,
       [Cards.Spell.PlasmaStorm]: 2,
+      [Cards.Faction6.PrismaticGiant]: 1,
+      [Cards.Faction6.IceDrake]: 1,
+      [Cards.Faction6.ArcticRhyno]: 1,
+      [Cards.Neutral.Jaxi]: 1,
+      [Cards.Neutral.ThornNeedler]: 1,
+      [Cards.Neutral.TwilightMage]: 1,
+      [Cards.Neutral.JaxTruesight]: 1,
     },
   },
   {
