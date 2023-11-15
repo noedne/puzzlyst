@@ -999,6 +999,12 @@ class CardFactory_CoreSet_Faction6
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Faction6.BlazingSpines)
+      if version is 0
+        maxHP = 3
+        manaCost = 1
+      else
+        maxHP = 1
+        manaCost = 0
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.setIsHiddenInCollection(true)
@@ -1024,8 +1030,8 @@ class CardFactory_CoreSet_Faction6
         death : RSX.f6BlazingSpinesDeath.name
       )
       card.atk = 3
-      card.maxHP = 1
-      card.manaCost = 0
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.TokenUnit
       card.setInherentModifiersContextObjects([ModifierWall.createContextObject()])
       card.addKeywordClassToInclude(ModifierToken)
@@ -1143,12 +1149,16 @@ class CardFactory_CoreSet_Faction6
       )
 
     if (identifier == Cards.Spell.BlazingSpines)
+      if version is 0
+        manaCost = 3
+      else
+        manaCost = 1
       card = new SpellSpawnEntity(gameSession)
       card.factionId = Factions.Faction6
       card.id = Cards.Spell.BlazingSpines
       card.name = i18next.t("cards.faction_6_spell_blazing_spines_name")
       card.setDescription(i18next.t("cards.faction_6_spell_blazing_spines_description"))
-      card.manaCost = 1
+      card.manaCost = manaCost
       card.rarityId = Rarity.Rare
       card.cardDataOrIndexToSpawn = {id: Cards.Faction6.BlazingSpines}
       card.setFXResource(["FX.Spell.FireTornado","FX.Cards.Spell.BlazingSpines"])

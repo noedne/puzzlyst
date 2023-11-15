@@ -54,6 +54,8 @@ ModifierDynamicCountModifySelfByShadowTilesOnBoard = require 'app/sdk/modifiers/
 ModifierDyingWishTeleportEnemyGeneral = require 'app/sdk/modifiers/modifierDyingWishTeleportEnemyGeneral'
 ModifierOpeningGambitPutCardInHand = require 'app/sdk/modifiers/modifierOpeningGambitPutCardInHand'
 ModifierDyingWish = require 'app/sdk/modifiers/modifierDyingWish'
+ModifierDyingWishPutCardInHand = require 'app/sdk/modifiers/modifierDyingWishPutCardInHand'
+
 PlayerModifierOnDeathWatchBonusMana = require 'app/sdk/playerModifiers/playerModifierOnDeathWatchBonusMana'
 
 i18next = require 'i18next'
@@ -533,10 +535,20 @@ class CardFactory_CoreSet_Faction4
       card.addKeywordClassToInclude(ModifierStackingShadows)
 
     if (identifier == Cards.Faction4.GloomChaser)
+      if version is 0
+        description = i18next.t("cards.faction_4_unit_gloomchaser_desc_0")
+        atk = 2
+        maxHP = 2
+        spawnPattern = CONFIG.PATTERN_3x3
+      else
+        description = i18next.t("cards.faction_4_unit_gloomchaser_desc_1")
+        atk = 3
+        maxHP = 1
+        spawnPattern = CONFIG.PATTERN_DIRECTLY_BEHIND
       card = new Unit(gameSession)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_gloomchaser_name")
-      card.setDescription(i18next.t("cards.faction_4_unit_gloomchaser_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction4.GloomChaser"])
       card.setBaseSoundResource(
         apply : RSX.sfx_f4_blacksolus_attack_swing.audio
@@ -556,8 +568,8 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4GloomchaserDamage.name
         death : RSX.f4GloomchaserDeath.name
       )
-      card.atk = 3
-      card.maxHP = 1
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 2
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([
@@ -565,7 +577,7 @@ class CardFactory_CoreSet_Faction4
           {id: Cards.Faction4.Wraithling},
           "1/1 Wraithling",
           1,
-          CONFIG.PATTERN_DIRECTLY_BEHIND,
+          spawnPattern,
         ),
       ])
 
@@ -728,10 +740,44 @@ class CardFactory_CoreSet_Faction4
       card.setInherentModifiersContextObjects([  ModifierFirstBlood.createContextObject(), ModifierDamageGeneralOnAttack.createContextObject(4)  ])
 
     if (identifier == Cards.Faction4.BlackSolus)
+      wraithlingData = { id: Cards.Faction4.Wraithling }
+      if version is 0
+        description = i18next.t("cards.faction_4_unit_black_solus_desc_0")
+        atk = 5
+        maxHP = 7
+        manaCost = 5
+        customContextObject =
+          ModifierSummonWatchByEntityBuffSelf.createContextObject(
+            2,
+            2,
+            wraithlingData.id,
+            "Wraithling",
+          )
+      else if version is 1
+        description = i18next.t("cards.faction_4_unit_black_solus_desc_1")
+        atk = 6
+        maxHP = 4
+        manaCost = 4
+        customContextObject = 
+          ModifierDyingWishPutCardInHand.createContextObject(
+            wraithlingData,
+            'Wraithling',
+            { shouldFill: true },
+          )
+      else
+        description = i18next.t("cards.faction_4_unit_black_solus_desc_2")
+        atk = 4
+        maxHP = 3
+        manaCost = 4
+        customContextObject = 
+          ModifierOpeningGambitPutCardInHand.createContextObject(
+            wraithlingData,
+            { count: 2 },
+          )
       card = new Unit(gameSession)
       card.factionId = Factions.Faction4
       card.name = i18next.t("cards.faction_4_unit_black_solus_name")
-      card.setDescription(i18next.t("cards.faction_4_unit_black_solus_desc"))
+      card.setDescription(description)
       card.setBoundingBoxWidth(70)
       card.setBoundingBoxHeight(90)
       card.setFXResource(["FX.Cards.Faction4.BlackSolus"])
@@ -753,17 +799,11 @@ class CardFactory_CoreSet_Faction4
         damage : RSX.f4BlackSolusDamage.name
         death : RSX.f4BlackSolusDeath.name
       )
-      card.atk = 4
-      card.maxHP = 3
-      card.manaCost = 4
+      card.atk = atk
+      card.maxHP = maxHP
+      card.manaCost = manaCost
       card.rarityId = Rarity.Rare
-      customContextObject = ModifierSummonWatchByEntityBuffSelf.createContextObject(2,0,Cards.Faction4.Wraithling,"Wraithling")
-      card.setInherentModifiersContextObjects([
-        ModifierOpeningGambitPutCardInHand.createContextObject(
-          { id: Cards.Faction4.Wraithling },
-          { count: 2 },
-        ),
-      ])
+      card.setInherentModifiersContextObjects([customContextObject])
 
     if (identifier == Cards.Spell.AbyssianStrength)
       card = new SpellApplyModifiers(gameSession)

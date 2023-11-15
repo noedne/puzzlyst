@@ -12,6 +12,8 @@ class ModifierReplaceWatchDamageEnemy extends ModifierReplaceWatch
 
   fxResource: ["FX.Modifiers.ModifierReplaceWatch", "FX.Modifiers.ModifierGenericDamageSmall"]
 
+  splitRandomly: false
+
   @createContextObject: (damageAmount, options=undefined) ->
     contextObject = super(options)
     contextObject.damageAmount = damageAmount
@@ -24,20 +26,32 @@ class ModifierReplaceWatchDamageEnemy extends ModifierReplaceWatch
       return @description
 
   onReplaceWatch: (action) ->
-    damageAction = new DamageAction(@getGameSession())
-    damageAction.setOwnerId(@getCard().getOwnerId())
-    damageAction.setSource(@getCard())
-    damageAction.setTarget(
+    if @splitRandomly
+      @damageEnemy()
+      @damageEnemy()
+    else
+      @damageGeneral()
+      @damageMinion()
+
+  damageGeneral: () ->
+    action = new DamageAction(@getGameSession())
+    action.setTarget(
       @getGameSession().getGeneralForOpponentOfPlayerId(@getOwnerId())
     )
-    damageAction.setDamageAmount(@damageAmount)
-    @getGameSession().executeAction(damageAction)
+    @executeAction(action)
 
-    randomDamageAction = new RandomDamageAction(@getGameSession())
-    randomDamageAction.setOwnerId(@getCard().getOwnerId())
-    randomDamageAction.setSource(@getCard())
-    randomDamageAction.setDamageAmount(@damageAmount)
-    randomDamageAction.canTargetGenerals = false
-    @getGameSession().executeAction(randomDamageAction)
+  damageMinion: () ->
+    @executeAction(new RandomDamageAction(@getGameSession()))
+
+  damageEnemy: () ->
+    action = new RandomDamageAction(@getGameSession())
+    action.canTargetGenerals = true
+    @executeAction(action)
+
+  executeAction: (action) ->
+    action.setOwnerId(@getOwnerId())
+    action.setSource(@getCard())
+    action.setDamageAmount(@damageAmount)
+    @getGameSession().executeAction(action)
 
 module.exports = ModifierReplaceWatchDamageEnemy

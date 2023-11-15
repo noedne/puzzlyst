@@ -936,13 +936,19 @@ class CardFactory_CoreSet_Faction5
       )
 
     if (identifier == Cards.Spell.EarthSphere)
+      if version is 0
+        description = i18next.t("cards.faction_5_spell_earth_sphere_description_0")
+        healModifier = 8
+      else
+        description = i18next.t("cards.faction_5_spell_earth_sphere_description_1")
+        healModifier = 9
       card = new SpellHealYourGeneral(gameSession)
       card.factionId = Factions.Faction5
       card.id = Cards.Spell.EarthSphere
       card.name = i18next.t("cards.faction_5_spell_earth_sphere_name")
-      card.setDescription(i18next.t("cards.faction_5_spell_earth_sphere_description"))
+      card.setDescription(description)
       card.manaCost = 4
-      card.healModifier = 9
+      card.healModifier = healModifier
       card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.AllyIndirect
       card.radius = CONFIG.WHOLE_BOARD_RADIUS

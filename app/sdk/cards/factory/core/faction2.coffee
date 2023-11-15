@@ -606,6 +606,25 @@ class CardFactory_CoreSet_Faction2
       card.setDescription(i18next.t("cards.faction_2_unit_four_winds_magi_desc"))
 
     if (identifier == Cards.Faction2.CelestialPhantom)
+      if version is 0
+        description = i18next.t("cards.faction_2_unit_celestial_phantom_desc_0")
+        atk = 1
+        maxHP = 5
+        manaCost = 3
+        modifierContextObject =
+          ModifierDealDamageWatchKillTarget.createContextObject()
+      else
+        description = i18next.t("cards.faction_2_unit_celestial_phantom_desc_1")
+        atk = 0
+        maxHP = 3
+        manaCost = 2
+        modifierContextObject =
+          ModifierOpeningGambitBuffSelfByHandCount.createContextObject(
+            1,
+            0,
+            i18next.t("modifiers.faction_2_celestial_phantom_buff_name"),
+            { useOpponentHand: false },
+          )
       card = new Unit(gameSession)
       card.factionId = Factions.Faction2
       card.name = i18next.t("cards.faction_2_unit_celestial_phantom_name")
@@ -630,17 +649,12 @@ class CardFactory_CoreSet_Faction2
         damage : RSX.f2DeathPhantomDamage.name
         death : RSX.f2DeathPhantomDeath.name
       )
-      card.atk = 0
-      card.maxHP = 3
-      card.manaCost = 2
-      card.setInherentModifiersContextObjects([
-        ModifierOpeningGambitBuffSelfByHandCount.createContextObject(1, 0,
-          i18next.t("modifiers.faction_2_celestial_phantom_buff_name"),
-          { useOpponentHand: false },
-        ),
-      ])
+      card.atk = atk
+      card.maxHP = maxHP
+      card.manaCost = manaCost
+      card.setInherentModifiersContextObjects([modifierContextObject])
       card.rarityId = Rarity.Epic
-      card.setDescription(i18next.t("cards.faction_2_unit_celestial_phantom_desc"))
+      card.setDescription(description)
 
     if (identifier == Cards.Faction2.StormKage)
       card = new Unit(gameSession)

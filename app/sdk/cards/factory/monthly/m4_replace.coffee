@@ -33,10 +33,16 @@ class CardFactory_Monthly_M4_Replace
     card = null
 
     if (identifier == Cards.Neutral.WhiteWidow)
+      if version is 0
+        description = i18next.t("cards.neutral_white_widow_desc_0")
+        splitRandomly = true
+      else
+        description = i18next.t("cards.neutral_white_widow_desc_1")
+        splitRandomly = false
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_white_widow_name")
-      card.setDescription(i18next.t("cards.neutral_white_widow_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.WhiteWidow"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_diretidefrenzy.audio
@@ -57,7 +63,10 @@ class CardFactory_Monthly_M4_Replace
         death : RSX.neutralWhiteWidowDeath.name
       )
       card.setInherentModifiersContextObjects([
-        ModifierReplaceWatchDamageEnemy.createContextObject(1)
+        ModifierReplaceWatchDamageEnemy.createContextObject(
+          1,
+          { splitRandomly },
+        )
       ])
       card.atk = 3
       card.maxHP = 4

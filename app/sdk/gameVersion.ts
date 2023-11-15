@@ -23,6 +23,7 @@ const enum Version {
   Patch__0_2_6,
   Patch__0_2_7,
   Patch__0_2_8,
+  Patch__0_2_9,
   Latest,
 }
 
@@ -32,8 +33,23 @@ const patches = [
     changes: {
       [Cards.Neutral.ArchonSpellbinder]: 3,
       [Cards.Spell.CosmicFlesh]: 3,
-      [Cards.Spell.Numb]: 3,
       [Cards.Faction6.SnowElemental]: 2,
+      [Cards.Faction4.BlackSolus]: 2,
+    },
+  },
+  {
+    version: Version.Patch__0_2_9,
+    changes: {
+      [Cards.Faction2.CelestialPhantom]: 1,
+      [Cards.Faction3.PortalGuardian]: 1,
+      [Cards.Artifact.PoisonHexblade]: 1,
+      [Cards.Faction4.GloomChaser]: 1,
+      [Cards.Faction4.BlackSolus]: 1,
+      [Cards.Spell.EarthSphere]: 1,
+      [Cards.Spell.BlazingSpines]: 1,
+      [Cards.Faction6.BlazingSpines]: 1,
+      [Cards.Spell.Numb]: 3,
+      [Cards.Neutral.WhiteWidow]: 1,
     },
   },
   {

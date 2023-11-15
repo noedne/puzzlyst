@@ -10,6 +10,7 @@ class ModifierDyingWishPutCardInHand extends ModifierDyingWish
   @description:"Put %X in your Action Bar"
 
   cardDataOrIndexToPutInHand: null
+  shouldFill: false
 
   @createContextObject: (cardDataOrIndexToPutInHand, cardDescription,options) ->
     contextObject = super(options)
@@ -24,12 +25,21 @@ class ModifierDyingWishPutCardInHand extends ModifierDyingWish
       return @description
 
   onDyingWish: () ->
-    a = new PutCardInHandAction(
-      @getGameSession(),
-      @getCard().getOwnerId(),
-      @getCardDataOrIndexToPutInHand(),
-    )
-    this.getGameSession().executeAction(a)
+    if @shouldFill
+      deck = @getOwner().getDeck()
+      count = deck.getHand().length - deck.getNumCardsInHand()
+    else
+      count = 1
+
+    for [0...count]
+      a = new PutCardInHandAction(
+        @getGameSession(),
+        @getCard().getOwnerId(),
+        @getCardDataOrIndexToPutInHand(),
+      )
+      this.getGameSession().executeAction(a)
+
+    return
   
   getCardDataOrIndexToPutInHand: () ->
     if @cardDataOrIndexToPutInHand?

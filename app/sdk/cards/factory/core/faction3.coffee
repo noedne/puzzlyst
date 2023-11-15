@@ -695,6 +695,10 @@ class CardFactory_CoreSet_Faction3
       card.setInherentModifiersContextObjects([ModifierProvoke.createContextObject(), ModifierDyingWishDamageEnemyGeneralHealGeneral.createContextObject(5)])
 
     if (identifier == Cards.Faction3.PortalGuardian)
+      if version is 0
+        atk = 0
+      else
+        atk = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Faction3
       card.name = i18next.t("cards.faction_3_unit_portal_guardian_name")
@@ -720,7 +724,7 @@ class CardFactory_CoreSet_Faction3
         damage : RSX.f3PortalGuardianDamage.name
         death : RSX.f3PortalGuardianDeath.name
       )
-      card.atk = 1
+      card.atk = atk
       card.maxHP = 7
       card.manaCost = 3
       card.rarityId = Rarity.Epic
@@ -1272,19 +1276,26 @@ class CardFactory_CoreSet_Faction3
       )
 
     if (identifier == Cards.Artifact.PoisonHexblade)
+      if version is 0
+        description = i18next.t("cards.faction_3_artifact_hexblade_description_0")
+        minionOnly = true
+      else
+        description = i18next.t("cards.faction_3_artifact_hexblade_description_1")
+        durationEndTurn = 2
+        minionOnly = false
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction3
       card.id = Cards.Artifact.PoisonHexblade
       card.name = i18next.t("cards.faction_3_artifact_hexblade_name")
-      card.setDescription(i18next.t("cards.faction_3_artifact_hexblade_description"))
+      card.setDescription(description)
       card.manaCost = 4
       card.rarityId = Rarity.Epic
       customContextObject = Modifier.createContextObjectWithAttributeBuffs(1,0)
       customContextObject.attributeBuffsAbsolute = ["atk"]
       customContextObject.appliedName = i18next.t("modifiers.faction_3_artifact_hexblade_2")
       customContextObject.appliedDescription = i18next.t("modifiers.faction_3_artifact_hexblade_3")
-      customContextObject.durationEndTurn = 2
-      customContextObject.canTargetGeneral = true
+      if durationEndTurn?
+        customContextObject.durationEndTurn = durationEndTurn
       card.setTargetModifiersContextObjects([
         Modifier.createContextObjectWithAttributeBuffs(3,0,{
           name: i18next.t("cards.faction_3_artifact_hexblade_name")
@@ -1293,6 +1304,7 @@ class CardFactory_CoreSet_Faction3
         ModifierDealDamageWatchModifyTarget.createContextObject([customContextObject], i18next.t("modifiers.faction_3_artifact_hexblade_4"),{
           name: i18next.t("cards.faction_3_artifact_hexblade_name")
           description: i18next.t("modifiers.faction_3_artifact_hexblade_1")
+          minionOnly
         })
       ])
       card.setFXResource(["FX.Cards.Artifact.PoisonHexblade"])

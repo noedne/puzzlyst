@@ -1,9 +1,4 @@
-Modifier = require './modifier'
-CardType = require 'app/sdk/cards/cardType'
 ModifierDealDamageWatch = require './modifierDealDamageWatch'
-DamageAction = require 'app/sdk/actions/damageAction'
-Stringifiers = require 'app/sdk/helpers/stringifiers'
-UtilsGameSession = require 'app/common/utils/utils_game_session'
 
 class ModifierDealDamageWatchModifyTarget extends ModifierDealDamageWatch
 
@@ -11,6 +6,9 @@ class ModifierDealDamageWatchModifyTarget extends ModifierDealDamageWatch
   @type:"ModifierDealDamageWatchModifyTarget"
 
   @description:"Whenever this minion damages an enemy minion, %X"
+
+  enemyOnly: true
+  minionOnly: true
 
   fxResource: ["FX.Modifiers.ModifierDealDamageWatch", "FX.Modifiers.ModifierGenericBuff"]
 
@@ -27,14 +25,9 @@ class ModifierDealDamageWatchModifyTarget extends ModifierDealDamageWatch
       return @description
 
   onDealDamage: (action) ->
-    target = action.getTarget()
-    if target? and
-        target.getOwnerId() isnt @getCard().getOwnerId() and
-        CardType.getIsEntityCardType(target.getType())
-      if @modifiersContextObjects?
-        for modifierContextObject in @modifiersContextObjects
-          if !target.getIsGeneral() or modifierContextObject.canTargetGeneral
-            @getGameSession().applyModifierContextObject(modifierContextObject, target)
-    return
+    @applyManagedModifiersFromModifiersContextObjects(
+      @modifiersContextObjects,
+      action.getTarget(),
+    )
 
 module.exports = ModifierDealDamageWatchModifyTarget
