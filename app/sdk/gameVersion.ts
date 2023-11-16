@@ -25,6 +25,7 @@ const enum Version {
   Patch__0_2_8,
   Patch__0_2_9,
   Patch__0_2_12,
+  Patch__0_2_14,
   Latest,
 }
 
@@ -36,6 +37,11 @@ const patches = [
       [Cards.Spell.CosmicFlesh]: 3,
       [Cards.Faction6.SnowElemental]: 3,
       [Cards.Faction4.BlackSolus]: 2,
+    },
+  },
+  {
+    version: Version.Patch__0_2_14,
+    changes: {
       [Cards.Spell.AncestralDivination]: 0,
     },
   },
