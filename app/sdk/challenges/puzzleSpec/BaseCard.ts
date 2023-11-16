@@ -96,7 +96,7 @@ function getIdOffset(group: Group): number {
     case Group.Faction1:
       return Cards.Faction1.SilverguardSquire;
     case Group.Faction2:
-      return Cards.Faction2.HeartSeeker;
+      return Cards.Faction2.Heartseeker;
     case Group.Faction3:
       return Cards.Faction3.WindShrike;
     case Group.Faction4:
