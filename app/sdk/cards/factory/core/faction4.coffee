@@ -1119,7 +1119,7 @@ class CardFactory_CoreSet_Faction4
         card = new SpellApplyModifiers(gameSession)
         card.setDescription(i18next.t("cards.faction_4_spell_soulshatter_pact_description_0"))
         card.spellFilterType = SpellFilterType.AllyIndirect
-        allyBuffContextObject.durationEndTurn = 2
+        allyBuffContextObject.durationIsUntilEndBeforeNextTurn = true
         card.setTargetModifiersContextObjects([allyBuffContextObject])
         card.radius = CONFIG.WHOLE_BOARD_RADIUS
       else

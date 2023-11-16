@@ -392,7 +392,7 @@ class CardFactory_CoreSet_Faction3
           targetModifiersContextObjects: [
             Modifier.createContextObjectWithAttributeBuffs(-2, 0, {
               appliedName: i18next.t("modifiers.faction_3_imperial_mechanyst"),
-              durationEndTurn: 2,
+              durationIsUntilEndBeforeNextTurn: true,
             }),
           ],
           _private: {
@@ -892,7 +892,7 @@ class CardFactory_CoreSet_Faction3
       customContextObject = Modifier.createContextObjectWithAttributeBuffs(0,0)
       customContextObject.attributeBuffs.atk = 0
       customContextObject.attributeBuffsAbsolute = ["atk"]
-      customContextObject.durationStartTurn = 2
+      customContextObject.durationIsUntilStartOfNextTurn = true
       customContextObject.appliedName = i18next.t("modifiers.faction_3_spell_blindscorch_1")
       customContextObject.appliedDescription = i18next.t("modifiers.faction_3_spell_blindscorch_2")
       card.setTargetModifiersContextObjects([customContextObject])
@@ -1281,7 +1281,7 @@ class CardFactory_CoreSet_Faction3
         minionOnly = true
       else
         description = i18next.t("cards.faction_3_artifact_hexblade_description_1")
-        durationEndTurn = 2
+        customContextObjectOptions = { durationIsUntilEndBeforeNextTurn: true }
         minionOnly = false
       card = new Artifact(gameSession)
       card.factionId = Factions.Faction3
@@ -1294,8 +1294,8 @@ class CardFactory_CoreSet_Faction3
       customContextObject.attributeBuffsAbsolute = ["atk"]
       customContextObject.appliedName = i18next.t("modifiers.faction_3_artifact_hexblade_2")
       customContextObject.appliedDescription = i18next.t("modifiers.faction_3_artifact_hexblade_3")
-      if durationEndTurn?
-        customContextObject.durationEndTurn = durationEndTurn
+      if customContextObjectOptions?
+        Object.assign(customContextObject, customContextObjectOptions)
       card.setTargetModifiersContextObjects([
         Modifier.createContextObjectWithAttributeBuffs(3,0,{
           name: i18next.t("cards.faction_3_artifact_hexblade_name")

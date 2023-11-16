@@ -85,7 +85,7 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
         atk = 1
         maxHP = 3
         immunityContextObject = PlayerModifierPreventSpellDamage.createContextObject()
-        immunityContextObject.durationEndTurn = 2
+        immunityContextObject.durationIsUntilEndBeforeNextTurn = true
         modifierContextObject = ModifierOpeningGambitApplyPlayerModifiers
           .createContextObjectToTargetOwnPlayer([immunityContextObject])
       else
@@ -93,7 +93,7 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
         atk = 2
         maxHP = 2
         immunityContextObject = ModifierImmuneToSpellDamage.createContextObject()
-        immunityContextObject.durationEndTurn = 2
+        immunityContextObject.durationIsUntilEndBeforeNextTurn = true
         modifierContextObject = ModifierOpeningGambitApplyModifiers
           .createContextObjectForAllUnitsAndGenerals([immunityContextObject])
       card = new Unit(gameSession)

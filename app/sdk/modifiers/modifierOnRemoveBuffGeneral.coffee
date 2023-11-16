@@ -11,7 +11,11 @@ class ModifierOnRemoveBuffGeneral extends Modifier
     return contextObject
   
   onRemoveFromCard: () ->
+    # cannot apply as managed modifier because this modifier is getting removed
     for modifierContextObject in @modifiersContextObjects
+      if modifierContextObject.durationIsUntilEndBeforeNextTurn or
+          modifierContextObject.durationIsUntilStartOfNextTurn
+        modifierContextObject.durationIsUntilNextTurnOfPlayerId = @getOwnerId()
       @getGameSession().applyModifierContextObject(
         modifierContextObject,
         @getGameSession().getGeneralForPlayerId(@getOwnerId()),

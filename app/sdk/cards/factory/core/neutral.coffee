@@ -847,10 +847,10 @@ class CardFactory_CoreSet_Neutral
       ])
 
     if (identifier == Cards.Neutral.ThornNeedler)
-      durationIsUntilYourNextTurn = false
+      durationIsUntilStartOfNextTurn = false
       if version is 0
         description = i18next.t("cards.neutral_thorn_needler_desc_0")
-        durationIsUntilYourNextTurn = true
+        durationIsUntilStartOfNextTurn = true
       else
         description = i18next.t("cards.neutral_thorn_needler_desc_1")
       card = new Unit(gameSession)
@@ -883,7 +883,7 @@ class CardFactory_CoreSet_Neutral
       card.setInherentModifiersContextObjects([
         ModifierTakeDamageWatchApplyModifiers.createContextObject([
           Modifier.createContextObjectWithAttributeBuffs(2, 0, {
-            durationIsUntilYourNextTurn
+            durationIsUntilStartOfNextTurn
           })
         ])
       ])

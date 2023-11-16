@@ -8,6 +8,8 @@ _ = require("underscore")
 class SpellTempTransform extends SpellRemoveAndReplaceEntity
 
   durationEndTurn: 0
+  durationIsUntilEndBeforeNextTurn: false
+  durationIsUntilStartOfNextTurn: false
   durationStartTurn: 0
 
   getCardDataOrIndexToSpawn: (x, y) ->
@@ -21,6 +23,10 @@ class SpellTempTransform extends SpellRemoveAndReplaceEntity
       # create modifier to transform this entity back to its original form
       transformBackModifierContextObject = ModifierRemoveAndReplaceEntity.createContextObject(existingEntityCardData, existingEntity.getBaseCardId())
       transformBackModifierContextObject.durationEndTurn = @durationEndTurn
+      transformBackModifierContextObject.durationIsUntilEndBeforeNextTurn = @durationIsUntilEndBeforeNextTurn
+      if @durationIsUntilEndBeforeNextTurn or @durationIsUntilStartOfNextTurn
+        transformBackModifierContextObject.durationIsUntilNextTurnOfPlayerId = @getOwnerId()
+      transformBackModifierContextObject.durationIsUntilStartOfNextTurn = @durationIsUntilStartOfNextTurn
       transformBackModifierContextObject.durationStartTurn = @durationStartTurn
       transformBackModifierContextObject.isInherent = true
       if cardDataOrIndexToSpawn? and !_.isObject(cardDataOrIndexToSpawn) then cardDataOrIndexToSpawn = @getGameSession().getCardByIndex(cardDataOrIndexToSpawn).createNewCardData()

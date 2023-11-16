@@ -6,7 +6,7 @@ export type ContextObject = {
   allowMultiple: boolean,
   contextObject: {
     cardId: number,
-    durationIsUntilYourNextTurn?: boolean,
+    durationIsUntilStartOfNextTurn?: boolean,
     indexOfContextObject: number,
     type: string,
   },
@@ -19,7 +19,7 @@ function getContextObjectData(cardId: number) {
         {
           allowMultiple: false,
           contextObject: ModifierImmuneToDamage.createContextObject({
-            durationIsUntilYourNextTurn: true,
+            durationIsUntilStartOfNextTurn: true,
           }),
         },
       ];
@@ -36,7 +36,7 @@ export function getDescription({ contextObject }: ContextObject): string {
   let { description } = GameSession.current().getModifierClassForType(
     contextObject.type,
   );
-  if (contextObject.durationIsUntilYourNextTurn === true) {
+  if (contextObject.durationIsUntilStartOfNextTurn === true) {
     description += ' until your next turn';
   }
   return description;

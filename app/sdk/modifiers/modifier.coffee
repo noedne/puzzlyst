@@ -56,9 +56,11 @@ class Modifier extends SDKObject
   cardFXResource: null # fx resource that is added onto this modifier's card's fx resource, effectively overriding card's fx while this modifier is active on the card
   contextObject: null
   durationEndTurn: 0 # how many end of turns can elapse before this modifier is removed
+  durationIsUntilEndBeforeNextTurn: false # until end turn before your next turn
+  durationIsUntilNextTurnOfPlayerId: null
+  durationIsUntilStartOfNextTurn: false # until start turn of your next turn
   durationStartTurn: 0 # how many start of turns can elapse before this modifier is removed
   durationRespectsBonusTurns: true # whether duration will be extended with bonus turns
-  durationIsUntilYourNextTurn: false
   durability: 0 # damage unit can take before this is destroyed
   numEndTurnsElapsed: 0 # how many end of turns have elapsed since this modifier was added
   numStartTurnsElapsed: 0 # how many start of turns have elapsed since this modifier was added
@@ -296,6 +298,12 @@ class Modifier extends SDKObject
 
   onApplyToCard: (card) ->
     @setCard(card)
+    if (@durationIsUntilEndBeforeNextTurn or
+        @durationIsUntilStartOfNextTurn) and
+        not @durationIsUntilNextTurnOfPlayerId? and
+        @getSourceCard()?
+      @durationIsUntilNextTurnOfPlayerId = @getSourceCard().getOwnerId()
+
     @startListeningToEvents()
     @onApplyToCardBeforeSyncState()
     @syncState()
@@ -2144,6 +2152,10 @@ class Modifier extends SDKObject
         if @numEndTurnsElapsed >= @durationEndTurn
           @onExpire(event)
           @getGameSession().removeModifier(@)
+      else if @durationIsUntilEndBeforeNextTurn and
+          @getGameSession().getNextTurnPlayerId() is @durationIsUntilNextTurnOfPlayerId
+        @onExpire(event)
+        @getGameSession().removeModifier(@)
       @getGameSession().popTriggeringModifierFromStack()
     else # if inactive, modifier may still run out of duration but cannot respond
       if @durationEndTurn > 0
@@ -2167,9 +2179,10 @@ class Modifier extends SDKObject
         if @numStartTurnsElapsed >= @durationStartTurn
           @onExpire(event)
           @getGameSession().removeModifier(@)
-      else if @durationIsUntilYourNextTurn && @getCard().isOwnersTurn()
-        @onExpire(event);
-        @getGameSession().removeModifier(@);
+      else if @durationIsUntilStartOfNextTurn and
+          @getGameSession().getCurrentPlayerId() is @durationIsUntilNextTurnOfPlayerId
+        @onExpire(event)
+        @getGameSession().removeModifier(@)
       @getGameSession().popTriggeringModifierFromStack()
     else # if inactive, modifier may still run out of duration but cannot respond
       if @durationStartTurn > 0

@@ -1326,6 +1326,12 @@ class _GameSession extends SDKObject
   skipSwapCurrentPlayerNextTurn:() ->
     @swapPlayersOnNewTurn = false
 
+  getNextTurnPlayerId:() ->
+    if @willSwapCurrentPlayerNextTurn()
+      return @getNonCurrentPlayerId()
+
+    return @getCurrentPlayerId()
+
   getIsDeveloperMode:()->
     return @_private.isDeveloperMode
 

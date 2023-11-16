@@ -1040,7 +1040,7 @@ class CardFactory_CoreSet_Faction5
       card.name = i18next.t("cards.faction_5_spell_metamorphosis_name")
       card.setDescription(i18next.t("cards.faction_5_spell_metamorphosis_description"))
       card.manaCost = 5
-      card.durationEndTurn = 2
+      card.durationIsUntilEndBeforeNextTurn = true
       card.rarityId = Rarity.Epic
       card.spellFilterType = SpellFilterType.EnemyIndirect
       card.radius = CONFIG.WHOLE_BOARD_RADIUS

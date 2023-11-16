@@ -757,7 +757,7 @@ class CardFactory_CoreSet_Faction2
       card.maxHP = 4
       card.manaCost = 4
       customContextObject = PlayerModifierManaModifier.createCostChangeContextObject(2, CardType.Spell)
-      customContextObject.durationEndTurn = 2 #lasts until end of opponent's next turn
+      customContextObject.durationIsUntilEndBeforeNextTurn = true
       customContextObject.auraIncludeSignatureCards = true
       card.setInherentModifiersContextObjects([
         ModifierOpeningGambitApplyPlayerModifiers.createContextObjectToTargetEnemyPlayer([customContextObject], false)
