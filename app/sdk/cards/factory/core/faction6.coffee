@@ -29,6 +29,7 @@ SpellTempTransform = require 'app/sdk/spells/spellTempTransform'
 SpellDamageAndApplyModifiers = require 'app/sdk/spells/spellDamageAndApplyModifiers'
 SpellCopyToActionBarAndTransform = require 'app/sdk/spells/spellCopyToActionBarAndTransform'
 SpellRemoveManaCores = require 'app/sdk/spells/spellRemoveManaCores'
+SpellAspectOfTheDrake = require 'app/sdk/spells/spellAspectOfTheDrake'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierImmuneToDamage = require 'app/sdk/modifiers/modifierImmuneToDamage'
@@ -912,11 +913,15 @@ class CardFactory_CoreSet_Faction6
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Faction6.AzureDrake)
+      if version is 0
+        description = i18next.t("cards.faction_6_unit_whyte_drake_desc")
+        modifierContextObject = ModifierFlying.createContextObject()
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.setIsHiddenInCollection(true)
       card.name = i18next.t("cards.faction_6_unit_whyte_drake_name")
-      card.setDescription(i18next.t("cards.faction_6_unit_whyte_drake_desc"))
+      if description?
+        card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction6.AzureDrake"])
       card.setBoundingBoxWidth(105)
       card.setBoundingBoxHeight(95)
@@ -942,6 +947,8 @@ class CardFactory_CoreSet_Faction6
       card.maxHP = 4
       card.manaCost = 3
       card.rarityId = Rarity.TokenUnit
+      if modifierContextObject?
+        card.setInherentModifiersContextObjects([modifierContextObject])
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Faction6.SeismicElemental)
@@ -1401,15 +1408,26 @@ class CardFactory_CoreSet_Faction6
       )
 
     if (identifier == Cards.Spell.AspectOfTheDrake)
-      card = new SpellCopyToActionBarAndTransform(gameSession)
+      if version is 0
+        description = i18next.t("cards.faction_6_spell_aspect_of_the_drake_description_0")
+        spell = SpellAspectOfTheDrake
+        manaCost = 4
+        keywordClass = ModifierFlying
+      else
+        description = i18next.t("cards.faction_6_spell_aspect_of_the_drake_description_1")
+        spell = SpellCopyToActionBarAndTransform
+        manaCost = 2
+      card = new spell(gameSession)
       card.factionId = Factions.Faction6
       card.id = Cards.Spell.AspectOfTheDrake
       card.name = i18next.t("cards.faction_6_spell_aspect_of_the_drake_name")
-      card.setDescription(i18next.t("cards.faction_6_spell_aspect_of_the_drake_description"))
-      card.manaCost = 2
+      card.setDescription(description)
+      card.manaCost = manaCost
       card.rarityId = Rarity.Epic
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.cardDataOrIndexToSpawn = {id: Cards.Faction6.AzureDrake}
+      if keywordClass?
+        card.addKeywordClassToInclude(keywordClass)
       card.setFXResource(["FX.Cards.Spell.AspectOfTheDrake"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_amplification.audio

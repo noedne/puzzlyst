@@ -27,6 +27,7 @@ const enum Version {
   Patch__0_2_12,
   Patch__0_2_14,
   Patch__0_2_15,
+  Patch__0_2_16,
   Latest,
 }
 
@@ -34,7 +35,16 @@ const patches = [
   {
     version: Version.Latest,
     changes: {
+    },
+  },
+  {
+    version: Version.Patch__0_2_16,
+    changes: {
+      [Cards.Spell.ConsumingRebirth]: 1,
       [Cards.Faction4.BlackSolus]: 2,
+      [Cards.Spell.NetherSummoning]: 1,
+      [Cards.Spell.AspectOfTheDrake]: 1,
+      [Cards.Faction6.AzureDrake]: 1,
     },
   },
   {

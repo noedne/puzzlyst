@@ -27,6 +27,7 @@ SpellLifeSurge = require 'app/sdk/spells/spellLifeSurge'
 SpellVoidSteal = require 'app/sdk/spells/spellVoidSteal'
 SpellApplyPlayerModifiers = require 'app/sdk/spells/spellApplyPlayerModifiers'
 SpellVoidPulse = require 'app/sdk/spells/spellVoidPulse'
+SpellConsumingRebirth = require 'app/sdk/spells/spellConsumingRebirth'
 
 Modifier =           require 'app/sdk/modifiers/modifier'
 ModifierStackingShadows = require 'app/sdk/modifiers/modifierStackingShadows'
@@ -852,12 +853,16 @@ class CardFactory_CoreSet_Faction4
       )
 
     if (identifier == Cards.Spell.NetherSummoning)
+      if version is 0
+        manaCost = 4
+      else
+        manaCost = 5
       card = new SpellNetherSummoning(gameSession)
       card.factionId = Factions.Faction4
       card.id = Cards.Spell.NetherSummoning
       card.name = i18next.t("cards.faction_4_spell_nether_summoning_name")
       card.setDescription(i18next.t("cards.faction_4_spell_nether_summoning_description"))
-      card.manaCost = 5
+      card.manaCost = manaCost
       card.rarityId = Rarity.Legendary
       card.setFXResource(["FX.Cards.Spell.NetherSummoning"])
       card.setBaseAnimResource(
@@ -1161,20 +1166,32 @@ class CardFactory_CoreSet_Faction4
       )
 
     if (identifier == Cards.Spell.ConsumingRebirth)
-      card = new SpellApplyPlayerModifiers(gameSession)
+      if version is 0
+        description = i18next.t("cards.faction_4_spell_consuming_rebirth_description_0")
+        spell = SpellConsumingRebirth
+        manaCost = 2
+        spellFilterType = SpellFilterType.AllyDirect
+      else
+        description = i18next.t("cards.faction_4_spell_consuming_rebirth_description_1")
+        spell = SpellApplyPlayerModifiers
+        manaCost = 1
+        applyToOwnGeneral = true
+        spellFilterType = SpellFilterType.None
+        modifierContextObject =
+          PlayerModifierOnDeathWatchBonusMana.createContextObject({
+            durationEndTurn: 1
+          })
+      card = new spell(gameSession)
       card.factionId = Factions.Faction4
       card.id = Cards.Spell.ConsumingRebirth
       card.name = i18next.t("cards.faction_4_spell_consuming_rebirth_name")
-      card.setDescription(i18next.t("cards.faction_4_spell_consuming_rebirth_description"))
-      card.manaCost = 1
+      card.setDescription(description)
+      card.manaCost = manaCost
       card.rarityId = Rarity.Epic
-      card.applyToOwnGeneral = true
-      card.spellFilterType = SpellFilterType.None
-      card.setTargetModifiersContextObjects([
-        PlayerModifierOnDeathWatchBonusMana.createContextObject({
-          durationEndTurn: 1,
-        }),
-      ])
+      card.applyToOwnGeneral = applyToOwnGeneral
+      card.spellFilterType = spellFilterType
+      if modifierContextObject?
+        card.setTargetModifiersContextObjects([modifierContextObject])
       card.setFXResource(["FX.Cards.Spell.ConsumingRebirth"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_flashreincarnation.audio
