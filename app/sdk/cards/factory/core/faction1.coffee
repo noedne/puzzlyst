@@ -586,6 +586,12 @@ class CardFactory_CoreSet_Faction1
       ])
 
     if (identifier == Cards.Faction1.Sunriser)
+      if version is 0
+        atk = 3
+        maxHP = 5
+      else
+        atk = 4
+        maxHP = 4
       card = new Unit(gameSession)
       card.factionId = Factions.Faction1
       card.name = i18next.t("cards.faction_1_unit_sunriser_name")
@@ -608,8 +614,8 @@ class CardFactory_CoreSet_Faction1
         damage : RSX.f1SunriserDamage.name
         death : RSX.f1SunriserDeath.name
       )
-      card.atk = 4
-      card.maxHP = 4
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 4
       card.rarityId = Rarity.Epic
       card.setDescription(i18next.t("cards.faction_1_unit_sunriser_desc"))

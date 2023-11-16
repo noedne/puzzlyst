@@ -818,9 +818,22 @@ class CardFactory_CoreSet_Faction6
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Faction6.SnowElemental)
-      atk = 2
-      maxHP = 3
-      description = i18next.t("cards.faction_6_unit_glacial_elemental_desc_0")
+      if version is 0
+        infiltrate = false
+        atk = 2
+        maxHP = 3
+      else if version is 1
+        infiltrate = true
+        atk = 2
+        maxHP = 3
+      else if version is 2
+        infiltrate = true
+        atk = 3
+        maxHP = 3
+      else
+        infiltrate = false
+        atk = 3
+        maxHP = 2
       modifiersContextObjects = [
         ModifierSummonWatchByRaceDamageEnemyMinion.createContextObject(
           2,
@@ -828,16 +841,13 @@ class CardFactory_CoreSet_Faction6
           "a Vespyr minion",
         )
       ]
-      if version is 0
-        inherentModifiersContextObjects = modifiersContextObjects
-      else if version is 1
+      if infiltrate
         description = i18next.t("cards.faction_6_unit_glacial_elemental_desc_1")
         inherentModifiersContextObjects = [
           ModifierInfiltrate.createContextObject(modifiersContextObjects)
         ]
-      else if version is 2
-        atk = 3
-        maxHP = 2
+      else
+        description = i18next.t("cards.faction_6_unit_glacial_elemental_desc_0")
         inherentModifiersContextObjects = modifiersContextObjects
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
@@ -1336,20 +1346,31 @@ class CardFactory_CoreSet_Faction6
       )
 
     if (identifier == Cards.Spell.MarkOfSolitude)
+      if version is 0
+        description = i18next.t("cards.faction_6_spell_mark_of_solitude_description_0")
+        attributeBuff = 5
+        appliedDescription = i18next.t("modifiers.faction_6_spell_mark_of_solitude_2a")
+      else
+        description = i18next.t("cards.faction_6_spell_mark_of_solitude_description_1")
+        attributeBuff = 6
+        appliedDescription = i18next.t("modifiers.faction_6_spell_mark_of_solitude_2b")
       card = new SpellApplyModifiers(gameSession)
       card.factionId = Factions.Faction6
       card.id = Cards.Spell.MarkOfSolitude
       card.name = i18next.t("cards.faction_6_spell_mark_of_solitude_name")
-      card.setDescription(i18next.t("cards.faction_6_spell_mark_of_solitude_description"))
+      card.setDescription(description)
       card.manaCost = 2
       card.rarityId = Rarity.Rare
       card.spellFilterType = SpellFilterType.NeutralDirect
-      customContextObject = Modifier.createContextObjectWithAttributeBuffs(6,6)
+      customContextObject = Modifier.createContextObjectWithAttributeBuffs(
+        attributeBuff,
+        attributeBuff,
+      )
       customContextObject.attributeBuffsAbsolute = ["atk", "maxHP"]
       customContextObject.resetsDamage = true
       customContextObject.isRemovable = false
       customContextObject.appliedName = i18next.t("modifiers.faction_6_spell_mark_of_solitude_1")
-      customContextObject.appliedDescription = i18next.t("modifiers.faction_6_spell_mark_of_solitude_2")
+      customContextObject.appliedDescription = appliedDescription
       card.setTargetModifiersContextObjects([  customContextObject, ModifierCannotAttackGeneral.createContextObject()])
       card.setFXResource(["FX.Cards.Spell.MarkOfSolitude"])
       card.setBaseSoundResource(

@@ -3,7 +3,6 @@
 
 CONFIG = require('app/common/config')
 RSX = require('app/data/resources')
-UtilsJavascript = require 'app/common/utils/utils_javascript'
 
 Cards = require 'app/sdk/cards/cardsLookupComplete'
 CardType = require 'app/sdk/cards/cardType'
@@ -671,6 +670,10 @@ class CardFactory_CoreSet_Neutral
       ])
 
     if (identifier == Cards.Neutral.PrimusShieldmaster)
+      if version is 0
+        maxHP = 5
+      else
+        maxHP = 6
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_primus_shieldmaster_name")
@@ -695,7 +698,7 @@ class CardFactory_CoreSet_Neutral
         death : RSX.neutralPrimusShieldmasterDeath.name
       )
       card.atk = 2
-      card.maxHP = 6
+      card.maxHP = maxHP
       card.manaCost = 4
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([
@@ -1482,6 +1485,10 @@ class CardFactory_CoreSet_Neutral
       ])
 
     if (identifier == Cards.Neutral.BlackSandBurrower)
+      if version is 0
+        atk = 2
+      else
+        atk = 3
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_sand_burrower_name")
@@ -1505,7 +1512,7 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralBlackSandBurrowerHit.name
         death : RSX.neutralBlackSandBurrowerDeath.name
       )
-      card.atk = 3
+      card.atk = atk
       card.maxHP = 3
       card.manaCost = 3
       card.rarityId = Rarity.Rare
@@ -1850,6 +1857,10 @@ class CardFactory_CoreSet_Neutral
       ])
 
     if (identifier == Cards.Neutral.GolemVanquisher)
+      if version is 0
+        atk = 2
+      else
+        atk = 3
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.raceId = Races.Golem
@@ -1876,7 +1887,7 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralGolemStoneDamage.name
         death : RSX.neutralGolemStoneDeath.name
       )
-      card.atk = 3
+      card.atk = atk
       card.maxHP = 4
       card.manaCost = 3
       card.rarityId = Rarity.Epic
@@ -3138,10 +3149,19 @@ class CardFactory_CoreSet_Neutral
       card.rarityId = Rarity.Common
 
     if (identifier == Cards.Neutral.AshMephyt)
+      if version is 0
+        description = i18next.t("cards.neutral_ash_mephytt_desc_0")
+      else
+        description = i18next.t("cards.neutral_ash_mephytt_desc_1")
+        modifierContextObject = ModifierAirdrop.createContextObject()
+        followupOptions =
+          canBeAppliedAnywhere: true
+          _private:
+            followupSourcePattern: CONFIG.PATTERN_WHOLE_BOARD
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_ash_mephytt_name")
-      card.setDescription(i18next.t("cards.neutral_ash_mephytt_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Neutral.AshMephyt"])
       card.setBaseSoundResource(
         apply : RSX.sfx_unit_deploy_3.audio
@@ -3162,18 +3182,12 @@ class CardFactory_CoreSet_Neutral
         death : RSX.neutralAshMephytDeath.name
       )
       card.addKeywordClassToInclude(ModifierOpeningGambit)
-      card.setInherentModifiersContextObjects([
-        ModifierAirdrop.createContextObject()
-      ])
-      followup = 
-        id: Cards.Spell.CloneSourceEntity
-        canBeAppliedAnywhere: true
-        _private:
-          followupSourcePattern: CONFIG.PATTERN_WHOLE_BOARD
-      card.setFollowups([
-        followup,
-        UtilsJavascript.fastExtend({}, followup),
-      ])
+      if modifierContextObject?
+        card.setInherentModifiersContextObjects([modifierContextObject])
+      followup = { id: Cards.Spell.CloneSourceEntity }
+      if followupOptions?
+        Object.assign(followup, followupOptions)
+      card.setFollowups([followup, Object.assign({}, followup)])
       card.atk = 2
       card.maxHP = 3
       card.manaCost = 5

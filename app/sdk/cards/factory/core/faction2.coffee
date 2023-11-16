@@ -540,6 +540,10 @@ class CardFactory_CoreSet_Faction2
       card.setDescription(i18next.t("cards.faction_2_unit_jade_monk_desc"))
 
     if (identifier == Cards.Faction2.ChakriAvatar)
+      if version is 0
+        atk = 1
+      else
+        atk = 0
       card = new Unit(gameSession)
       card.factionId = Factions.Faction2
       card.raceId = Races.Arcanyst
@@ -563,7 +567,7 @@ class CardFactory_CoreSet_Faction2
         damage : RSX.f2ChakriAvatarDamage.name
         death : RSX.f2ChakriAvatarDeath.name
       )
-      card.atk = 0
+      card.atk = atk
       card.maxHP = 2
       card.manaCost = 2
       card.rarityId = Rarity.Common
@@ -1041,13 +1045,20 @@ class CardFactory_CoreSet_Faction2
       )
 
     if (identifier == Cards.Spell.AncestralDivination)
+      if version is 0
+        description = i18next.t("cards.faction_2_spell_ancestral_divination_description_0")
+        drawCardsPostPlay = 0
+      else
+        description = i18next.t("cards.faction_2_spell_ancestral_divination_description_1")
+        drawCardsPostPlay = 1
       card = new SpellApplyPlayerModifiers(gameSession)
       card.factionId = Factions.Faction2
       card.id = Cards.Spell.AncestralDivination
       card.name = i18next.t("cards.faction_2_spell_ancestral_divination_name")
-      card.setDescription(i18next.t("cards.faction_2_spell_ancestral_divination_description"))
+      card.setDescription(description)
       card.spellFilterType = SpellFilterType.None
       card.manaCost = 1
+      card.drawCardsPostPlay = drawCardsPostPlay
       card.rarityId = Rarity.Epic
       card.applyToOwnGeneral = true
       card.setTargetModifiersContextObjects([
