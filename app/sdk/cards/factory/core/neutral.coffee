@@ -1930,34 +1930,32 @@ class CardFactory_CoreSet_Neutral
 
     if (identifier == Cards.Neutral.ArchonSpellbinder)
       if version is 0
-        description = i18next.t("cards.neutral_archon_spellbinder_desc_0")
+        symmetric = false
         atk = 7
         maxHP = 9
         manaCost = 6
-        createContextObject = ModifierCardControlledPlayerModifiers
-          .createContextObjectOnBoardToTargetEnemyPlayer
-          .bind(ModifierCardControlledPlayerModifiers)
       else if version is 1
-        description = i18next.t("cards.neutral_archon_spellbinder_desc_1")
+        symmetric = true
         atk = 5
         maxHP = 6
         manaCost = 5
-        createContextObject = ModifierCardControlledPlayerModifiers
-          .createContextObjectOnBoardToTargetBothPlayers
-          .bind(ModifierCardControlledPlayerModifiers)
       else if version is 2
-        description = i18next.t("cards.neutral_archon_spellbinder_desc_1")
+        symmetric = true
         atk = 6
         maxHP = 6
         manaCost = 5
+      else
+        symmetric = false
+        atk = 8
+        maxHP = 8
+        manaCost = 6
+      if symmetric
+        description = i18next.t("cards.neutral_archon_spellbinder_desc_1")
         createContextObject = ModifierCardControlledPlayerModifiers
           .createContextObjectOnBoardToTargetBothPlayers
           .bind(ModifierCardControlledPlayerModifiers)
       else
         description = i18next.t("cards.neutral_archon_spellbinder_desc_0")
-        atk = 8
-        maxHP = 8
-        manaCost = 6
         createContextObject = ModifierCardControlledPlayerModifiers
           .createContextObjectOnBoardToTargetEnemyPlayer
           .bind(ModifierCardControlledPlayerModifiers)

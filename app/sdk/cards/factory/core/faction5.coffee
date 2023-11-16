@@ -27,6 +27,7 @@ SpellDamageAndApplyModifiers = require 'app/sdk/spells/spellDamageAndApplyModifi
 SpellTempTransform = require 'app/sdk/spells/spellTempTransform'
 SpellSilenceAroundGeneral = require 'app/sdk/spells/spellSilenceAroundGeneral'
 SpellApplyModifiersAndActivateAlliedGrow = require 'app/sdk/spells/spellApplyModifiersAndActivateAlliedGrow'
+SpellApplyModifiersToDamagedMinion = require 'app/sdk/spells/spellApplyModifiersToDamagedMinion'
 
 Modifier = require 'app/sdk/modifiers/modifier'
 ModifierFirstBlood = require 'app/sdk/modifiers/modifierFirstBlood'
@@ -669,10 +670,16 @@ class CardFactory_CoreSet_Faction5
       ])
 
     if (identifier == Cards.Faction5.SpiritHarvester)
+      if version is 0
+        description = i18next.t("cards.faction_5_unit_spirit_harvester_desc_0")
+        damageAmount = 2
+      else
+        description = i18next.t("cards.faction_5_unit_spirit_harvester_desc_1")
+        damageAmount = 1
       card = new Unit(gameSession)
       card.factionId = Factions.Faction5
       card.name = i18next.t("cards.faction_5_unit_spirit_harvester_name")
-      card.setDescription(i18next.t("cards.faction_5_unit_spirit_harvester_desc"))
+      card.setDescription(description)
       card.setFXResource(["FX.Cards.Faction5.SpiritHarvester"])
       card.setBoundingBoxWidth(90)
       card.setBoundingBoxHeight(80)
@@ -698,7 +705,12 @@ class CardFactory_CoreSet_Faction5
       card.maxHP = 5
       card.manaCost = 5
       card.rarityId = Rarity.Rare
-      card.setInherentModifiersContextObjects([ModifierEndTurnWatchDamageAllMinions.createContextObject(1, CONFIG.WHOLE_BOARD_RADIUS)])
+      card.setInherentModifiersContextObjects([
+        ModifierEndTurnWatchDamageAllMinions.createContextObject(
+          damageAmount,
+          CONFIG.WHOLE_BOARD_RADIUS,
+        )
+      ])
 
     if (identifier == Cards.Faction5.MiniMagmar)
       card = new Unit(gameSession)
@@ -987,16 +999,29 @@ class CardFactory_CoreSet_Faction5
       )
 
     if (identifier == Cards.Spell.Amplification)
-      card = new SpellApplyModifiersAndActivateAlliedGrow(gameSession)
+      if version is 0
+        spell = SpellApplyModifiersToDamagedMinion
+        description = i18next.t("cards.faction_5_spell_amplification_description_0")
+        modifierContextObject =
+          Modifier.createContextObjectWithAttributeBuffs(3, 0, {
+            appliedName: i18next.t("modifiers.faction_5_spell_amplification_1")
+          })
+        manaCost = 0
+      else
+        spell = SpellApplyModifiersAndActivateAlliedGrow
+        description = i18next.t("cards.faction_5_spell_amplification_description_1")
+        modifierContextObject = ModifierGrow.createContextObject(2)
+        manaCost = 2
+        keywordClass = ModifierGrow
+      card = new spell(gameSession)
       card.factionId = Factions.Faction5
       card.id = Cards.Spell.Amplification
       card.name = i18next.t("cards.faction_5_spell_amplification_name")
-      card.setDescription(i18next.t("cards.faction_5_spell_amplification_description"))
-      statContextObject = ModifierGrow.createContextObject(2)
-      card.manaCost = 2
+      card.setDescription(description)
+      card.manaCost = manaCost
       card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.NeutralDirect
-      card.setTargetModifiersContextObjects([ statContextObject ])
+      card.setTargetModifiersContextObjects([ modifierContextObject ])
       card.setFXResource(["FX.Cards.Spell.Amplification"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_amplification.audio
@@ -1005,7 +1030,8 @@ class CardFactory_CoreSet_Faction5
         idle : RSX.iconAmplificationIdle.name
         active : RSX.iconAmplificationActive.name
       )
-      card.addKeywordClassToInclude(ModifierGrow)
+      if keywordClass?
+        card.addKeywordClassToInclude(keywordClass)
 
     if (identifier == Cards.Spell.Metamorphosis)
       card = new SpellTempTransform(gameSession)
