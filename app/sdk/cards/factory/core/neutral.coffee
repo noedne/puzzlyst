@@ -2442,6 +2442,12 @@ class CardFactory_CoreSet_Neutral
       card.rarityId = Rarity.Epic
 
     if (identifier == Cards.Neutral.CoiledCrawler)
+      if version is 0
+        atk = 1
+        maxHP = 4
+      else
+        atk = 2
+        maxHP = 2
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_rust_crawler_name")
@@ -2465,8 +2471,8 @@ class CardFactory_CoreSet_Neutral
         damage : RSX.neutralCoiledCrawlerHit.name
         death : RSX.neutralCoiledCrawlerDeath.name
       )
-      card.atk = 2
-      card.maxHP = 2
+      card.atk = atk
+      card.maxHP = maxHP
       card.manaCost = 2
       card.rarityId = Rarity.Common
       card.setInherentModifiersContextObjects([ModifierOpeningGambitRemoveRandomArtifact.createContextObject()])
@@ -3615,6 +3621,10 @@ class CardFactory_CoreSet_Neutral
       ])
 
     if (identifier == Cards.Neutral.ZuraelTheLifegiver)
+      if version is 0
+        maxHP = 7
+      else
+        maxHP = 6
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_zurael_the_lifegiver_name")
@@ -3641,7 +3651,7 @@ class CardFactory_CoreSet_Neutral
         death : RSX.neutralZuraelDeath.name
       )
       card.atk = 9
-      card.maxHP = 6
+      card.maxHP = maxHP
       card.manaCost = 9
       card.rarityId = Rarity.Legendary
       card.setInherentModifiersContextObjects([

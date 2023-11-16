@@ -28,6 +28,7 @@ const enum Version {
   Patch__0_2_14,
   Patch__0_2_15,
   Patch__0_2_16,
+  Patch__0_2_18,
   Latest,
 }
 
@@ -35,6 +36,14 @@ const patches = [
   {
     version: Version.Latest,
     changes: {
+    },
+  },
+  {
+    version: Version.Patch__0_2_18,
+    changes: {
+      [Cards.Faction6.SeismicElemental]: 1,
+      [Cards.Neutral.CoiledCrawler]: 1,
+      [Cards.Neutral.ZuraelTheLifegiver]: 1,
     },
   },
   {

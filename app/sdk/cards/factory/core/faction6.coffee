@@ -952,6 +952,10 @@ class CardFactory_CoreSet_Faction6
       card.addKeywordClassToInclude(ModifierToken)
 
     if (identifier == Cards.Faction6.SeismicElemental)
+      if version is 0
+        manaCost = 3
+      else
+        manaCost = 4
       card = new Unit(gameSession)
       card.factionId = Factions.Faction6
       card.setIsHiddenInCollection(true)
@@ -979,7 +983,7 @@ class CardFactory_CoreSet_Faction6
       )
       card.atk = 5
       card.maxHP = 5
-      card.manaCost = 3
+      card.manaCost = manaCost
       card.rarityId = Rarity.TokenUnit
       card.addKeywordClassToInclude(ModifierToken)
 
