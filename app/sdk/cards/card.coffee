@@ -116,6 +116,7 @@ class Card extends SDKObject
     p.followups = [] # options for actions, in order of execution, that are allowed to followup
     p.followupName = null
     p.followupDescription = null
+    p.hadFollowups = false
 
     # resources and options for external systems
     p.animResource = null # currently active animation resource
@@ -2011,9 +2012,13 @@ class Card extends SDKObject
 
   setFollowups: (val) ->
     @_private.followups = val
+    @_private.hadFollowups = true
 
   getFollowups: (val) ->
     return @_private.followups
+
+  getHadFollowups: () ->
+    return @_private.hadFollowups
 
   clearFollowups: () ->
     @_private.followups = []

@@ -37,11 +37,17 @@ class ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf extends ModifierSu
     @applyManagedModifiersFromModifiersContextObjects(@modifiersContextObjects, @getCard())
 
   getIsCardRelevantToWatcher: (card) ->
-    # search for keyword class opening gambit
-    # searching by keyword class because units with followup spells on summon are also 'opening gambit' minions
+    # card should have OG modifier class or followups + OG keyword class
+    if card.hasModifierClass(ModifierOpeningGambit)
+      return true
+    
+    if not card.getHadFollowups()
+      return false
+
     for kwClass in card.getKeywordClasses()
       if kwClass.belongsToKeywordClass(ModifierOpeningGambit)
         return true
-    return false  #fallback to false if no opening gambit keywords found
+
+    return false
 
 module.exports = ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf
