@@ -451,7 +451,7 @@ class _GameSession extends SDKObject
     player1.setStartingMana(CONFIG.STARTING_MANA)
     @players.push(player1)
     player2 = new Player(@, "2", "player2")
-    player2.setStartingMana(CONFIG.STARTING_MANA + 1)
+    player2.setStartingMana(CONFIG.STARTING_MANA)
     @players.push(player2)
     @getPlayer1().setIsCurrentPlayer(true)
 
@@ -1437,9 +1437,8 @@ class _GameSession extends SDKObject
 
         # update mana for players
         if player.getIsCurrentPlayer()
-          # player 2 starts out with one more mana than player 1, so don't increment on first turn change
-          # otherwise, give player +1 max mana (up to 9) at each new turn start when they are current player
-          if player.maximumMana < CONFIG.MAX_MANA and @getNumberOfTurns() > 1
+          # give player +1 max mana (up to 9) at each new turn start when they are current player
+          if player.maximumMana < CONFIG.MAX_MANA
             player.maximumMana++
           player.remainingMana = player.maximumMana
 
