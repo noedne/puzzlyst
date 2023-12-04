@@ -1,16 +1,19 @@
 const Card = require('app/sdk/cards/card');
 const SDKPlayer = require('app/sdk/player');
 const Unit = require('app/sdk/entities/unit');
+import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
 import DeckCard from './DeckCard';
 import GeneralCard from './GeneralCard';
-import SpecString from './SpecString';
+import List from './List';
+import type PositionCoder from "./PositionCoder";
+import type SpecString from './SpecString';
 
 export default class Player {
   static handSizeInBits = 3;
   constructor(
     public generalCard: GeneralCard,
-    public hand: DeckCard[],
-    public deck: DeckCard[],
+    public hand: List<DeckCard>,
+    public deck: List<DeckCard>,
   ) {}
 
   static fromSpecString(specString: SpecString): Player | null {
@@ -18,14 +21,15 @@ export default class Player {
     if (generalCard === null) {
       return null;
     }
-    const hand = specString.extractList(
-      DeckCard.fromSpecString,
+    const hand = List.fromSpecString(
+      DeckCard,
+      specString,
       Player.handSizeInBits,
     );
     if (hand === null) {
       return null;
     }
-    const deck = specString.extractList(DeckCard.fromSpecString);
+    const deck = List.fromSpecString(DeckCard, specString);
     if (deck === null) {
       return null;
     }
@@ -42,19 +46,46 @@ export default class Player {
     const cardsInHand = player
       .getDeck()
       .getCardsInHandExcludingMissing()
-    const hand = Player.cardsToDeckCards(cardsInHand);
+    const hand = new List(Player.cardsToDeckCards(cardsInHand));
     const cardsInDeck = player
       .getDeck()
       .getCardsInDrawPileExcludingMissing()
-    const deck = Player.cardsToDeckCards(cardsInDeck);
+    const deck = new List(Player.cardsToDeckCards(cardsInDeck));
     return new Player(generalCard, hand, deck);
   }
 
+  static updateCoder(
+    coder: ArithmeticCoder,
+    positionCoder: PositionCoder,
+    player?: Player,
+  ): Player {
+    const generalCard = GeneralCard.updateCoder(
+      coder,
+      positionCoder,
+      player?.generalCard,
+    );
+    const hand = List.updateCoder(
+      DeckCard,
+      coder,
+      this.handLengthDenominator,
+      player?.hand,
+    );
+    const deck = List.updateCoder(
+      DeckCard,
+      coder,
+      this.handLengthDenominator,
+      player?.deck,
+    );
+    return player ?? new Player(generalCard, hand, deck);
+  }
+
   toString(): string {
-    const hand = SpecString.constructList(this.hand, Player.handSizeInBits);
-    const deck = SpecString.constructList(this.deck);
+    const hand = this.hand.toString(Player.handSizeInBits);
+    const deck = this.deck.toString();
     return `${this.generalCard}${hand}${deck}`;
   }
+
+  private static handLengthDenominator = 7;
 
   private static cardsToDeckCards(cards: (typeof Card)[]): DeckCard[] {
     return cards
