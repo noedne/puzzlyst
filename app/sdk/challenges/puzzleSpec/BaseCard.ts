@@ -4,13 +4,14 @@ const CardType = require('app/sdk/cards/cardType');
 const Factions = require('app/sdk/cards/factionsLookup');
 const GameSession = require('app/sdk/gameSession');
 
+import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
+import { getUniformArrayCoding, getUniformNumberCoding } from "./arithmeticCoding/utils";
 import SpecString from './SpecString';
 
 export default class BaseCard {
   constructor(
     public cardId: number,
     private group: Group,
-    private id: number,
     private _card: typeof Card | null = null,
   ) {}
 
@@ -24,7 +25,7 @@ export default class BaseCard {
       return null;
     }
     const cardId = id + getIdOffset(group);
-    return new BaseCard(cardId, group, id);
+    return new BaseCard(cardId, group);
   }
 
   static fromCard(card: typeof Card): BaseCard | null {
@@ -32,8 +33,7 @@ export default class BaseCard {
     if (group === null) {
       return null;
     }
-    const id = card.getId() - getIdOffset(group);
-    return new BaseCard(card.getId(), group, id, card);
+    return new BaseCard(card.getId(), group, card);
   }
 
   static fromCardId(cardId: number): BaseCard | null {
@@ -45,10 +45,16 @@ export default class BaseCard {
     return this._card;
   }
 
+  static updateCoder(coder: ArithmeticCoder, baseCard?: BaseCard): BaseCard {
+    const group = getGroupCoding().updateCoder(coder, baseCard?.group);
+    const cardId = getIdCoding(group).updateCoder(coder, baseCard?.cardId);
+    return baseCard ?? new BaseCard(cardId, group);
+  }
+
   toString(): string {
     const group = this.group;
     const id = SpecString.padNumWithZeroesForCountingPastNMinBits(
-      this.id,
+      this.cardId - getIdOffset(group),
       getIdMinBitLength(group),
     )
     return `${group}${id}`;
@@ -145,5 +151,49 @@ function getGroup(card: typeof Card): Group | null {
       return Group.Tile;
     default:
       return null;
+  }
+}
+
+function getGroupCoding() {
+  return getUniformArrayCoding([
+    Group.Faction1,
+    Group.Faction2,
+    Group.Faction3,
+    Group.Faction4,
+    Group.Faction5,
+    Group.Faction6,
+    Group.Neutral,
+    Group.Spell,
+    Group.Artifact,
+    Group.Tile,
+  ]);
+}
+
+function getIdCoding(group: Group) {
+  return getUniformNumberCoding(getGroupSize(group), getIdOffset(group));
+}
+
+function getGroupSize(group: Group): number {
+  switch (group) {
+    case Group.Faction1:
+      return 14;
+    case Group.Faction2:
+      return 15;
+    case Group.Faction3:
+      return 15;
+    case Group.Faction4:
+      return 15;
+    case Group.Faction5:
+      return 16;
+    case Group.Faction6:
+      return 24;
+    case Group.Neutral:
+      return 123;
+    case Group.Spell:
+      return 104;
+    case Group.Artifact:
+      return 18;
+    case Group.Tile:
+      return 2;
   }
 }
