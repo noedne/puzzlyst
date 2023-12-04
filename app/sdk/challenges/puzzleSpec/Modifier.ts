@@ -1,5 +1,7 @@
 const Card = require('app/sdk/cards/card');
+import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import BaseCard from "./BaseCard";
+import { getUniformNumberCoding } from "./arithmeticCoding/utils";
 import SpecString from "./SpecString";
 import getContextObjectData from "./getContextObjectData";
 
@@ -56,6 +58,21 @@ export default class Modifier {
     );
   }
 
+  static updateCoder(coder: ArithmeticCoder, modifier?: Modifier): Modifier {
+    const baseCard = BaseCard.updateCoder(coder, modifier?.baseCard);
+    const array = getContextObjectData(baseCard.cardId);
+    const index = getIndexOfContextObjectCoding(array.length)
+      .updateCoder(coder, modifier?.indexOfContextObject);
+    const data = array[index];
+    if (data === undefined) {
+      throw Error('invalid');
+    }
+    const multiplicity = data.allowMultiple
+      ? getMultiplicityCoding().updateCoder(coder, modifier?.multiplicity)
+      : 0;
+    return modifier ?? new Modifier(baseCard, index, multiplicity);
+  }
+
   toString(): string {
     const array = getContextObjectData(this.baseCard.cardId);
     const indexOfContextObject = array.length === 1
@@ -79,4 +96,12 @@ export default class Modifier {
     }
     return new Modifier(baseCard, indexOfContextObject, 1);
   }
+}
+
+function getIndexOfContextObjectCoding(numberOfContextObjects: number) {
+  return getUniformNumberCoding(numberOfContextObjects);
+}
+
+function getMultiplicityCoding() {
+  return getUniformNumberCoding(2, 1);
 }
