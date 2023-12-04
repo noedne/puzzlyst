@@ -1,6 +1,9 @@
 const Cards = require('app/sdk/cards/cardsLookupComplete');
 const Factions = require('app/sdk/cards/factionsLookup');
 const Unit = require('app/sdk/entities/unit');
+import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
+import { getUniformArrayCoding, getUniformNumberCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
+import List from "./List";
 import Modifier from "./Modifier";
 import {
   fromCard as getPositionFromCard,
@@ -8,6 +11,8 @@ import {
   type Position,
   toString as positionToString,
 } from "./Position";
+import PositionableType from "./PositionableType";
+import type PositionCoder from "./PositionCoder";
 import SpecString from "./SpecString";
 
 export default class GeneralCard {
@@ -17,7 +22,7 @@ export default class GeneralCard {
     public cardId: number,
     public position: Position,
     public damage: number,
-    public modifiers: Modifier[],
+    public modifiers: List<Modifier>,
     private faction: Faction,
     private general: General,
   ) {}
@@ -40,7 +45,7 @@ export default class GeneralCard {
     if (damage === null) {
       return null;
     }
-    const modifiers = specString.extractList(Modifier.fromSpecString);
+    const modifiers = List.fromSpecString(Modifier, specString);
     if (modifiers === null) {
       return null;
     }
@@ -61,8 +66,37 @@ export default class GeneralCard {
       unit.getId(),
       getPositionFromCard(unit),
       unit.getDamage(),
-      Modifier.fromCard(unit),
+      new List(Modifier.fromCard(unit)),
       faction ?? Faction.Faction1,
+      general,
+    );
+  }
+
+  static updateCoder(
+    coder: ArithmeticCoder,
+    positionCoder: PositionCoder,
+    generalCard?: GeneralCard,
+  ): GeneralCard {
+    const faction = getFactionCoding().updateCoder(coder, generalCard?.faction);
+    const general = getGeneralCoding().updateCoder(coder, generalCard?.general);
+    const position = positionCoder.updateCoder(
+      coder,
+      PositionableType.Unit,
+      generalCard?.position,
+    );
+    const damage = getDamageCoding().updateCoder(coder, generalCard?.damage);
+    const modifiers = List.updateCoder(
+      Modifier, 
+      coder, 
+      modifiersLengthDenominator, 
+      generalCard?.modifiers,
+    );
+    return generalCard ?? new GeneralCard(
+      GeneralCard.getCardId(faction, general),
+      position,
+      damage,
+      modifiers,
+      faction,
       general,
     );
   }
@@ -73,7 +107,7 @@ export default class GeneralCard {
       this.damage,
       GeneralCard.damageMinBitLength,
     );
-    const modifiers = SpecString.constructList(this.modifiers);
+    const modifiers = this.modifiers.toString();
     return `${this.faction}${this.general}${position}${damage}${modifiers}`;
   }
 
@@ -158,6 +192,35 @@ export default class GeneralCard {
     }
   }
 }
+
+function getFactionCoding() {
+  return getUniformArrayCoding([
+    Faction.Faction1,
+    Faction.Faction2,
+    Faction.Faction3,
+    Faction.Faction4,
+    Faction.Faction5,
+    Faction.Faction6,
+  ]);
+}
+
+function getGeneralCoding() {
+  return getWeightedArrayCoding(
+    [
+      General.General,
+      General.AltGeneral,
+      General.ThirdGeneral,
+      General.GrandmasterZir,
+    ],
+    [21/64, 21/64, 21/64],
+  );
+}
+
+function getDamageCoding() {
+  return getUniformNumberCoding(25);
+}
+
+const modifiersLengthDenominator = 3;
 
 const enum Faction {
   Faction1 = '000',
