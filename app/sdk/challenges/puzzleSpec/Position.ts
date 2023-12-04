@@ -3,8 +3,8 @@ import type SpecString from "./SpecString";
 
 export type Position = [number, number];
 
-const WIDTH = 9;
-const HEIGHT = 5;
+export const WIDTH = 9;
+export const HEIGHT = 5;
 const LENGTH = 6;
 
 export function fromSpecString(specString: SpecString): Position | null {
