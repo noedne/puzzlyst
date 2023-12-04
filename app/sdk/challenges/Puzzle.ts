@@ -69,8 +69,8 @@ export default class Puzzle extends Challenge {
   setupSession(gameSession: GameSession): GameSession {
     this.userIsPlayer1 = this.puzzle.isPlayer1;
     this.startingManaPlayer = this.puzzle.mana;
-    this.startingHandSizePlayer = this.puzzle.you.hand.length;
-    this.startingHandSizeOpponent = this.puzzle.opponent.hand.length;
+    this.startingHandSizePlayer = this.puzzle.you.hand.list.length;
+    this.startingHandSizeOpponent = this.puzzle.opponent.hand.list.length;
     const editingMode = gameSession.getEditingMode();
     gameSession.setIsSettingUp();
     if (this.snapshot === null) {
@@ -109,8 +109,8 @@ export default class Puzzle extends Challenge {
     } = player;
     return [
       { id: cardId },
-      ...hand
-        .concat(deck)
+      ...hand.list
+        .concat(deck.list)
         .map(({ baseCard: { cardId } }) => ({ id: cardId  }))
         .reverse(),
     ];
@@ -137,7 +137,7 @@ export default class Puzzle extends Challenge {
   setupCardsInPlay(gameSession: GameSession) {
     const myPlayerId = gameSession.getMyPlayerId();
     const opponentPlayerId = gameSession.getOpponentPlayerId();
-    this.puzzle.cardsInPlay.forEach(cardInPlay => {
+    this.puzzle.cardsInPlay.list.forEach(cardInPlay => {
       const {
         baseCard: { card },
         customModifiers,
@@ -172,7 +172,7 @@ export default class Puzzle extends Challenge {
     const { generalCard: { damage, modifiers, position: [x, y] } } = player;
     general.setPosition({ x, y });
     general.setDamage(damage);
-    this.applyModifiers(gameSession, general, modifiers);
+    this.applyModifiers(gameSession, general, modifiers.list);
   }
 
   applyModifiers(gameSession: GameSession, card: Card, modifiers: Modifier[]) {

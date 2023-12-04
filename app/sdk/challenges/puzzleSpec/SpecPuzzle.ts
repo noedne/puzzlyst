@@ -5,15 +5,21 @@ const GameSession = require('app/sdk/gameSession');
 const Modifier = require('app/sdk/modifiers/modifier');
 const Tile = require('app/sdk/entities/tile');
 const Unit = require('app/sdk/entities/unit');
+import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
+import ArithmeticDecoder from "./arithmeticCoding/ArithmeticDecoder";
+import ArithmeticEncoder from "./arithmeticCoding/ArithmeticEncoder";
 import CardInPlay from './CardInPlay';
+import { getUniformBooleanCoding, getWeightedNumberCoding } from "./arithmeticCoding/utils";
+import List from './List';
 import Player from './Player';
 import { areEqual as arePositionsEqual, fromCard as getPositionFromCard } from './Position';
+import PositionCoder from "./PositionCoder";
 import SpecString from './SpecString';
 
 const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModifiers');
 
 export default class SpecPuzzle {
-  static manaIndexLengthInBits = 3;
+  private static readonly manaIndexLengthInBits = 3;
   constructor(
     public isPlayer1: boolean,
     public mana: number,
@@ -23,10 +29,10 @@ export default class SpecPuzzle {
     public playerModifiers: any,
     public you: Player,
     public opponent: Player,
-    public cardsInPlay: CardInPlay[],
+    public cardsInPlay: List<CardInPlay>,
   ) {}
 
-  static fromSpecString(specString: SpecString): SpecPuzzle | null {
+  public static fromSpecString(specString: SpecString): SpecPuzzle | null {
     const isPlayer1 = specString.readNBits(1) === 0;
     if (isPlayer1 === null) {
       return null;
@@ -51,7 +57,7 @@ export default class SpecPuzzle {
     if (opponent === null) {
       return null;
     }
-    const cardsInPlay = specString.extractList(CardInPlay.fromSpecString);
+    const cardsInPlay = List.fromSpecString(CardInPlay, specString);
     if (cardsInPlay === null) {
       return null;
     }
@@ -68,7 +74,9 @@ export default class SpecPuzzle {
     );
   }
 
-  static fromGameSession(gameSession: typeof GameSession): SpecPuzzle | null {
+  public static fromGameSession(
+    gameSession: typeof GameSession,
+  ): SpecPuzzle | null {
     const myPlayer = gameSession.getMyPlayer();
     if (myPlayer == null) {
       return null;
@@ -111,11 +119,21 @@ export default class SpecPuzzle {
       [],
       you,
       opponent,
-      cardsInPlay,
+      new List(cardsInPlay),
     )
   }
 
-  toString(): string {
+  public encode(): string {
+    const encoder = new ArithmeticEncoder();
+    SpecPuzzle.updateCoder(encoder, this);
+    return encoder.flush();
+  }
+
+  public static decode(encoded: string): SpecPuzzle {
+    return this.updateCoder(new ArithmeticDecoder(encoded));
+  }
+
+  public toString(): string {
     const isPlayer1 = SpecString.boolToBit(!this.isPlayer1);
     const manaIndex = SpecString.writeNumWithNBits(
       this.mana - 2,
@@ -124,7 +142,7 @@ export default class SpecPuzzle {
     const hasBottomManaTile = SpecString.boolToBit(this.hasBottomManaTile);
     const hasCenterManaTile = SpecString.boolToBit(this.hasCenterManaTile);
     const hasTopManaTile = SpecString.boolToBit(this.hasTopManaTile);
-    const cardsInPlay = SpecString.constructList(this.cardsInPlay);
+    const cardsInPlay = this.cardsInPlay.toString();
     return `\
 ${isPlayer1}\
 ${manaIndex}\
@@ -178,5 +196,61 @@ ${cardsInPlay}\
         }
       });
     return { tiles, hasBottomManaTile, hasCenterManaTile, hasTopManaTile };
+  }
+
+  private static readonly cardsInPlayLengthDenominator = 45;
+
+  private static updateCoder(
+    coder: ArithmeticCoder,
+    specPuzzle?: SpecPuzzle,
+  ): SpecPuzzle {
+    const positionCoder = new PositionCoder();
+    const isPlayer1 = this.getPlayerCoding()
+      .updateCoder(coder, specPuzzle?.isPlayer1);
+    const mana = this.getManaCoding()
+      .updateCoder(coder, specPuzzle?.mana);
+    const manaTileCoding = this.getManaTileCoding();
+    const hasBottomManaTile = manaTileCoding
+      .updateCoder(coder, specPuzzle?.hasBottomManaTile);
+    const hasCenterManaTile = manaTileCoding
+      .updateCoder(coder, specPuzzle?.hasCenterManaTile);
+    const hasTopManaTile = manaTileCoding
+      .updateCoder(coder, specPuzzle?.hasTopManaTile);
+    const you = Player.updateCoder(coder, positionCoder, specPuzzle?.you);
+    const opponent =
+      Player.updateCoder(coder, positionCoder, specPuzzle?.opponent);
+    const cardsInPlay = List.updateCoder(
+      CardInPlay,
+      coder,
+      this.cardsInPlayLengthDenominator,
+      specPuzzle?.cardsInPlay,
+      positionCoder,
+    );
+    return specPuzzle ?? new SpecPuzzle(
+      isPlayer1,
+      mana,
+      hasBottomManaTile,
+      hasCenterManaTile,
+      hasTopManaTile,
+      [],
+      you,
+      opponent,
+      cardsInPlay,
+    );
+  }
+
+  private static getPlayerCoding() {
+    return getUniformBooleanCoding();
+  }
+
+  private static getManaCoding() {
+    return getWeightedNumberCoding(
+      [1/256, 1/256, 1/128, 1/128, 1/128, 1/32, 1/32, 1/32],
+      1,
+    );
+  }
+
+  private static getManaTileCoding() {
+    return getUniformBooleanCoding();
   }
 }
