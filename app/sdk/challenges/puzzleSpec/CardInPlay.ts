@@ -5,7 +5,9 @@ const CONFIG = require('app/common/config');
 const Tile = require('app/sdk/entities/tile');
 const Unit = require('app/sdk/entities/unit');
 
+import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import BaseCard from "./BaseCard";
+import { getUniformArrayCoding, getUniformNumberCoding } from "./arithmeticCoding/utils";
 import Modifier from './Modifier';
 import {
   fromCard as getPositionFromCard,
@@ -13,6 +15,8 @@ import {
   type Position,
   toString as positionToString,
 } from "./Position";
+import PositionableType from "./PositionableType";
+import type PositionCoder from "./PositionCoder";
 import SpecString from "./SpecString";
 import getCustomModifiers from "./getCustomModifiers";
 
@@ -73,6 +77,19 @@ export default class CardInPlay {
     return new CardInPlay(baseCard, owner, properties);
   }
 
+  static updateCoder(
+    coder: ArithmeticCoder,
+    positionCoder: PositionCoder,
+    cardInPlay?: CardInPlay,
+  ): CardInPlay {
+    const baseCard = BaseCard.updateCoder(coder, cardInPlay?.baseCard);
+    const owner = this.getOwnerCoding().updateCoder(coder, cardInPlay?.owner);
+    const properties = cardInPlay != null
+      ? this.encodeProperties(coder, positionCoder, cardInPlay.properties)
+      : this.decodeProperties(coder, positionCoder, baseCard.card.getType());
+    return cardInPlay ?? new CardInPlay(baseCard, owner, properties, []);
+  }
+
   toString(): string {
     const { card, cardId } = this.baseCard;
     const customModifiers = getCustomModifiers(cardId)
@@ -93,6 +110,42 @@ export default class CardInPlay {
         return MinionProperties.fromSpecString(specString);
       default:
         return null;
+    }
+  }
+
+  private static getOwnerCoding() {
+    return getUniformArrayCoding([Owner.You, Owner.Opponent]);
+  }
+
+  private static encodeProperties(
+    coder: ArithmeticCoder,
+    positionCoder: PositionCoder,
+    properties: CardInPlayProperties
+  ): CardInPlayProperties {
+    switch (properties.type) {
+      case CardInPlayType.Artifact:
+        return ArtifactProperties.updateCoder(coder, properties);
+      case CardInPlayType.Minion:
+        return MinionProperties.updateCoder(coder, positionCoder, properties);
+      case CardInPlayType.Tile:
+        return TileProperties.updateCoder(coder, positionCoder, properties);
+    }
+  }
+
+  private static decodeProperties(
+    coder: ArithmeticCoder,
+    positionCoder: PositionCoder,
+    cardType: typeof CardType,
+  ): CardInPlayProperties {
+    switch (cardType) {
+      case CardType.Artifact:
+        return ArtifactProperties.updateCoder(coder);
+      case CardType.Tile:
+        return TileProperties.updateCoder(coder, positionCoder);
+      case CardType.Unit:
+        return MinionProperties.updateCoder(coder, positionCoder);
+      default:
+        throw Error('invalid');
     }
   }
 
@@ -135,10 +188,25 @@ class ArtifactProperties {
     return new ArtifactProperties(artifact.durability);
   }
 
+  static updateCoder(
+    coder: ArithmeticCoder,
+    artifactProperties?: ArtifactProperties,
+  ): ArtifactProperties {
+    const durability = this.getDurabilityCoding().updateCoder(
+      coder,
+      artifactProperties?.durability,
+    );
+    return artifactProperties ?? new ArtifactProperties(durability);
+  }
+
   toString(): string {
     return SpecString.writeNZeroes(
       CONFIG.MAX_ARTIFACT_DURABILITY - this.durability,
     );
+  }
+
+  private static getDurabilityCoding() {
+    return getUniformNumberCoding(3, 1);
   }
 }
 
@@ -175,11 +243,32 @@ class MinionProperties {
     );
   }
 
+  static updateCoder(
+    coder: ArithmeticCoder, 
+    positionCoder: PositionCoder, 
+    minionProperties?: MinionProperties,
+  ): MinionProperties {
+    const position = positionCoder.updateCoder(
+      coder,
+      PositionableType.Unit,
+      minionProperties?.position,
+    );
+    const damage = this.getDamageCoding().updateCoder(
+      coder,
+      minionProperties?.damage,
+    );
+    return minionProperties ?? new MinionProperties(position, damage, []);
+  }
+
   toString(): string {
     const position = positionToString(this.position);
     const damage = SpecString.writeNZeroes(this.damage);
     const modifiers = SpecString.constructList(this.modifiers);
     return `${position}${damage}${modifiers}`;
+  }
+
+  private static getDamageCoding() {
+    return getUniformNumberCoding(6);
   }
 }
 
@@ -198,6 +287,19 @@ class TileProperties {
 
   static fromTile(tile: typeof Tile): TileProperties {
     return new TileProperties(getPositionFromCard(tile));
+  }
+
+  static updateCoder(
+    coder: ArithmeticCoder,
+    positionCoder: PositionCoder,
+    tileProperties?: TileProperties,
+  ): TileProperties {
+    const position = positionCoder.updateCoder(
+      coder, 
+      PositionableType.Tile, 
+      tileProperties?.position,
+    );
+    return tileProperties ?? new TileProperties(position);
   }
 
   toString(): string {
