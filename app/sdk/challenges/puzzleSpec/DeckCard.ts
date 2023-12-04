@@ -1,4 +1,5 @@
 const Card = require('app/sdk/cards/card');
+import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import BaseCard from "./BaseCard";
 import Modifier from "./Modifier";
 import SpecString from "./SpecString";
@@ -16,6 +17,11 @@ export default class DeckCard {
       return null;
     }
     return new DeckCard(baseCard, modifiers);
+  }
+
+  static updateCoder(coder: ArithmeticCoder, deckCard?: DeckCard): DeckCard {
+    const baseCard = BaseCard.updateCoder(coder, deckCard?.baseCard);
+    return deckCard ?? new DeckCard(baseCard, []);
   }
 
   static fromCard(card: typeof Card): DeckCard | null {
