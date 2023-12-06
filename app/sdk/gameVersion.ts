@@ -1,5 +1,7 @@
 const Cards = require('app/sdk/cards/cardsLookup');
 
+import { artifacts, minions, spells, tiles } from "./cards/baseCardSet";
+
 export function getCardVersion(identifier: number): number {
   for (const patch of patches) {
     const cardVersion = patch.changes[identifier];
@@ -8,6 +10,22 @@ export function getCardVersion(identifier: number): number {
     }
   }
   return 0;
+}
+
+export function getArtifacts(): number[] {
+  return artifacts;
+}
+
+export function getMinions(): number[] {
+  return minions;
+}
+
+export function getSpells(): number[] {
+  return spells;
+}
+
+export function getTiles(): number[] {
+  return tiles;
 }
 
 export function getIsHurtingDamageTrueDamage(): boolean {
