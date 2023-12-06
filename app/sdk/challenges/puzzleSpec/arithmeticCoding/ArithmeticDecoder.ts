@@ -20,13 +20,6 @@ export default class ArithmeticDecoder extends ArithmeticCoder {
       / (this.range.high - this.range.low);
   }
 
-  public shouldTerminate(wasTerminatorRead: boolean): boolean {
-    const remainingLength = this.compressed.length
-      - this.getLengthWithPending(this.getFinalPending());
-    return wasTerminatorRead && remainingLength === 0
-      || remainingLength < 0;
-  }
-
   protected override updateRange(offset: number): void {
     super.updateRange(offset);
     this.range.value = 2 * this.range.value - offset;
