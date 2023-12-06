@@ -2,7 +2,6 @@ const Cards = require('app/sdk/cards/cardsLookupComplete');
 const Challenge = require('app/sdk/challenges/challenge');
 const ChallengeCategory = require('app/sdk/challenges/challengeCategory');
 const RSX = require('app/data/resources');
-import { CardInPlayType, Owner } from './puzzleSpec/CardInPlay';
 import type Modifier from './puzzleSpec/Modifier';
 import type Player from './puzzleSpec/Player';
 import SpecPuzzle from './puzzleSpec/SpecPuzzle';
@@ -96,12 +95,16 @@ export default class Puzzle extends Challenge {
     gameSession.getOpponentPlayer().remainingMana = 0;
     this.setupManaTiles();
     this.setupGenerals(gameSession);
-    this.setupCardsInPlay(gameSession);
+    this.setupPlayers(gameSession);
   }
 
   setupOpponentAgent() {}
+
+  applyCardToBoard(...args: any[]): Card {
+    return super.applyCardToBoard(...args);
+  }
   
-  static getPlayerDeckData(player: Player): DeckData {
+  private static getPlayerDeckData(player: Player): DeckData {
     const {
       deck,
       generalCard: { cardId },
@@ -116,7 +119,7 @@ export default class Puzzle extends Challenge {
     ];
   }
 
-  setupManaTiles() {
+  private setupManaTiles() {
     if (this.puzzle.hasBottomManaTile)
       this.applyCardToBoard({ id: Cards.Tile.BonusMana }, 4, 0);
     if (this.puzzle.hasCenterManaTile)
@@ -125,8 +128,12 @@ export default class Puzzle extends Challenge {
       this.applyCardToBoard({ id: Cards.Tile.BonusMana }, 5, 2);
   }
 
-  setupGenerals(gameSession: GameSession) {
-    this.setupGeneral(gameSession, gameSession.getMyPlayerId(), this.puzzle.you);
+  private setupGenerals(gameSession: GameSession) {
+    this.setupGeneral(
+      gameSession,
+      gameSession.getMyPlayerId(),
+      this.puzzle.you,
+    );
     this.setupGeneral(
       gameSession,
       gameSession.getOpponentPlayerId(),
@@ -134,40 +141,20 @@ export default class Puzzle extends Challenge {
     );
   }
 
-  setupCardsInPlay(gameSession: GameSession) {
-    const myPlayerId = gameSession.getMyPlayerId();
-    const opponentPlayerId = gameSession.getOpponentPlayerId();
-    this.puzzle.cardsInPlay.list.forEach(cardInPlay => {
-      const {
-        baseCard: { card },
-        customModifiers,
-        owner,
-        properties,
-      } = cardInPlay;
-      const playerId = owner == Owner.You ? myPlayerId : opponentPlayerId;
-      switch (properties.type) {
-        case CardInPlayType.Artifact:
-          card.durability = properties.durability;
-          this.applyCardToBoard(card, 0, 0, playerId);
-          break;
-        case CardInPlayType.Minion: {
-          const { damage, modifiers, position: [x, y] } = properties;
-          this.applyCardToBoard(card, x, y, playerId);
-          card.damage = damage;
-          this.applyModifiers(gameSession, card, modifiers);
-          break;
-        }
-        case CardInPlayType.Tile: {
-          const { position: [x, y] } = properties;
-          this.applyCardToBoard(card, x, y, playerId);
-          break;
-        }
-      }
-      customModifiers.forEach((modifier: CustomModifier) => modifier(card));
-    });
+  private setupPlayers(gameSession: GameSession) {
+    this.setupPlayer(gameSession, gameSession.getMyPlayerId(), this.puzzle.you);
+    this.setupPlayer(
+      gameSession,
+      gameSession.getOpponentPlayerId(),
+      this.puzzle.opponent,
+    );
   }
 
-  setupGeneral(gameSession: GameSession, playerId: string, player: Player) {
+  private setupGeneral(
+    gameSession: GameSession,
+    playerId: string,
+    player: Player,
+  ) {
     const general = gameSession.getGeneralForPlayerId(playerId);
     const { generalCard: { damage, modifiers, position: [x, y] } } = player;
     general.setPosition({ x, y });
@@ -175,7 +162,62 @@ export default class Puzzle extends Challenge {
     this.applyModifiers(gameSession, general, modifiers.list);
   }
 
-  applyModifiers(gameSession: GameSession, card: Card, modifiers: Modifier[]) {
+  private setupPlayer(
+    gameSession: GameSession,
+    playerId: string,
+    player: Player,
+  ) {
+    this.setupArtifacts(playerId, player);
+    this.setupMinions(gameSession, playerId, player);
+    this.setupTiles(playerId, player);
+  }
+
+  private setupArtifacts(playerId: string, player: Player) {
+    player.artifacts.list.forEach(artifact => {
+      const {
+        baseCard: { card },
+        customModifiers,
+        durability,
+      } = artifact;
+      card.durability = durability;
+      this.applyCardToBoard(card, 0, 0, playerId);
+      customModifiers.forEach((modifier: CustomModifier) => modifier(card));
+    });
+  }
+
+  private setupMinions(
+    gameSession: GameSession,
+    playerId: string,
+    player: Player,
+  ) {
+    player.minions.list.forEach(minion => {
+      const {
+        baseCard: { card },
+        position: [x, y],
+        damage,
+        modifiers,
+      } = minion;
+      this.applyCardToBoard(card, x, y, playerId);
+      card.damage = damage;
+      this.applyModifiers(gameSession, card, modifiers);
+    });
+  }
+
+  private setupTiles(playerId: string, player: Player) {
+    player.tiles.list.forEach(minion => {
+      const {
+        baseCard: { card },
+        position: [x, y],
+      } = minion;
+      this.applyCardToBoard(card, x, y, playerId);
+    });
+  }
+
+  private applyModifiers(
+    gameSession: GameSession,
+    card: Card,
+    modifiers: Modifier[],
+  ) {
     modifiers.forEach(({ baseCard: { cardId }, indexOfContextObject }) => {
       const contextObject =
         getContextObjectData(cardId)[indexOfContextObject]?.contextObject;
@@ -186,10 +228,6 @@ export default class Puzzle extends Challenge {
         );
       }
     });
-  }
-
-  applyCardToBoard(...args: any[]): Card {
-    return super.applyCardToBoard(...args);
   }
 }
 

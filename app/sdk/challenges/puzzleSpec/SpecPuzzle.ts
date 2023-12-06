@@ -1,16 +1,10 @@
-const Artifact = require('app/sdk/artifacts/artifact');
-const Card = require('app/sdk/cards/card');
 const Cards = require('app/sdk/cards/cardsLookupComplete');
 const GameSession = require('app/sdk/gameSession');
-const Modifier = require('app/sdk/modifiers/modifier');
 const Tile = require('app/sdk/entities/tile');
-const Unit = require('app/sdk/entities/unit');
 import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
 import ArithmeticDecoder from "./arithmeticCoding/ArithmeticDecoder";
 import ArithmeticEncoder from "./arithmeticCoding/ArithmeticEncoder";
-import CardInPlay from './CardInPlay';
 import { getUniformBooleanCoding, getWeightedNumberCoding } from "./arithmeticCoding/utils";
-import List from './List';
 import Player from './Player';
 import { areEqual as arePositionsEqual, fromCard as getPositionFromCard } from './Position';
 import PositionCoder from "./PositionCoder";
@@ -29,7 +23,6 @@ export default class SpecPuzzle {
     public playerModifiers: any,
     public you: Player,
     public opponent: Player,
-    public cardsInPlay: List<CardInPlay>,
   ) {}
 
   public static fromSpecString(specString: SpecString): SpecPuzzle | null {
@@ -57,10 +50,6 @@ export default class SpecPuzzle {
     if (opponent === null) {
       return null;
     }
-    const cardsInPlay = List.fromSpecString(CardInPlay, specString);
-    if (cardsInPlay === null) {
-      return null;
-    }
     return new SpecPuzzle(
       isPlayer1,
       mana,
@@ -70,7 +59,6 @@ export default class SpecPuzzle {
       playerModifiers,
       you,
       opponent,
-      cardsInPlay,
     );
   }
 
@@ -93,23 +81,11 @@ export default class SpecPuzzle {
     if (opponent === null) {
       return null;
     }
-    const board = gameSession.getBoard();
-    const artifacts = SpecPuzzle.getArtifacts(gameSession);
-    const minions = board
-      .getUnits(true)
-      .filter((unit: typeof Unit) => !unit.getIsGeneral());
     const {
-      tiles,
       hasBottomManaTile,
       hasCenterManaTile,
       hasTopManaTile,
     } = SpecPuzzle.getTileData(gameSession);
-    const cardsInPlay = [tiles, minions, artifacts].flat()
-      .map((card: typeof Card) => CardInPlay.fromCard(card))
-      .reduce<CardInPlay[]>(
-        (acc, val) => val === null ? acc : acc.concat([val]),
-        [],
-      );
     return new SpecPuzzle(
       gameSession.getMyPlayerId() === gameSession.getPlayer1Id(),
       myPlayer.getRemainingMana(),
@@ -119,7 +95,6 @@ export default class SpecPuzzle {
       [],
       you,
       opponent,
-      new List(cardsInPlay),
     )
   }
 
@@ -142,7 +117,6 @@ export default class SpecPuzzle {
     const hasBottomManaTile = SpecString.boolToBit(this.hasBottomManaTile);
     const hasCenterManaTile = SpecString.boolToBit(this.hasCenterManaTile);
     const hasTopManaTile = SpecString.boolToBit(this.hasTopManaTile);
-    const cardsInPlay = this.cardsInPlay.toString();
     return `\
 ${isPlayer1}\
 ${manaIndex}\
@@ -151,28 +125,14 @@ ${hasCenterManaTile}\
 ${hasTopManaTile}\
 ${this.you}\
 ${this.opponent}\
-${cardsInPlay}\
 `;
   }
 
-  private static getArtifacts(gameSession: typeof GameSession):
-    (typeof Artifact)[] {
-    const artifactIndices =
-      [gameSession.getGeneralForPlayer1(), gameSession.getGeneralForPlayer2()]
-        .flatMap((general: typeof Unit) => general
-          .getArtifactModifiers()
-          .map((modifier: typeof Modifier) => modifier.getSourceCardIndex()));
-    return [...new Set(artifactIndices)]
-      .map((index: number) => gameSession.getCardByIndex(index));
-  }
-
   private static getTileData(gameSession: typeof GameSession): {
-    tiles: (typeof Tile)[],
     hasBottomManaTile: boolean,
     hasCenterManaTile: boolean,
     hasTopManaTile: boolean,
   } {
-    const tiles: (typeof Tile)[] = [];
     let hasBottomManaTile = false,
       hasCenterManaTile = false,
       hasTopManaTile = false;
@@ -181,7 +141,6 @@ ${cardsInPlay}\
       .getTiles(true)
       .forEach((tile: typeof Tile) => {
         if (tile.getId() !== Cards.Tile.BonusMana) {
-          tiles.push(tile);
           return;
         }
         const position = getPositionFromCard(tile);
@@ -191,14 +150,10 @@ ${cardsInPlay}\
           hasCenterManaTile = true;
         } else if (arePositionsEqual(position, [4, 4])) {
           hasTopManaTile = true;
-        } else {
-          tiles.push(tile);
         }
       });
-    return { tiles, hasBottomManaTile, hasCenterManaTile, hasTopManaTile };
+    return { hasBottomManaTile, hasCenterManaTile, hasTopManaTile };
   }
-
-  private static readonly cardsInPlayLengthDenominator = 45;
 
   private static updateCoder(
     coder: ArithmeticCoder,
@@ -219,13 +174,6 @@ ${cardsInPlay}\
     const you = Player.updateCoder(coder, positionCoder, specPuzzle?.you);
     const opponent =
       Player.updateCoder(coder, positionCoder, specPuzzle?.opponent);
-    const cardsInPlay = List.updateCoder(
-      CardInPlay,
-      coder,
-      this.cardsInPlayLengthDenominator,
-      specPuzzle?.cardsInPlay,
-      positionCoder,
-    );
     return specPuzzle ?? new SpecPuzzle(
       isPlayer1,
       mana,
@@ -235,7 +183,6 @@ ${cardsInPlay}\
       [],
       you,
       opponent,
-      cardsInPlay,
     );
   }
 
