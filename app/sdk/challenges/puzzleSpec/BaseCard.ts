@@ -1,63 +1,58 @@
 const Card = require('app/sdk/cards/card');
-const Cards = require('app/sdk/cards/cardsLookupComplete');
-const CardType = require('app/sdk/cards/cardType');
-const Factions = require('app/sdk/cards/factionsLookup');
 const GameSession = require('app/sdk/gameSession');
 
+import { getArtifacts, getMinions, getSpells, getTiles } from '../../gameVersion';
 import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
-import { getUniformArrayCoding, getUniformNumberCoding } from "./arithmeticCoding/utils";
+import { getUniformArrayCoding } from "./arithmeticCoding/utils";
 import SpecString from './SpecString';
 
 export default class BaseCard {
-  constructor(
+  private static readonly indexMinBitLength = 8;
+
+  private constructor(
     public cardId: number,
-    private group: Group,
     private _card: typeof Card | null = null,
   ) {}
 
-  static fromSpecString(specString: SpecString): BaseCard | null {
-    const group = specString.matchRegex(/^(0[01]{3}|1[01])/) as Group | null;
-    if (group === null) {
+  public static fromSpecString(specString: SpecString): BaseCard | null {
+    const index =
+      specString.countZeroesAndReadNPlusBits(this.indexMinBitLength);
+    if (index === null) {
       return null;
     }
-    const id = specString.countZeroesAndReadNPlusBits(getIdMinBitLength(group));
-    if (id === null) {
+    const cardId = getIds()[index];
+    if (cardId === undefined) {
       return null;
     }
-    const cardId = id + getIdOffset(group);
-    return new BaseCard(cardId, group);
+    return new BaseCard(cardId);
   }
 
-  static fromCard(card: typeof Card): BaseCard | null {
-    const group = getGroup(card);
-    if (group === null) {
-      return null;
-    }
-    return new BaseCard(card.getId(), group, card);
+  public static fromCard(card: typeof Card): BaseCard | null {
+    return new BaseCard(card.getId(), card);
   }
 
   static fromCardId(cardId: number): BaseCard | null {
     return BaseCard.fromCard(BaseCard.getCard(cardId));
   }
 
-  get card(): typeof Card {
+  public get card(): typeof Card {
     this._card ??= BaseCard.getCard(this.cardId);
     return this._card;
   }
 
-  static updateCoder(coder: ArithmeticCoder, baseCard?: BaseCard): BaseCard {
-    const group = getGroupCoding().updateCoder(coder, baseCard?.group);
-    const cardId = getIdCoding(group).updateCoder(coder, baseCard?.cardId);
-    return baseCard ?? new BaseCard(cardId, group);
+  public static updateCoder(
+    coder: ArithmeticCoder,
+    baseCard?: BaseCard,
+  ): BaseCard {
+    const cardId = getIdCoding().updateCoder(coder, baseCard?.cardId);
+    return baseCard ?? new BaseCard(cardId);
   }
 
-  toString(): string {
-    const group = this.group;
-    const id = SpecString.padNumWithZeroesForCountingPastNMinBits(
-      this.cardId - getIdOffset(group),
-      getIdMinBitLength(group),
-    )
-    return `${group}${id}`;
+  public toString(): string {
+    return SpecString.padNumWithZeroesForCountingPastNMinBits(
+      getIds().indexOf(this.cardId),
+      BaseCard.indexMinBitLength,
+    );
   }
 
   private static getCard(cardId: number): typeof Card {
@@ -65,135 +60,13 @@ export default class BaseCard {
   }
 }
 
-const enum Group {
-  Faction1 = '0000',
-  Faction2 = '0001',
-  Faction3 = '0010',
-  Faction4 = '0011',
-  Faction5 = '0100',
-  Faction6 = '0101',
-  Neutral = '10',
-  Spell = '11',
-  Artifact = '0110',
-  Tile = '0111',
+function getIds(): number[] {
+  return getArtifacts()
+    .concat(getMinions())
+    .concat(getSpells())
+    .concat(getTiles());
 }
 
-function getIdMinBitLength(group: Group): number {
-  switch (group) {
-    case Group.Tile:
-      return 0;
-    case Group.Faction1:
-    case Group.Faction2:
-    case Group.Faction3:
-    case Group.Faction4:
-    case Group.Faction5:
-    case Group.Artifact:
-      return 3;
-    case Group.Faction6:
-      return 4;
-    case Group.Neutral:
-    case Group.Spell:
-      return 6;
-  }
-}
-
-function getIdOffset(group: Group): number {
-  switch (group) {
-    case Group.Faction1:
-      return Cards.Faction1.SilverguardSquire;
-    case Group.Faction2:
-      return Cards.Faction2.Heartseeker;
-    case Group.Faction3:
-      return Cards.Faction3.WindShrike;
-    case Group.Faction4:
-      return Cards.Faction4.AbyssalCrawler;
-    case Group.Faction5:
-      return Cards.Faction5.EarthWalker;
-    case Group.Faction6:
-      return Cards.Faction6.FenrirWarmaster;
-    case Group.Neutral:
-      return Cards.Neutral.SpottedDragonlark;
-    case Group.Spell:
-      return Cards.Spell.SundropElixir;
-    case Group.Artifact:
-      return Cards.Artifact.IndomitableWill;
-    case Group.Tile:
-      return Cards.Tile.BonusMana;
-  }
-}
-
-function getGroup(card: typeof Card): Group | null {
-  switch (card.getType()) {
-    case CardType.Unit:
-      switch (card.getFactionId()) {
-        case Factions.Faction1:
-          return Group.Faction1;
-        case Factions.Faction2:
-          return Group.Faction2;
-        case Factions.Faction3:
-          return Group.Faction3;
-        case Factions.Faction4:
-          return Group.Faction4;
-        case Factions.Faction5:
-          return Group.Faction5;
-        case Factions.Faction6:
-          return Group.Faction6;
-        case Factions.Neutral:
-          return Group.Neutral;
-        default:
-          return null;
-      }
-    case CardType.Spell:
-      return Group.Spell;
-    case CardType.Artifact:
-      return Group.Artifact;
-    case CardType.Tile:
-      return Group.Tile;
-    default:
-      return null;
-  }
-}
-
-function getGroupCoding() {
-  return getUniformArrayCoding([
-    Group.Faction1,
-    Group.Faction2,
-    Group.Faction3,
-    Group.Faction4,
-    Group.Faction5,
-    Group.Faction6,
-    Group.Neutral,
-    Group.Spell,
-    Group.Artifact,
-    Group.Tile,
-  ]);
-}
-
-function getIdCoding(group: Group) {
-  return getUniformNumberCoding(getGroupSize(group), getIdOffset(group));
-}
-
-function getGroupSize(group: Group): number {
-  switch (group) {
-    case Group.Faction1:
-      return 14;
-    case Group.Faction2:
-      return 15;
-    case Group.Faction3:
-      return 15;
-    case Group.Faction4:
-      return 15;
-    case Group.Faction5:
-      return 16;
-    case Group.Faction6:
-      return 24;
-    case Group.Neutral:
-      return 123;
-    case Group.Spell:
-      return 104;
-    case Group.Artifact:
-      return 18;
-    case Group.Tile:
-      return 2;
-  }
+function getIdCoding() {
+  return getUniformArrayCoding(getIds());
 }
