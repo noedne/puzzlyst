@@ -41,14 +41,14 @@ export default class Tile {
 
   public static updateCoder(
     coder: ArithmeticCoder,
+    tile: Tile | undefined,
     positionCoder: PositionCoder,
-    tile?: Tile,
   ): Tile {
     const baseCard = BaseCard.updateCoder(coder, tile?.baseCard);
     const position = positionCoder.updateCoder(
       coder,
-      PositionableType.Tile,
       tile?.position,
+      PositionableType.Tile,
     );
     return tile ?? new Tile(baseCard, position);
   }

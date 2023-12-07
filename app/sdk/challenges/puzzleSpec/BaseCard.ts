@@ -42,7 +42,7 @@ export default class BaseCard {
 
   public static updateCoder(
     coder: ArithmeticCoder,
-    baseCard?: BaseCard,
+    baseCard: BaseCard | undefined,
   ): BaseCard {
     const cardId = getIdCoding().updateCoder(coder, baseCard?.cardId);
     return baseCard ?? new BaseCard(cardId);

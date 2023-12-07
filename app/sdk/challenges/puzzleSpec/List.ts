@@ -2,16 +2,19 @@ import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import { getUniformNumberCoding } from "./arithmeticCoding/utils";
 import SpecString from "./SpecString";
 
-interface Codeable<T> {
+interface SpecStringable<T> {
   fromSpecString: (specString: SpecString) => T | null;
-  updateCoder: (coder: ArithmeticCoder, ...rest: any[]) => T;
+}
+
+interface Codeable<T, U extends unknown[]> {
+  updateCoder: (coder: ArithmeticCoder, data: T | undefined, ...rest: U) => T;
 }
 
 export default class List<T> {
   public constructor(public list: T[]) {}
 
   public static fromSpecString<T>(
-    Class: Codeable<T>,
+    Class: SpecStringable<T>,
     specString: SpecString,
     listSizeBitLength: number | null = null,
   ): List<T> | null {
@@ -25,18 +28,18 @@ export default class List<T> {
     return new List(list);
   }
 
-  public static updateCoder<T>(
-    Class: Codeable<T>,
+  public static updateCoder<T, U extends unknown[]>(
+    Class: Codeable<T, U>,
     coder: ArithmeticCoder,
     lengthDenominator: number,
-    encodedList?: List<T>,
-    ...rest: any[]
+    encodedList: List<T> | undefined,
+    ...rest: U
   ): List<T> {
     const length = getUniformNumberCoding(lengthDenominator)
       .updateCoder(coder, encodedList?.list.length);
     const decodedList = [];
     for (let i = 0; i < length; i++) {
-      decodedList.push(Class.updateCoder(coder, ...rest, encodedList?.list[i]));
+      decodedList.push(Class.updateCoder(coder, encodedList?.list[i], ...rest));
     }
     return encodedList ?? new List(decodedList);
   }

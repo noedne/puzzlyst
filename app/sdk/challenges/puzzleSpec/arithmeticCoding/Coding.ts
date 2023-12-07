@@ -10,7 +10,7 @@ export default class Coding<T> {
     private readonly rangeIndexer: RangeIndexer,
   ) {}
 
-  public updateCoder(coder: ArithmeticCoder, data?: T): T {
+  public updateCoder(coder: ArithmeticCoder, data: T | undefined): T {
     if (data != null) {
       this.encode(coder as ArithmeticEncoder, data);
       return data;

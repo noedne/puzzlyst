@@ -9,8 +9,8 @@ import type Range from "./arithmeticCoding/Range";
 export default class PositionCoder {
   public updateCoder(
     coder: ArithmeticCoder,
+    position: Position | undefined,
     type: PositionableType,
-    position?: Position,
   ): Position {
     if (position != null) {
       this.encodePosition(coder as ArithmeticEncoder, position, type);

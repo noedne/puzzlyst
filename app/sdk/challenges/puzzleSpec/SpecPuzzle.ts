@@ -171,9 +171,9 @@ ${this.opponent}\
       .updateCoder(coder, specPuzzle?.hasCenterManaTile);
     const hasTopManaTile = manaTileCoding
       .updateCoder(coder, specPuzzle?.hasTopManaTile);
-    const you = Player.updateCoder(coder, positionCoder, specPuzzle?.you);
+    const you = Player.updateCoder(coder, specPuzzle?.you, positionCoder);
     const opponent =
-      Player.updateCoder(coder, positionCoder, specPuzzle?.opponent);
+      Player.updateCoder(coder, specPuzzle?.opponent, positionCoder);
     return specPuzzle ?? new SpecPuzzle(
       isPlayer1,
       mana,

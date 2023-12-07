@@ -85,13 +85,13 @@ export default class Player {
 
   public static updateCoder(
     coder: ArithmeticCoder,
+    player: Player | undefined,
     positionCoder: PositionCoder,
-    player?: Player,
   ): Player {
     const generalCard = GeneralCard.updateCoder(
       coder,
-      positionCoder,
       player?.generalCard,
+      positionCoder,
     );
     const hand = List.updateCoder(
       DeckCard,

@@ -55,14 +55,14 @@ export default class Minion {
 
   public static updateCoder(
     coder: ArithmeticCoder,
+    minion: Minion | undefined,
     positionCoder: PositionCoder,
-    minion?: Minion,
   ): Minion {
     const baseCard = BaseCard.updateCoder(coder, minion?.baseCard);
     const position = positionCoder.updateCoder(
       coder,
-      PositionableType.Unit,
       minion?.position,
+      PositionableType.Unit,
     );
     const damage = getDamageCoding().updateCoder(
       coder,

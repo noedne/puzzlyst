@@ -19,7 +19,10 @@ export default class DeckCard {
     return new DeckCard(baseCard, modifiers);
   }
 
-  static updateCoder(coder: ArithmeticCoder, deckCard?: DeckCard): DeckCard {
+  static updateCoder(
+    coder: ArithmeticCoder,
+    deckCard: DeckCard | undefined,
+  ): DeckCard {
     const baseCard = BaseCard.updateCoder(coder, deckCard?.baseCard);
     return deckCard ?? new DeckCard(baseCard, []);
   }

@@ -74,15 +74,15 @@ export default class GeneralCard {
 
   static updateCoder(
     coder: ArithmeticCoder,
+    generalCard: GeneralCard | undefined,
     positionCoder: PositionCoder,
-    generalCard?: GeneralCard,
   ): GeneralCard {
     const faction = getFactionCoding().updateCoder(coder, generalCard?.faction);
     const general = getGeneralCoding().updateCoder(coder, generalCard?.general);
     const position = positionCoder.updateCoder(
       coder,
-      PositionableType.Unit,
       generalCard?.position,
+      PositionableType.Unit,
     );
     const damage = getDamageCoding().updateCoder(coder, generalCard?.damage);
     const modifiers = List.updateCoder(

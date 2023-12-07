@@ -58,7 +58,10 @@ export default class Modifier {
     );
   }
 
-  static updateCoder(coder: ArithmeticCoder, modifier?: Modifier): Modifier {
+  static updateCoder(
+    coder: ArithmeticCoder,
+    modifier: Modifier | undefined,
+  ): Modifier {
     const baseCard = BaseCard.updateCoder(coder, modifier?.baseCard);
     const array = getContextObjectData(baseCard.cardId);
     const index = getIndexOfContextObjectCoding(array.length)
