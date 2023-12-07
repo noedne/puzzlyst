@@ -88,7 +88,7 @@ export default class Modifier {
     return `${this.baseCard}${indexOfContextObject}${multiplicity}`;
   }
 
-  private static fromContextObject(contextObject: any): Modifier | null { 
+  private static fromContextObject(contextObject: any): Modifier | null {
     const { cardId, indexOfContextObject } = contextObject;
     if (cardId == null || indexOfContextObject == null) {
       return null;

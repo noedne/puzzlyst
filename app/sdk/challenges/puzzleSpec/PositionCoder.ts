@@ -41,15 +41,15 @@ export default class PositionCoder {
   }
 
   private encodePosition(
-    encoder: ArithmeticEncoder, 
-    position: Position, 
+    encoder: ArithmeticEncoder,
+    position: Position,
     type: PositionableType,
   ): void {
     encoder.update(this.getPositionRange(position, type));
   }
 
   private decodePosition(
-    decoder: ArithmeticDecoder, 
+    decoder: ArithmeticDecoder,
     type: PositionableType,
   ): Position {
     const availablePositionIndices = this.availablePositionIndicesByType[type];

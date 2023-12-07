@@ -86,9 +86,9 @@ export default class GeneralCard {
     );
     const damage = getDamageCoding().updateCoder(coder, generalCard?.damage);
     const modifiers = List.updateCoder(
-      Modifier, 
-      coder, 
-      modifiersLengthDenominator, 
+      Modifier,
+      coder,
+      modifiersLengthDenominator,
       generalCard?.modifiers,
     );
     return generalCard ?? new GeneralCard(

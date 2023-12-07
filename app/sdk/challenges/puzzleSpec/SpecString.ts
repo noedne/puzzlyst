@@ -54,7 +54,7 @@ export default class SpecString {
     const prefix = str.length === n ? '1' : '0'.repeat(str.length - n);
     return `${prefix}${str}`;
   }
-  
+
   extractList<T>(
     fromSpecString: (specString: SpecString) => T | null,
     listSizeBitLength: number | null = null,
