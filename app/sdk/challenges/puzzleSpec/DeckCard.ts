@@ -20,10 +20,10 @@ export default class DeckCard {
   }
 
   static updateCoder(
-    coder: ArithmeticCoder,
+    _coder: ArithmeticCoder,
+    baseCard: BaseCard,
     deckCard: DeckCard | undefined,
   ): DeckCard {
-    const baseCard = BaseCard.updateCoder(coder, deckCard?.baseCard);
     return deckCard ?? new DeckCard(baseCard, []);
   }
 

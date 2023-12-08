@@ -4,6 +4,7 @@ import ArrayDataIndexer from "./dataIndexer/ArrayDataIndexer";
 import NumberDataIndexer from "./dataIndexer/NumberDataIndexer";
 import UniformRangeIndexer from "./rangeIndexer/UniformRangeIndexer";
 import WeightedRangeIndexer from "./rangeIndexer/WeightedRangeIndexer";
+import AdaptiveRangeIndexer from "./rangeIndexer/AdaptiveRangeIndexer";
 
 export function getUniformRange(index: number, count: number): Range {
   return { low: index / count, high: (index + 1) / count };
@@ -55,4 +56,8 @@ export function getWeightedArrayCoding<T>(array: T[], weights: number[]): Coding
 
 export function getWeightedNumberCoding(weights: number[], offset: number = 0): Coding<number> {
   return new Coding(new NumberDataIndexer(offset), new WeightedRangeIndexer(weights));
+}
+
+export function getAdaptiveArrayCoding(ids: number[]): Coding<number> {
+  return new Coding(new ArrayDataIndexer(ids), new AdaptiveRangeIndexer(ids.length));
 }

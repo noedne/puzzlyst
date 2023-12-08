@@ -55,10 +55,10 @@ export default class Minion {
 
   public static updateCoder(
     coder: ArithmeticCoder,
+    baseCard: BaseCard,
     minion: Minion | undefined,
     positionCoder: PositionCoder,
   ): Minion {
-    const baseCard = BaseCard.updateCoder(coder, minion?.baseCard);
     const position = positionCoder.updateCoder(
       coder,
       minion?.position,

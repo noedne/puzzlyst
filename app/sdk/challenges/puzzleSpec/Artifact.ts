@@ -44,9 +44,9 @@ export default class Artifact {
 
   public static updateCoder(
     coder: ArithmeticCoder,
+    baseCard: BaseCard,
     artifact: Artifact | undefined,
   ): Artifact {
-    const baseCard = BaseCard.updateCoder(coder, artifact?.baseCard);
     const durability = getDurabilityCoding().updateCoder(
       coder,
       artifact?.durability,

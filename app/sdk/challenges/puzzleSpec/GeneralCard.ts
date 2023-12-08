@@ -3,6 +3,7 @@ const Factions = require('app/sdk/cards/factionsLookup');
 const Unit = require('app/sdk/entities/unit');
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import { getUniformArrayCoding, getUniformNumberCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
+import { contextObjectCardIds } from "./getContextObjectData";
 import List from "./List";
 import Modifier from "./Modifier";
 import {
@@ -88,6 +89,7 @@ export default class GeneralCard {
     const modifiers = List.updateCoder(
       Modifier,
       coder,
+      contextObjectCardIds,
       modifiersLengthDenominator,
       generalCard?.modifiers,
     );

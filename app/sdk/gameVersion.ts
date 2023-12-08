@@ -12,19 +12,23 @@ export function getCardVersion(identifier: number): number {
   return 0;
 }
 
-export function getArtifacts(): number[] {
+export function getCardIds(): number[] {
+  return artifacts.concat(minions, spells, tiles);
+}
+
+export function getArtifactIds(): number[] {
   return artifacts;
 }
 
-export function getMinions(): number[] {
+export function getMinionIds(): number[] {
   return minions;
 }
 
-export function getSpells(): number[] {
+export function getSpellIds(): number[] {
   return spells;
 }
 
-export function getTiles(): number[] {
+export function getTileIds(): number[] {
   return tiles;
 }
 

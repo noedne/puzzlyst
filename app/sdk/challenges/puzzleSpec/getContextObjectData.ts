@@ -28,7 +28,7 @@ function getContextObjectData(cardId: number) {
   }
 }
 
-export const contextObjectCardIds = [
+export const contextObjectCardIds: number[] = [
   Cards.Artifact.Winterblade,
 ];
 

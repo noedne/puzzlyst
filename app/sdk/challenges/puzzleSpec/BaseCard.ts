@@ -1,15 +1,13 @@
 const Card = require('app/sdk/cards/card');
 const GameSession = require('app/sdk/gameSession');
 
-import { getArtifacts, getMinions, getSpells, getTiles } from '../../gameVersion';
-import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
-import { getUniformArrayCoding } from "./arithmeticCoding/utils";
+import { getCardIds } from '../../gameVersion';
 import SpecString from './SpecString';
 
 export default class BaseCard {
   private static readonly indexMinBitLength = 8;
 
-  private constructor(
+  public constructor(
     public cardId: number,
     private _card: typeof Card | null = null,
   ) {}
@@ -20,7 +18,7 @@ export default class BaseCard {
     if (index === null) {
       return null;
     }
-    const cardId = getIds()[index];
+    const cardId = getCardIds()[index];
     if (cardId === undefined) {
       return null;
     }
@@ -40,17 +38,9 @@ export default class BaseCard {
     return this._card;
   }
 
-  public static updateCoder(
-    coder: ArithmeticCoder,
-    baseCard: BaseCard | undefined,
-  ): BaseCard {
-    const cardId = getIdCoding().updateCoder(coder, baseCard?.cardId);
-    return baseCard ?? new BaseCard(cardId);
-  }
-
   public toString(): string {
     return SpecString.padNumWithZeroesForCountingPastNMinBits(
-      getIds().indexOf(this.cardId),
+      getCardIds().indexOf(this.cardId),
       BaseCard.indexMinBitLength,
     );
   }
@@ -58,15 +48,4 @@ export default class BaseCard {
   private static getCard(cardId: number): typeof Card {
     return GameSession.current().createCardForIdentifier(cardId);
   }
-}
-
-function getIds(): number[] {
-  return getArtifacts()
-    .concat(getMinions())
-    .concat(getSpells())
-    .concat(getTiles());
-}
-
-function getIdCoding() {
-  return getUniformArrayCoding(getIds());
 }
