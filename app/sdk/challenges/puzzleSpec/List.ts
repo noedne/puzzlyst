@@ -1,6 +1,6 @@
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import type Coding from "./arithmeticCoding/Coding";
-import { getAdaptiveArrayCoding, getUniformNumberCoding } from "./arithmeticCoding/utils";
+import { getAdaptiveArrayCoding } from "./arithmeticCoding/utils";
 import BaseCard from "./BaseCard";
 import SpecString from "./SpecString";
 
@@ -43,13 +43,12 @@ export default class List<T> {
     Class: CodeableClass<T, U>,
     coder: ArithmeticCoder,
     ids: number[],
-    lengthDenominator: number,
+    lengthCoding: Coding<number>,
     encodedList: List<T> | undefined,
     ...rest: U
   ): List<T> {
     const idCoding = getAdaptiveArrayCoding(ids);
-    const length = getUniformNumberCoding(lengthDenominator)
-      .updateCoder(coder, encodedList?.list.length);
+    const length = lengthCoding.updateCoder(coder, encodedList?.list.length);
     const decodedList = [];
     for (let i = 0; i < length; i++) {
       const item = encodedList?.list[i];

@@ -6,7 +6,8 @@ import ArithmeticDecoder from "./arithmeticCoding/ArithmeticDecoder";
 import ArithmeticEncoder from "./arithmeticCoding/ArithmeticEncoder";
 import { getUniformBooleanCoding, getWeightedNumberCoding } from "./arithmeticCoding/utils";
 import Player from './Player';
-import { areEqual as arePositionsEqual, fromCard as getPositionFromCard } from './Position';
+import { areEqual as arePositionsEqual, fromCard as getPositionFromCard, Position } from './Position';
+import PositionableType from './PositionableType';
 import PositionCoder from "./PositionCoder";
 import SpecString from './SpecString';
 
@@ -14,6 +15,10 @@ const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModif
 
 export default class SpecPuzzle {
   private static readonly manaIndexLengthInBits = 3;
+  private static readonly bottomManaTilePosition: Position = [4, 0];
+  private static readonly centerManaTilePosition: Position = [5, 2];
+  private static readonly topManaTilePosition: Position = [4, 4];
+
   constructor(
     public isPlayer1: boolean,
     public mana: number,
@@ -144,11 +149,11 @@ ${this.opponent}\
           return;
         }
         const position = getPositionFromCard(tile);
-        if (arePositionsEqual(position, [4, 0])) {
+        if (arePositionsEqual(position, this.bottomManaTilePosition)) {
           hasBottomManaTile = true;
-        } else if (arePositionsEqual(position, [5, 2])) {
+        } else if (arePositionsEqual(position, this.centerManaTilePosition)) {
           hasCenterManaTile = true;
-        } else if (arePositionsEqual(position, [4, 4])) {
+        } else if (arePositionsEqual(position, this.topManaTilePosition)) {
           hasTopManaTile = true;
         }
       });
@@ -167,13 +172,31 @@ ${this.opponent}\
     const manaTileCoding = this.getManaTileCoding();
     const hasBottomManaTile = manaTileCoding
       .updateCoder(coder, specPuzzle?.hasBottomManaTile);
+    if (hasBottomManaTile) {
+      positionCoder.removePosition(
+        this.bottomManaTilePosition,
+        PositionableType.Tile,
+      );
+    }
     const hasCenterManaTile = manaTileCoding
       .updateCoder(coder, specPuzzle?.hasCenterManaTile);
+    if (hasCenterManaTile) {
+      positionCoder.removePosition(
+        this.centerManaTilePosition,
+        PositionableType.Tile,
+      );
+    }
     const hasTopManaTile = manaTileCoding
       .updateCoder(coder, specPuzzle?.hasTopManaTile);
-    const you = Player.updateCoder(coder, specPuzzle?.you, positionCoder);
+    if (hasTopManaTile) {
+      positionCoder.removePosition(
+        this.topManaTilePosition,
+        PositionableType.Tile,
+      );
+    }
+    const you = Player.updateCoder(coder, specPuzzle?.you, true, positionCoder);
     const opponent =
-      Player.updateCoder(coder, specPuzzle?.opponent, positionCoder);
+      Player.updateCoder(coder, specPuzzle?.opponent, false, positionCoder);
     return specPuzzle ?? new SpecPuzzle(
       isPlayer1,
       mana,

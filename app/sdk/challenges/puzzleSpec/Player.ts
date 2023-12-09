@@ -6,21 +6,19 @@ const SDKTile = require('app/sdk/entities/tile');
 const Unit = require('app/sdk/entities/unit');
 import { getArtifactIds, getMinionIds, getSpellIds, getTileIds } from '../../gameVersion';
 import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
+import { getWeightedNumberCoding } from './arithmeticCoding/utils';
 import Artifact from './Artifact';
 import DeckCard from './DeckCard';
 import GeneralCard from './GeneralCard';
 import List from './List';
 import Minion from './Minion';
+import PositionableType from './PositionableType';
 import type PositionCoder from "./PositionCoder";
 import type SpecString from './SpecString';
 import Tile from './Tile';
 
 export default class Player {
   private static readonly handSizeInBits = 3;
-  private static readonly handLengthDenominator = 7;
-  private static readonly artifactsLengthDenominator = 3;
-  private static readonly minionsLengthDenominator = 45;
-  private static readonly tilesLengthDenominator = 45;
 
   private constructor(
     public generalCard: GeneralCard,
@@ -87,6 +85,7 @@ export default class Player {
   public static updateCoder(
     coder: ArithmeticCoder,
     player: Player | undefined,
+    isMe: boolean,
     positionCoder: PositionCoder,
   ): Player {
     const generalCard = GeneralCard.updateCoder(
@@ -103,28 +102,34 @@ export default class Player {
       DeckCard,
       coder,
       deckIds,
-      this.handLengthDenominator,
+      getWeightedNumberCoding(
+        isMe
+          ? [1/16, 1/16, 1/8, 1/8, 1/8, 1/8]
+          : [29/32, 1/64, 1/64, 1/64, 1/64, 1/64],
+      ),
       player?.hand,
     );
     const deck = List.updateCoder(
       DeckCard,
       coder,
       deckIds,
-      this.handLengthDenominator,
+      getWeightedNumberCoding(getExponentialLengthWeights(1/32, 39)),
       player?.deck,
     );
     const artifacts = List.updateCoder(
       Artifact,
       coder,
       artifactIds,
-      this.artifactsLengthDenominator,
+      getWeightedNumberCoding([13/16, 1/16, 1/16]),
       player?.artifacts,
     );
     const minions = List.updateCoder(
       Minion,
       coder,
       minionIds,
-      this.minionsLengthDenominator,
+      getWeightedNumberCoding(getMinionLengthWeights(
+        positionCoder.getNumAvailable(PositionableType.Unit),
+      )),
       player?.minions,
       positionCoder,
     );
@@ -132,7 +137,10 @@ export default class Player {
       Tile,
       coder,
       tileIds,
-      this.tilesLengthDenominator,
+      getWeightedNumberCoding(getExponentialLengthWeights(
+        1/32,
+        positionCoder.getNumAvailable(PositionableType.Tile),
+      )),
       player?.tiles,
       positionCoder,
     );
@@ -148,6 +156,59 @@ export default class Player {
     const tiles = this.tiles.toString();
     return `${this.generalCard}${hand}${deck}${artifacts}${minions}${tiles}`;
   }
+}
+
+function getExponentialLengthWeights(
+  nonzeroWeight: number,
+  maxLength: number,
+): number[] {
+  if (maxLength === 0) {
+    return [];
+  }
+  const weights = [1 - nonzeroWeight];
+  let weight = nonzeroWeight;
+  for (let i = 1; i < maxLength; i++) {
+    weight /= 2;
+    weights.push(weight);
+  }
+  return weights;
+}
+
+const minionLengthWeights = [
+  1/32,
+  1/16,
+  1/8, 1/8, 1/8, 1/8,
+  1/16, 1/16,
+  1/32, 1/32, 1/32, 1/32,
+  1/64, 1/64, 1/64, 1/64,
+  1/128, 1/128, 1/128, 1/128,
+  1/256, 1/256, 1/256, 1/256, 1/256, 1/256, 1/256, 1/256,
+  1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512, 1/512,
+];
+
+function getMinionLengthWeights(maxLength: number): number[] {
+  if (maxLength === 0) {
+    return [];
+  }
+  if (maxLength >= minionLengthWeights.length) {
+    return minionLengthWeights;
+  }
+  let sum = 1/512;
+  for (let i = maxLength + 1; i < minionLengthWeights.length; i++) {
+    const weight = minionLengthWeights[i];
+    if (weight === undefined) {
+      throw Error('invalid');
+    }
+    sum += weight;
+  }
+  const average = sum / (maxLength + 1);
+  return Array.from(Array(maxLength)).map((_, i) => {
+    const weight = minionLengthWeights[i];
+    if (weight === undefined) {
+      throw Error('invalid');
+    }
+    return weight + average;
+  });
 }
 
 interface CardClass<T> {

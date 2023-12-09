@@ -19,6 +19,21 @@ export default class PositionCoder {
     return this.decodePosition(coder as ArithmeticDecoder, type);
   }
 
+  public getNumAvailable(type: PositionableType): number {
+    return this.availablePositionIndicesByType[type].length;
+  }
+
+  public removePosition(position: Position, type: PositionableType): number {
+    const availablePositionIndices = this.availablePositionIndicesByType[type];
+    const positionIndex = position[1] * WIDTH + position[0];
+    const indexOf = availablePositionIndices.indexOf(positionIndex);
+    if (indexOf === -1) {
+      throw Error('invalid');
+    }
+    availablePositionIndices.splice(indexOf, 1);
+    return indexOf;
+  }
+
   private readonly availablePositionIndicesByType = {
     [PositionableType.Tile]: PositionCoder.genAllPositionIndices(),
     [PositionableType.Unit]: PositionCoder.genAllPositionIndices(),
@@ -29,14 +44,8 @@ export default class PositionCoder {
   }
 
   private getPositionRange(position: Position, type: PositionableType): Range {
-    const availablePositionIndices = this.availablePositionIndicesByType[type];
-    const positionIndex = position[1] * WIDTH + position[0];
-    const indexOf = availablePositionIndices.indexOf(positionIndex);
-    if (indexOf === -1) {
-      throw Error('invalid');
-    }
-    const length = availablePositionIndices.length;
-    availablePositionIndices.splice(indexOf, 1);
+    const length = this.availablePositionIndicesByType[type].length;
+    const indexOf = this.removePosition(position, type);
     return getUniformRange(indexOf, length);
   }
 

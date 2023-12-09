@@ -90,7 +90,7 @@ export default class GeneralCard {
       Modifier,
       coder,
       contextObjectCardIds,
-      modifiersLengthDenominator,
+      getUniformNumberCoding(contextObjectCardIds.length + 1),
       generalCard?.modifiers,
     );
     return generalCard ?? new GeneralCard(
@@ -221,8 +221,6 @@ function getGeneralCoding() {
 function getDamageCoding() {
   return getUniformNumberCoding(25);
 }
-
-const modifiersLengthDenominator = 3;
 
 const enum Faction {
   Faction1 = '000',
