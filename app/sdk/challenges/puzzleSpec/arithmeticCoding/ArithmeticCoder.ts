@@ -34,7 +34,7 @@ export default class ArithmeticCoder {
     this.range.high = 2 * this.range.high - offset;
   }
 
-  protected getBitChar(bit: boolean): string {
+  protected static getBitChar(bit: boolean): string {
     return bit ? '1' : '0';
   }
 }

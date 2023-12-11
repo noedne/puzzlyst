@@ -9,7 +9,10 @@ export default class ArithmeticEncoder extends ArithmeticCoder {
   }
 
   public flush(): string {
-    return this.encoded + '1';
+    const one = ArithmeticCoder.getBitChar(true);
+    return this.range.low > 0 || this.pending > 0
+      ? this.encoded + one
+      : this.encoded.slice(0, this.encoded.lastIndexOf(one) + 1);
   }
 
   protected override updateRange(offset: number): void {
@@ -24,9 +27,9 @@ export default class ArithmeticEncoder extends ArithmeticCoder {
   }
 
   private write(bit: boolean): void {
-    this.encoded += this.getBitChar(bit);
+    this.encoded += ArithmeticCoder.getBitChar(bit);
     if (this.pending > 0) {
-      this.encoded += this.getBitChar(!bit).repeat(this.pending);
+      this.encoded += ArithmeticCoder.getBitChar(!bit).repeat(this.pending);
       this.pending = 0;
     }
   }

@@ -46,6 +46,6 @@ export default class ArithmeticDecoder extends ArithmeticCoder {
     if (this.index >= this.compressed.length) {
       return null;
     }
-    return this.compressed[this.index++] === this.getBitChar(true);
+    return this.compressed[this.index++] === ArithmeticCoder.getBitChar(true);
   }
 }
