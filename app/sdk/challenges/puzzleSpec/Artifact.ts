@@ -5,7 +5,7 @@ const SDKArtifact = require('app/sdk/artifacts/artifact');
 import BaseCard from "./BaseCard";
 import SpecString from "./SpecString";
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
-import { getUniformNumberCoding } from "./arithmeticCoding/utils";
+import { getWeightedNumberCoding } from "./arithmeticCoding/utils";
 import getCustomModifiers from "./getCustomModifiers";
 
 export default class Artifact {
@@ -47,7 +47,7 @@ export default class Artifact {
     baseCard: BaseCard,
     artifact: Artifact | undefined,
   ): Artifact {
-    const durability = getDurabilityCoding().updateCoder(
+    const durability = getWeightedNumberCoding([1/8, 1/8], 1).updateCoder(
       coder,
       artifact?.durability,
     );
@@ -63,8 +63,4 @@ export default class Artifact {
       .map(({ toString }) => toString(card)).join('');
     return `${this.baseCard}${durability}${customModifiers}`;
   }
-}
-
-function getDurabilityCoding() {
-  return getUniformNumberCoding(3, 1);
 }
