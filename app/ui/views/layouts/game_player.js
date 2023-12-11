@@ -16,6 +16,7 @@ var i18next = require('i18next');
 var OpponentPlayerPopoverLayout = require('./game_opponent_player_popover');
 var MyPlayerPopoverLayout = require('./game_my_player_popover');
 const Handlebars = require('hbsfy/runtime');
+const Puzzle = require('app/sdk/challenges/Puzzle').default;
 
 /**
  * Abstract player view, override and assign a playerId to the model.
@@ -496,9 +497,8 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
       const myMana = index + 1;
       myPlayer.setStartingMana(myMana);
       const isPlayer1 = myPlayer.getPlayerId() === gameSession.getPlayer1Id();
-      const opponentHasSameMana = isPlayer1 || myMana === CONFIG.MAX_MANA;
-      const opponentMana = opponentHasSameMana ? myMana : myMana - 1;
-      gameSession.getOpponentPlayer().maximumMana = opponentMana;
+      gameSession.getOpponentPlayer().maximumMana =
+        Puzzle.getStartingManaOpponent(isPlayer1, myMana);
       Scene.current().getGameLayer().getEventBus().trigger('bindMana');
     }
   },

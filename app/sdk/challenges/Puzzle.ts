@@ -1,6 +1,7 @@
 const Cards = require('app/sdk/cards/cardsLookupComplete');
 const Challenge = require('app/sdk/challenges/challenge');
 const ChallengeCategory = require('app/sdk/challenges/challengeCategory');
+const CONFIG = require('app/common/config');
 const RSX = require('app/data/resources');
 import type Modifier from './puzzleSpec/Modifier';
 import type Player from './puzzleSpec/Player';
@@ -29,11 +30,11 @@ export default class Puzzle extends Challenge {
 
   battleMapTemplateIndex = 6;
   snapShotOnPlayerTurn = 0;
-  startingManaOpponent = 9;
   usesResetTurn = false;
 
   userIsPlayer1: boolean = true;
   startingManaPlayer: number | null = null;
+  startingManaOpponent: number | null = null;
   startingHandSizePlayer: number | null = null;
   startingHandSizeOpponent: number | null = null;
 
@@ -41,6 +42,15 @@ export default class Puzzle extends Challenge {
 
   constructor(public puzzle: SpecPuzzle) {
     super();
+  }
+
+  static getStartingManaOpponent(
+    userIsPlayer1: boolean,
+    startingManaPlayer: number,
+  ): number {
+    return !userIsPlayer1 && startingManaPlayer < CONFIG.MAX_MANA
+      ? startingManaPlayer - 1
+      : Math.min(startingManaPlayer, CONFIG.MAX_MANA);
   }
 
   static fromBase64(base64: string): Puzzle {
@@ -68,6 +78,10 @@ export default class Puzzle extends Challenge {
   setupSession(gameSession: GameSession): GameSession {
     this.userIsPlayer1 = this.puzzle.isPlayer1;
     this.startingManaPlayer = this.puzzle.mana;
+    this.startingManaOpponent = Puzzle.getStartingManaOpponent(
+      this.userIsPlayer1,
+      this.startingManaPlayer,
+    );
     this.startingHandSizePlayer = this.puzzle.you.hand.list.length;
     this.startingHandSizeOpponent = this.puzzle.opponent.hand.list.length;
     const editingMode = gameSession.getEditingMode();
