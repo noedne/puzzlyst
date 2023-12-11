@@ -58,6 +58,10 @@ export function getWeightedNumberCoding(weights: number[], offset: number = 0): 
   return new Coding(new NumberDataIndexer(offset), new WeightedRangeIndexer(weights));
 }
 
+export function getWeightedBooleanCoding(weight: number): Coding<boolean> {
+  return new Coding(new ArrayDataIndexer([true, false]), new WeightedRangeIndexer([weight]));
+}
+
 export function getAdaptiveArrayCoding(ids: number[]): Coding<number> {
   return new Coding(new ArrayDataIndexer(ids), new AdaptiveRangeIndexer(ids.length));
 }

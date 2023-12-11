@@ -12,7 +12,7 @@ import type PositionCoder from "./PositionCoder";
 import PositionableType from "./PositionableType";
 import SpecString from "./SpecString";
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
-import { getUniformNumberCoding } from "./arithmeticCoding/utils";
+import { getUniformNumberCoding, getWeightedBooleanCoding } from "./arithmeticCoding/utils";
 
 export default class Minion {
   private constructor(
@@ -64,10 +64,16 @@ export default class Minion {
       minion?.position,
       PositionableType.Unit,
     );
-    const damage = getDamageCoding().updateCoder(
-      coder,
-      minion?.damage,
-    );
+    const maxDamage = baseCard.card.maxHP - 1;
+    const isHealthy = maxDamage === 0
+      ? true
+      : getWeightedBooleanCoding(3/4).updateCoder(
+          coder,
+          minion === undefined ? undefined : minion.damage === 0,
+        );
+    const damage = isHealthy
+      ? 0
+      : getUniformNumberCoding(maxDamage, 1).updateCoder(coder, minion?.damage);
     return minion ?? new Minion(baseCard, position, damage, []);
   }
 
@@ -77,8 +83,4 @@ export default class Minion {
     const modifiers = SpecString.constructList(this.modifiers);
     return `${this.baseCard}${position}${damage}${modifiers}`;
   }
-}
-
-function getDamageCoding() {
-  return getUniformNumberCoding(6);
 }
