@@ -25,8 +25,8 @@ export default class PositionCoder {
 
   public removePosition(position: Position, type: PositionableType): number {
     const availablePositionIndices = this.availablePositionIndicesByType[type];
-    const positionIndex = position[1] * WIDTH + position[0];
-    const indexOf = availablePositionIndices.indexOf(positionIndex);
+    const indexOf =
+      availablePositionIndices.indexOf(PositionCoder.positionToIndex(position));
     if (indexOf === -1) {
       throw Error('invalid');
     }
@@ -36,11 +36,23 @@ export default class PositionCoder {
 
   private readonly availablePositionIndicesByType = {
     [PositionableType.Tile]: PositionCoder.genAllPositionIndices(),
-    [PositionableType.Unit]: PositionCoder.genAllPositionIndices(),
+    [PositionableType.Unit]: PositionCoder.genUnitPositionIndices(),
   };
+
+  private static genUnitPositionIndices(): number[] {
+    const generalPositions: Position[] = [[0, 2], [8, 2]];
+    const generalIndices = generalPositions.map(this.positionToIndex);
+    return generalIndices.concat(this.genAllPositionIndices().filter(
+      index => !generalIndices.includes(index),
+    ));
+  }
 
   private static genAllPositionIndices(): number[] {
     return Array(WIDTH * HEIGHT).fill(0).map((_, i) => i);
+  }
+
+  private static positionToIndex(position: Position): number {
+    return position[1] * WIDTH + position[0];
   }
 
   private getPositionRange(position: Position, type: PositionableType): Range {

@@ -47,7 +47,7 @@ export function getUniformNumberCoding(count: number, offset: number = 0): Codin
 }
 
 export function getUniformBooleanCoding(): Coding<boolean> {
-  return new Coding(new ArrayDataIndexer([false, true]), new UniformRangeIndexer(2));
+  return new Coding(new ArrayDataIndexer([true, false]), new UniformRangeIndexer(2));
 }
 
 export function getWeightedArrayCoding<T>(array: T[], weights: number[]): Coding<T> {

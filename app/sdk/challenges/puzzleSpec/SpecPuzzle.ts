@@ -4,7 +4,7 @@ const Tile = require('app/sdk/entities/tile');
 import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
 import ArithmeticDecoder from "./arithmeticCoding/ArithmeticDecoder";
 import ArithmeticEncoder from "./arithmeticCoding/ArithmeticEncoder";
-import { getUniformBooleanCoding, getWeightedNumberCoding } from "./arithmeticCoding/utils";
+import { getUniformBooleanCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
 import Player from './Player';
 import { areEqual as arePositionsEqual, fromCard as getPositionFromCard, Position } from './Position';
 import PositionableType from './PositionableType';
@@ -214,9 +214,9 @@ ${this.opponent}\
   }
 
   private static getManaCoding() {
-    return getWeightedNumberCoding(
+    return getWeightedArrayCoding(
+      [2, 1, 3, 4, 5, 6, 7, 8, 9],
       [1/256, 1/256, 1/128, 1/128, 1/128, 1/32, 1/32, 1/32],
-      1,
     );
   }
 
