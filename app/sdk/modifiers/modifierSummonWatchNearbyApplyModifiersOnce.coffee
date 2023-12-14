@@ -1,4 +1,4 @@
-ModifierSummonWatchNearbyApplyModifiers = require './modifierSummonWatchApplyModifiers'
+ModifierSummonWatchNearbyApplyModifiers = require './modifierSummonWatchNearbyApplyModifiers'
 
 class ModifierSummonWatchNearbyApplyModifiersOnce extends ModifierSummonWatchNearbyApplyModifiers
 
