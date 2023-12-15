@@ -5,47 +5,33 @@ const Template = require('app/ui/templates/item/add_modifier_modal.hbs');
 import TypeaheadModal from './typeahead_modal';
 import getContextObjectData, { contextObjectCardIds, getDescription } from '../../../sdk/challenges/puzzleSpec/getContextObjectData';
 import { matchSorter } from 'match-sorter';
-import withNumberInput from './with_number_input';
+import NumberInput from './number_input';
 
-const NumberInputView = withNumberInput(TypeaheadModal);
-
-export default NumberInputView.extend({
+export default TypeaheadModal.extend({
+  className: TypeaheadModal.prototype.className + ' number-input-view',
   id: 'app-add-modifier',
   template: Template,
 
-  ui: {
-    $form: '.prompt-form',
-    $typeahead: '.typeahead',
-    $results: '#results',
-    $submit: '.prompt-submit',
-    $upArrow: '.up-arrow',
-    $numberInput: '.number-input',
-    $downArrow: '.down-arrow',
-  },
-
-  events: {
-    'click @ui.$submit': 'onClickSubmit',
-    'keydown .modal-dialog': 'onKeyDown',
-    'input @ui.$typeahead': 'onInputChange',
-    'mousemove li': 'onHoverResult',
-    'click li': 'onClickResult',
-    'click @ui.$upArrow': 'onClickUpArrow',
-    'click @ui.$downArrow': 'onClickDownArrow',
-    'input @ui.$numberInput': 'onNumberChange',
-  },
-
   initialize: function (options: { card: typeof Card }) {
     this.card = options.card;
-    NumberInputView.prototype.initialize.apply(this, [{
-      initial: 1,
-      max: Infinity,
-      min: 1,
-      placeholder: 1,
-      select: false,
-    }]);
   },
 
-  onSubmitImpl: function (count: number) {
+  onShow: function () {
+    TypeaheadModal.prototype.onShow.apply(this);
+    this.numberInput = new NumberInput(
+      this.$('.number-input-group'),
+      {
+        initial: 1,
+        max: Infinity,
+        min: 1,
+        placeholder: 1,
+        select: false,
+      },
+    );
+  },
+
+  onSubmit: function () {
+    const count = this.numberInput.getValue();
     SDK.GameSession.current().applyModifierContextObjectToCard(
       this.card,
       this.getResult().contextObject,
@@ -73,5 +59,13 @@ export default NumberInputView.extend({
 
   createResult: function (item: { name: string, description: string }): JQuery {
     return $('<li>').text(`${item.name}: ${item.description}`);
+  },
+
+  updateValidState: function () {
+    if (this.numberInput == null || !this.numberInput.getIsValid()) {
+      this.isValid = false;
+    } else {
+      TypeaheadModal.prototype.updateValidState.apply(this);
+    }
   },
 });
