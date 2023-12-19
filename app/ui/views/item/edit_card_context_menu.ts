@@ -8,8 +8,8 @@ const Template = require('app/ui/templates/item/edit_card_context_menu.hbs');
 const UtilsEngine = require('app/common/utils/utils_engine');
 const UtilsPointer = require('app/common/utils/utils_pointer');
 import AddModifierModal from './add_modifier_modal';
-import SetDamageModal from './set_damage_modal';
 import SetDurabilityModal from './set_durability_modal';
+import SetStatsModal from './set_stats_modal';
 
 export default Marionette.ItemView.extend({
   id: 'app-edit-card-context-menu',
@@ -17,7 +17,7 @@ export default Marionette.ItemView.extend({
 
   ui: {
     $dropdown: '.dropdown-menu',
-    $setDamageItem: '.set-damage-item',
+    $setStatsItem: '.set-stats-item',
     $setDurabilityItem: '.set-durability-item',
     $addModifierItem: '.add-modifier-item',
     $manaTileItem: '.mana-tile-item',
@@ -27,7 +27,7 @@ export default Marionette.ItemView.extend({
   },
 
   events: {
-    'click @ui.$setDamageItem': 'onSetDamage',
+    'click @ui.$setStatsItem': 'onSetStats',
     'click @ui.$setDurabilityItem': 'onSetDurability',
     'click @ui.$addModifierItem': 'onAddModifier',
     'click @ui.$manaTileItem': 'onToggleManaSpring',
@@ -57,7 +57,7 @@ export default Marionette.ItemView.extend({
       deleteTile: this.tile != null,
       isManaTile,
       isManaTileDepleted: this.isManaTileDepleted,
-      setDamage: isUnit,
+      setStats: isUnit,
       setDurability: isArtifact,
     };
   },
@@ -82,8 +82,8 @@ export default Marionette.ItemView.extend({
     });
   },
 
-  onSetDamage: function () {
-    this.onOpenModal(SetDamageModal);
+  onSetStats: function () {
+    this.onOpenModal(SetStatsModal);
   },
 
   onSetDurability: function () {

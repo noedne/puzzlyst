@@ -18,16 +18,13 @@ export default TypeaheadModal.extend({
 
   onShow: function () {
     TypeaheadModal.prototype.onShow.apply(this);
-    this.numberInput = new NumberInput(
-      this.$('.number-input-group'),
-      {
-        initial: 1,
-        max: Infinity,
-        min: 1,
-        placeholder: 1,
-        select: false,
-      },
-    );
+    this.numberInput = new NumberInput({
+      $groupElement: this.$('.number-input-group'),
+      initial: 1,
+      max: Infinity,
+      min: 1,
+      placeholder: 1,
+    });
   },
 
   onSubmit: function () {

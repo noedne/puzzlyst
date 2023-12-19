@@ -32,16 +32,14 @@ export default FormPromptModalItemView.extend({
 
   onShow: function () {
     FormPromptModalItemView.prototype.onShow.apply(this);
-    this.numberInput = new NumberInput(
-      this.ui.$numberInputGroup,
-      {
-        initial: this.card.getDamage(),
-        max: this.card.getMaxHP() - 1,
-        min: 0,
-        placeholder: 0,
-        select: true,
-      },
-    );
+    this.numberInput = new NumberInput({
+      $groupElement: this.ui.$numberInputGroup,
+      initial: this.card.getDamage(),
+      max: this.card.getMaxHP() - 1,
+      min: 0,
+      placeholder: 0,
+      select: true,
+    });
   },
 
   onSubmit: function () {

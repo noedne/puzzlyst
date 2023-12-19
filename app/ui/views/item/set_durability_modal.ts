@@ -33,16 +33,14 @@ export default FormPromptModalItemView.extend({
 
   onShow: function () {
     FormPromptModalItemView.prototype.onShow.apply(this);
-    this.numberInput = new NumberInput(
-      this.ui.$numberInputGroup,
-      {
-        initial: this.artifact.durability,
-        max: CONFIG.MAX_ARTIFACT_DURABILITY,
-        min: 1,
-        placeholder: CONFIG.MAX_ARTIFACT_DURABILITY,
-        select: true,
-      },
-    );
+    this.numberInput = new NumberInput({
+      $groupElement: this.ui.$numberInputGroup,
+      initial: this.artifact.durability,
+      max: CONFIG.MAX_ARTIFACT_DURABILITY,
+      min: 1,
+      placeholder: CONFIG.MAX_ARTIFACT_DURABILITY,
+      select: true,
+    });
   },
 
   onSubmit: function () {

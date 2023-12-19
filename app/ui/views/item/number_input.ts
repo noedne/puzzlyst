@@ -15,26 +15,29 @@ export default class NumberInput {
   private readonly max: number;
   private readonly min: number;
   private readonly placeholder: number;
+  private readonly onChangeValue: ((delta: number) => void) | undefined;
 
-  public constructor(
+  public constructor({
+    $groupElement,
+    initial,
+    max,
+    min,
+    placeholder,
+    select = false,
+    onChangeValue,
+  }: {
     $groupElement: JQuery,
-    {
-      initial,
-      max,
-      min,
-      placeholder,
-      select,
-    }: {
-      initial: number,
-      max: number,
-      min: number,
-      placeholder: number,
-      select: boolean,
-    },
-  ) {
+    initial: number,
+    max: number,
+    min: number,
+    placeholder: number,
+    select?: boolean,
+    onChangeValue?: (delta: number) => void,
+  }) {
     this.max = max;
     this.min = min;
     this.placeholder = placeholder;
+    this.onChangeValue = onChangeValue;
     $groupElement.append(this.$upArrow, this.$numberInput, this.$downArrow);
     this.$numberInput.attr({ max, min, placeholder });
     this.$numberInput.val(initial);
@@ -85,6 +88,7 @@ export default class NumberInput {
       Math.max(this.min, Math.min(this.getValue() + delta, this.max)),
     );
     this.onNumberChange();
+    this.onChangeValue?.(delta);
   }
 
   private setDisabled(): void {
