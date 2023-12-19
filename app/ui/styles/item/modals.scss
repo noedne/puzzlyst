@@ -438,13 +438,42 @@
 	}
 }
 
-#app-add-modifier {
-	.w-100 {
-		width: 100%
-	}
-	#input-row {
+.modal-dialog .modal-content .modal-body .w-100 {
+	width: 100%;
+}
+
+.input-row {
+	display: flex;
+	align-self: stretch;
+	align-items: baseline;
+	.stats {
 		display: flex;
-		align-self: stretch;
+		margin-left: auto;
+		.stat {
+			width: 68px;
+			height: 71px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			&.atk {
+				background-image: url(resources/ui/icon_atk.png);
+			}
+			&.hp {
+				background-image: url(resources/ui/icon_hp.png);
+			}
+			&.buff {
+				color: rgb(39,233,86);
+			}
+			&.nerf {
+				color: rgb(255,50,0);
+			}
+		}
+		.tooltip-arrow {
+			border-top-color: rgba(255,0,60,1);
+		}
+		.tooltip-inner {
+			background-color: rgba(255,0,60,1);
+		}
 	}
 }
 
@@ -453,6 +482,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		margin: 0 16px;
 		.arrow {
 			&:hover, &:focus {
 				color: $light-blue;
@@ -461,6 +491,7 @@
 		.up-arrow {
 			position: absolute;
 			translate: 0 -100%;
+			padding-bottom: 0;
 		}
 		.number-input {
 			width: 3em;
@@ -469,6 +500,9 @@
 			&::-webkit-inner-spin-button {
 				appearance: none;
 			}
+		}
+		.down-arrow {
+			padding-top: 0;
 		}
 	}
 }

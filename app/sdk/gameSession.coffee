@@ -344,6 +344,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
 {
   editorProperties,
   copyCard,
+  getCardStats,
   setCardDamage,
   setArtifactDurability,
   applyModifierContextObjectToCard,
@@ -381,6 +382,7 @@ class _GameSession extends SDKObject
   getIsHurtingDamageTrueDamage: getIsHurtingDamageTrueDamage
 
   copyCard: copyCard
+  getCardStats: getCardStats
   setCardDamage: setCardDamage
   setArtifactDurability: setArtifactDurability
   applyModifierContextObjectToCard: applyModifierContextObjectToCard

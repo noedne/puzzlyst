@@ -46,6 +46,27 @@ export function copyCard(
   return card;
 }
 
+type CardStats = {
+  damage: number,
+  attackBase: number,
+  attackBuff: number,
+  healthBase: number,
+  healthBuff: number,
+};
+
+export function getCardStats(
+  this: typeof GameSession,
+  card: typeof Card,
+): CardStats {
+  return {
+    damage: card.getDamage(),
+    attackBase: card.getBaseATK(),
+    attackBuff: card.getATK(false) - card.getBaseATK(),
+    healthBase: card.getBaseMaxHP(),
+    healthBuff: card.getMaxHP(false) - card.getBaseMaxHP(),
+  };
+}
+
 export function setCardDamage(
   this: typeof GameSession,
   card: typeof Card,
