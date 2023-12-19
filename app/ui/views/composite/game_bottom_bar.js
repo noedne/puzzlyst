@@ -137,7 +137,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       setArtifactDurability,
       setInitialBenchSelected,
       setMouseOver,
-      showHP,
+      showStats,
       showModifiers,
       showDeactivatedModifier,
     } = event.options;
@@ -195,13 +195,18 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       );
       player.setMouseOverEntityNode(entityNode);
     }
-    if (showHP) {
-      const { card } = showHP;
+    if (showStats) {
+      const { card } = showStats;
       Object.assign(card.getActionStateRecord()._currentState, {
+        atk: card.getATK(),
+        baseATK: card.getBaseATK(),
+        baseMaxHP: card.getBaseMaxHP(),
         damage: card.getDamage(),
         hp: card.getHP(),
+        maxHP: card.getMaxHP(),
+        modifierStacks: card.getVisibleModifierStacks(),
       });
-      gameLayer.getNodeForSdkCard(card).getStatsNode().showHP();
+      gameLayer.getNodeForSdkCard(card).getStatsNode().showStatsAsOfAction();
       if (card.getIsGeneral()) {
         const playerId = card.getOwnerId();
         gameLayer.getEventBus().trigger('bindGeneralHP', { playerId });

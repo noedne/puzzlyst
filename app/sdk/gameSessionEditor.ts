@@ -67,17 +67,73 @@ export function getCardStats(
   };
 }
 
-export function setCardDamage(
+export function setCardStats(
   this: typeof GameSession,
   card: typeof Card,
-  damage: number,
+  {
+    damage,
+    attackBase,
+    attackBuff,
+    healthBase,
+    healthBuff,
+  }: Partial<CardStats>,
 ) {
-  if (damage === card.getDamage()) {
+  const stats = this.getCardStats(card);
+  if (attackBase !== undefined || healthBase !== undefined) {
+    setBaseStats(
+      this,
+      card,
+      attackBase ?? stats.attackBase,
+      healthBase ?? stats.healthBase,
+      true,
+    );
+  }
+  if (attackBuff !== undefined || healthBuff !== undefined) {
+    setBaseStats(
+      this,
+      card,
+      attackBuff ?? stats.attackBuff,
+      healthBuff ?? stats.healthBuff,
+      false,
+    );
+  }
+  card.setDamage(damage ?? stats.damage);
+  pushUndo(this);
+  pushEvent(this, { showStats: { card }});
+}
+
+function setBaseStats(
+  gameSession: typeof GameSession,
+  card: typeof Card,
+  attack: number,
+  health: number,
+  isRebase: boolean,
+) {
+  const rebaseModifier = card.getModifiers().find(
+    (modifier: typeof Modifier) =>
+      modifier.getBuffsAttributes()
+      && modifier.getRebasesAttributes() === isRebase,
+  );
+  if (rebaseModifier !== undefined) {
+    gameSession.removeModifier(rebaseModifier);
+  }
+  if (
+    (isRebase && attack === card.atk && health === card.maxHP)
+    || (!isRebase && attack === 0 && health === 0)
+   ) {
     return;
   }
-  card.setDamage(damage);
-  pushUndo(this);
-  pushEvent(this, { showHP: { card }});
+  const contextObject = Modifier.createContextObject();
+  contextObject.attributeBuffs = {
+    atk: attack,
+    maxHP: health,
+  };
+  if (isRebase) {
+    contextObject.attributeBuffsRebased = ['atk', 'maxHP'];
+    contextObject.appliedDescription = `Set to ${attack}/${health}`;
+  }
+  contextObject.appliedName = isRebase ? 'Base Stats' : 'Stats Buff';
+  gameSession.applyModifierContextObject(contextObject, card);
 }
 
 export function setArtifactDurability(
@@ -396,7 +452,7 @@ function pushEvent(
     },
     setInitialBenchSelected?: boolean,
     setMouseOver?: boolean,
-    showHP?: {
+    showStats?: {
       card: typeof Card,
     },
     showModifiers?: {
@@ -420,7 +476,7 @@ function pushEvent(
       setArtifactDurability: options.setArtifactDurability ?? null,
       setInitialBenchSelected: options.setInitialBenchSelected ?? false,
       setMouseOver: options.setMouseOver ?? false,
-      showHP: options.showHP ?? null,
+      showStats: options.showStats ?? null,
       showModifiers: options.showModifiers ?? null,
       showDeactivatedModifier: options.showDeactivatedModifier ?? null,
     },

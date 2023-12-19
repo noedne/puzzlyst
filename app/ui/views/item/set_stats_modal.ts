@@ -95,8 +95,24 @@ export default FormPromptModalItemView.extend({
   },
 
   onSubmit: function () {
-    const damage = this.damageInput.getValue();
-    SDK.GameSession.current().setCardDamage(this.card, damage);
+    const newStats = {
+      damage: this.damageInput.getValue(),
+      attackBase: this.attackBaseInput.getValue(),
+      attackBuff: this.attackBuffInput.getValue(),
+      healthBase: this.healthBaseInput.getValue(),
+      healthBuff: this.healthBuffInput.getValue(),
+    };
+    const diffStats: { [key: string]: number } = {};
+    let didChange = false;
+    Object.entries(newStats).forEach(([key, val]) => {
+      if (val !== this.stats[key]) {
+        diffStats[key] = val;
+        didChange = true;
+      }
+    });
+    if (didChange) {
+      SDK.GameSession.current().setCardStats(this.card, diffStats);
+    }
     NavigationManager.getInstance().destroyModalView();
     this.trigger('submit');
   },
