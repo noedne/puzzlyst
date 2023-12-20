@@ -62,7 +62,7 @@ export default class SpecPuzzle {
     if (myPlayer == null) {
       return null;
     }
-    const you = Player.fromPlayer(myPlayer);
+    const you = Player.fromPlayer(myPlayer, true);
     if (you === null) {
       return null;
     }
@@ -70,7 +70,7 @@ export default class SpecPuzzle {
     if (opponentPlayer == null) {
       return null;
     }
-    const opponent = Player.fromPlayer(opponentPlayer);
+    const opponent = Player.fromPlayer(opponentPlayer, false);
     if (opponent === null) {
       return null;
     }

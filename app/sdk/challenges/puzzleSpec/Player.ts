@@ -15,6 +15,7 @@ import Minion from './Minion';
 import PositionableType from './PositionableType';
 import type PositionCoder from "./PositionCoder";
 import type SpecString from './SpecString';
+import StartingManaTiles from './StartingManaTiles';
 import Tile from './Tile';
 
 export default class Player {
@@ -61,7 +62,10 @@ export default class Player {
     return new Player(generalCard, hand, deck, artifacts, minions, tiles);
   }
 
-  public static fromPlayer(player: typeof SDKPlayer): Player | null {
+  public static fromPlayer(
+    player: typeof SDKPlayer,
+    isMe: boolean,
+  ): Player | null {
     const general: typeof Unit | undefined =
       player.getGameSession().getGeneralForPlayer(player);
     if (general == null) {
@@ -78,7 +82,7 @@ export default class Player {
     const deck = cardsToList(DeckCard, cardsInDeck);
     const artifacts = cardsToList(Artifact, getArtifacts(general));
     const minions = cardsToList(Minion, getMinions(player));
-    const tiles = cardsToList(Tile, getTiles(player));
+    const tiles = cardsToList(Tile, getTiles(player, isMe));
     return new Player(generalCard, hand, deck, artifacts, minions, tiles);
   }
 
@@ -240,10 +244,17 @@ function getMinions(player: typeof SDKPlayer): (typeof Unit)[] {
       unit.isOwnedBy(player) && !unit.getIsGeneral());
 }
 
-function getTiles(player: typeof SDKPlayer): (typeof SDKTile)[] {
+function getTiles(player: typeof SDKPlayer, isMe: boolean): (typeof SDKTile)[] {
   return player
     .getGameSession()
     .getBoard()
     .getTiles(true)
-    .filter((tile: typeof SDKTile) => tile.isOwnedBy(player));
+    .filter((tile: typeof SDKTile) =>
+      tile.isOwnedBy(player) || isMe && isUnownedTile(tile),
+    );
+}
+
+function isUnownedTile(tile: typeof SDKTile): boolean {
+  return tile.isOwnedByGameSession()
+    && !StartingManaTiles.isStartingManaTile(tile);
 }
