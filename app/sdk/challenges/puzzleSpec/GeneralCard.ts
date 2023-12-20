@@ -124,7 +124,7 @@ export default class GeneralCard {
     general: General | null = null,
   ): string {
     if (general === General.GrandmasterZir) {
-      return 'Neutral';
+      return 'Faction1';
     }
     switch (faction) {
       case Faction.Faction1:

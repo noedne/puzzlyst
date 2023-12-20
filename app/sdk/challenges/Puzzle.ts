@@ -96,12 +96,12 @@ export default class Puzzle extends Challenge {
     return gameSession;
   }
 
-  getMyPlayerDeckData(_gameSession: GameSession): DeckData {
-    return Puzzle.getPlayerDeckData(this.puzzle.you);
+  getMyPlayerDeckData(gameSession: GameSession): DeckData {
+    return Puzzle.getPlayerDeckData(gameSession, this.puzzle.you);
   }
 
-  getOpponentPlayerDeckData(_gameSession: GameSession): DeckData {
-    return Puzzle.getPlayerDeckData(this.puzzle.opponent);
+  getOpponentPlayerDeckData(gameSession: GameSession): DeckData {
+    return Puzzle.getPlayerDeckData(gameSession, this.puzzle.opponent);
   }
 
   setupBoard(gameSession: GameSession) {
@@ -118,14 +118,20 @@ export default class Puzzle extends Challenge {
     return super.applyCardToBoard(...args);
   }
   
-  private static getPlayerDeckData(player: Player): DeckData {
+  private static getPlayerDeckData(
+    gameSession: GameSession,
+    player: Player,
+  ): DeckData {
     const {
       deck,
       generalCard: { cardId },
       hand,
     } = player;
+    const card = gameSession.createCardForIdentifier(cardId);
+    const index = gameSession._indexCardAsNeeded(card);
+    card.setIsGeneral(true);
     return [
-      { id: cardId },
+      { index },
       ...hand.list
         .concat(deck.list)
         .map(({ baseCard: { cardId } }) => ({ id: cardId  }))
@@ -247,5 +253,5 @@ export default class Puzzle extends Challenge {
 
 type Card = any;
 type CustomModifier = any;
-type DeckData = { id: number }[];
+type DeckData = ({ id: number } | { index: number })[];
 type GameSession = any;
