@@ -2,6 +2,7 @@ const Cards = require('app/sdk/cards/cardsLookupComplete');
 const Challenge = require('app/sdk/challenges/challenge');
 const ChallengeCategory = require('app/sdk/challenges/challengeCategory');
 const CONFIG = require('app/common/config');
+const ModifierCollectableBonusMana = require('app/sdk/modifiers/modifierCollectableBonusMana');
 const RSX = require('app/data/resources');
 import type Modifier from './puzzleSpec/Modifier';
 import type Player from './puzzleSpec/Player';
@@ -9,6 +10,7 @@ import SpecPuzzle from './puzzleSpec/SpecPuzzle';
 import SpecString from './puzzleSpec/SpecString';
 import { base64StringToBinary } from './puzzleSpec/base64';
 import getContextObjectData from './puzzleSpec/getContextObjectData';
+import { TileState } from './puzzleSpec/StartingManaTiles';
 
 export default class Puzzle extends Challenge {
 
@@ -107,7 +109,7 @@ export default class Puzzle extends Challenge {
   setupBoard(gameSession: GameSession) {
     super.setupBoard(gameSession);
     gameSession.getOpponentPlayer().remainingMana = 0;
-    this.setupManaTiles();
+    this.setupStartingManaTiles();
     this.setupGenerals(gameSession);
     this.setupPlayers(gameSession);
   }
@@ -139,13 +141,19 @@ export default class Puzzle extends Challenge {
     ];
   }
 
-  private setupManaTiles() {
-    if (this.puzzle.hasBottomManaTile)
-      this.applyCardToBoard({ id: Cards.Tile.BonusMana }, 4, 0);
-    if (this.puzzle.hasCenterManaTile)
-      this.applyCardToBoard({ id: Cards.Tile.BonusMana }, 4, 4);
-    if (this.puzzle.hasTopManaTile)
-      this.applyCardToBoard({ id: Cards.Tile.BonusMana }, 5, 2);
+  private setupStartingManaTiles() {
+    this.puzzle.startingManaTiles.tiles.forEach(
+      ({ position: [x, y], state }) => {
+        if (state === TileState.Missing) {
+          return;
+        }
+        const tile = this.applyCardToBoard({ id: Cards.Tile.BonusMana }, x, y);
+        if (state === TileState.Depleted) {
+          tile.getActiveModifierByType(ModifierCollectableBonusMana.type)
+            .onDepleted();
+        }
+      },
+    );
   }
 
   private setupGenerals(gameSession: GameSession) {

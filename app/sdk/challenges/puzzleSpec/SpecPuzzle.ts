@@ -1,30 +1,22 @@
-const Cards = require('app/sdk/cards/cardsLookupComplete');
-const GameSession = require('app/sdk/gameSession');
-const Tile = require('app/sdk/entities/tile');
 import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
 import ArithmeticDecoder from "./arithmeticCoding/ArithmeticDecoder";
 import ArithmeticEncoder from "./arithmeticCoding/ArithmeticEncoder";
 import { getUniformBooleanCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
 import Player from './Player';
-import { areEqual as arePositionsEqual, fromCard as getPositionFromCard, Position } from './Position';
-import PositionableType from './PositionableType';
 import PositionCoder from "./PositionCoder";
 import SpecString from './SpecString';
+import StartingManaTiles from './StartingManaTiles';
 
+const GameSession = require('app/sdk/gameSession');
 const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModifiers');
 
 export default class SpecPuzzle {
   private static readonly manaIndexLengthInBits = 3;
-  private static readonly bottomManaTilePosition: Position = [4, 0];
-  private static readonly centerManaTilePosition: Position = [5, 2];
-  private static readonly topManaTilePosition: Position = [4, 4];
 
   constructor(
     public isPlayer1: boolean,
     public mana: number,
-    public hasBottomManaTile: boolean,
-    public hasCenterManaTile: boolean,
-    public hasTopManaTile: boolean,
+    public startingManaTiles: StartingManaTiles,
     public playerModifiers: any,
     public you: Player,
     public opponent: Player,
@@ -40,9 +32,7 @@ export default class SpecPuzzle {
       return null;
     }
     const mana = manaIndex + 2;
-    const hasBottomManaTile = specString.readNBits(1) === 1;
-    const hasCenterManaTile = specString.readNBits(1) === 1;
-    const hasTopManaTile = specString.readNBits(1) === 1;
+    const startingManaTiles = StartingManaTiles.fromSpecString(specString);
     const playerModifiers =
       getPlayerModifiers().map(({ modifier }: {
         modifier: (specString: SpecString) => any,
@@ -58,9 +48,7 @@ export default class SpecPuzzle {
     return new SpecPuzzle(
       isPlayer1,
       mana,
-      hasBottomManaTile,
-      hasCenterManaTile,
-      hasTopManaTile,
+      startingManaTiles,
       playerModifiers,
       you,
       opponent,
@@ -86,17 +74,13 @@ export default class SpecPuzzle {
     if (opponent === null) {
       return null;
     }
-    const {
-      hasBottomManaTile,
-      hasCenterManaTile,
-      hasTopManaTile,
-    } = SpecPuzzle.getTileData(gameSession);
+    const startingManaTiles = StartingManaTiles.fromBoard(
+      gameSession.getBoard(),
+    );
     return new SpecPuzzle(
       gameSession.getMyPlayerId() === gameSession.getPlayer1Id(),
       myPlayer.getRemainingMana(),
-      hasBottomManaTile,
-      hasCenterManaTile,
-      hasTopManaTile,
+      startingManaTiles,
       [],
       you,
       opponent,
@@ -119,45 +103,13 @@ export default class SpecPuzzle {
       this.mana - 2,
       SpecPuzzle.manaIndexLengthInBits,
     );
-    const hasBottomManaTile = SpecString.boolToBit(this.hasBottomManaTile);
-    const hasCenterManaTile = SpecString.boolToBit(this.hasCenterManaTile);
-    const hasTopManaTile = SpecString.boolToBit(this.hasTopManaTile);
     return `\
 ${isPlayer1}\
 ${manaIndex}\
-${hasBottomManaTile}\
-${hasCenterManaTile}\
-${hasTopManaTile}\
+${this.startingManaTiles}\
 ${this.you}\
 ${this.opponent}\
 `;
-  }
-
-  private static getTileData(gameSession: typeof GameSession): {
-    hasBottomManaTile: boolean,
-    hasCenterManaTile: boolean,
-    hasTopManaTile: boolean,
-  } {
-    let hasBottomManaTile = false,
-      hasCenterManaTile = false,
-      hasTopManaTile = false;
-    gameSession
-      .getBoard()
-      .getTiles(true)
-      .forEach((tile: typeof Tile) => {
-        if (tile.getId() !== Cards.Tile.BonusMana) {
-          return;
-        }
-        const position = getPositionFromCard(tile);
-        if (arePositionsEqual(position, this.bottomManaTilePosition)) {
-          hasBottomManaTile = true;
-        } else if (arePositionsEqual(position, this.centerManaTilePosition)) {
-          hasCenterManaTile = true;
-        } else if (arePositionsEqual(position, this.topManaTilePosition)) {
-          hasTopManaTile = true;
-        }
-      });
-    return { hasBottomManaTile, hasCenterManaTile, hasTopManaTile };
   }
 
   private static updateCoder(
@@ -169,40 +121,18 @@ ${this.opponent}\
       .updateCoder(coder, specPuzzle?.isPlayer1);
     const mana = this.getManaCoding()
       .updateCoder(coder, specPuzzle?.mana);
-    const manaTileCoding = this.getManaTileCoding();
-    const hasBottomManaTile = manaTileCoding
-      .updateCoder(coder, specPuzzle?.hasBottomManaTile);
-    if (hasBottomManaTile) {
-      positionCoder.removePosition(
-        this.bottomManaTilePosition,
-        PositionableType.Tile,
-      );
-    }
-    const hasCenterManaTile = manaTileCoding
-      .updateCoder(coder, specPuzzle?.hasCenterManaTile);
-    if (hasCenterManaTile) {
-      positionCoder.removePosition(
-        this.centerManaTilePosition,
-        PositionableType.Tile,
-      );
-    }
-    const hasTopManaTile = manaTileCoding
-      .updateCoder(coder, specPuzzle?.hasTopManaTile);
-    if (hasTopManaTile) {
-      positionCoder.removePosition(
-        this.topManaTilePosition,
-        PositionableType.Tile,
-      );
-    }
+    const startingManaTiles = StartingManaTiles.updateCoder(
+      coder,
+      specPuzzle?.startingManaTiles,
+      positionCoder,
+    );
     const you = Player.updateCoder(coder, specPuzzle?.you, true, positionCoder);
     const opponent =
       Player.updateCoder(coder, specPuzzle?.opponent, false, positionCoder);
     return specPuzzle ?? new SpecPuzzle(
       isPlayer1,
       mana,
-      hasBottomManaTile,
-      hasCenterManaTile,
-      hasTopManaTile,
+      startingManaTiles,
       [],
       you,
       opponent,
@@ -218,9 +148,5 @@ ${this.opponent}\
       [2, 1, 3, 4, 5, 6, 7, 8, 9],
       [1/256, 1/256, 1/128, 1/128, 1/128, 1/32, 1/32, 1/32],
     );
-  }
-
-  private static getManaTileCoding() {
-    return getUniformBooleanCoding();
   }
 }
