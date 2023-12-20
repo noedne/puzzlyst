@@ -47,6 +47,7 @@ class Card extends SDKObject
   appliedToBoardByActionIndex: -1 # unique index of action that applied this card to the board, where -1 is during game setup
   appliedToSignatureCardsByActionIndex: -1 # unique index of action that applied this card to the signature cards, where -1 is during game setup
   canBeAppliedAnywhere: false # whether card can be applied anywhere on board when played
+  canSetOwnerId: true
   factionId: Factions.Neutral
   hideAsCardId: null # card id of the card this card should be hidden as during scrubbing
   id: null # this should be unique to each individual type of unit/spell/etc
@@ -1044,12 +1045,20 @@ class Card extends SDKObject
     return @_private.announcerSecondResource
 
   setOwnerId: (ownerId) ->
+    unless @getCanSetOwnerId()
+      return
     if @ownerId != ownerId
       @ownerId = ownerId
       @getOwner().flushCachedEventReceivingCards()
 
   getOwnerId: () ->
     return @ownerId
+
+  setCanSetOwnerId: (canSetOwnerId) ->
+    @canSetOwnerId = canSetOwnerId
+
+  getCanSetOwnerId: () ->
+    return @canSetOwnerId
 
   setBossBattleDescription: (val) ->
     @_private.bossBattleDescription = val

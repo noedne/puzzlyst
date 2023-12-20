@@ -60,6 +60,7 @@ class CardFactory_Tiles
       card.setInherentModifiersContextObjects([
         ModifierCollectableBonusMana.createContextObject()
       ])
+      card.setCanSetOwnerId(false)
       card.setFXResource(["FX.Cards.Tile.BonusMana"])
       card.setSpriteOptions({
         occludes: true
