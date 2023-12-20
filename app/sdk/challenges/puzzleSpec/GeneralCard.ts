@@ -78,8 +78,10 @@ export default class GeneralCard {
     generalCard: GeneralCard | undefined,
     positionCoder: PositionCoder,
   ): GeneralCard {
-    const faction = getFactionCoding().updateCoder(coder, generalCard?.faction);
     const general = getGeneralCoding().updateCoder(coder, generalCard?.general);
+    const faction = general === General.GrandmasterZir
+      ? Faction.Faction1
+      : getFactionCoding().updateCoder(coder, generalCard?.faction);
     const position = positionCoder.updateCoder(
       coder,
       generalCard?.position,
