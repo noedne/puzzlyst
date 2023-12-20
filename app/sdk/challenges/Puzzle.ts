@@ -232,11 +232,11 @@ export default class Puzzle extends Challenge {
   }
 
   private setupTiles(playerId: string, player: Player) {
-    player.tiles.list.forEach(minion => {
+    player.tiles.list.forEach(tile => {
       const {
         baseCard: { card },
         position: [x, y],
-      } = minion;
+      } = tile;
       this.applyCardToBoard(card, x, y, playerId);
     });
   }
