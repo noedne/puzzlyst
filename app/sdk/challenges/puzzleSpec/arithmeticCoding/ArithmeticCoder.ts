@@ -16,7 +16,7 @@ export default class ArithmeticCoder {
     this.range.high -= (1 - range.high) * len;
     for (;;) {
       if (this.range.high <= 0.5) {
-        this.updateRange(0)
+        this.updateRange(0);
       } else if (this.range.low >= 0.5) {
         this.updateRange(1);
       } else if (this.range.low >= 0.25 && this.range.high <= 0.75) {
