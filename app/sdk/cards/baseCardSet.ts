@@ -352,7 +352,10 @@ export const spells: number[] = [
     Cards.Spell.Cryogenesis,
 ];
 
-export const tiles: number[] = [
-    Cards.Tile.BonusMana,
+export const ownedTiles: number[] = [
     Cards.Tile.Shadow,
+];
+
+export const neutralTiles: number[] = [
+    Cards.Tile.BonusMana,
 ];

@@ -4,7 +4,13 @@ const SDKArtifact = require('app/sdk/artifacts/artifact');
 const SDKPlayer = require('app/sdk/player');
 const SDKTile = require('app/sdk/entities/tile');
 const Unit = require('app/sdk/entities/unit');
-import { getArtifactIds, getMinionIds, getSpellIds, getTileIds } from '../../gameVersion';
+import {
+  getArtifactIds,
+  getMinionIds,
+  getSpellIds,
+  getOwnedTileIds,
+  getNeutralTileIds,
+} from '../../gameVersion';
 import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
 import { getWeightedNumberCoding } from './arithmeticCoding/utils';
 import Artifact from './Artifact';
@@ -100,7 +106,10 @@ export default class Player {
     const artifactIds = getArtifactIds();
     const minionIds = getMinionIds();
     const spellIds = getSpellIds();
-    const tileIds = getTileIds();
+    let tileIds = getOwnedTileIds();
+    if (isMe) {
+      tileIds = tileIds.concat(getNeutralTileIds());
+    }
     const deckIds = artifactIds.concat(minionIds, spellIds);
     const hand = List.updateCoder(
       DeckCard,

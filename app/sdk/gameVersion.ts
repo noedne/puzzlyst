@@ -1,6 +1,12 @@
 const Cards = require('app/sdk/cards/cardsLookup');
 
-import { artifacts, minions, spells, tiles } from "./cards/baseCardSet";
+import {
+  artifacts,
+  minions,
+  spells,
+  ownedTiles,
+  neutralTiles,
+} from "./cards/baseCardSet";
 
 export function getCardVersion(identifier: number): number {
   for (const patch of patches) {
@@ -13,7 +19,7 @@ export function getCardVersion(identifier: number): number {
 }
 
 export function getCardIds(): number[] {
-  return artifacts.concat(minions, spells, tiles);
+  return artifacts.concat(minions, spells, ownedTiles, neutralTiles);
 }
 
 export function getArtifactIds(): number[] {
@@ -28,8 +34,12 @@ export function getSpellIds(): number[] {
   return spells;
 }
 
-export function getTileIds(): number[] {
-  return tiles;
+export function getOwnedTileIds(): number[] {
+  return ownedTiles;
+}
+
+export function getNeutralTileIds(): number[] {
+  return neutralTiles;
 }
 
 export function getIsHurtingDamageTrueDamage(): boolean {
