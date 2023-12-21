@@ -8,6 +8,7 @@ const Unit = require('app/sdk/entities/unit');
 
 export default class Stats {
   private static readonly damageMinBitLength = 0;
+  private static readonly statMinBitLength = 0;
 
   private constructor(
     public damage: number,
@@ -18,25 +19,33 @@ export default class Stats {
   ) {}
 
   public static fromSpecString(specString: SpecString): Stats | null {
+    const hasChanges = specString.readNBits(1) === 1;
+    if (!hasChanges) {
+      return new Stats(0, 0, 0, 0, 0);
+    }
     const damage = specString.countZeroesAndReadNPlusBits(
       this.damageMinBitLength,
     );
     if (damage === null) {
       return null;
     }
-    const attackBaseDelta = 0;
+    const hasStatChanges = specString.readNBits(1) === 1;
+    if (!hasStatChanges) {
+      return new Stats(damage, 0, 0, 0, 0);
+    }
+    const attackBaseDelta = this.readStat(specString);
     if (attackBaseDelta === null) {
       return null;
     }
-    const attackBuff = 0;
+    const attackBuff = this.readStat(specString);
     if (attackBuff === null) {
       return null;
     }
-    const healthBaseDelta = 0;
+    const healthBaseDelta = this.readStat(specString);
     if (healthBaseDelta === null) {
       return null;
     }
-    const healthBuff = 0;
+    const healthBuff = this.readStat(specString);
     if (healthBuff === null) {
       return null;
     }
@@ -109,11 +118,53 @@ export default class Stats {
   }
 
   public toString(): string {
+    let str = '';
+    const hasStatChanges =
+      this.attackBaseDelta !== 0
+      || this.attackBuff !== 0
+      || this.healthBaseDelta !== 0
+      || this.healthBuff !== 0;
+    const hasChanges = this.damage !== 0 || hasStatChanges;
+    str += SpecString.boolToBit(hasChanges);
+    if (!hasChanges) {
+      return str;
+    }
     const damage = SpecString.padNumWithZeroesForCountingPastNMinBits(
       this.damage,
       Stats.damageMinBitLength,
     );
-    return `${damage}`;
+    str += `${damage}${SpecString.boolToBit(hasStatChanges)}`;
+    if (!hasStatChanges) {
+      return str;
+    }
+    return `\
+${str}\
+${Stats.writeStat(this.attackBaseDelta)}\
+${Stats.writeStat(this.attackBuff)}\
+${Stats.writeStat(this.healthBaseDelta)}\
+${Stats.writeStat(this.healthBuff)}\
+`;
+  }
+
+  private static readStat(specString: SpecString): number | null {
+    const val = specString.countZeroesAndReadNPlusBits(this.statMinBitLength);
+    if (val === null) {
+      return null;
+    }
+    if (val === 0) {
+      return 0;
+    }
+    if (val % 2 === 1) {
+      return (val + 1) / 2;
+    }
+    return -val / 2;
+  }
+
+  private static writeStat(stat: number): string {
+    return SpecString.padNumWithZeroesForCountingPastNMinBits(
+      stat === 0 ? 0 : stat > 0 ? 2 * stat - 1 : -2 * stat,
+      this.statMinBitLength,
+    );
   }
 
   private static codeDamage(

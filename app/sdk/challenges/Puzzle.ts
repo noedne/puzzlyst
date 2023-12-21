@@ -186,7 +186,7 @@ export default class Puzzle extends Challenge {
     const general = gameSession.getGeneralForPlayerId(playerId);
     const { generalCard: { stats, modifiers, position: [x, y] } } = player;
     general.setPosition({ x, y });
-    gameSession.setCardStats(general, stats);
+    gameSession.setCardStats(general, stats.getCardStats(general));
     this.applyModifiers(gameSession, general, modifiers.list);
   }
 
