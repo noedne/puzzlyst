@@ -30,6 +30,9 @@ export default class SpecString {
     if (match === null) {
       return null;
     }
+    if (match === '') {
+      return 0;
+    }
     return parseInt(match, 2);
   }
 
@@ -50,7 +53,8 @@ export default class SpecString {
   }
 
   static padNumWithZeroesForCountingPastNMinBits(num: number, n: number): string {
-    const str = num.toString(2).padStart(n, '0');
+    const bin = num === 0 ? '' : num.toString(2);
+    const str = bin.padStart(n, '0');
     const prefix = str.length === n ? '1' : '0'.repeat(str.length - n);
     return `${prefix}${str}`;
   }
