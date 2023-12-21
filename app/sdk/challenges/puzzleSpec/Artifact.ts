@@ -34,11 +34,8 @@ export default class Artifact {
     return new Artifact(baseCard, durability, customModifiers);
   }
 
-  public static fromCard(artifact: typeof SDKArtifact): Artifact | null {
+  public static fromCard(artifact: typeof SDKArtifact): Artifact {
     const baseCard = BaseCard.fromCard(artifact);
-    if (baseCard === null) {
-      return null;
-    }
     return new Artifact(baseCard, artifact.durability);
   }
 

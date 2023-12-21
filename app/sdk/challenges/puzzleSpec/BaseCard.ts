@@ -25,11 +25,11 @@ export default class BaseCard {
     return new BaseCard(cardId);
   }
 
-  public static fromCard(card: typeof Card): BaseCard | null {
+  public static fromCard(card: typeof Card): BaseCard {
     return new BaseCard(card.getId(), card);
   }
 
-  static fromCardId(cardId: number): BaseCard | null {
+  public static fromCardId(cardId: number): BaseCard {
     return BaseCard.fromCard(BaseCard.getCard(cardId));
   }
 

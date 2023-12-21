@@ -94,9 +94,6 @@ export default class Modifier {
       return null;
     }
     const baseCard = BaseCard.fromCardId(cardId);
-    if (baseCard === null) {
-      return null;
-    }
     return new Modifier(baseCard, indexOfContextObject, 1);
   }
 }

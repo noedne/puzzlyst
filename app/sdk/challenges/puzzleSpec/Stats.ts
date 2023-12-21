@@ -49,7 +49,7 @@ export default class Stats {
     );
   }
 
-  public static fromCard(unit: typeof Unit): Stats | null {
+  public static fromCard(unit: typeof Unit): Stats {
     const {
       damage,
       attackBase,

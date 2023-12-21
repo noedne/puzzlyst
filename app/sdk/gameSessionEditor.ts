@@ -493,9 +493,6 @@ function pushEvent(
 
 function getState(gameSession: typeof GameSession): string | null {
   const specPuzzle = SpecPuzzle.fromGameSession(gameSession);
-  if (specPuzzle === null) {
-    return null;
-  }
   const base64 = binaryToBase64String(specPuzzle.toString());
   if (base64 === null) {
     return null;

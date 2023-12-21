@@ -68,19 +68,13 @@ export default class Player {
     return new Player(generalCard, hand, deck, artifacts, minions, tiles);
   }
 
-  public static fromPlayer(
-    player: typeof SDKPlayer,
-    isMe: boolean,
-  ): Player | null {
+  public static fromPlayer(player: typeof SDKPlayer, isMe: boolean): Player {
     const general: typeof Unit | undefined =
       player.getGameSession().getGeneralForPlayer(player);
     if (general == null) {
-      return null;
+      throw Error('invalid');
     }
     const generalCard = GeneralCard.fromUnit(general);
-    if (generalCard === null) {
-      return null;
-    }
     const cardsInHand = player
       .getDeck()
       .getCardsInHandExcludingMissing()

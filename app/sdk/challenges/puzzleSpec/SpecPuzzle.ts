@@ -55,25 +55,17 @@ export default class SpecPuzzle {
     );
   }
 
-  public static fromGameSession(
-    gameSession: typeof GameSession,
-  ): SpecPuzzle | null {
+  public static fromGameSession(gameSession: typeof GameSession): SpecPuzzle {
     const myPlayer = gameSession.getMyPlayer();
     if (myPlayer == null) {
-      return null;
+      throw Error('invalid');
     }
     const you = Player.fromPlayer(myPlayer, true);
-    if (you === null) {
-      return null;
-    }
     const opponentPlayer = gameSession.getOpponentPlayer();
     if (opponentPlayer == null) {
-      return null;
+      throw Error('invalid');
     }
     const opponent = Player.fromPlayer(opponentPlayer, false);
-    if (opponent === null) {
-      return null;
-    }
     const startingManaTiles = StartingManaTiles.fromBoard(
       gameSession.getBoard(),
     );

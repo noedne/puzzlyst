@@ -42,16 +42,10 @@ export default class Minion {
     return new Minion(baseCard, position, stats, modifiers);
   }
 
-  public static fromCard(minion: typeof Unit): Minion | null {
+  public static fromCard(minion: typeof Unit): Minion {
     const baseCard = BaseCard.fromCard(minion);
-    if (baseCard === null) {
-      return null;
-    }
     const position = getPositionFromCard(minion);
     const stats = Stats.fromCard(minion);
-    if (stats === null) {
-      return null;
-    }
     const modifiers = Modifier.fromCard(minion);
     return new Minion(baseCard, position, stats, modifiers);
   }

@@ -30,11 +30,8 @@ export default class Tile {
     return new Tile(baseCard, position);
   }
 
-  public static fromCard(tile: typeof SDKTile): Tile | null {
+  public static fromCard(tile: typeof SDKTile): Tile {
     const baseCard = BaseCard.fromCard(tile);
-    if (baseCard === null) {
-      return null;
-    }
     const position = getPositionFromCard(tile);
     return new Tile(baseCard, position);
   }

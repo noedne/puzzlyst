@@ -59,11 +59,8 @@ export default class GeneralCard {
     );
   }
 
-  static fromUnit(unit: typeof Unit): GeneralCard | null {
+  static fromUnit(unit: typeof Unit): GeneralCard {
     const stats = Stats.fromCard(unit);
-    if (stats === null) {
-      return null;
-    }
     const faction = GeneralCard.getFaction(unit);
     const general = GeneralCard.getGeneral(unit, faction);
     return new GeneralCard(
@@ -92,9 +89,6 @@ export default class GeneralCard {
       PositionableType.Unit,
     );
     const baseCard = BaseCard.fromCardId(cardId);
-    if (baseCard === null) {
-      throw Error('invalid');
-    }
     const stats = Stats.updateCoder(coder, baseCard, null, generalCard?.stats);
     const modifiers = List.updateCoder(
       Modifier,
