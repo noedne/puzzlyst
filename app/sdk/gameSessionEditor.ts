@@ -11,6 +11,7 @@ const CONFIG = require('app/common/config');
 const EVENTS = require('app/common/event_types');
 const GameSession = require('./gameSession');
 const Modifier = require('app/sdk/modifiers/modifier');
+const ModifierBuff = require('app/sdk/modifiers/modifierBuff');
 const RSX = require('app/data/resources');
 
 const enum Mode {
@@ -58,14 +59,14 @@ export function getCardStats(
   this: typeof GameSession,
   card: typeof Card,
 ): CardStats {
-  const buff = getStatModifier(card, false)?.attributeBuffs
-    ?? { atk: 0, maxHP: 0 };
+  const rebaseModifier = getStatModifier(card, true)?.attributeBuffs;
+  const buffModifier = getStatModifier(card, false)?.attributeBuffs;
   return {
     damage: card.getDamage(),
-    attackBase: card.getBaseATK(),
-    attackBuff: buff.atk,
-    healthBase: card.getBaseMaxHP(),
-    healthBuff: buff.maxHP,
+    attackBase: rebaseModifier?.atk ?? card.atk,
+    attackBuff: buffModifier?.atk ?? 0,
+    healthBase: rebaseModifier?.maxHP ?? card.maxHP,
+    healthBuff: buffModifier?.maxHP ?? 0,
   };
 }
 
@@ -115,8 +116,8 @@ export function changeCardStats(
 function setBaseStats(
   gameSession: typeof GameSession,
   card: typeof Card,
-  attack: number,
-  health: number,
+  atk: number,
+  maxHP: number,
   isRebase: boolean,
 ) {
   const rebaseModifier = getStatModifier(card, isRebase);
@@ -124,32 +125,21 @@ function setBaseStats(
     gameSession.removeModifier(rebaseModifier);
   }
   if (
-    (isRebase && attack === card.atk && health === card.maxHP)
-    || (!isRebase && attack === 0 && health === 0)
+    (isRebase && atk === card.atk && maxHP === card.maxHP)
+    || (!isRebase && atk === 0 && maxHP === 0)
    ) {
     return;
   }
-  const contextObject = Modifier.createContextObject();
-  contextObject.attributeBuffs = {
-    atk: attack,
-    maxHP: health,
-  };
-  if (isRebase) {
-    contextObject.attributeBuffsRebased = ['atk', 'maxHP'];
-    contextObject.appliedDescription = `Set to ${attack}/${health}`;
-  }
-  contextObject.appliedName = isRebase ? 'Base Stats' : 'Stats Buff';
+  const contextObject = ModifierBuff.createContextObject(atk, maxHP, isRebase);
   gameSession.applyModifierContextObject(contextObject, card);
 }
 
 function getStatModifier(
   card: typeof Card,
   isRebase: boolean,
-): typeof Modifier | undefined {
+): typeof ModifierBuff | undefined {
   return card.getModifiers().find((modifier: typeof Modifier) =>
-    modifier.getBuffsAttributes()
-    && modifier.getRebasesAttributes() === isRebase
-    && !modifier.getIsFromArtifact(),
+    modifier.type === ModifierBuff.type && modifier.getIsRebase() === isRebase,
   );
 }
 

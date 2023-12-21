@@ -1,4 +1,5 @@
 Modifier =           require './modifier'
+ModifierBuff = require './modifierBuff'
 ModifierDestructible = require './modifierDestructible'
 ModifierRanged = require './modifierRanged'
 ModifierSilence =       require './modifierSilence'
@@ -768,6 +769,8 @@ class ModifierFactory
   @modifierClassForType: (modifierType) ->
     if (modifierType == Modifier.type)
       return Modifier
+    if (modifierType == ModifierBuff.type)
+      return ModifierBuff
     if (modifierType == ModifierOpeningGambit.type)
       return ModifierOpeningGambit
     if (modifierType == ModifierFirstBlood.type)
