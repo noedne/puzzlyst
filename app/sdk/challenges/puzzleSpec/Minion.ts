@@ -12,13 +12,13 @@ import type PositionCoder from "./PositionCoder";
 import PositionableType from "./PositionableType";
 import SpecString from "./SpecString";
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
-import { getUniformNumberCoding, getWeightedBooleanCoding } from "./arithmeticCoding/utils";
+import Stats from "./Stats";
 
 export default class Minion {
   private constructor(
     public baseCard: BaseCard,
     public position: Position,
-    public damage: number,
+    public stats: Stats,
     public modifiers: Modifier[],
   ) {}
 
@@ -31,15 +31,15 @@ export default class Minion {
     if (position === null) {
       return null;
     }
-    const damage = specString.countZeroes();
-    if (damage === null) {
+    const stats = Stats.fromSpecString(specString);
+    if (stats === null) {
       return null;
     }
     const modifiers = specString.extractList(Modifier.fromSpecString);
     if (modifiers === null) {
       return null;
     }
-    return new Minion(baseCard, position, damage, modifiers);
+    return new Minion(baseCard, position, stats, modifiers);
   }
 
   public static fromCard(minion: typeof Unit): Minion | null {
@@ -48,9 +48,12 @@ export default class Minion {
       return null;
     }
     const position = getPositionFromCard(minion);
-    const damage = minion.getDamage();
+    const stats = Stats.fromCard(minion);
+    if (stats === null) {
+      return null;
+    }
     const modifiers = Modifier.fromCard(minion);
-    return new Minion(baseCard, position, damage, modifiers);
+    return new Minion(baseCard, position, stats, modifiers);
   }
 
   public static updateCoder(
@@ -64,23 +67,13 @@ export default class Minion {
       minion?.position,
       PositionableType.Unit,
     );
-    const maxDamage = baseCard.card.maxHP - 1;
-    const isHealthy = maxDamage === 0
-      ? true
-      : getWeightedBooleanCoding(3/4).updateCoder(
-          coder,
-          minion === undefined ? undefined : minion.damage === 0,
-        );
-    const damage = isHealthy
-      ? 0
-      : getUniformNumberCoding(maxDamage, 1).updateCoder(coder, minion?.damage);
-    return minion ?? new Minion(baseCard, position, damage, []);
+    const stats = Stats.updateCoder(coder, baseCard, minion?.stats);
+    return minion ?? new Minion(baseCard, position, stats, []);
   }
 
   public toString(): string {
     const position = positionToString(this.position);
-    const damage = SpecString.writeNZeroes(this.damage);
     const modifiers = SpecString.constructList(this.modifiers);
-    return `${this.baseCard}${position}${damage}${modifiers}`;
+    return `${this.baseCard}${position}${this.stats}${modifiers}`;
   }
 }

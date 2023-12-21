@@ -112,7 +112,7 @@ export default FormPromptModalItemView.extend({
       }
     });
     if (didChange) {
-      SDK.GameSession.current().setCardStats(this.card, diffStats);
+      SDK.GameSession.current().changeCardStats(this.card, diffStats);
     }
     NavigationManager.getInstance().destroyModalView();
     this.trigger('submit');

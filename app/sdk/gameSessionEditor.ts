@@ -46,7 +46,7 @@ export function copyCard(
   return card;
 }
 
-type CardStats = {
+export type CardStats = {
   damage: number,
   attackBase: number,
   attackBuff: number,
@@ -98,6 +98,14 @@ export function setCardStats(
     );
   }
   card.setDamage(damage ?? stats.damage);
+}
+
+export function changeCardStats(
+  this: typeof GameSession,
+  card: typeof Card,
+  stats: Partial<CardStats>,
+) {
+  this.setCardStats(card, stats);
   pushUndo(this);
   pushEvent(this, { showStats: { card }});
 }

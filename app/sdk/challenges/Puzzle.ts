@@ -222,11 +222,11 @@ export default class Puzzle extends Challenge {
       const {
         baseCard: { card },
         position: [x, y],
-        damage,
+        stats,
         modifiers,
       } = minion;
       this.applyCardToBoard(card, x, y, playerId);
-      card.damage = damage;
+      gameSession.setCardStats(card, stats.getCardStats(card));
       this.applyModifiers(gameSession, card, modifiers);
     });
   }
