@@ -3,6 +3,7 @@ const Factions = require('app/sdk/cards/factionsLookup');
 const Unit = require('app/sdk/entities/unit');
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import { getUniformArrayCoding, getUniformNumberCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
+import BaseCard from "./BaseCard";
 import { contextObjectCardIds } from "./getContextObjectData";
 import List from "./List";
 import Modifier from "./Modifier";
@@ -14,15 +15,14 @@ import {
 } from "./Position";
 import PositionableType from "./PositionableType";
 import type PositionCoder from "./PositionCoder";
-import SpecString from "./SpecString";
+import type SpecString from "./SpecString";
+import Stats from "./Stats";
 
 export default class GeneralCard {
-  static damageMinBitLength = 5;
-
   constructor(
     public cardId: number,
     public position: Position,
-    public damage: number,
+    public stats: Stats,
     public modifiers: List<Modifier>,
     private faction: Faction,
     private general: General,
@@ -41,9 +41,8 @@ export default class GeneralCard {
     if (position === null) {
       return null;
     }
-    const damage =
-      specString.countZeroesAndReadNPlusBits(this.damageMinBitLength);
-    if (damage === null) {
+    const stats = Stats.fromSpecString(specString);
+    if (stats === null) {
       return null;
     }
     const modifiers = List.fromSpecString(Modifier, specString);
@@ -53,20 +52,24 @@ export default class GeneralCard {
     return new GeneralCard(
       GeneralCard.getCardId(faction, general),
       position,
-      damage,
+      stats,
       modifiers,
       faction,
       general,
     );
   }
 
-  static fromUnit(unit: typeof Unit): GeneralCard {
+  static fromUnit(unit: typeof Unit): GeneralCard | null {
+    const stats = Stats.fromCard(unit);
+    if (stats === null) {
+      return null;
+    }
     const faction = GeneralCard.getFaction(unit);
     const general = GeneralCard.getGeneral(unit, faction);
     return new GeneralCard(
       unit.getId(),
       getPositionFromCard(unit),
-      unit.getDamage(),
+      stats,
       new List(Modifier.fromCard(unit)),
       faction ?? Faction.Faction1,
       general,
@@ -82,12 +85,17 @@ export default class GeneralCard {
     const faction = general === General.GrandmasterZir
       ? Faction.Faction1
       : getFactionCoding().updateCoder(coder, generalCard?.faction);
+    const cardId = GeneralCard.getCardId(faction, general);
     const position = positionCoder.updateCoder(
       coder,
       generalCard?.position,
       PositionableType.Unit,
     );
-    const damage = getDamageCoding().updateCoder(coder, generalCard?.damage);
+    const baseCard = BaseCard.fromCardId(cardId);
+    if (baseCard === null) {
+      throw Error('invalid');
+    }
+    const stats = Stats.updateCoder(coder, baseCard, null, generalCard?.stats);
     const modifiers = List.updateCoder(
       Modifier,
       coder,
@@ -96,9 +104,9 @@ export default class GeneralCard {
       generalCard?.modifiers,
     );
     return generalCard ?? new GeneralCard(
-      GeneralCard.getCardId(faction, general),
+      cardId,
       position,
-      damage,
+      stats,
       modifiers,
       faction,
       general,
@@ -107,12 +115,8 @@ export default class GeneralCard {
 
   toString(): string {
     const position = positionToString(this.position);
-    const damage = SpecString.padNumWithZeroesForCountingPastNMinBits(
-      this.damage,
-      GeneralCard.damageMinBitLength,
-    );
     const modifiers = this.modifiers.toString();
-    return `${this.faction}${this.general}${position}${damage}${modifiers}`;
+    return `${this.faction}${this.general}${position}${this.stats}${modifiers}`;
   }
 
   private static getCardId(faction: Faction, general: General): number {
@@ -218,10 +222,6 @@ function getGeneralCoding() {
     ],
     [21/64, 21/64, 21/64],
   );
-}
-
-function getDamageCoding() {
-  return getUniformNumberCoding(25);
 }
 
 const enum Faction {

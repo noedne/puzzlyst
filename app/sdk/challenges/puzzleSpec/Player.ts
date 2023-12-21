@@ -78,6 +78,9 @@ export default class Player {
       return null;
     }
     const generalCard = GeneralCard.fromUnit(general);
+    if (generalCard === null) {
+      return null;
+    }
     const cardsInHand = player
       .getDeck()
       .getCardsInHandExcludingMissing()

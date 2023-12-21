@@ -7,6 +7,8 @@ import SpecString from "./SpecString";
 const Unit = require('app/sdk/entities/unit');
 
 export default class Stats {
+  private static readonly damageMinBitLength = 0;
+
   private constructor(
     public damage: number,
     public attackBaseDelta: number,
@@ -16,7 +18,9 @@ export default class Stats {
   ) {}
 
   public static fromSpecString(specString: SpecString): Stats | null {
-    const damage = specString.countZeroes();
+    const damage = specString.countZeroesAndReadNPlusBits(
+      this.damageMinBitLength,
+    );
     if (damage === null) {
       return null;
     }
@@ -87,18 +91,10 @@ export default class Stats {
   public static updateCoder(
     coder: ArithmeticCoder,
     baseCard: BaseCard,
+    healthyProb: number | null,
     stats: Stats | undefined,
   ): Stats {
-    const maxDamage = baseCard.card.maxHP - 1;
-    const isHealthy = maxDamage === 0
-      ? true
-      : getWeightedBooleanCoding(3/4).updateCoder(
-          coder,
-          stats === undefined ? undefined : stats.damage === 0,
-        );
-    const damage = isHealthy
-      ? 0
-      : getUniformNumberCoding(maxDamage, 1).updateCoder(coder, stats?.damage);
+    const damage = this.codeDamage(coder, baseCard, healthyProb, stats?.damage);
     const attackBaseDelta = 0;
     const attackBuff = 0;
     const healthBaseDelta = 0;
@@ -113,7 +109,32 @@ export default class Stats {
   }
 
   public toString(): string {
-    const damage = SpecString.writeNZeroes(this.damage);
+    const damage = SpecString.padNumWithZeroesForCountingPastNMinBits(
+      this.damage,
+      Stats.damageMinBitLength,
+    );
     return `${damage}`;
+  }
+
+  private static codeDamage(
+    coder: ArithmeticCoder,
+    baseCard: BaseCard,
+    healthyProb: number | null,
+    damage: number | undefined,
+  ): number {
+    const maxDamage = baseCard.card.maxHP - 1;
+    if (maxDamage === 0) {
+      return 0;
+    }
+    if (healthyProb === null) {
+      return getUniformNumberCoding(maxDamage + 1).updateCoder(coder, damage);
+    }
+    const isHealthyData = damage === undefined ? undefined : damage === 0;
+    const isHealthy = getWeightedBooleanCoding(healthyProb)
+      .updateCoder(coder, isHealthyData);
+    if (isHealthy) {
+      return 0;
+    }
+    return getUniformNumberCoding(maxDamage, 1).updateCoder(coder, damage);
   }
 }
