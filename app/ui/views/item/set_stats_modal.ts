@@ -30,6 +30,7 @@ export default FormPromptModalItemView.extend({
   },
 
   initialize: function (options: { card: typeof Card }) {
+    FormPromptModalItemView.prototype.initialize.apply(this);
     this.card = options.card;
     this.statATK = this.card.getATK();
     this.statHP = this.card.getHP();
@@ -126,7 +127,7 @@ export default FormPromptModalItemView.extend({
       this.statHP += change;
       this.ui.$statHP.text(this.statHP);
     }
-    this.updateValidState();
+    this.updateValidStateDebounced();
     this.updateStatColors();
   },
 

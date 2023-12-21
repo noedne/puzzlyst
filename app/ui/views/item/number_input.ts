@@ -16,6 +16,7 @@ export default class NumberInput {
   private readonly min: number;
   private readonly placeholder: number;
   private readonly onChangeValue: ((delta: number) => void) | undefined;
+  private oldValue: number;
 
   public constructor({
     $groupElement,
@@ -38,6 +39,7 @@ export default class NumberInput {
     this.min = min;
     this.placeholder = placeholder;
     this.onChangeValue = onChangeValue;
+    this.oldValue = initial;
     $groupElement.append(this.$upArrow, this.$numberInput, this.$downArrow);
     this.$numberInput.attr({ max, min, placeholder });
     this.$numberInput.val(initial);
@@ -75,12 +77,17 @@ export default class NumberInput {
   }
 
   private onNumberChange(): void {
-    if (this.getValue() < this.min) {
-      this.$numberInput.val(this.min);
+    let value = this.getValue();
+    if (value < this.min) {
+      value = this.min;
+      this.$numberInput.val(value);
     } else if (this.getValue() > this.max) {
-      this.$numberInput.val(this.max);
+      value = this.max;
+      this.$numberInput.val(value);
     }
     this.setDisabled();
+    this.onChangeValue?.(value - this.oldValue);
+    this.oldValue = value;
   }
 
   private changeValue(delta: number): void {
@@ -88,7 +95,6 @@ export default class NumberInput {
       Math.max(this.min, Math.min(this.getValue() + delta, this.max)),
     );
     this.onNumberChange();
-    this.onChangeValue?.(delta);
   }
 
   private setDisabled(): void {
