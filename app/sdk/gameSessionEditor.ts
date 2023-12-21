@@ -58,12 +58,14 @@ export function getCardStats(
   this: typeof GameSession,
   card: typeof Card,
 ): CardStats {
+  const buff = getStatModifier(card, false)?.attributeBuffs
+    ?? { atk: 0, maxHP: 0 };
   return {
     damage: card.getDamage(),
     attackBase: card.getBaseATK(),
-    attackBuff: card.getATK(false) - card.getBaseATK(),
+    attackBuff: buff.atk,
     healthBase: card.getBaseMaxHP(),
-    healthBuff: card.getMaxHP(false) - card.getBaseMaxHP(),
+    healthBuff: buff.maxHP,
   };
 }
 
@@ -117,11 +119,7 @@ function setBaseStats(
   health: number,
   isRebase: boolean,
 ) {
-  const rebaseModifier = card.getModifiers().find(
-    (modifier: typeof Modifier) =>
-      modifier.getBuffsAttributes()
-      && modifier.getRebasesAttributes() === isRebase,
-  );
+  const rebaseModifier = getStatModifier(card, isRebase);
   if (rebaseModifier !== undefined) {
     gameSession.removeModifier(rebaseModifier);
   }
@@ -142,6 +140,17 @@ function setBaseStats(
   }
   contextObject.appliedName = isRebase ? 'Base Stats' : 'Stats Buff';
   gameSession.applyModifierContextObject(contextObject, card);
+}
+
+function getStatModifier(
+  card: typeof Card,
+  isRebase: boolean,
+): typeof Modifier | undefined {
+  return card.getModifiers().find((modifier: typeof Modifier) =>
+    modifier.getBuffsAttributes()
+    && modifier.getRebasesAttributes() === isRebase
+    && !modifier.getIsFromArtifact(),
+  );
 }
 
 export function setArtifactDurability(
