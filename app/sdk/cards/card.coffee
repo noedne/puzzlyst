@@ -1996,14 +1996,14 @@ class Card extends SDKObject
 
     return attributeValue
 
-  getBaseAttribute: (attributeValue, buffKey, withAuras=true, clamped=true) ->
+  getBaseAttribute: (attributeValue, buffKey, clamped=true) ->
     cachedValue = @_private.cachedBaseAttributes[buffKey]
     if cachedValue?
       # always use cached value
       attributeValue = cachedValue
     else
       # get buffed attribute from active modifiers excluding auras and stopping at base
-      attributeValue = @_getBuffedAttributeFromModifiers(attributeValue, buffKey, @getActiveModifiers(), withAuras, stopAtBase=true)
+      attributeValue = @_getBuffedAttributeFromModifiers(attributeValue, buffKey, @getActiveModifiers(), false, stopAtBase=true)
 
       # cache value
       @_private.cachedBaseAttributes[buffKey] = attributeValue
