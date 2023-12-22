@@ -89,7 +89,8 @@ export default class GeneralCard {
       PositionableType.Unit,
     );
     const baseCard = BaseCard.fromCardId(cardId);
-    const stats = Stats.updateCoder(coder, baseCard, null, generalCard?.stats);
+    const probs = { hasNoBuffsProb: 1023/1024, hasBaseStatsProb: 8191/8192 };
+    const stats = Stats.updateCoder(coder, baseCard, probs, generalCard?.stats);
     const modifiers = List.updateCoder(
       Modifier,
       coder,

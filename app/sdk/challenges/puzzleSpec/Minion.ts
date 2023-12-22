@@ -61,7 +61,12 @@ export default class Minion {
       minion?.position,
       PositionableType.Unit,
     );
-    const stats = Stats.updateCoder(coder, baseCard, 3/4, minion?.stats);
+    const probs = {
+      isHealthyProb: 7/8,
+      hasNoBuffsProb: 127/128,
+      hasBaseStatsProb: 1023/1024,
+    };
+    const stats = Stats.updateCoder(coder, baseCard, probs, minion?.stats);
     return minion ?? new Minion(baseCard, position, stats, []);
   }
 

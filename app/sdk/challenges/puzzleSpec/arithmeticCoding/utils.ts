@@ -5,6 +5,8 @@ import NumberDataIndexer from "./dataIndexer/NumberDataIndexer";
 import UniformRangeIndexer from "./rangeIndexer/UniformRangeIndexer";
 import WeightedRangeIndexer from "./rangeIndexer/WeightedRangeIndexer";
 import AdaptiveRangeIndexer from "./rangeIndexer/AdaptiveRangeIndexer";
+import NumberWithHoleDataIndexer from "./dataIndexer/NumberWithHoleDataIndexer";
+import MultiRangeIndexer from "./rangeIndexer/MultiRangeIndexer";
 
 export function getUniformRange(index: number, count: number): Range {
   return { low: index / count, high: (index + 1) / count };
@@ -64,4 +66,35 @@ export function getWeightedBooleanCoding(weight: number): Coding<boolean> {
 
 export function getAdaptiveArrayCoding(ids: number[]): Coding<number> {
   return new Coding(new ArrayDataIndexer(ids), new AdaptiveRangeIndexer(ids.length));
+}
+
+export function getMultiUniformRangeNumberWithHoleCoding({
+  hole,
+  min,
+  max,
+  threshold,
+  prob,
+}: {
+  hole: number,
+  min: number,
+  max: number,
+  threshold: number,
+  prob: number,
+}): Coding<number> {
+  let countA = threshold - min;
+  let countB = max - threshold + 1;
+  if (hole < threshold) {
+    countA--;
+  } else {
+    countB--;
+  }
+  return new Coding(
+    new NumberWithHoleDataIndexer(hole, min),
+    new MultiRangeIndexer(
+      new UniformRangeIndexer(countA),
+      new UniformRangeIndexer(countB),
+      countA,
+      prob,
+    ),
+  );
 }
