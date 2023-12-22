@@ -7,6 +7,7 @@ const SDK = require('app/sdk');
 const Template = require('app/ui/templates/item/edit_card_context_menu.hbs');
 const UtilsEngine = require('app/common/utils/utils_engine');
 const UtilsPointer = require('app/common/utils/utils_pointer');
+import AddKeywordModal from './add_keyword_modal';
 import AddModifierModal from './add_modifier_modal';
 import SetDurabilityModal from './set_durability_modal';
 import SetStatsModal from './set_stats_modal';
@@ -19,6 +20,7 @@ export default Marionette.ItemView.extend({
     $dropdown: '.dropdown-menu',
     $setStatsItem: '.set-stats-item',
     $setDurabilityItem: '.set-durability-item',
+    $addKeywordItem: '.add-keyword-item',
     $addModifierItem: '.add-modifier-item',
     $manaTileItem: '.mana-tile-item',
     $deleteMinionItem: '.delete-minion-item',
@@ -29,6 +31,7 @@ export default Marionette.ItemView.extend({
   events: {
     'click @ui.$setStatsItem': 'onSetStats',
     'click @ui.$setDurabilityItem': 'onSetDurability',
+    'click @ui.$addKeywordItem': 'onAddKeyword',
     'click @ui.$addModifierItem': 'onAddModifier',
     'click @ui.$manaTileItem': 'onToggleManaSpring',
     'click @ui.$deleteMinionItem': 'onDeleteMinion',
@@ -51,6 +54,7 @@ export default Marionette.ItemView.extend({
     const isUnit = CardType.getIsUnitCardType(type);
     this.isManaTileDepleted = isManaTile && card.getDepleted();
     this.templateHelpers = {
+      addKeyword: isUnit,
       addModifier: isUnit,
       deleteArtifact: isArtifact,
       deleteMinion: isUnit && !card.getIsGeneral(),
@@ -88,6 +92,10 @@ export default Marionette.ItemView.extend({
 
   onSetDurability: function () {
     this.onOpenModal(SetDurabilityModal);
+  },
+
+  onAddKeyword: function () {
+    this.onOpenModal(AddKeywordModal);
   },
 
   onAddModifier: function () {

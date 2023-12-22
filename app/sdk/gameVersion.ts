@@ -1,4 +1,5 @@
 const Cards = require('app/sdk/cards/cardsLookup');
+const ModifierFactory = require('./modifiers/modifierFactory');
 
 import {
   artifacts,
@@ -40,6 +41,10 @@ export function getOwnedTileIds(): number[] {
 
 export function getNeutralTileIds(): number[] {
   return neutralTiles;
+}
+
+export function getKeywords() {
+  return ModifierFactory.getStandaloneKeywords();
 }
 
 export function getIsHurtingDamageTrueDamage(): boolean {

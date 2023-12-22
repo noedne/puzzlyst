@@ -2278,4 +2278,21 @@ class ModifierFactory
 
     console.error "ModifierFactory:modifierForType - Unknown Modifier Type: #{modifierType}".red
 
+  @getStandaloneKeywords: () ->
+    return [
+      ModifierBlastAttack # Blast
+      ModifierTranscendance # Celerity
+      ModifierFlying
+      ModifierFrenzy
+      ModifierStartTurnWatchSummonDervish # Gateway
+      ModifierProvoke
+      ModifierRanged
+      ModifierRebirth
+      ModifierFirstBlood # Rush
+      ModifierStunned
+      ModifierStunnedVanar
+      ModifierImmuneToSpells # Veil
+      ModifierWall
+    ]
+
 module.exports = ModifierFactory
