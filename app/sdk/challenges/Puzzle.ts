@@ -250,9 +250,9 @@ export default class Puzzle extends Challenge {
       const contextObject =
         getContextObjectData(cardId)[indexOfContextObject]?.contextObject;
       if (contextObject != null) {
-        gameSession.applyModifierContextObject(
-          contextObject,
+        gameSession.applyCardModifier(
           card,
+          contextObject,
         );
       }
     });

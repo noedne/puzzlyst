@@ -90,6 +90,7 @@ class Modifier extends SDKObject
   triggerActivatedModifiersData: null # list of modifier indices that were activated by this modifier triggering, with action indices and resolve action indices
   triggerDeactivatedModifiersData: null # list of modifier indices that were deactivated by this modifier triggering, with action indices and resolve action indices
   triggerRemovedModifiersData: null # list of modifier indices that were removed by this modifier triggering, with action indices and resolve action indices
+  wasAppliedByEditor: false
 
   constructor: (gameSession) ->
     super(gameSession)
@@ -949,6 +950,9 @@ class Modifier extends SDKObject
 
     # Generic stack type so all artifacts count as same type
     return "ArtifactStackType"
+
+  getWasAppliedByEditor: () ->
+    return @wasAppliedByEditor
 
   # endregion GETTERS / SETTERS
 

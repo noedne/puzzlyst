@@ -131,7 +131,7 @@ function setBaseStats(
     return;
   }
   const contextObject = ModifierBuff.createContextObject(atk, maxHP, isRebase);
-  gameSession.applyModifierContextObject(contextObject, card);
+  gameSession.applyCardModifier(card, contextObject);
 }
 
 function getStatModifier(
@@ -163,6 +163,20 @@ export function setArtifactDurability(
   });
 }
 
+export function applyCardModifier(
+  this: typeof GameSession,
+  card: typeof Card,
+  contextObject: ContextObject['contextObject'],
+): number {
+  return this.applyModifierContextObject(
+    {
+      ...contextObject,
+      wasAppliedByEditor: true,
+    },
+    card,
+  );
+}
+
 export function applyModifierContextObjectToCard(
   this: typeof GameSession,
   card: typeof Card,
@@ -170,10 +184,10 @@ export function applyModifierContextObjectToCard(
   count: number = 1,
 ) {
   const indices = Array.from(Array(count)).map(_ => this.generateIndex());
-  indices.forEach(index => this.applyModifierContextObject({
+  indices.forEach(index => this.applyCardModifier(card, {
     ...contextObject,
     index,
-  }, card));
+  }));
   pushUndo(this);
   pushEvent(this, {
     showModifiers: {
