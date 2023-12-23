@@ -1,5 +1,6 @@
 const Cards = require('app/sdk/cards/cardsLookup');
 const ModifierFactory = require('./modifiers/modifierFactory');
+const ModifierStunnedVanar = require('app/sdk/modifiers/modifierStunnedVanar');
 
 import {
   artifacts,
@@ -43,8 +44,19 @@ export function getNeutralTileIds(): number[] {
   return neutralTiles;
 }
 
-export function getKeywords() {
-  return ModifierFactory.getStandaloneKeywords();
+export function getKeywordData(): {
+  class: Modifier,
+  name: string,
+  type: string,
+}[] {
+  return ModifierFactory.getStandaloneKeywords()
+    .map((modifierClass: Modifier) => ({
+      class: modifierClass,
+      name: modifierClass === ModifierStunnedVanar
+        ? 'Stunned (Vanar)'
+        : modifierClass.getName(),
+      type: modifierClass.type,
+    }));
 }
 
 export function getIsHurtingDamageTrueDamage(): boolean {
@@ -234,3 +246,5 @@ const patches = [
     },
   },
 ];
+
+type Modifier = any
