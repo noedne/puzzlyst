@@ -55,6 +55,8 @@ PlayerModifierSpellDamageModifier = require 'app/sdk/playerModifiers/playerModif
 PlayerModifierCardDrawModifier = require 'app/sdk/playerModifiers/playerModifierCardDrawModifier'
 PlayerModifierAncestralPact = require 'app/sdk/playerModifiers/playerModifierAncestralPact'
 
+getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData').default;
+
 i18next = require 'i18next'
 if i18next.t() is undefined
   i18next.t = (text) ->
@@ -71,6 +73,8 @@ class CardFactory_CoreSet_Faction2
    ###
   @cardForIdentifier: (identifier,gameSession,version) ->
     card = null
+    contextObjects = getContextObjectData(identifier).map (data) ->
+      data.contextObject
 
     if (identifier == Cards.Faction2.General)
       card = new Unit(gameSession)
@@ -1029,12 +1033,7 @@ class CardFactory_CoreSet_Faction2
       card.spellFilterType = SpellFilterType.AllyDirect
       card.manaCost = 2
       card.rarityId = Rarity.Rare
-      killDamagedContextObject = ModifierDealDamageWatchKillTarget.createContextObject()
-      killDamagedContextObject.appliedName = i18next.t("modifiers.faction_2_spell_deathstrike_seal_1")
-      killDamagedContextObject.appliedDescription = i18next.t("modifiers.faction_2_spell_deathstrike_seal_2")
-      card.setTargetModifiersContextObjects([
-        killDamagedContextObject
-      ])
+      card.setTargetModifiersContextObjects([contextObjects[0]])
       card.setFXResource(["FX.Cards.Spell.DeathstrikeSeal"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_deathstrikeseal.audio

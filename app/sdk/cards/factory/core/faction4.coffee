@@ -44,7 +44,6 @@ ModifierTranscendance = require 'app/sdk/modifiers/modifierTranscendance'
 ModifierSummonWatchByEntityBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchByEntityBuffSelf'
 ModifierDealDamageWatchSpawnEntity = require 'app/sdk/modifiers/modifierDealDamageWatchSpawnEntity'
 ModifierWraithlingFury = require 'app/sdk/modifiers/modifierWraithlingFury'
-ModifierDyingWishDamageNearbyAllies = require 'app/sdk/modifiers/modifierDyingWishDamageNearbyAllies'
 ModifierKillWatchHealSelf = require 'app/sdk/modifiers/modifierKillWatchHealSelf'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierDyingWishSpawnTile = require 'app/sdk/modifiers/modifierDyingWishSpawnTile'
@@ -58,6 +57,8 @@ ModifierDyingWish = require 'app/sdk/modifiers/modifierDyingWish'
 ModifierDyingWishPutCardInHand = require 'app/sdk/modifiers/modifierDyingWishPutCardInHand'
 
 PlayerModifierOnDeathWatchBonusMana = require 'app/sdk/playerModifiers/playerModifierOnDeathWatchBonusMana'
+
+getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData').default;
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -75,6 +76,8 @@ class CardFactory_CoreSet_Faction4
    ###
   @cardForIdentifier: (identifier,gameSession,version) ->
     card = null
+    contextObjects = getContextObjectData(identifier).map (data) ->
+      data.contextObject
 
     if (identifier == Cards.Faction4.General)
       card = new Unit(gameSession)
@@ -933,7 +936,7 @@ class CardFactory_CoreSet_Faction4
       card.setDescription(i18next.t("cards.faction_4_spell_deathfire_crescendo_description"))
       card.addKeywordClassToInclude(ModifierDeathWatchBuffSelf)
       card.manaCost = 3
-      card.setTargetModifiersContextObjects([ModifierDeathWatchBuffSelf.createContextObject(2,2)])
+      card.setTargetModifiersContextObjects([contextObjects[0]])
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.rarityId = Rarity.Legendary
       card.setFXResource(["FX.Cards.Spell.DeathfireCrescendo"])
@@ -1078,8 +1081,7 @@ class CardFactory_CoreSet_Faction4
       card.manaCost = 1
       card.rarityId = Rarity.Rare
       card.spellFilterType = SpellFilterType.NeutralDirect
-      dyingWishContextObject = ModifierDyingWishDamageNearbyAllies.createContextObject(3)
-      card.setTargetModifiersContextObjects([dyingWishContextObject])
+      card.setTargetModifiersContextObjects([contextObjects[0]])
       card.addKeywordClassToInclude(ModifierDyingWish)
       card.setFXResource(["FX.Cards.Spell.CurseOfAgony"])
       card.setBaseAnimResource(

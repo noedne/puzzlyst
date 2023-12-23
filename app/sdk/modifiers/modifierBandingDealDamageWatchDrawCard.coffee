@@ -8,8 +8,7 @@ class ModifierBandingDealDamageWatchDrawCard extends ModifierBanding
   type:"ModifierBandingDealDamageWatchDrawCard"
   @type:"ModifierBandingDealDamageWatchDrawCard"
 
-  #maxStacks: 1
-  @description: ""
+  @description: "Zeal: When this deals damage, draw a card"
 
   fxResource: ["FX.Modifiers.ModifierZeal"]
 

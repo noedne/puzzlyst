@@ -16,6 +16,8 @@ class ModifierCannot extends Modifier
   activeInSignatureCards: false
   activeOnBoard: true
 
+  maxStacks: 1
+
   fxResource: ["FX.Modifiers.ModifierCannot"]
 
 module.exports = ModifierCannot

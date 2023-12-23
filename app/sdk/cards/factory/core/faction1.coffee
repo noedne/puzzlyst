@@ -37,7 +37,6 @@ ModifierStunned = require 'app/sdk/modifiers/modifierStunned'
 ModifierStun = require 'app/sdk/modifiers/modifierStun'
 ModifierBackupGeneral = require 'app/sdk/modifiers/modifierBackupGeneral'
 ModifierAbsorbDamageOnce = require 'app/sdk/modifiers/modifierAbsorbDamageOnce'
-ModifierBandingDealDamageWatchDrawCard = require 'app/sdk/modifiers/modifierBandingDealDamageWatchDrawCard'
 ModifierHealWatchBuffSelf = require 'app/sdk/modifiers/modifierHealWatchBuffSelf'
 ModifierHealWatchDamageNearbyEnemies = require 'app/sdk/modifiers/modifierHealWatchDamageNearbyEnemies'
 ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
@@ -46,6 +45,8 @@ ModifierOpeningGambitApplyPlayerModifiers = require 'app/sdk/modifiers/modifierO
 
 PlayerModiferCanSummonAnywhere = require 'app/sdk/playerModifiers/playerModiferCanSummonAnywhere'
 ModifierCardControlledPlayerModifiers = require 'app/sdk/modifiers/modifierCardControlledPlayerModifiers'
+
+getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData').default;
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -63,6 +64,8 @@ class CardFactory_CoreSet_Faction1
    ###
   @cardForIdentifier: (identifier,gameSession,version) ->
     card = null
+    contextObjects = getContextObjectData(identifier).map (data) ->
+      data.contextObject
 
     if (identifier == Cards.Faction1.General)
       card = new Unit(gameSession)
@@ -848,7 +851,7 @@ class CardFactory_CoreSet_Faction1
       card.setDescription(i18next.t("cards.faction_1_spell_lionheart_blessing_description"))
       card.manaCost = 0
       card.rarityId = Rarity.Epic
-      card.setTargetModifiersContextObjects([ModifierBandingDealDamageWatchDrawCard.createContextObject()])
+      card.setTargetModifiersContextObjects([contextObjects[0]])
       card.spellFilterType = SpellFilterType.AllyDirect
       card.setFXResource(["FX.Cards.Spell.LionheartBlessing"])
       card.setBaseAnimResource(

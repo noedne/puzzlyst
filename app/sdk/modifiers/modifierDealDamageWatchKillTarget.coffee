@@ -4,11 +4,15 @@ AttackAction = require 'app/sdk/actions/attackAction'
 CardType = require 'app/sdk/cards/cardType'
 ModifierDealDamageWatch = require './modifierDealDamageWatch'
 KillAction = require 'app/sdk/actions/killAction'
+i18next = require 'i18next'
 
 class ModifierDealDamageWatchKillTarget extends ModifierDealDamageWatch
 
   type:"ModifierDealDamageWatchKillTarget"
   @type:"ModifierDealDamageWatchKillTarget"
+
+  @modifierName: i18next.t("modifiers.faction_2_spell_deathstrike_seal_1")
+  @description: i18next.t("modifiers.faction_2_spell_deathstrike_seal_2")
 
   maxStacks: 1
 

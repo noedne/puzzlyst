@@ -50,6 +50,8 @@ ModifierAbsorbDamage = require 'app/sdk/modifiers/modifierAbsorbDamage'
 ModifierOnRemoveShuffleCopyIntoDeck = require 'app/sdk/modifiers/modifierOnRemoveShuffleCopyIntoDeck'
 ModifierOpeningGambitRefreshArtifacts = require 'app/sdk/modifiers/modifierOpeningGambitRefreshArtifacts'
 
+getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData').default;
+
 i18next = require 'i18next'
 if i18next.t() is undefined
   i18next.t = (text) ->
@@ -66,6 +68,8 @@ class CardFactory_CoreSet_Faction3
    ###
   @cardForIdentifier: (identifier,gameSession,version) ->
     card = null
+    contextObjects = getContextObjectData(identifier).map (data) ->
+      data.contextObject
 
     if (identifier == Cards.Faction3.General)
       card = new Unit(gameSession)
@@ -1015,12 +1019,7 @@ class CardFactory_CoreSet_Faction3
       card.rarityId = Rarity.Common
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.drawCardsPostPlay = 1
-      speedBuffContextObject = Modifier.createContextObjectOnBoard()
-      speedBuffContextObject.attributeBuffs = {"speed": 0}
-      speedBuffContextObject.attributeBuffsAbsolute = ["speed"]
-      speedBuffContextObject.attributeBuffsFixed = ["speed"]
-      speedBuffContextObject.appliedName = i18next.t("modifiers.faction_3_spell_sand_trap_1")
-      card.setTargetModifiersContextObjects([speedBuffContextObject])
+      card.setTargetModifiersContextObjects([contextObjects[0]])
       card.setFXResource(["FX.Cards.Spell.SandTrap"])
       card.setBaseAnimResource(
         idle: RSX.iconSandTrapIdle.name

@@ -44,7 +44,6 @@ ModifierStunned = require 'app/sdk/modifiers/modifierStunned'
 ModifierStunnedVanar = require 'app/sdk/modifiers/modifierStunnedVanar'
 ModifierStun = require 'app/sdk/modifiers/modifierStun'
 ModifierInfiltrate = require 'app/sdk/modifiers/modifierInfiltrate'
-ModifierCannotAttackGeneral = require 'app/sdk/modifiers/modifierCannotAttackGeneral'
 ModifierSummonWatchByRaceDamageEnemyMinion = require 'app/sdk/modifiers/modifierSummonWatchByRaceDamageEnemyMinion'
 ModifierEndTurnWatchDamageNearbyEnemy = require 'app/sdk/modifiers/modifierEndTurnWatchDamageNearbyEnemy'
 ModifierStunWhenDamaged = require 'app/sdk/modifiers/modifierStunWhenDamaged'
@@ -711,7 +710,7 @@ class CardFactory_CoreSet_Faction6
       card.setInherentModifiersContextObjects([
         ModifierProvoke.createContextObject(),
         createContextObject.bind(ModifierOpeningGambitApplyModifiers)(
-          [ModifierDyingWishSpawnEntity.createContextObject({id: Cards.Faction6.Treant}, "1/1 Treant with Provoke")],
+          [contextObjects[0]],
           false, "Your minions gain \"Dying Wish: Summon a 1/1 Treant with Provoke\""
         )
       ])
@@ -1382,7 +1381,7 @@ class CardFactory_CoreSet_Faction6
       customContextObject.isRemovable = false
       customContextObject.appliedName = i18next.t("modifiers.faction_6_spell_mark_of_solitude_1")
       customContextObject.appliedDescription = appliedDescription
-      card.setTargetModifiersContextObjects([  customContextObject, ModifierCannotAttackGeneral.createContextObject()])
+      card.setTargetModifiersContextObjects([  customContextObject, contextObjects[0]])
       card.setFXResource(["FX.Cards.Spell.MarkOfSolitude"])
       card.setBaseSoundResource(
         apply : RSX.sfx_f6_voiceofthewind_attack_impact.audio

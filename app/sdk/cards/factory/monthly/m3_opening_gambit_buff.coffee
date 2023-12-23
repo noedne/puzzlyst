@@ -14,11 +14,12 @@ SpellFilterType = require 'app/sdk/spells/spellFilterType'
 ModifierOpeningGambit = require 'app/sdk/modifiers/modifierOpeningGambit'
 ModifierSummonWatchFromActionBarByOpeningGambitBuffSelf = require 'app/sdk/modifiers/modifierSummonWatchFromActionBarByOpeningGambitBuffSelf'
 ModifierEndTurnWatchBuffSelf = require 'app/sdk/modifiers/modifierEndTurnWatchBuffSelf'
-ModifierImmuneToSpellDamage = require 'app/sdk/modifiers/modifierImmuneToSpellDamage'
 ModifierOpeningGambitApplyModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyModifiers'
 ModifierOpeningGambitApplyPlayerModifiers = require 'app/sdk/modifiers/modifierOpeningGambitApplyPlayerModifiers'
 
 PlayerModifierPreventSpellDamage = require 'app/sdk/playerModifiers/playerModifierPreventSpellDamage'
+
+getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData').default;
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -36,6 +37,8 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
    ###
   @cardForIdentifier: (identifier,gameSession,version) ->
     card = null
+    contextObjects = getContextObjectData(identifier).map (data) ->
+      data.contextObject
 
     if (identifier == Cards.Neutral.SunElemental)
       if version is 0
@@ -92,10 +95,8 @@ class CardFactory_Monthly_M3_OpeningGambitBuff
         description = i18next.t("cards.neutral_prophet_of_the_white_palm_desc_1")
         atk = 2
         maxHP = 2
-        immunityContextObject = ModifierImmuneToSpellDamage.createContextObject()
-        immunityContextObject.durationIsUntilEndBeforeNextTurn = true
         modifierContextObject = ModifierOpeningGambitApplyModifiers
-          .createContextObjectForAllUnitsAndGenerals([immunityContextObject])
+          .createContextObjectForAllUnitsAndGenerals([contextObjects[0]])
       card = new Unit(gameSession)
       card.factionId = Factions.Neutral
       card.name = i18next.t("cards.neutral_prophet_of_the_white_palm_name")

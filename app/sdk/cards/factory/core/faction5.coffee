@@ -42,7 +42,6 @@ ModifierEndTurnWatchDamageAllMinions = require 'app/sdk/modifiers/modifierEndTur
 ModifierEndTurnWatchDamageAndBuffRandom = require 'app/sdk/modifiers/modifierEndTurnWatchDamageAndBuffRandom'
 ModifierMyMinionOrGeneralDamagedWatchBuffSelf = require 'app/sdk/modifiers/modifierMyMinionOrGeneralDamagedWatchBuffSelf'
 ModifierReduceCostOfMinionsAndDamageThem = require 'app/sdk/modifiers/modifierReduceCostOfMinionsAndDamageThem'
-ModifierCannotStrikeback = require 'app/sdk/modifiers/modifierCannotStrikeback'
 ModifierToken = require 'app/sdk/modifiers/modifierToken'
 ModifierTakeDamageWatchDamageMyGeneral = require 'app/sdk/modifiers/modifierTakeDamageWatchDamageMyGeneral'
 ModifierSummonWatchNearbyApplyModifiersOnce = require 'app/sdk/modifiers/modifierSummonWatchNearbyApplyModifiersOnce'
@@ -50,6 +49,8 @@ ModifierDispels = require 'app/sdk/modifiers/modifierDispels'
 ModifierOpeningGambitDamageMyGeneral = require 'app/sdk/modifiers/modifierOpeningGambitDamageMyGeneral'
 
 PlayerModifierFlashReincarnation = require 'app/sdk/playerModifiers/playerModifierFlashReincarnation'
+
+getContextObjectData = require('app/sdk/challenges/puzzleSpec/getContextObjectData').default;
 
 i18next = require 'i18next'
 if i18next.t() is undefined
@@ -67,6 +68,8 @@ class CardFactory_CoreSet_Faction5
    ###
   @cardForIdentifier: (identifier,gameSession,version) ->
     card = null
+    contextObjects = getContextObjectData(identifier).map (data) ->
+      data.contextObject
 
     if (identifier == Cards.Faction5.General)
       card = new Unit(gameSession)
@@ -824,7 +827,7 @@ class CardFactory_CoreSet_Faction5
       card.spellFilterType = SpellFilterType.NeutralDirect
       card.manaCost = 0
       card.rarityId = Rarity.Common
-      card.setTargetModifiersContextObjects([ModifierCannotStrikeback.createContextObject()])
+      card.setTargetModifiersContextObjects([contextObjects[0]])
       card.setFXResource(["FX.Cards.Spell.DampeningWave"])
       card.setBaseSoundResource(
         apply : RSX.sfx_spell_drainmorale.audio
@@ -1010,7 +1013,7 @@ class CardFactory_CoreSet_Faction5
       else
         spell = SpellApplyModifiersAndActivateAlliedGrow
         description = i18next.t("cards.faction_5_spell_amplification_description_1")
-        modifierContextObject = ModifierGrow.createContextObject(2)
+        modifierContextObject = contextObjects[0]
         manaCost = 2
         keywordClass = ModifierGrow
       card = new spell(gameSession)
