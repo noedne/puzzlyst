@@ -13,12 +13,14 @@ import PositionableType from "./PositionableType";
 import SpecString from "./SpecString";
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import Stats from "./Stats";
+import Keywords from "./Keywords";
 
 export default class Minion {
   private constructor(
     public baseCard: BaseCard,
     public position: Position,
     public stats: Stats,
+    public keywords: Keywords,
     public modifiers: Modifier[],
   ) {}
 
@@ -35,19 +37,24 @@ export default class Minion {
     if (stats === null) {
       return null;
     }
+    const keywords = Keywords.fromSpecString(specString);
+    if (keywords === null) {
+      return null;
+    }
     const modifiers = specString.extractList(Modifier.fromSpecString);
     if (modifiers === null) {
       return null;
     }
-    return new Minion(baseCard, position, stats, modifiers);
+    return new Minion(baseCard, position, stats, keywords, modifiers);
   }
 
   public static fromCard(minion: typeof Unit): Minion {
     const baseCard = BaseCard.fromCard(minion);
     const position = getPositionFromCard(minion);
     const stats = Stats.fromCard(minion);
+    const keywords = Keywords.fromCard(minion);
     const modifiers = Modifier.fromCard(minion);
-    return new Minion(baseCard, position, stats, modifiers);
+    return new Minion(baseCard, position, stats, keywords, modifiers);
   }
 
   public static updateCoder(
@@ -67,12 +74,19 @@ export default class Minion {
       hasBaseStatsProb: 1023/1024,
     };
     const stats = Stats.updateCoder(coder, baseCard, probs, minion?.stats);
-    return minion ?? new Minion(baseCard, position, stats, []);
+    const keywords = Keywords.updateCoder(coder, minion?.keywords);
+    return minion ?? new Minion(baseCard, position, stats, keywords, []);
   }
 
   public toString(): string {
     const position = positionToString(this.position);
     const modifiers = SpecString.constructList(this.modifiers);
-    return `${this.baseCard}${position}${this.stats}${modifiers}`;
+    return `\
+${this.baseCard}\
+${position}\
+${this.stats}\
+${this.keywords}\
+${modifiers}\
+`;
   }
 }

@@ -11,6 +11,7 @@ import SpecString from './puzzleSpec/SpecString';
 import { base64StringToBinary } from './puzzleSpec/base64';
 import getContextObjectData from './puzzleSpec/getContextObjectData';
 import { TileState } from './puzzleSpec/StartingManaTiles';
+import type Keywords from './puzzleSpec/Keywords';
 
 export default class Puzzle extends Challenge {
 
@@ -223,10 +224,12 @@ export default class Puzzle extends Challenge {
         baseCard: { card },
         position: [x, y],
         stats,
+        keywords,
         modifiers,
       } = minion;
       this.applyCardToBoard(card, x, y, playerId);
       gameSession.setCardStats(card, stats.getCardStats(card));
+      this.applyKeywords(card, keywords);
       this.applyModifiers(gameSession, card, modifiers);
     });
   }
@@ -239,6 +242,13 @@ export default class Puzzle extends Challenge {
       } = tile;
       this.applyCardToBoard(card, x, y, playerId);
     });
+  }
+
+  private applyKeywords(card: Card, keywords: Keywords) {
+    keywords.getKeywords().forEach(
+      modifierClass => card.getGameSession()
+        .applyCardModifier(card, modifierClass.createContextObject()),
+    );
   }
 
   private applyModifiers(
