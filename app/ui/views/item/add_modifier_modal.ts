@@ -32,7 +32,7 @@ export default TypeaheadModal.extend({
     SDK.GameSession.current().applyModifierContextObjectToCard(
       this.card,
       this.getResult().contextObject,
-      count,
+      this.getResult().allowMultiple ? count : 1,
     );
     NavigationManager.getInstance().destroyModalView();
     this.trigger('submit');
