@@ -7,8 +7,8 @@ export default class CodingData {
     return data === undefined ? undefined : data === n;
   }
 
-  public static isNegative(data: Number): Boolean {
-    return data === undefined ? undefined : data < 0;
+  public static isNonnegative(data: Number): Boolean {
+    return data === undefined ? undefined : data >= 0;
   }
 }
 

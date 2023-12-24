@@ -242,9 +242,9 @@ ${Stats.writeStat(this.healthBuff)}\
     stat: number | undefined,
   ): number {
     if (min < 0) {
-      const isNegative = getWeightedBooleanCoding(1/256)
-        .updateCoder(coder, CodingData.isNegative(stat));
-      if (isNegative) {
+      const isNonnegative = getWeightedBooleanCoding(255/256)
+        .updateCoder(coder, CodingData.isNonnegative(stat));
+      if (!isNonnegative) {
         return getUniformNumberCoding(-min, min).updateCoder(coder, stat);
       }
       min = 0;
