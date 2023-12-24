@@ -256,14 +256,20 @@ export default class Puzzle extends Challenge {
     card: Card,
     modifiers: Modifier[],
   ) {
-    modifiers.forEach(({ baseCard: { cardId }, indexOfContextObject }) => {
+    modifiers.forEach(({
+      baseCard: { cardId },
+      indexOfContextObject,
+      multiplicity,
+    }) => {
       const contextObject =
         getContextObjectData(cardId)[indexOfContextObject]?.contextObject;
       if (contextObject != null) {
-        gameSession.applyCardModifier(
-          card,
-          contextObject,
-        );
+        for (let i = 0; i < multiplicity; i++) {
+          gameSession.applyCardModifier(
+            card,
+            contextObject,
+          );
+        }
       }
     });
   }

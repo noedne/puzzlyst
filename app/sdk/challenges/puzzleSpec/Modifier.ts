@@ -29,7 +29,7 @@ export default class Modifier {
     if (data === undefined) {
       return null;
     }
-    const multiplicity = data.allowMultiple ? specString.countZeroes() : 0;
+    const multiplicity = data.allowMultiple ? specString.countZeroes() : 1;
     if (multiplicity === null) {
       return null;
     }
@@ -72,7 +72,7 @@ export default class Modifier {
     }
     const multiplicity = data.allowMultiple
       ? getMultiplicityCoding().updateCoder(coder, modifier?.multiplicity)
-      : 0;
+      : 1;
     return modifier ?? new Modifier(baseCard, index, multiplicity);
   }
 
