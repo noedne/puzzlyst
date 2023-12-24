@@ -2,9 +2,8 @@ const Cards = require('app/sdk/cards/cardsLookupComplete');
 const Factions = require('app/sdk/cards/factionsLookup');
 const Unit = require('app/sdk/entities/unit');
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
-import { getUniformArrayCoding, getUniformNumberCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
+import { getUniformArrayCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
 import BaseCard from "./BaseCard";
-import { contextObjectCardIds } from "./getContextObjectData";
 import List from "./List";
 import Modifier from "./Modifier";
 import {
@@ -91,13 +90,7 @@ export default class GeneralCard {
     const baseCard = BaseCard.fromCardId(cardId);
     const probs = { hasNoBuffsProb: 1023/1024, hasBaseStatsProb: 8191/8192 };
     const stats = Stats.updateCoder(coder, baseCard, probs, generalCard?.stats);
-    const modifiers = List.updateCoder(
-      Modifier,
-      coder,
-      contextObjectCardIds,
-      getUniformNumberCoding(contextObjectCardIds.length + 1),
-      generalCard?.modifiers,
-    );
+    const modifiers = Modifier.updateListCoder(coder, generalCard?.modifiers);
     return generalCard ?? new GeneralCard(
       cardId,
       position,

@@ -1,6 +1,7 @@
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import type Coding from "./arithmeticCoding/Coding";
-import { getAdaptiveArrayCoding } from "./arithmeticCoding/utils";
+import CodingData from "./arithmeticCoding/CodingData";
+import { getAdaptiveArrayCoding, getUniformArrayCoding, getWeightedBooleanCoding } from "./arithmeticCoding/utils";
 import BaseCard from "./BaseCard";
 import SpecString from "./SpecString";
 
@@ -39,7 +40,7 @@ export default class List<T> {
     return new List(list);
   }
 
-  public static updateCoder<T extends CodeableInstance, U extends unknown[]>(
+  public static updateAdaptiveCoder<T extends CodeableInstance, U extends unknown[]>(
     Class: CodeableClass<T, U>,
     coder: ArithmeticCoder,
     ids: number[],
@@ -55,6 +56,33 @@ export default class List<T> {
       const baseCard =
         this.updateCoderBaseCard(coder, idCoding, item?.baseCard);
       decodedList.push(Class.updateCoder(coder, baseCard, item, ...rest));
+    }
+    return encodedList ?? new List(decodedList);
+  }
+
+  public static updateUniqueCoder<T extends CodeableInstance>(
+    Class: CodeableClass<T, never>,
+    coder: ArithmeticCoder,
+    ids: number[],
+    terminationProb: number,
+    encodedList: List<T> | undefined,
+  ): List<T> {
+    const idsLeft = [...ids];
+    const decodedList = [];
+    for (let i = 0; i < ids.length; i++) {
+      const isTerminated = getWeightedBooleanCoding(terminationProb)
+        .updateCoder(coder, CodingData.equals(encodedList?.list.length, i));
+      if (isTerminated) {
+        break;
+      }
+      const item = encodedList?.list[i];
+      const baseCard = this.updateCoderBaseCard(
+        coder,
+        getUniformArrayCoding(idsLeft),
+        item?.baseCard,
+      );
+      idsLeft.splice(idsLeft.indexOf(baseCard.cardId), 1);
+      decodedList.push(Class.updateCoder(coder, baseCard, item));
     }
     return encodedList ?? new List(decodedList);
   }

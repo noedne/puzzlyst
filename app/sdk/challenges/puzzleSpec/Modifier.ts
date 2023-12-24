@@ -1,9 +1,11 @@
 const Card = require('app/sdk/cards/card');
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import BaseCard from "./BaseCard";
-import { getUniformNumberCoding } from "./arithmeticCoding/utils";
+import { getUniformBooleanCoding, getUniformNumberCoding } from "./arithmeticCoding/utils";
 import SpecString from "./SpecString";
-import getContextObjectData from "./getContextObjectData";
+import getContextObjectData, { contextObjectCardIds } from "./getContextObjectData";
+import CodingData from "./arithmeticCoding/CodingData";
+import List from "./List";
 
 export default class Modifier {
   constructor(
@@ -12,7 +14,7 @@ export default class Modifier {
     public multiplicity: number,
   ) {}
 
-  static fromSpecString(specString: SpecString): Modifier | null {
+  public static fromSpecString(specString: SpecString): Modifier | null {
     const baseCard = BaseCard.fromSpecString(specString);
     if (baseCard === null) {
       return null;
@@ -36,7 +38,7 @@ export default class Modifier {
     return new Modifier(baseCard, index, multiplicity);
   }
 
-  static fromCard(card: typeof Card): Modifier[] {
+  public static fromCard(card: typeof Card): Modifier[] {
     return card.getModifiers().reduce(
       (acc: Modifier[], { contextObject }: any) => {
         const last = acc.at(-1);
@@ -58,7 +60,7 @@ export default class Modifier {
     );
   }
 
-  static updateCoder(
+  public static updateCoder(
     coder: ArithmeticCoder,
     baseCard: BaseCard,
     modifier: Modifier | undefined,
@@ -71,12 +73,25 @@ export default class Modifier {
       throw Error('invalid');
     }
     const multiplicity = data.allowMultiple
-      ? getMultiplicityCoding().updateCoder(coder, modifier?.multiplicity)
+      ? this.codeMultiplicity(coder, modifier?.multiplicity)
       : 1;
     return modifier ?? new Modifier(baseCard, index, multiplicity);
   }
 
-  toString(): string {
+  public static updateListCoder(
+    coder: ArithmeticCoder,
+    modifiers?: List<Modifier>,
+  ): List<Modifier> {
+    return List.updateUniqueCoder(
+      Modifier,
+      coder,
+      contextObjectCardIds,
+      1023/1024,
+      modifiers,
+    );
+  }
+
+  public toString(): string {
     const array = getContextObjectData(this.baseCard.cardId);
     const indexOfContextObject = array.length === 1
       ? ''
@@ -96,12 +111,20 @@ export default class Modifier {
     const baseCard = BaseCard.fromCardId(cardId);
     return new Modifier(baseCard, indexOfContextObject, 1);
   }
+
+  private static codeMultiplicity(
+    coder: ArithmeticCoder,
+    multiplicity?: number,
+  ): number {
+    for (let i = 1;; i++) {
+      const isEqual = CodingData.equals(multiplicity, i);
+      if (getUniformBooleanCoding().updateCoder(coder, isEqual)) {
+        return i;
+      }
+    }
+  }
 }
 
 function getIndexOfContextObjectCoding(numberOfContextObjects: number) {
   return getUniformNumberCoding(numberOfContextObjects);
-}
-
-function getMultiplicityCoding() {
-  return getUniformNumberCoding(2, 1);
 }

@@ -15,8 +15,6 @@ import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import Stats from "./Stats";
 import Keywords from "./Keywords";
 import List from "./List";
-import { contextObjectCardIds } from "./getContextObjectData";
-import { getUniformNumberCoding } from "./arithmeticCoding/utils";
 
 export default class Minion {
   private constructor(
@@ -78,13 +76,7 @@ export default class Minion {
     };
     const stats = Stats.updateCoder(coder, baseCard, probs, minion?.stats);
     const keywords = Keywords.updateCoder(coder, minion?.keywords);
-    const modifiers = List.updateCoder(
-      Modifier,
-      coder,
-      contextObjectCardIds,
-      getUniformNumberCoding(contextObjectCardIds.length + 1),
-      minion?.modifiers,
-    );
+    const modifiers = Modifier.updateListCoder(coder, minion?.modifiers);
     return minion ?? new Minion(baseCard, position, stats, keywords, modifiers);
   }
 

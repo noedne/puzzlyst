@@ -108,7 +108,7 @@ export default class Player {
       tileIds = tileIds.concat(getNeutralTileIds());
     }
     const deckIds = artifactIds.concat(minionIds, spellIds);
-    const hand = List.updateCoder(
+    const hand = List.updateAdaptiveCoder(
       DeckCard,
       coder,
       deckIds,
@@ -119,21 +119,21 @@ export default class Player {
       ),
       player?.hand,
     );
-    const deck = List.updateCoder(
+    const deck = List.updateAdaptiveCoder(
       DeckCard,
       coder,
       deckIds,
       getWeightedNumberCoding(getExponentialLengthWeights(1/32, 39)),
       player?.deck,
     );
-    const artifacts = List.updateCoder(
+    const artifacts = List.updateAdaptiveCoder(
       Artifact,
       coder,
       artifactIds,
       getWeightedNumberCoding([13/16, 1/16, 1/16]),
       player?.artifacts,
     );
-    const minions = List.updateCoder(
+    const minions = List.updateAdaptiveCoder(
       Minion,
       coder,
       minionIds,
@@ -143,7 +143,7 @@ export default class Player {
       player?.minions,
       positionCoder,
     );
-    const tiles = List.updateCoder(
+    const tiles = List.updateAdaptiveCoder(
       Tile,
       coder,
       tileIds,
