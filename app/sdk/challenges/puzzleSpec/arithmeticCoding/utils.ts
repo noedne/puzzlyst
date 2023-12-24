@@ -40,6 +40,22 @@ export function getProbsIndex(probs: number[], value: number): number {
   return probs.length;
 }
 
+function getExponentialLengthWeights(
+  nonzeroWeight: number,
+  count: number,
+): number[] {
+  if (count === 0) {
+    return [];
+  }
+  const weights = [1 - nonzeroWeight];
+  let weight = nonzeroWeight;
+  for (let i = 1; i < count; i++) {
+    weight /= 2;
+    weights.push(weight);
+  }
+  return weights;
+}
+
 export function getUniformArrayCoding<T>(array: T[]): Coding<T> {
   return new Coding(new ArrayDataIndexer(array), new UniformRangeIndexer(array.length));
 }
@@ -62,6 +78,10 @@ export function getWeightedNumberCoding(weights: number[], offset: number = 0): 
 
 export function getWeightedBooleanCoding(weight: number): Coding<boolean> {
   return new Coding(new ArrayDataIndexer([true, false]), new WeightedRangeIndexer([weight]));
+}
+
+export function getExponentialNumberCoding(nonzeroWeight: number, max: number): Coding<number> {
+  return getWeightedNumberCoding(getExponentialLengthWeights(nonzeroWeight, max));
 }
 
 export function getAdaptiveArrayCoding(ids: number[]): Coding<number> {

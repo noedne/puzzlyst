@@ -12,7 +12,7 @@ import {
   getNeutralTileIds,
 } from '../../gameVersion';
 import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
-import { getWeightedNumberCoding } from './arithmeticCoding/utils';
+import { getExponentialNumberCoding, getWeightedNumberCoding } from './arithmeticCoding/utils';
 import Artifact from './Artifact';
 import DeckCard from './DeckCard';
 import GeneralCard from './GeneralCard';
@@ -123,7 +123,7 @@ export default class Player {
       DeckCard,
       coder,
       deckIds,
-      getWeightedNumberCoding(getExponentialLengthWeights(1/32, 39)),
+      getExponentialNumberCoding(1/32, 39),
       player?.deck,
     );
     const artifacts = List.updateAdaptiveCoder(
@@ -147,10 +147,10 @@ export default class Player {
       Tile,
       coder,
       tileIds,
-      getWeightedNumberCoding(getExponentialLengthWeights(
+      getExponentialNumberCoding(
         1/32,
         positionCoder.getNumAvailable(PositionableType.Tile),
-      )),
+      ),
       player?.tiles,
       positionCoder,
     );
@@ -166,22 +166,6 @@ export default class Player {
     const tiles = this.tiles.toString();
     return `${this.generalCard}${hand}${deck}${artifacts}${minions}${tiles}`;
   }
-}
-
-function getExponentialLengthWeights(
-  nonzeroWeight: number,
-  maxLength: number,
-): number[] {
-  if (maxLength === 0) {
-    return [];
-  }
-  const weights = [1 - nonzeroWeight];
-  let weight = nonzeroWeight;
-  for (let i = 1; i < maxLength; i++) {
-    weight /= 2;
-    weights.push(weight);
-  }
-  return weights;
 }
 
 const minionLengthWeights = [
