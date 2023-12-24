@@ -230,7 +230,7 @@ export default class Puzzle extends Challenge {
       this.applyCardToBoard(card, x, y, playerId);
       gameSession.setCardStats(card, stats.getCardStats(card));
       this.applyKeywords(card, keywords);
-      this.applyModifiers(gameSession, card, modifiers);
+      this.applyModifiers(gameSession, card, modifiers.list);
     });
   }
 

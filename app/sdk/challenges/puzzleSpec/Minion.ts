@@ -10,10 +10,13 @@ import {
 } from "./Position";
 import type PositionCoder from "./PositionCoder";
 import PositionableType from "./PositionableType";
-import SpecString from "./SpecString";
+import type SpecString from "./SpecString";
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import Stats from "./Stats";
 import Keywords from "./Keywords";
+import List from "./List";
+import { contextObjectCardIds } from "./getContextObjectData";
+import { getUniformNumberCoding } from "./arithmeticCoding/utils";
 
 export default class Minion {
   private constructor(
@@ -21,7 +24,7 @@ export default class Minion {
     public position: Position,
     public stats: Stats,
     public keywords: Keywords,
-    public modifiers: Modifier[],
+    public modifiers: List<Modifier>,
   ) {}
 
   public static fromSpecString(specString: SpecString): Minion | null {
@@ -41,7 +44,7 @@ export default class Minion {
     if (keywords === null) {
       return null;
     }
-    const modifiers = specString.extractList(Modifier.fromSpecString);
+    const modifiers = List.fromSpecString(Modifier, specString);
     if (modifiers === null) {
       return null;
     }
@@ -53,7 +56,7 @@ export default class Minion {
     const position = getPositionFromCard(minion);
     const stats = Stats.fromCard(minion);
     const keywords = Keywords.fromCard(minion);
-    const modifiers = Modifier.fromCard(minion);
+    const modifiers = new List(Modifier.fromCard(minion));
     return new Minion(baseCard, position, stats, keywords, modifiers);
   }
 
@@ -75,18 +78,24 @@ export default class Minion {
     };
     const stats = Stats.updateCoder(coder, baseCard, probs, minion?.stats);
     const keywords = Keywords.updateCoder(coder, minion?.keywords);
-    return minion ?? new Minion(baseCard, position, stats, keywords, []);
+    const modifiers = List.updateCoder(
+      Modifier,
+      coder,
+      contextObjectCardIds,
+      getUniformNumberCoding(contextObjectCardIds.length + 1),
+      minion?.modifiers,
+    );
+    return minion ?? new Minion(baseCard, position, stats, keywords, modifiers);
   }
 
   public toString(): string {
     const position = positionToString(this.position);
-    const modifiers = SpecString.constructList(this.modifiers);
     return `\
 ${this.baseCard}\
 ${position}\
 ${this.stats}\
 ${this.keywords}\
-${modifiers}\
+${this.modifiers}\
 `;
   }
 }
