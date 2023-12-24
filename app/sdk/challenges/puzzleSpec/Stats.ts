@@ -1,5 +1,6 @@
 import type { CardStats } from "../../gameSessionEditor";
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
+import CodingData from "./arithmeticCoding/CodingData";
 import { getMultiUniformRangeNumberWithHoleCoding, getUniformNumberCoding, getWeightedBooleanCoding } from "./arithmeticCoding/utils";
 import type BaseCard from "./BaseCard";
 import SpecString from "./SpecString";
@@ -120,7 +121,7 @@ export default class Stats {
         min: 0,
         isDefaultProb: hasBaseStatsProb,
       },
-      getSum(stats?.attackBaseDelta, defaultAttackBase),
+      CodingData.plus(stats?.attackBaseDelta, defaultAttackBase),
     );
     const defaultHealthBase = baseCard.card.maxHP;
     const healthBase = this.codeNonnegativeStat(
@@ -130,7 +131,7 @@ export default class Stats {
         min: 1,
         isDefaultProb: hasBaseStatsProb,
       },
-      getSum(stats?.healthBaseDelta, defaultHealthBase),
+      CodingData.plus(stats?.healthBaseDelta, defaultHealthBase),
     );
     const attackBuff = this.codeStat(
       coder,
@@ -242,7 +243,7 @@ ${Stats.writeStat(this.healthBuff)}\
   ): number {
     if (min < 0) {
       const isNegative = getWeightedBooleanCoding(1/256)
-        .updateCoder(coder, getIsNegative(stat));
+        .updateCoder(coder, CodingData.isNegative(stat));
       if (isNegative) {
         return getUniformNumberCoding(-min, min).updateCoder(coder, stat);
       }
@@ -271,7 +272,7 @@ ${Stats.writeStat(this.healthBuff)}\
     stat: number | undefined,
   ): number {
     const isDefault = getWeightedBooleanCoding(isDefaultProb)
-      .updateCoder(coder, getEquals(stat, defaultVal));
+      .updateCoder(coder, CodingData.equals(stat, defaultVal));
     if (isDefault) {
       return defaultVal;
     }
@@ -283,16 +284,4 @@ ${Stats.writeStat(this.healthBuff)}\
       prob: 1023/1024,
     }).updateCoder(coder, stat);
   }
-}
-
-function getSum(data: number | undefined, n: number): number | undefined {
-  return data === undefined ? undefined : data + n;
-}
-
-function getEquals(data: number | undefined, n: number): boolean | undefined {
-  return data === undefined ? undefined : data === n;
-}
-
-function getIsNegative(data: number | undefined): boolean | undefined {
-  return data === undefined ? undefined : data < 0;
 }
