@@ -3,7 +3,7 @@ const NavigationManager = require('app/ui/managers/navigation_manager');
 const SDK = require('app/sdk');
 const Template = require('app/ui/templates/item/add_modifier_modal.hbs');
 import TypeaheadModal from './typeahead_modal';
-import getContextObjectData, { contextObjectCardIds, getDescription } from '../../../sdk/challenges/puzzleSpec/getContextObjectData';
+import { contextObjectCardIds, getContextObjectDataForEditing, getDescription } from '../../../sdk/challenges/puzzleSpec/getContextObjectData';
 import { matchSorter } from 'match-sorter';
 import NumberInput from './number_input';
 
@@ -43,7 +43,7 @@ export default TypeaheadModal.extend({
     return matchSorter(
       contextObjectCardIds.flatMap(cardId => {
         const name = gameSession.createCardForIdentifier(cardId).getName();
-        return getContextObjectData(cardId).map(data => ({
+        return getContextObjectDataForEditing(cardId).map(data => ({
           ...data,
           name,
           description: getDescription(data),

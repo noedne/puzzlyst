@@ -9,7 +9,7 @@ import type Player from './puzzleSpec/Player';
 import SpecPuzzle from './puzzleSpec/SpecPuzzle';
 import SpecString from './puzzleSpec/SpecString';
 import { base64StringToBinary } from './puzzleSpec/base64';
-import getContextObjectData from './puzzleSpec/getContextObjectData';
+import { getContextObjectDataForEditing } from './puzzleSpec/getContextObjectData';
 import { TileState } from './puzzleSpec/StartingManaTiles';
 import type Keywords from './puzzleSpec/Keywords';
 
@@ -261,8 +261,8 @@ export default class Puzzle extends Challenge {
       indexOfContextObject,
       multiplicity,
     }) => {
-      const contextObject =
-        getContextObjectData(cardId)[indexOfContextObject]?.contextObject;
+      const contextObject = getContextObjectDataForEditing(cardId)
+        [indexOfContextObject]?.contextObject;
       if (contextObject != null) {
         for (let i = 0; i < multiplicity; i++) {
           gameSession.applyCardModifier(

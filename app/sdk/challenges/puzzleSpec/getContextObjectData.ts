@@ -23,7 +23,7 @@ export type ContextObject = {
   },
 };
 
-function getContextObjectData(cardId: number) {
+function getContextObjectDataBase(cardId: number, isPlaying: boolean) {
   switch (cardId) {
     case Cards.Spell.LionheartBlessing:
       return [
@@ -104,17 +104,48 @@ function getContextObjectData(cardId: number) {
         },
       ];
     case Cards.Neutral.ProphetWhitePalm:
+      const contextObject = ModifierImmuneToSpellDamage.createContextObject({
+        durationIsUntilEndBeforeNextTurn: true,
+      });
+      if (!isPlaying) {
+        contextObject.durationIsUntilNextTurnOfPlayerId =
+          GameSession.current().getNonCurrentPlayerId();
+      }
       return [
         {
           allowMultiple: false,
-          contextObject: ModifierImmuneToSpellDamage.createContextObject({
-            durationIsUntilEndBeforeNextTurn: true,
-          }),
+          contextObject,
         },
       ];
     default:
       return [];
   }
+}
+
+function getContextObjectDataWithIndex(
+  cardId: number,
+  isPlaying: boolean,
+): ContextObject[] {
+  return getContextObjectDataBase(cardId, isPlaying).map(
+    (data, indexOfContextObject) =>
+    ({
+      ...data,
+      contextObject: {
+        ...data.contextObject,
+        cardId,
+        indexOfContextObject,
+      }
+    }));
+}
+
+export default function getContextObjectData(cardId: number): ContextObject[] {
+  return getContextObjectDataWithIndex(cardId, true);
+}
+
+export function getContextObjectDataForEditing(
+  cardId: number,
+): ContextObject[] {
+  return getContextObjectDataWithIndex(cardId, false);
 }
 
 export const contextObjectCardIds: number[] = [
@@ -142,19 +173,4 @@ export function getDescription({ contextObject }: ContextObject): string {
     description += ' until your next turn';
   }
   return description;
-}
-
-export default function getContextObjectDataWithIndex(
-  cardId: number,
-): ContextObject[] {
-  return getContextObjectData(cardId).map(
-    (data, indexOfContextObject) =>
-    ({
-      ...data,
-      contextObject: {
-        ...data.contextObject,
-        cardId,
-        indexOfContextObject,
-      }
-    }));
 }
