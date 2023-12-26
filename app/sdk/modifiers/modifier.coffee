@@ -2151,21 +2151,23 @@ class Modifier extends SDKObject
     if @_private.cachedIsActive # if active, modifier can respond to this duration change
       @getGameSession().pushTriggeringModifierOntoStack(@)
       @onEndTurnDurationChange(event)
-      if @durationEndTurn > 0
-        @durationEndTurn = @_getModifierDurationChangeInCaseOfBonusTurn(@durationEndTurn)
-        if @numEndTurnsElapsed >= @durationEndTurn
-          @onExpire(event)
-          @getGameSession().removeModifier(@)
-      else if @durationIsUntilEndBeforeNextTurn and
-          @getGameSession().getNextTurnPlayerId() is @durationIsUntilNextTurnOfPlayerId
+      if @_getHasEndTurnDurationEnded()
         @onExpire(event)
         @getGameSession().removeModifier(@)
       @getGameSession().popTriggeringModifierFromStack()
     else # if inactive, modifier may still run out of duration but cannot respond
-      if @durationEndTurn > 0
-        @durationEndTurn = @_getModifierDurationChangeInCaseOfBonusTurn(@durationEndTurn)
-        if @numEndTurnsElapsed >= @durationEndTurn
-          @getGameSession().removeModifier(@)
+      if @_getHasEndTurnDurationEnded()
+        @getGameSession().removeModifier(@)
+
+  _getHasEndTurnDurationEnded: () ->
+    if @durationEndTurn > 0
+      @durationEndTurn =
+        @_getModifierDurationChangeInCaseOfBonusTurn(@durationEndTurn)
+      return @numEndTurnsElapsed >= @durationEndTurn
+    if @durationIsUntilEndBeforeNextTurn
+      return @getGameSession().getNextTurnPlayerId() is
+        @durationIsUntilNextTurnOfPlayerId
+    return false
 
   _onStartTurnDurationChange: (event) ->
     if !@_private.cachedIsActive and !@_private.cachedIsActiveInLocation
@@ -2178,21 +2180,23 @@ class Modifier extends SDKObject
     if @_private.cachedIsActive # if active, modifier can respond to this duration change
       @getGameSession().pushTriggeringModifierOntoStack(@)
       @onStartTurnDurationChange(event)
-      if @durationStartTurn > 0
-        @durationStartTurn = @_getModifierDurationChangeInCaseOfBonusTurn(@durationStartTurn)
-        if @numStartTurnsElapsed >= @durationStartTurn
-          @onExpire(event)
-          @getGameSession().removeModifier(@)
-      else if @durationIsUntilStartOfNextTurn and
-          @getGameSession().getCurrentPlayerId() is @durationIsUntilNextTurnOfPlayerId
+      if @_getHasStartTurnDurationEnded()
         @onExpire(event)
         @getGameSession().removeModifier(@)
       @getGameSession().popTriggeringModifierFromStack()
     else # if inactive, modifier may still run out of duration but cannot respond
-      if @durationStartTurn > 0
-        @durationStartTurn = @_getModifierDurationChangeInCaseOfBonusTurn(@durationStartTurn)
-        if @numStartTurnsElapsed >= @durationStartTurn
-          @getGameSession().removeModifier(@)
+      if @_getHasStartTurnDurationEnded()
+        @getGameSession().removeModifier(@)
+
+  _getHasStartTurnDurationEnded: () ->
+    if @durationStartTurn > 0
+      @durationStartTurn =
+        @_getModifierDurationChangeInCaseOfBonusTurn(@durationStartTurn)
+      return @numStartTurnsElapsed >= @durationStartTurn
+    if @durationIsUntilStartOfNextTurn
+      return @getGameSession().getCurrentPlayerId() is
+        @durationIsUntilNextTurnOfPlayerId
+    return false
 
   _getModifierDurationChangeInCaseOfBonusTurn: (duration) ->
     # special case: if not swapping current player at end turn like normal (current player taking an turn)
