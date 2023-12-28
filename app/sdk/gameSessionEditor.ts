@@ -3,6 +3,7 @@ import SpecPuzzle from "./challenges/puzzleSpec/SpecPuzzle";
 import { binaryToBase64String } from "./challenges/puzzleSpec/base64";
 import type { ContextObject } from "./challenges/puzzleSpec/getContextObjectData";
 
+const Action = require('app/sdk/actions/action');
 const Artifact = require('app/sdk/artifacts/artifact');
 const audio_engine = require('app/audio/audio_engine');
 const Card = require('app/sdk/cards/card');
@@ -184,10 +185,12 @@ export function applyModifierContextObjectToCard(
   count: number = 1,
 ) {
   const indices = Array.from(Array(count)).map(_ => this.generateIndex());
-  indices.forEach(index => this.applyCardModifier(card, {
-    ...contextObject,
-    index,
-  }));
+  syncState(this, () =>
+    indices.forEach(index => this.getGameSession().applyCardModifier(card, {
+      ...contextObject,
+      index,
+    })),
+  );
   pushUndo(this);
   pushEvent(this, {
     showModifiers: {
@@ -214,7 +217,9 @@ export function removeCardFromBoardWhileEditing(
   this: typeof GameSession,
   card: typeof Card,
 ) {
-  this.removeCardFromBoard(card, card.getPositionX(), card.getPositionY());
+  syncState(this, () => this.getGameSession()
+    .removeCardFromBoard(card, card.getPositionX(), card.getPositionY()),
+  );
   pushUndo(this);
   pushEvent(this, {
     destroyNodeForSdkCard: card,
@@ -225,9 +230,11 @@ export function removeArtifact(
   this: typeof GameSession,
   artifact: typeof Artifact,
 ) {
-  artifact.getArtifactModifiers()
-    .forEach((modifier: typeof Modifier) => this.removeModifier(modifier));
-  this.syncState();
+  syncState(this, () => artifact.getArtifactModifiers().forEach(
+    (modifier: typeof Modifier) =>
+      this.getGameSession().removeModifier(modifier),
+    ),
+  );
   pushUndo(this);
   pushEvent(this, {
     removeArtifact: artifact,
@@ -323,14 +330,26 @@ export function applyBenchCardToBoard(
     // artifacts target generals
     ? this.getBoard().getUnitAtPosition(position).getOwnerId()
     : benchCard.getOwnerId();
-  const card = this.getChallenge().applyCardToBoard(
-    { id: benchCard.getId() },
-    boardX,
-    boardY,
-    playerId,
+  const card = this.createCardForIdentifier(benchCard.getId());
+  syncState(this, () =>
+    this.getGameSession().getChallenge().applyCardToBoard(
+      card,
+      boardX,
+      boardY,
+      playerId,
+    ),
   );
   pushUndo(this);
   pushEvent(this, { addNodeForSdkCard: { card, position }});
+}
+
+export function moveEntity(
+  this: typeof GameSession,
+  card: typeof Card,
+  position: { x: number, y: number },
+) {
+  card.setPosition(position);
+  syncState(this);
 }
 
 export function getCachedCardsByType(
@@ -453,6 +472,18 @@ function updateFromBase64(gameSession: typeof GameSession, base64: string) {
 export function setupPuzzleForString(this: typeof GameSession, string: string) {
   Puzzle.fromBase64(string).setupSession(this);
   pushUndo(this);
+}
+
+function syncState(gameSession: typeof GameSession, executeFn?: Function) {
+  gameSession.getEditingBench().forEach(
+    (card: typeof Card) => card.flushCachedValidTargetPositions(),
+  );
+  const action = new Action(gameSession);
+  if (executeFn !== undefined) {
+    action._execute = executeFn;
+  }
+  action.setIsAutomatic(true);
+  gameSession.executeAction(action);
 }
 
 function pushEvent(

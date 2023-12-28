@@ -1,5 +1,4 @@
 // pragma PKGS: game
-const Cards = require('app/sdk/cards/cardsLookupComplete');
 const CONFIG = require('app/common/config');
 const EVENTS = require('app/common/event_types');
 const Logger = require('app/common/logger');
@@ -1632,8 +1631,7 @@ const Player = cc.Class.extend({
               if (selectedSdkEntity.getIsGeneral()) {
                 return;
               }
-              gameSession._removeCardFromCurrentLocation(selectedSdkEntity);
-              selectedEntityNode.destroy();
+              gameSession.removeCardFromBoardWhileEditing(selectedSdkEntity);
               gameLayer.stopMouseDown();
               return;
             }
@@ -1644,20 +1642,8 @@ const Player = cc.Class.extend({
               selectedEntityNode.setPosition(
                 UtilsEngine.transformBoardToTileMap(mouseBoardPosition),
               );
-              selectedSdkEntity.setPosition(mouseBoardPosition);
-              selectedSdkEntity.updateCachedState();
+              gameSession.moveEntity(selectedSdkEntity, mouseBoardPosition);
               gameLayer.stopParticles();
-              if (
-                mouseOverSdkEntity != null
-                && mouseOverSdkEntity.getId() === Cards.Tile.BonusMana
-              ) {
-                const modifier = mouseOverSdkEntity.getActiveModifierByType(
-                  SDK.ModifierCollectableBonusMana.type,
-                );
-                if (modifier != null) {
-                  modifier.onDepleted();
-                }
-              }
             }
             return;
           }

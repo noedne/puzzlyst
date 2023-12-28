@@ -2048,6 +2048,10 @@ const EntityNode = SdkNode.extend({
   /* region Triggered visual effects */
 
   showModifierChanges(modifier, action, forRemove) {
+    if (modifier.getGameSession().getIsEditing()) {
+      return 0.0;
+    }
+
     let showDuration = this._super(modifier, action, forRemove);
 
     if (modifier instanceof SDK.ModifierProvoked) {

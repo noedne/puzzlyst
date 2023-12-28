@@ -359,6 +359,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   setSelectedBenchIndex,
   toggleOwnership,
   applyBenchCardToBoard,
+  moveEntity,
   getCachedCardsByType,
   setCachedCardsByType,
   getEditingBench,
@@ -399,6 +400,7 @@ class _GameSession extends SDKObject
   setSelectedBenchIndex: setSelectedBenchIndex
   toggleOwnership: toggleOwnership
   applyBenchCardToBoard: applyBenchCardToBoard
+  moveEntity: moveEntity
   getCachedCardsByType: getCachedCardsByType
   setCachedCardsByType: setCachedCardsByType
   getEditingBench: getEditingBench

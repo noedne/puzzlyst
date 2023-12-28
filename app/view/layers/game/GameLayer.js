@@ -1166,7 +1166,10 @@ var GameLayer = FXCompositeLayer.extend({
         }
 
         // stop any mouse down/over and try to show followup
-        if (!SDK.GameSession.getInstance().getIsSpectateMode()) {
+        if (
+          !SDK.GameSession.getInstance().getIsSpectateMode()
+          && !SDK.GameSession.current().getIsEditing()
+        ) {
           this.stopMouseDown();
         }
         this.showPlayerNextFollowupCard();
