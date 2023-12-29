@@ -177,9 +177,9 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
       this.updateArtifactsForPlayer(removeArtifact.getOwner());
     }
     if (selectBenchIndex !== null) {
-      if (selectBenchIndex === player.getSelectedCardIndexInHand()) {
-        gameLayer.stopMouseDown();
-      } else {
+      const selectedCardIndexInHand = player.getSelectedCardIndexInHand();
+      gameLayer.stopMouseDown();
+      if (selectBenchIndex !== selectedCardIndexInHand) {
         player.setSelectedCard(
           deckLayer.getCardNodeByHandIndex(selectBenchIndex),
         );
