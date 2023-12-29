@@ -419,6 +419,7 @@ export function setIsPlaying(this: typeof GameSession) {
   pushEvent(this, {
     bindHand: true,
     bindSubmitTurn: true,
+    clear: true,
   });
 }
 
@@ -495,6 +496,7 @@ function pushEvent(
     },
     bindHand?: boolean,
     bindSubmitTurn?: boolean,
+    clear?: boolean,
     destroyNodeForSdkCard?: typeof Card,
     removeArtifact?: typeof Artifact,
     selectBenchIndex?: number,
@@ -522,6 +524,7 @@ function pushEvent(
       addNodeForSdkCard: options.addNodeForSdkCard ?? null,
       bindHand: options.bindHand ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
+      clear: options.clear ?? false,
       destroyNodeForSdkCard: options.destroyNodeForSdkCard ?? null,
       removeArtifact: options.removeArtifact ?? null,
       selectBenchIndex: options.selectBenchIndex ?? null,
