@@ -125,19 +125,17 @@ export default class Puzzle extends Challenge {
     gameSession: GameSession,
     player: Player,
   ): DeckData {
-    const {
-      deck,
-      generalCard: { cardId },
-      hand,
-    } = player;
-    const card = gameSession.createCardForIdentifier(cardId);
-    const index = gameSession._indexCardAsNeeded(card);
-    card.setIsGeneral(true);
+    const generalCard = gameSession.createCard(player.generalCard.cardId);
+    generalCard.setIsGeneral(true);
     return [
-      { index },
-      ...hand.list
-        .concat(deck.list)
-        .map(({ baseCard: { cardId } }) => ({ id: cardId  }))
+      { index: generalCard.getIndex() },
+      ...player.hand.list
+        .concat(player.deck.list)
+        .map(card => ({
+          index: gameSession
+            .createCard(card.baseCard.cardId, card.isKeeper)
+            .getIndex(),
+        }))
         .reverse(),
     ];
   }
@@ -277,5 +275,5 @@ export default class Puzzle extends Challenge {
 
 type Card = any;
 type CustomModifier = any;
-type DeckData = ({ id: number } | { index: number })[];
+type DeckData = { index: number }[];
 type GameSession = any;
