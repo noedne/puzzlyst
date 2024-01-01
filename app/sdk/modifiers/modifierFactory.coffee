@@ -702,6 +702,7 @@ ModifierEndTurnWatchBuffSelf = require './modifierEndTurnWatchBuffSelf'
 ModifierStartTurnWatchSwapGeneralPositions = require './modifierStartTurnWatchSwapGeneralPositions'
 ModifierOpeningGambitRefreshManaTiles = require './modifierOpeningGambitRefreshManaTiles'
 ModifierWarTalon = require './modifierWarTalon'
+ModifierKeeper = require './modifierKeeper'
 
 PlayerModifier = require 'app/sdk/playerModifiers/playerModifier'
 PlayerModifierManaModifier = require 'app/sdk/playerModifiers/playerModifierManaModifier'
@@ -2171,6 +2172,8 @@ class ModifierFactory
       return ModifierOpeningGambitRefreshManaTiles
     if (modifierType == ModifierWarTalon.type)
       return ModifierWarTalon
+    if (modifierType == ModifierKeeper.type)
+      return ModifierKeeper
 
     if (modifierType == PlayerModifier.type)
       return PlayerModifier

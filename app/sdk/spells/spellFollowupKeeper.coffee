@@ -1,5 +1,4 @@
-Modifier = require 'app/sdk/modifiers/modifier'
-ModifierManaCostChange = require 'app/sdk/modifiers/modifierManaCostChange'
+ModifierKeeper = require 'app/sdk/modifiers/modifierKeeper'
 Spell = require './spell'
 CardType = require 'app/sdk/cards/cardType'
 PutCardInHandAction = require 'app/sdk/actions/putCardInHandAction'
@@ -16,22 +15,7 @@ class SpellFollowupKeeper extends Spell
     entity = board.getCardAtPosition({x: x, y: y}, CardType.Unit)
     newCardData = entity.createNewCardData()
 
-    statContextObject = Modifier.createContextObjectWithAbsoluteAttributeBuffs(
-      @atkValue,
-      @hpValue,
-    )
-    statContextObject.isRemovable = false
-
-    costChangeContextObject = ModifierManaCostChange.createContextObject(
-      @costValue
-    )
-    costChangeContextObject.attributeBuffsAbsolute = ['manaCost']
-    costChangeContextObject.isRemovable = false
-
-    newCardData.additionalModifiersContextObjects = [
-      statContextObject,
-      costChangeContextObject,
-    ]
+    newCardData.additionalModifiersContextObjects = [ModifierKeeper.createContextObject()]
     putCardInHandAction = new PutCardInHandAction(@getGameSession(), entity.getOwnerId(), newCardData)
     @getGameSession().executeAction(putCardInHandAction)
 
