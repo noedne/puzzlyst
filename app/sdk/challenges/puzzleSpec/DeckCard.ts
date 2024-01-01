@@ -1,38 +1,46 @@
 const Card = require('app/sdk/cards/card');
+const ModifierKeeper = require('app/sdk/modifiers/modifierKeeper');
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
+import { getWeightedBooleanCoding } from "./arithmeticCoding/utils";
 import BaseCard from "./BaseCard";
-import Modifier from "./Modifier";
 import SpecString from "./SpecString";
 
 export default class DeckCard {
-  constructor(public baseCard: BaseCard, public modifiers: Modifier[]) {}
+  constructor(public baseCard: BaseCard, public isKeeper: boolean) {}
 
   static fromSpecString(specString: SpecString): DeckCard | null {
     const baseCard = BaseCard.fromSpecString(specString);
     if (baseCard === null) {
       return null;
     }
-    const modifiers = specString.extractList(Modifier.fromSpecString);
-    if (modifiers === null) {
-      return null;
-    }
-    return new DeckCard(baseCard, modifiers);
+    const isKeeper = baseCard.isUnit() && specString.readNBits(1) === 1;
+    return new DeckCard(baseCard, isKeeper);
   }
 
   static updateCoder(
-    _coder: ArithmeticCoder,
+    coder: ArithmeticCoder,
     baseCard: BaseCard,
     deckCard: DeckCard | undefined,
   ): DeckCard {
-    return deckCard ?? new DeckCard(baseCard, []);
+    let isKeeper = false;
+    if (baseCard.isUnit()) {
+      isKeeper = getWeightedBooleanCoding(1/1024)
+        .updateCoder(coder, deckCard?.isKeeper);
+    }
+    return deckCard ?? new DeckCard(baseCard, isKeeper);
   }
 
   static fromCard(card: typeof Card): DeckCard {
     const baseCard = BaseCard.fromCard(card);
-    return new DeckCard(baseCard, Modifier.fromCard(card));
+    const isKeeper = card.hasModifierType(ModifierKeeper.type);
+    return new DeckCard(baseCard, isKeeper);
   }
 
   toString(): string {
-    return `${this.baseCard}${SpecString.constructList(this.modifiers)}`;
+    let str = this.baseCard.toString();
+    if (!this.baseCard.isUnit()) {
+      return str;
+    }
+    return `${str}${SpecString.boolToBit(this.isKeeper)}`;
   }
 }

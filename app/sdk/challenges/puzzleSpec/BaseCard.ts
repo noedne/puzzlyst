@@ -1,4 +1,5 @@
 const Card = require('app/sdk/cards/card');
+const CardType = require('app/sdk/cards/cardType');
 const GameSession = require('app/sdk/gameSession');
 
 import { getCardIds } from '../../gameVersion';
@@ -43,6 +44,10 @@ export default class BaseCard {
       getCardIds().indexOf(this.cardId),
       BaseCard.indexMinBitLength,
     );
+  }
+
+  public isUnit(): boolean {
+    return CardType.getIsUnitCardType(this.card.getType());
   }
 
   private static getCard(cardId: number): typeof Card {
