@@ -23,10 +23,11 @@ export default TypeaheadModal.extend({
   },
 
   onSubmit: function () {
-    this.trigger(
-      'submit',
-      SDK.GameSession.current().copyCard(this.getResult()),
+    const card = SDK.GameSession.current().copyCard(
+      this.getResult(),
+      this.$('#keeper').prop('checked'),
     );
+    this.trigger('submit', card);
     NavigationManager.getInstance().destroyModalView();
   },
 

@@ -13,6 +13,7 @@ const EVENTS = require('app/common/event_types');
 const GameSession = require('./gameSession');
 const Modifier = require('app/sdk/modifiers/modifier');
 const ModifierBuff = require('app/sdk/modifiers/modifierBuff');
+const ModifierKeeper = require('app/sdk/modifiers/modifierKeeper');
 const RSX = require('app/data/resources');
 
 const enum Mode {
@@ -39,13 +40,31 @@ export const editorProperties = {
   history,
 };
 
+export function createCard(
+  this: typeof GameSession,
+  id: number,
+  isKeeper: boolean,
+): typeof Card {
+  const card = this.createCardForIdentifier(id);
+  this._indexCardAsNeeded(card);
+  if (isKeeper) {
+    this.applyModifierContextObject(
+      ModifierKeeper.createContextObject(),
+      card,
+    );
+  }
+  return card;
+}
+
 export function copyCard(
   this: typeof GameSession,
   oldCard: typeof Card,
+  isKeeper?: boolean,
 ): typeof Card {
-  const card = this.createCardForIdentifier(oldCard.getId());
-  this._indexCardAsNeeded(card);
-  return card;
+  isKeeper = isKeeper !== false
+    && CardType.getIsUnitCardType(oldCard.getType())
+    && (isKeeper ?? oldCard.hasModifierType(ModifierKeeper.type));
+  return this.createCard(oldCard.getId(), isKeeper);
 }
 
 export type CardStats = {
