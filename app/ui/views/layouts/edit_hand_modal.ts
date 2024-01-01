@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import AddCardModal from '../item/add_card_modal';
 const Animations = require('app/ui/views/animations');
 const audio_engine = require('app/audio/audio_engine');
@@ -37,17 +36,7 @@ export default Marionette.LayoutView.extend({
   onShow: function () {
     const cards = this.getDeck()
       .getCardsInHandExcludingMissing();
-    const cardCounts = _.countBy(
-      cards,
-      (card: typeof Card) => card.getId(),
-    );
     this.collection.addCardsToCollection(cards);
-    this.collection.each((cardModel: typeof CardModel) => {
-      cardModel.set(
-        'deckCount',
-        cardCounts[cardModel.get('id')],
-      );
-    })
     this.cardsCompositeView = new DeckCardsCompositeView({
       collection: this.collection,
     });
@@ -71,8 +60,8 @@ export default Marionette.LayoutView.extend({
   },
 
   onDestroy: function () {
-    const getModel = (index: number) => this.collection.get(
-      SDK.GameSession.current().getCardByIndex(index).getId(),
+    const getModel = (index: number) => this.collection.getCardModelFromCard(
+      SDK.GameSession.current().getCardByIndex(index),
     );
     this.getDeck().getHand().sort((a: number | null, b: number | null) =>
       a == null ? 1 : b == null ? -1 :

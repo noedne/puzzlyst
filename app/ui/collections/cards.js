@@ -8,6 +8,7 @@ var InventoryManager = require('app/ui/managers/inventory_manager');
 var AchievementsManager = require('app/ui/managers/achievements_manager');
 var ProgressionManager = require('app/ui/managers/progression_manager');
 var i18next = require('i18next');
+const ModifierKeeper = require('app/sdk/modifiers/modifierKeeper');
 
 var CardsCollection = Backbone.Collection.extend({
 
@@ -16,6 +17,18 @@ var CardsCollection = Backbone.Collection.extend({
   initialize: function () {
     Logger.module('UI').log('initialize a Cards collection');
     this.on('add', this.onAddModel, this);
+  },
+
+  getNameFromCard: function (card) {
+    const name = card.getName();
+    if (!card.hasModifierType(ModifierKeeper.type)) {
+      return name;
+    }
+    return `${name} (Keeper)`;
+  },
+
+  getCardModelFromCard: function (card) {
+    return this.get(this.getNameFromCard(card));
   },
 
   /**
@@ -79,8 +92,18 @@ var CardsCollection = Backbone.Collection.extend({
 
   addCardsToCollection: function (cards, factionProgressionCardIds) {
     var cardModels = [];
+    const cardModelIndexByName = {};
     for (var i = 0, il = cards.length; i < il; i++) {
       var card = cards[i];
+      const name = this.getNameFromCard(card);
+      const cardModelIndex = cardModelIndexByName[name];
+      if (cardModelIndex == null) {
+        cardModelIndexByName[name] = cardModels.length;
+      } else {
+        const cardModel = cardModels[cardModelIndex];
+        cardModel.set('deckCount', cardModel.get('deckCount') + 1);
+        continue;
+      }
       var cardId = card.getId();
       var baseCardId = card.getBaseCardId();
       var skinNum = SDK.Cards.getCardSkinNum(cardId);
@@ -160,7 +183,7 @@ var CardsCollection = Backbone.Collection.extend({
         isUnlockableWithSpiritOrbs: isUnlockableWithSpiritOrbs,
         isUnlockablePrismaticWithSpiritOrbs: isUnlockablePrismaticWithSpiritOrbs,
         manaCost: card.getManaCost(),
-        name: card.getName(),
+        name,
         raceName: race.name,
         rarityColor: rarity.hex,
         rarityId: rarity.id,

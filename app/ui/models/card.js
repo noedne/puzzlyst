@@ -5,6 +5,7 @@ var CONFIG = require('app/common/config');
 var SDK = require('app/sdk');
 
 var CardModel = Backbone.Model.extend({
+  idAttribute: 'name',
 
   initialize: function () {
     this.on('change:card', this.onCardChanged, this);
@@ -83,7 +84,7 @@ var CardModel = Backbone.Model.extend({
     baseCardId: 0,
     card: null,
     count: 0,
-    deckCount: 0,
+    deckCount: 1,
     description: '',
     factionId: 0,
     factionName: 'Neutral',
