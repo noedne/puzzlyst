@@ -144,6 +144,7 @@ export default Marionette.LayoutView.extend({
     const navigationManager = NavigationManager.current();
     const modal = new AddCardModal({
       title: 'Add a Card',
+      checkboxes: true,
     });
     navigationManager.showModalView(modal);
     this.listenToOnce(modal, 'submit', this.addCard);

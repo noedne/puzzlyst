@@ -12,11 +12,13 @@ export default TypeaheadModal.extend({
 
   initialize: function (options: {
     title: string,
-    types: typeof CardType[],
+    types?: typeof CardType[],
+    checkboxes?: boolean,
   }) {
     this.types = options.types ?? [CardType.Card];
     this.templateHelpers = {
       title: options.title,
+      checkboxes: options.checkboxes ?? false,
     };
   },
 

@@ -12,6 +12,15 @@
         </div>
         <div class="form-control-buttons">
           <button class="btn btn-clean btn-clean-confirm prompt-submit">Add</button>
+          {{#if checkboxes}}
+          <div class="checkbox-input-group">
+            <label for="keeper">Keeper</label>
+            <div class="switch">
+              <input type="checkbox" id="keeper" name="keeper" />
+              <label><i></i></label>
+            </div>
+          </div>
+          {{/if}}
         </div>
       </div>
     </div>
