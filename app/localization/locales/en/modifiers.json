@@ -161,6 +161,7 @@
 	"banded_ranged_def":"Ranged",
 	"banding_change_card_draw_name":"Zeal: Sun's Blessing",
 	"banding_change_card_draw_def":"Draw {{amount}} additional cards at the end of your turn",
+	"banded_deal_damage_watch_draw_card_name":"Zealed: Lion's Blessing",
 	"banding_deal_damage_watch_draw_card_name":"Zeal: Lion's Blessing",
 	"banding_heal_self_and_general_name":"Zeal: Lion's Restoration",
 	"belongs_to_all_races_name":"Belongs to all Races",

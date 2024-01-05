@@ -16,7 +16,11 @@ class ModifierBandingDealDamageWatchDrawCard extends ModifierBanding
     contextObject = super(options)
     contextObject.appliedName = i18next.t("modifiers.banding_deal_damage_watch_draw_card_name")
     bandedContextObject = ModifierDealDamageWatchDrawCard.createContextObject()
-    bandedContextObject.appliedName = i18next.t("modifiers.banding_deal_damage_watch_draw_card_name")
+    bandedContextObject.appliedName = i18next.t("modifiers.banded_deal_damage_watch_draw_card_name")
+    bandedContextObject.fxResource = [
+      "FX.Modifiers.ModifierDealDamageWatch",
+      "FX.Modifiers.ModifierZealed",
+    ]
     contextObject.modifiersContextObjects = [bandedContextObject]
     return contextObject
 
