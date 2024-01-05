@@ -174,6 +174,7 @@ var CardsCollection = Backbone.Collection.extend({
 
       var modelData = {
         baseCardId: baseCardId,
+        baseManaCost: card.getBaseManaCost(),
         card: card,
         cardSetId: card.getCardSetId(),
         description: card.getDescription(CONFIG.FORMATTING_HTML),
@@ -410,8 +411,9 @@ var CardsCollection = Backbone.Collection.extend({
 }, { comparator });
 
 function comparator(a, b) {
-  // sort by general, mana cost
-  var comparison = (b.get('isGeneral') - a.get('isGeneral')) || (a.get('manaCost') - b.get('manaCost'));
+  // sort by general, base mana cost
+  var comparison = (b.get('isGeneral') - a.get('isGeneral'))
+    || (a.get('baseManaCost') - b.get('baseManaCost'));
   if (comparison === 0) {
     var aName = a.get('name').toLowerCase();
     var bName = b.get('name').toLowerCase();
