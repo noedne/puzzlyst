@@ -26,7 +26,10 @@ class ModifierBanding extends ModifierSituationalBuffSelf
     general = @getCard().getGameSession().getGeneralForPlayerId(@getCard().getOwnerId())
     if general?
       generalPosition = general.getPosition()
-      return Math.abs(entityPosition.x - generalPosition.x) <= 1 && Math.abs(entityPosition.y - generalPosition.y) <= 1
+      return Math.abs(entityPosition.x - generalPosition.x) <= 1 &&
+        Math.abs(entityPosition.y - generalPosition.y) <= 1 &&
+        (entityPosition.x isnt generalPosition.x or
+        entityPosition.y isnt generalPosition.y)
 
     return false
 
