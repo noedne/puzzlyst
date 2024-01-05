@@ -193,7 +193,7 @@ var NavigationManager = Manager.extend({
           }
           case cc.KEY.h:
             if (gameSession.getIsEditing()) {
-              this.showModalView(new EditHandModal());
+              this.showModalView(new EditHandModal({ myHand: true }));
             }
             break;
           case cc.KEY.r:

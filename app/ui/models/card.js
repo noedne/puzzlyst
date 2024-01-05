@@ -5,7 +5,12 @@ var CONFIG = require('app/common/config');
 var SDK = require('app/sdk');
 
 var CardModel = Backbone.Model.extend({
-  idAttribute: 'name',
+  constructor: function (attrs, options) {
+    if (options.idAttribute != null) {
+      this.idAttribute = options.idAttribute;
+    }
+    Backbone.Model.call(this, attrs, options);
+  },
 
   initialize: function () {
     this.on('change:card', this.onCardChanged, this);

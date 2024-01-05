@@ -1,15 +1,50 @@
-<div class="modal-dialog">
+<div class="modal-dialog" tabindex="-1">
   <button type="button" class="btn btn-clean btn-user-cancel btn-cancel-primary"></button>
   <div class="modal-content">
     <div class="modal-header">
-      <h4 class="header-dashed-text modal-title">Edit hand</h4>
+      <h4 class="header-dashed-text modal-title">Edit hands/decks</h4>
+      <ul class="nav nav-pills centered" role="tablist">
+        <li class="nav-item{{#if myHand}} active{{/if}}" role="presentation">
+          <a class="nav-link" id="my-hand-tab" data-toggle="pill" data-target="#my-hand" role="tab" aria-controls="my-hand">
+            My hand
+          </a>
+        </li>
+        <li class="nav-item{{#if myDeck}} active{{/if}}" role="presentation">
+          <a class="nav-link" id="my-deck-tab" data-toggle="pill" data-target="#my-deck" role="tab" aria-controls="my-deck">
+            My deck
+          </a>
+        </li>
+        <li class="nav-item{{#if enemyHand}} active{{/if}}" role="presentation">
+          <a class="nav-link" id="enemy-hand-tab" data-toggle="pill" data-target="#enemy-hand" role="tab" aria-controls="enemy-hand">
+            Enemy hand
+          </a>
+        </li>
+        <li class="nav-item{{#if enemyDeck}} active{{/if}}" role="presentation">
+          <a class="nav-link" id="enemy-deck-tab" data-toggle="pill" data-target="#enemy-deck" role="tab" aria-controls="enemy-deck">
+            Enemy deck
+          </a>
+        </li>
+      </ul>
     </div>
     <div class="modal-body">
-     <div class="hand-region"></div> 
-     <div class="form-control-buttons">
-      <button class="btn btn-clean btn-clean-primary hand-back">Done</button>
-      <button class="btn btn-clean btn-clean-primary hand-add">Add card</button>
-     </div>
+      <div class="tab-content">
+        <div class="tab-pane fade{{#if myHand}} in active{{/if}}" id="my-hand" role="tabpanel" aria-labelledby="my-hand-tab">
+          <div id="my-hand-region"></div>
+        </div>
+        <div class="tab-pane fade{{#if myDeck}} in active{{/if}}" id="my-deck" role="tabpanel" aria-labelledby="my-deck-tab">
+          <div id="my-deck-region"></div>
+        </div>
+        <div class="tab-pane fade{{#if enemyHand}} in active{{/if}}" id="enemy-hand" role="tabpanel" aria-labelledby="enemy-hand-tab">
+          <div id="enemy-hand-region"></div>
+        </div>
+        <div class="tab-pane fade{{#if enemyDeck}} in active{{/if}}" id="enemy-deck" role="tabpanel" aria-labelledby="enemy-deck-tab">
+          <div id="enemy-deck-region"></div>
+        </div>
+      </div>
+      <div class="form-control-buttons">
+        <button class="btn btn-clean btn-clean-primary hand-back">Done</button>
+        <button class="btn btn-clean btn-clean-primary hand-add">Add card</button>
+      </div>
     </div>
   </div>
 </div>

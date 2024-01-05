@@ -5,6 +5,7 @@ const Card = require('app/sdk/cards/card');
 const CardsCollection = require("app/ui/collections/cards");
 const CardModel = require('app/ui/models/card');
 const CONFIG = require('app/common/config');
+const Deck = require('app/sdk/cards/deck');
 const DeckCardsCompositeView = require('app/ui/views2/collection/deck_cards');
 const EVENTS = require('app/common/event_types');
 const NavigationManager = require('app/ui/managers/navigation_manager');
@@ -20,85 +21,164 @@ export default Marionette.LayoutView.extend({
   ui: {
     $handAdd: '.hand-add',
     $handBack: '.hand-back',
+    $dialog: '.modal-dialog',
   },
 
   events: {
-    'click @ui.$handAdd': 'onHandAdd',
-    'click @ui.$handBack': 'onHandBack',
+    'click @ui.$handAdd': 'onAdd',
+    'click @ui.$handBack': 'onBack',
+    'shown.bs.tab': 'onShowTab',
+    'keydown @ui.$dialog': 'onKeyDown',
   },
 
   regions: {
-    handRegion: '.hand-region',
+    myHandRegion: '#my-hand-region',
+    myDeckRegion: '#my-deck-region',
+    enemyHandRegion: '#enemy-hand-region',
+    enemyDeckRegion: '#enemy-deck-region',
+  },
+  
+  myHandCollection: new CardsCollection(null, { sort: true }),
+  myDeckCollection: new CardsCollection(),
+  enemyHandCollection: new CardsCollection(null, { sort: true }),
+  enemyDeckCollection: new CardsCollection(),
+
+  initialize: function (options: {
+    myHand?: boolean,
+    myDeck?: boolean,
+    enemyHand?: boolean,
+    enemyDeck?: boolean,
+  }) {
+    this.templateHelpers = {
+      myHand: options.myHand ?? false,
+      myDeck: options.myDeck ?? false,
+      enemyHand: options.enemyHand ?? false,
+      enemyDeck: options.enemyDeck ?? false,
+    };
   },
 
-  collection: new CardsCollection(),
-
   onShow: function () {
-    const cards = this.getDeck()
-      .getCardsInHandExcludingMissing();
-    this.collection.addCardsToCollection(cards);
-    this.cardsCompositeView = new DeckCardsCompositeView({
-      collection: this.collection,
-    });
-    this.cardsCompositeView.listenTo(
-      this.cardsCompositeView,
-      'childview:select',
-      this.onSelectCardView.bind(this),
-    );
-    this.cardsCompositeView.listenTo(
-      this.cardsCompositeView,
-      'childview:rightClick',
-      this.onRightClickCardView.bind(this),
-    );
-    this.handRegion.show(this.cardsCompositeView);
-    this.maybeDisableAdd();
+    this.onShowTab();
     this.listenTo(
       NavigationManager.getInstance(),
       EVENTS.user_triggered_confirm,
-      this.onHandAdd,
+      this.onAdd,
     );
+    this.ui.$dialog.focus();
+  },
+
+  onShowTab: function() {
+    const { deck, isHand, collection, region } = this.getTab();
+    if (isHand) {
+      collection.addCardsToCollection(
+        deck.getCardsInHandExcludingMissing(),
+        null,
+        'name',
+      );
+    } else {
+      collection.addCardsToCollection(
+        deck.getCardsInDrawPileExcludingMissing(),
+        null,
+        'index',
+      );
+    }
+    const cardsCompositeView = new DeckCardsCompositeView({ collection });
+    cardsCompositeView.listenTo(
+      cardsCompositeView,
+      'childview:select',
+      (cardView: Marionette.View<typeof CardModel>) => {
+        this.ui.$dialog.focus();
+        this.changeCardView(cardView, -1);
+      },
+    );
+    cardsCompositeView.listenTo(
+      cardsCompositeView,
+      'childview:rightClick',
+      (cardView: Marionette.View<typeof CardModel>) =>
+        this.changeCardView(cardView, 1),
+    );
+    region.show(cardsCompositeView);
+    this.setAddAbility(deck, isHand);
+  },
+
+  onKeyDown: function (event: JQuery.TriggeredEvent) {
+    let offset;
+    switch (event.which) {
+      case 37: offset = -1; break;
+      case 39: offset = 1; break;
+      default: return;
+    }
+    const tabs = [
+      this.$('#my-hand-tab'),
+      this.$('#my-deck-tab'),
+      this.$('#enemy-hand-tab'),
+      this.$('#enemy-deck-tab'),
+    ];
+    const index = (this.getTab().index + offset + tabs.length) % tabs.length;
+    tabs[index].tab('show');
   },
 
   onDestroy: function () {
-    const getModel = (index: number) => this.collection.getCardModelFromCard(
-      SDK.GameSession.current().getCardByIndex(index),
+    const gameSession = SDK.GameSession.current();
+    [
+      {
+        deck: this.getMyDeck(),
+        collection: this.myHandCollection,
+      },
+      {
+        deck: this.getEnemyDeck(),
+        collection: this.enemyHandCollection,
+      },
+    ].forEach(({ deck, collection }) =>
+      deck.getHand().sort((a: number | null, b: number | null) => {
+        if (a == null) {
+          return 1;
+        }
+        if (b == null) {
+          return -1;
+        }
+        const modelA = collection.getCardModelFromCard(
+          gameSession.getCardByIndex(a),
+        );
+        const modelB = collection.getCardModelFromCard(
+          gameSession.getCardByIndex(b),
+        );
+        return CardsCollection.comparator(modelA, modelB);
+      }),
     );
-    this.getDeck().getHand().sort((a: number | null, b: number | null) =>
-      a == null ? 1 : b == null ? -1 :
-        this.collection.comparator(getModel(a), getModel(b)),
-    );
-  },
-
-  onSelectCardView: function (cardView: Marionette.View<typeof CardModel>) {
-    this.changeCardView(cardView, -1);
-  },
-
-  onRightClickCardView: function (cardView: Marionette.View<typeof CardModel>) {
-    if (this.getDeck().getNumCardsInHand() < CONFIG.MAX_HAND_SIZE) {
-      this.changeCardView(cardView, 1);
-    } else {
-      this.playErrorSFX();
-    }
   },
 
   changeCardView: function (
     cardView: Marionette.View<typeof CardModel>,
     deltaCount: -1 | 1,
   ) {
-    const deck = this.getDeck();
+    const { deck, isHand, collection } = this.getTab();
+    if (
+      deltaCount === 1 && (
+        isHand
+          ? deck.getNumCardsInHand() >= CONFIG.MAX_HAND_SIZE
+          : deck.getNumCardsInDrawPile() >= CONFIG.MAX_DECK_SIZE
+      )
+    ) {
+      this.playErrorSFX();
+      return;
+    }
     const cardModel = cardView.model;
     const count = cardModel.get('deckCount') + deltaCount;
     const modelCard = cardModel.get('card');
     const cardIndex = modelCard.getIndex();
     if (count === 0) {
-      this.collection.remove(cardModel);
+      collection.remove(cardModel);
     } else {
       if (deltaCount === -1) {
-        const card = deck
-          .getCardsInHandExcludingMissing()
-          .find((card: typeof Card) =>
-            card.getId() === cardModel.get('id')
-            && card.getIndex() !== cardIndex);
+        const card = (
+          isHand
+            ? deck.getCardsInHandExcludingMissing()
+            : deck.getCardsInDrawPileExcludingMissing()
+        ).find(
+          (card: typeof Card) => card.getId() === cardModel.get('id')
+            && card.getIndex() !== cardIndex,
+        );
         cardModel.set('card', card);
       }
       cardModel.set('deckCount', count);
@@ -115,18 +195,25 @@ export default Marionette.LayoutView.extend({
       CONFIG.SELECT_SFX_PRIORITY,
     );
     if (deltaCount === -1) {
-      deck.removeCardIndexFromHand(cardIndex);
-      if (this.ui.$handAdd.prop('disabled')) {
-        this.ui.$handAdd.prop('disabled', false);
+      if (isHand) {
+        deck.removeCardIndexFromHand(cardIndex);
+      } else {
+        deck.removeCardIndexFromDeck(cardIndex);
       }
     } else {
-      this.addCard(SDK.GameSession.current().copyCard(modelCard));
-      this.maybeDisableAdd();
+      this.addCard(
+        deck,
+        isHand,
+        SDK.GameSession.current().copyCard(modelCard),
+        deck.getDrawPile().indexOf(modelCard.getIndex()),
+      );
     }
+    this.setAddAbility(deck, isHand);
   },
 
-  onHandAdd: function () {
-    if (this.isHandFull()) {
+  onAdd: function () {
+    const { deck, isHand, options } = this.getTab();
+    if (this.isFull(deck, isHand)) {
       this.playErrorSFX();
       return;
     }
@@ -136,20 +223,30 @@ export default Marionette.LayoutView.extend({
       checkboxes: true,
     });
     navigationManager.showModalView(modal);
-    this.listenToOnce(modal, 'submit', this.addCard);
+    this.listenToOnce(modal, 'submit', (card: typeof Card) =>
+      this.addCard(deck, isHand, card));
     this.listenToOnce(modal, 'prepareForDestroy', () => {
-      navigationManager.showModalView(new this.constructor());
+      navigationManager.showModalView(new this.constructor(options));
     });
   },
 
-  onHandBack: function () {
+  onBack: function () {
     NavigationManager.current().destroyModalView();
   },
 
-  addCard: function (card: typeof Card) {
+  addCard: function (
+    deck: typeof Deck,
+    isHand: boolean,
+    card: typeof Card,
+    indexInDeck?: number,
+  ) {
     const gameSession = SDK.GameSession.current();
     card.setOwnerId(gameSession.getMyPlayerId());
-    gameSession.applyCardToHand(this.getDeck(), null, card);
+    if (isHand) {
+      gameSession.applyCardToHand(deck, null, card);
+    } else {
+      gameSession.applyCardToDeck(deck, null, card, null, indexInDeck);
+    }
   },
 
   playErrorSFX: function () {
@@ -159,20 +256,73 @@ export default Marionette.LayoutView.extend({
     );
   },
 
-  maybeDisableAdd: function () {
-    if (this.isHandFull()) {
-      this.ui.$handAdd.prop('disabled', true);
+  setAddAbility: function (deck: typeof Deck, isHand: boolean) {
+    const isFull = this.isFull(deck, isHand);
+    if (this.ui.$handAdd.prop('disabled') !== isFull) {
+      this.ui.$handAdd.prop('disabled', isFull);
     }
   },
 
-  isHandFull: function () {
-    return this.getDeck().getNumCardsInHand() >= CONFIG.MAX_HAND_SIZE;
+  isFull: function (deck: typeof Deck, isHand: boolean) {
+    if (isHand) {
+      return deck.getNumCardsInHand() >= CONFIG.MAX_HAND_SIZE;
+    }
+    return deck.getNumCardsInDrawPile() >= CONFIG.MAX_DECK_SIZE;
   },
 
-  getDeck: function () {
+  getTab: function () {
+    return this.getTabById(this.$('.tab-pane.active').attr('id'));
+  },
+
+  getTabById: function (id: string) {
+    switch (id) {
+      case 'my-hand': return {
+        deck: this.getMyDeck(),
+        isHand: true,
+        collection: this.myHandCollection,
+        region: this.myHandRegion,
+        options: { myHand: true },
+        index: 0,
+      };
+      case 'my-deck': return {
+        deck: this.getMyDeck(),
+        isHand: false,
+        collection: this.myDeckCollection,
+        region: this.myDeckRegion,
+        options: { myDeck: true },
+        index: 1,
+      };
+      case 'enemy-hand': return {
+        deck: this.getEnemyDeck(),
+        isHand: true,
+        collection: this.enemyHandCollection,
+        region: this.enemyHandRegion,
+        options: { enemyHand: true },
+        index: 2,
+      };
+      case 'enemy-deck': return {
+        deck: this.getEnemyDeck(),
+        isHand: false,
+        collection: this.enemyDeckCollection,
+        region: this.enemyDeckRegion,
+        options: { enemyDeck: true },
+        index: 3,
+      };
+      default: throw Error('invalid');
+    }
+  },
+
+  getMyDeck: function () {
     return SDK.GameSession
       .current()
       .getMyPlayer()
+      .getDeck();
+  },
+
+  getEnemyDeck: function () {
+    return SDK.GameSession
+      .current()
+      .getOpponentPlayer()
       .getDeck();
   },
 });

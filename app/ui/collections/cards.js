@@ -14,9 +14,12 @@ var CardsCollection = Backbone.Collection.extend({
 
   model: CardModel,
 
-  initialize: function () {
+  initialize: function (_attrs, options = {}) {
     Logger.module('UI').log('initialize a Cards collection');
     this.on('add', this.onAddModel, this);
+    if (options.sort) {
+      this.comparator = comparator;
+    }
   },
 
   getNameFromCard: function (card) {
@@ -90,19 +93,28 @@ var CardsCollection = Backbone.Collection.extend({
     this.addCardsToCollection(cards, factionProgressionCardIds);
   },
 
-  addCardsToCollection: function (cards, factionProgressionCardIds) {
+  addCardsToCollection: function (cards, factionProgressionCardIds, idAttribute) {
     var cardModels = [];
     const cardModelIndexByName = {};
+    let previousName = null;
     for (var i = 0, il = cards.length; i < il; i++) {
       var card = cards[i];
       const name = this.getNameFromCard(card);
-      const cardModelIndex = cardModelIndexByName[name];
-      if (cardModelIndex == null) {
-        cardModelIndexByName[name] = cardModels.length;
+      if (this.comparator == null) {
+        if (name === previousName) {
+          const cardModel = cardModels.at(-1);
+          cardModel.set('deckCount', cardModel.get('deckCount') + 1);
+          continue;
+        }
+        previousName = name;
       } else {
-        const cardModel = cardModels[cardModelIndex];
-        cardModel.set('deckCount', cardModel.get('deckCount') + 1);
-        continue;
+        const cardModelIndex = cardModelIndexByName[name];
+        if (cardModelIndex != null) {
+          const cardModel = cardModels[cardModelIndex];
+          cardModel.set('deckCount', cardModel.get('deckCount') + 1);
+          continue;
+        }
+        cardModelIndexByName[name] = cardModels.length;
       }
       var cardId = card.getId();
       var baseCardId = card.getBaseCardId();
@@ -168,6 +180,7 @@ var CardsCollection = Backbone.Collection.extend({
         factionId: cardFactionId,
         factionName: cardFaction.name,
         id: cardId,
+        index: card.getIndex(),
         isAvailable: isAvailable,
         isHiddenInCollection: isHiddenInCollection,
         isLegacy: isLegacy,
@@ -224,7 +237,7 @@ var CardsCollection = Backbone.Collection.extend({
       }
 
       // add model to list
-      cardModels.push(new CardModel(modelData));
+      cardModels.push(new CardModel(modelData, { idAttribute }));
     }
 
     if (factionProgressionCardIds != null) {
@@ -394,20 +407,20 @@ var CardsCollection = Backbone.Collection.extend({
       });
     }
   },
+}, { comparator });
 
-  comparator: function (a, b) {
-    // sort by general, mana cost
-    var comparison = (b.get('isGeneral') - a.get('isGeneral')) || (a.get('manaCost') - b.get('manaCost'));
-    if (comparison === 0) {
-      var aName = a.get('name').toLowerCase();
-      var bName = b.get('name').toLowerCase();
-      if (aName === bName) return a.get('skinNum') - b.get('skinNum') || a.get('isPrismatic') - b.get('isPrismatic');
-      else if (aName > bName) return 1;
-      else if (aName < bName) return -1;
-    }
-    return comparison;
-  },
-});
+function comparator(a, b) {
+  // sort by general, mana cost
+  var comparison = (b.get('isGeneral') - a.get('isGeneral')) || (a.get('manaCost') - b.get('manaCost'));
+  if (comparison === 0) {
+    var aName = a.get('name').toLowerCase();
+    var bName = b.get('name').toLowerCase();
+    if (aName === bName) return a.get('skinNum') - b.get('skinNum') || a.get('isPrismatic') - b.get('isPrismatic');
+    else if (aName > bName) return 1;
+    else if (aName < bName) return -1;
+  }
+  return comparison;
+}
 
 // Expose the class either via CommonJS or the global object
 module.exports = CardsCollection;
