@@ -194,17 +194,19 @@ export default Marionette.LayoutView.extend({
       sfx.audio,
       CONFIG.SELECT_SFX_PRIORITY,
     );
+    const gameSession = SDK.GameSession.current();
     if (deltaCount === -1) {
       if (isHand) {
-        deck.removeCardIndexFromHand(cardIndex);
+        gameSession.removeCardByIndexFromHand(deck, cardIndex);
       } else {
-        deck.removeCardIndexFromDeck(cardIndex);
+        gameSession.removeCardByIndexFromDeck(deck, cardIndex);
       }
+      gameSession.syncState();
     } else {
       this.addCard(
         deck,
         isHand,
-        SDK.GameSession.current().copyCard(modelCard),
+        gameSession.copyCard(modelCard),
         deck.getDrawPile().indexOf(modelCard.getIndex()),
       );
     }
