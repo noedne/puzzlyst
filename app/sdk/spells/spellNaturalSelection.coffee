@@ -1,5 +1,3 @@
-Logger = require 'app/common/logger'
-CONFIG = require 'app/common/config'
 SpellKillTarget = require './spellKillTarget'
 
 ###
@@ -13,12 +11,11 @@ class SpellNaturalSelection extends SpellKillTarget
     filteredValidPositions = []
 
     # find all units with lowest attack value on the board
-    lowestAttack = CONFIG.INFINITY
     for position in validPositions
       unit = @getGameSession().getBoard().getUnitAtPosition(position)
       if unit?
         atk = unit.getATK()
-        if atk < lowestAttack
+        if not lowestAttack? or atk < lowestAttack
           lowestAttack = atk
           # reset list of valid positions starting with the first unit that has the lowest atk
           filteredValidPositions = [unit.getPosition()]
