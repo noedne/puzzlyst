@@ -1,12 +1,10 @@
 #app-deck, #app-edit-hand .modal-dialog {
-	.hand-region {
-		height: 31.8rem;
+	.modal-body {
+		padding-top: 0;
 	}
 	.deck-cards {
-		@include fillParent();
-		margin-bottom: 1.8rem;
-	}
-	.cards-list {
+		height: 34.8rem;
+		overflow: auto scroll;
 	}
 	.cards {
 		position: relative;
