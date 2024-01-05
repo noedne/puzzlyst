@@ -130,6 +130,7 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     const {
       addNodeForSdkCard,
       bindHand,
+      bindReplace,
       bindSubmitTurn,
       clear,
       destroyNodeForSdkCard,
@@ -160,6 +161,9 @@ var GameBottomBarCompositeView = Backbone.Marionette.CompositeView.extend({
     }
     if (bindHand) {
       deckLayer.bindHand();
+    }
+    if (bindReplace) {
+      gameLayer.updateReplaceActiveState();
     }
     if (bindSubmitTurn) {
       this._updateControls();

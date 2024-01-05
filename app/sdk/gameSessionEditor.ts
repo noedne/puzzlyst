@@ -437,6 +437,7 @@ export function setIsPlaying(this: typeof GameSession) {
   this.getChallenge().snapshotChallenge();
   pushEvent(this, {
     bindHand: true,
+    bindReplace: true,
     bindSubmitTurn: true,
     clear: true,
   });
@@ -514,6 +515,7 @@ function pushEvent(
       position: { x: number, y: number },
     },
     bindHand?: boolean,
+    bindReplace?: boolean,
     bindSubmitTurn?: boolean,
     clear?: boolean,
     destroyNodeForSdkCard?: typeof Card,
@@ -542,6 +544,7 @@ function pushEvent(
     options: {
       addNodeForSdkCard: options.addNodeForSdkCard ?? null,
       bindHand: options.bindHand ?? false,
+      bindReplace: options.bindReplace ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
       clear: options.clear ?? false,
       destroyNodeForSdkCard: options.destroyNodeForSdkCard ?? null,
