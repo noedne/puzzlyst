@@ -1122,8 +1122,7 @@ var GameLayer = FXCompositeLayer.extend({
     this.player1Layer.getSignatureCardNode().updateUsability();
     this.player2Layer.getSignatureCardNode().updateUsability();
 
-    // update replace active state
-    this.bottomDeckLayer.getReplaceNode().setActive(this._player.getIsCurrentPlayer() && this._player.getSdkPlayer().getDeck().getCanReplaceCardThisTurn());
+    this.updateReplaceActiveState();
 
     // add all applied units as placeholders immediately
     for (let i = 0, il = sdkStepInterface.actionInterfaceSequence.length; i < il; i++) {
@@ -1510,6 +1509,8 @@ var GameLayer = FXCompositeLayer.extend({
         this.bottomDeckLayer.bindHand();
         this.bottomDeckLayer.bindHandUsability();
 
+        this.updateReplaceActiveState();
+
         // bind signature cards
         this.player1Layer.bindAndResetSignatureCard(0.0);
         this.player2Layer.bindAndResetSignatureCard(0.0);
@@ -1726,8 +1727,7 @@ var GameLayer = FXCompositeLayer.extend({
       // update players
       this.updateCurrentPlayer();
 
-      // update replace active state
-      this.bottomDeckLayer.getReplaceNode().setActive(this._player.getIsCurrentPlayer() && this._player.getSdkPlayer().getDeck().getCanReplaceCardThisTurn());
+      this.updateReplaceActiveState();
 
       // when my player is switched
       if (SDK.GameSession.getInstance().isSandbox()) {
@@ -5047,6 +5047,13 @@ var GameLayer = FXCompositeLayer.extend({
     for (let i = 0; i < this._particleContainer.length; i++) {
       this._particleContainer[i].stopSystem();
     }
+  },
+
+  updateReplaceActiveState() {
+    this.bottomDeckLayer.getReplaceNode().setActive(
+      this._player.getIsCurrentPlayer()
+      && this._player.getSdkPlayer().getDeck().getCanReplaceCardThisTurn(),
+    );
   },
 
   /* endregion NODE VISUALS */
