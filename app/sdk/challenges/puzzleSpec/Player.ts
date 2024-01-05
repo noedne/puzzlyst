@@ -1,4 +1,5 @@
 const Card = require('app/sdk/cards/card');
+const CONFIG = require('app/common/config');
 const Modifier = require('app/sdk/modifiers/modifier');
 const SDKArtifact = require('app/sdk/artifacts/artifact');
 const SDKPlayer = require('app/sdk/player');
@@ -123,7 +124,7 @@ export default class Player {
       DeckCard,
       coder,
       deckIds,
-      getExponentialNumberCoding(1/32, 39),
+      getExponentialNumberCoding(1/32, CONFIG.MAX_DECK_SIZE),
       player?.deck,
     );
     const artifacts = List.updateAdaptiveCoder(
