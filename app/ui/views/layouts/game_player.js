@@ -174,6 +174,7 @@ var GamePlayerLayout = Backbone.Marionette.LayoutView.extend({
       this.listenTo(gameLayer.getEventBus(), EVENTS.game_selection_changed, this.onSelectionChanged);
       this.listenTo(gameLayer.getEventBus(), 'bindGeneralHP', this.bindGeneralHP);
       this.listenTo(gameLayer.getEventBus(), 'bindMana', this.bindMana);
+      this.listenTo(gameLayer.getEventBus(), 'bindDeck', this.bindDeck);
     }
 
     // listen to global events

@@ -10,6 +10,7 @@ const DeckCardsCompositeView = require('app/ui/views2/collection/deck_cards');
 const EVENTS = require('app/common/event_types');
 const NavigationManager = require('app/ui/managers/navigation_manager');
 const RSX = require('app/data/resources');
+const Scene = require('app/view/Scene');
 const SDK = require('app/sdk');
 const Template = require('app/ui/templates/layouts/edit_hand_modal.hbs');
 
@@ -146,6 +147,9 @@ export default Marionette.LayoutView.extend({
         return CardsCollection.comparator(modelA, modelB);
       }),
     );
+    if (this.isAdding !== true) {
+      Scene.current().getGameLayer().getEventBus().trigger('bindDeck');
+    }
   },
 
   changeCardView: function (
@@ -219,6 +223,7 @@ export default Marionette.LayoutView.extend({
       this.playErrorSFX();
       return;
     }
+    this.isAdding = true;
     const navigationManager = NavigationManager.current();
     const modal = new AddCardModal({
       title: 'Add a Card',
