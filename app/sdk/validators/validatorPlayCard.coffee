@@ -1,8 +1,6 @@
 Validator = require("./validator")
-Player = require("app/sdk/player")
 PlayCardFromHandAction = require("app/sdk/actions/playCardFromHandAction")
 PlaySignatureCardAction = require("app/sdk/actions/playSignatureCardAction")
-DamageAction = require("app/sdk/actions/damageAction")
 _ = require("underscore")
 i18next = require("i18next")
 
@@ -33,23 +31,6 @@ class ValidatorPlayCard extends Validator
           if card.getIndex() != owner.getDeck().getCardIndexInHandAtIndex(action.indexOfCardInHand)
             # playing a card that does not match the index in hand
             @invalidateAction(action, targetPosition, i18next.t("validators.invalid_card_message"))
-          else # validate that player is not simply stalling out the game
-            actions = []
-            currentTurn = @getGameSession().getCurrentTurn()
-            for step in currentTurn.getSteps()
-              actions = actions.concat(step.getAction().getFlattenedActionTree())
-
-            hasFoundMeaningfulAction = false
-            numCardsPlayedFromHand = 0
-            for a in actions by -1
-              if a instanceof PlayCardFromHandAction
-                numCardsPlayedFromHand++
-              if a instanceof DamageAction
-                hasFoundMeaningfulAction = true
-              if numCardsPlayedFromHand >= 10
-                break
-            if numCardsPlayedFromHand >= 10 and !hasFoundMeaningfulAction
-              @invalidateAction(action, targetPosition, "Too many cards played without advancing board state.")
         else if action instanceof PlaySignatureCardAction
           if !card.getOwner().getIsSignatureCardActive()
             # trying to play signature card when it should not be active
