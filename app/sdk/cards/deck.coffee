@@ -245,6 +245,17 @@ class Deck extends SDKObject
       @flushCachedCards()
 
   ###*
+   * Inserts card index into the deck at a specified index.
+   * NOTE: use GameSession.applyCardToDeck instead of calling this directly.
+   * @param {Number|String} cardIndex
+   * @param {Number} indexOfCard
+   ###
+  insertCardIndexInDeckAtIndex: (cardIndex, indexOfCard) ->
+    if cardIndex? and !_.contains(@drawPile, cardIndex) and indexOfCard?
+      @drawPile.splice(indexOfCard, 0, cardIndex)
+      @flushCachedCards()
+
+  ###*
    * Puts card index into the hand at the first open slot.
    * NOTE: use GameSession.applyCardToHand instead of calling this directly.
    * @param {Number|String} cardIndex

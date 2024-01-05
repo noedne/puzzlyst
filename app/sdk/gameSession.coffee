@@ -2778,8 +2778,9 @@ class _GameSession extends SDKObject
    * @param {Object|Number|String} [cardDataOrIndex=null]
    * @param {Card} [card=null] card may be null in case of non-authoritative session
    * @param {Action} [sourceAction=null] action that applied the card
+   * @param {Number} [indexInDeck=null] whether to insert the card at a specific index of deck
    ###
-  applyCardToDeck: (deck, cardDataOrIndex, card, sourceAction) ->
+  applyCardToDeck: (deck, cardDataOrIndex, card, sourceAction, indexInDeck) ->
     if deck?
       if card?
         # apply card data received
@@ -2797,7 +2798,10 @@ class _GameSession extends SDKObject
       @_removeCardFromCurrentLocation(card, cardIndex, sourceAction)
 
       # add card index to deck
-      deck.putCardIndexIntoDeck(cardIndex)
+      if indexInDeck?
+        deck.insertCardIndexInDeckAtIndex(cardIndex, indexInDeck)
+      else
+        deck.putCardIndexIntoDeck(cardIndex)
 
       if card?
         # push card to stack and start pseudo event: apply_card_to_deck
@@ -2852,7 +2856,7 @@ class _GameSession extends SDKObject
    * @param {Deck} deck
    * @param {Object|Number|String} [cardDataOrIndex=null]
    * @param {Card} [card=null] card may be null in case of non-authoritative session
-   * @param {Boolean} [indexInHand=null] whether to put the card into a specific index of hand
+   * @param {Number} [indexInHand=null] whether to put the card into a specific index of hand
    * @param {Action} [sourceAction=null] action that applied the card
    * @param {Boolean} [burnCard=false] if card should always be burned immediately regardless of space left in hand
    * @returns {Number|null} index in hand card was applied to, or null if not applied
