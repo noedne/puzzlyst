@@ -338,16 +338,16 @@ class Deck extends SDKObject
     return @numCardsReplacedThisTurn
 
   getCanReplaceCardThisTurn: () ->
-    if @getOwner().getPlayerModifiersByClass(PlayerModifierCannotReplace).length > 0
+    if @getOwner().getPlayerModifiersByClass(PlayerModifierCannotReplace).length > 0 or
+        not @getGameSession().getIsPlaying()
       return false
-    else
-      replacesAllowedThisTurn = CONFIG.MAX_REPLACE_PER_TURN
-      replaceCardChange = 0
-      for replaceCardModifier in @getOwner().getPlayerModifiersByClass(PlayerModifierReplaceCardModifier)
-        replaceCardChange += replaceCardModifier.getReplaceCardChange()
-      replacesAllowedThisTurn += replaceCardChange # final number of cards allowed to be replaced
-      return @numCardsReplacedThisTurn < replacesAllowedThisTurn and
-        @getReplaceDeck().getDrawPile().length > 0
+    replacesAllowedThisTurn = CONFIG.MAX_REPLACE_PER_TURN
+    replaceCardChange = 0
+    for replaceCardModifier in @getOwner().getPlayerModifiersByClass(PlayerModifierReplaceCardModifier)
+      replaceCardChange += replaceCardModifier.getReplaceCardChange()
+    replacesAllowedThisTurn += replaceCardChange # final number of cards allowed to be replaced
+    return @numCardsReplacedThisTurn < replacesAllowedThisTurn and
+      @getReplaceDeck().getDrawPile().length > 0
 
   getReplaceDeck: () ->
     if @getOwner()
