@@ -321,7 +321,7 @@ export function toggleOwnership(
   this: typeof GameSession,
   card: typeof Card | null,
 ) {
-  if (card === null) {
+  if (card === null || CardType.getIsArtifactCardType(card.getType())) {
     return;
   }
   card.setOwnerId(this.getOpponentPlayerIdOfPlayerId(card.getOwnerId()));
