@@ -29,7 +29,7 @@ class DrawCardAction extends PutCardInHandAction
       if @cardIndexFromDeck?
         index = @cardIndexFromDeck
       else if !@getGameSession().getAreDecksRandomized()
-        index = drawPile.length - 1
+        index = 0
       else
         index = @getGameSession().getRandomIntegerForExecution(drawPile.length)
       @cardDataOrIndex = @cardIndexFromDeck || drawPile[index]

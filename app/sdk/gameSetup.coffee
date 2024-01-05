@@ -167,7 +167,7 @@ GameSetup.addCardsToDeck = (gameSession, player, playerData, playerCardsData) ->
     # add cards to hand
     for i in [0...playerStartingHandSize]
       if !gameSession.getAreDecksRandomized()
-        index = playerCardsData.length - 1
+        index = 0
       else
         index = Math.floor(Math.random() * playerCardsData.length)
       cardData = playerCardsData.splice(index, 1)[0]

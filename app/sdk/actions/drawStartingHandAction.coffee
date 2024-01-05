@@ -67,7 +67,7 @@ class DrawStartingHandAction extends Action
             for index in @mulliganIndices
               # redraw next card
               if !@getGameSession().getAreDecksRandomized()
-                indexInCards = cardIndicesToChooseFrom.length - 1
+                indexInCards = 0
               else
                 indexInCards = @getGameSession().getRandomIntegerForExecution(cardIndicesToChooseFrom.length)
               cardIndex = cardIndicesToChooseFrom[indexInCards]

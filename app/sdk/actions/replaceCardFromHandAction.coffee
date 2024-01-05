@@ -39,7 +39,7 @@ class ReplaceCardFromHandAction extends PutCardInHandAction
         while !indexOfCardInDeck? and indices.length > 0
           # get next index
           if !@getGameSession().getAreDecksRandomized()
-            index = indices.pop()
+            index = indices.shift()
           else
             index = indices.splice(@getGameSession().getRandomIntegerForExecution(indices.length), 1)[0]
 

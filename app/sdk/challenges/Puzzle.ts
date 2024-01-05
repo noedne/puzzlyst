@@ -135,8 +135,7 @@ export default class Puzzle extends Challenge {
           index: gameSession
             .createCard(card.baseCard.cardId, card.isKeeper)
             .getIndex(),
-        }))
-        .reverse(),
+        })),
     ];
   }
 
