@@ -879,7 +879,12 @@ const EntityNode = SdkNode.extend({
   // TODO; shows the next animation if one exists
   showNextState() {
     if (this.canChangeState()) {
+      const firstStateAction = this._stateActions[0];
       this.whenResourcesReady(this.getCardResourceRequestId()).then((cardResourceRequestId) => {
+        if (this._stateActions[0] !== firstStateAction) {
+          // state actions were just updated, so cancel this state change
+          return;
+        }
         if (!this.getAreResourcesValid(cardResourceRequestId)) return; // card has changed
 
         if (this.canChangeState()) {
