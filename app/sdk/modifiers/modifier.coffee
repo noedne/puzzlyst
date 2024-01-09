@@ -938,6 +938,11 @@ class Modifier extends SDKObject
           for buffKey in attributesBuffed
             stackType += "_" + buffKey + @attributeBuffs[buffKey]
 
+      # distinguish between submodifiers of distinct artifact modifiers 
+      parentModifier = @getParentModifier()
+      if parentModifier? and parentModifier.getIsFromArtifact()
+        stackType += parentModifier.getIndex()
+
       @_private.cachedStackType = stackType
     return @_private.cachedStackType
 
