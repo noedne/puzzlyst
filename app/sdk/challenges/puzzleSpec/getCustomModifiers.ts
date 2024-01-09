@@ -2,33 +2,21 @@ import SpecString from "./SpecString";
 
 const Card = require('app/sdk/cards/card');
 const Cards = require('app/sdk/cards/cardsLookupComplete');
-const Modifier = require('app/sdk/modifiers/modifier');
 const ModifierAbsorbDamageOnce = require('app/sdk/modifiers/modifierAbsorbDamageOnce');
 
 export default function getCustomModifiers(cardId: number) {
   switch (cardId) {
     case Cards.Artifact.ArclyteRegalia: {
-      const getModifierAbsorbDamage = (card: typeof Card) =>
-        card
-          .getGameSession()
-          .getGeneralForPlayerId(card.getOwnerId())
-          .getArtifactModifiers()
-          .find((modifier: typeof Modifier) =>
-            modifier.type === ModifierAbsorbDamageOnce.type);
-      const getIsDamaged = (card: typeof Card) =>
-        getModifierAbsorbDamage(card)?.canAbsorb === false;
-      const setIsDamaged = (card: typeof Card, isDamaged: boolean) => {
-        const modifierAbsorbDamage = getModifierAbsorbDamage(card);
-        if (modifierAbsorbDamage != null) {
-          modifierAbsorbDamage.canAbsorb = !isDamaged;
-        }
-      };
+      const type = ModifierAbsorbDamageOnce.type;
       return [
         getBooleanModifier({
           turnOffDescription: 'Reset damage reduction',
           turnOnDescription: 'Remove damage reduction',
-          getValue: getIsDamaged,
-          setValue: setIsDamaged,
+          getValue: (card: typeof Card) =>
+            card.getArtifactModifierByType(type).canAbsorb === false,
+          setValue: (card: typeof Card, isDamaged: boolean) => {
+            card.getArtifactModifierByType(type).canAbsorb = !isDamaged;
+          },
         }),
       ];
     }

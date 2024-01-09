@@ -72,6 +72,9 @@ class Artifact extends Card
       general.getArtifactModifiers(),
       @,
     )
+
+  getArtifactModifierByType: (type) ->
+    return @getArtifactModifiers().find (modifier) => modifier.getType() is type
   
   getDurability: () ->
     for modifier in @getArtifactModifiers()
