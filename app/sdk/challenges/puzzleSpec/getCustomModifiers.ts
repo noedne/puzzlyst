@@ -15,26 +15,50 @@ export default function getCustomModifiers(cardId: number) {
           .getArtifactModifiers()
           .find((modifier: typeof Modifier) =>
             modifier.type === ModifierAbsorbDamageOnce.type);
+      const getIsDamaged = (card: typeof Card) =>
+        getModifierAbsorbDamage(card)?.canAbsorb === false;
+      const setIsDamaged = (card: typeof Card, isDamaged: boolean) => {
+        const modifierAbsorbDamage = getModifierAbsorbDamage(card);
+        if (modifierAbsorbDamage != null) {
+          modifierAbsorbDamage.canAbsorb = !isDamaged;
+        }
+      };
       return [
-        {
-          description: 'Damaged at start of turn',
-          fromSpecString: (specString: SpecString) => {
-            const isDamaged = specString.readNBits(1);
-            return (card: typeof Card) => {
-              const modifierAbsorbDamage = getModifierAbsorbDamage(card);
-              if (modifierAbsorbDamage != null && isDamaged) {
-                modifierAbsorbDamage.canAbsorb = false;
-              }
-            };
-          },
-          toString: (card: typeof Card) => {
-            const modifierAbsorbDamage = getModifierAbsorbDamage(card);
-            return SpecString.boolToBit(modifierAbsorbDamage?.canAbsorb === false);
-          }
-        },
+        getBooleanModifier({
+          turnOffDescription: 'Reset damage reduction',
+          turnOnDescription: 'Remove damage reduction',
+          getValue: getIsDamaged,
+          setValue: setIsDamaged,
+        }),
       ];
     }
     default:
       return [];
   }
+}
+
+function getBooleanModifier({
+  turnOffDescription,
+  turnOnDescription,
+  getValue,
+  setValue,
+}: {
+  turnOffDescription: string,
+  turnOnDescription: string,
+  getValue: (card: typeof Card) => boolean,
+  setValue: (card: typeof Card, value: boolean) => void,
+}) {
+  return {
+    opensModal: false,
+    getDescription: (value: boolean) => value
+      ? turnOffDescription
+      : turnOnDescription,
+    getValue,
+    setValue,
+    fromSpecString: (specString: SpecString) => {
+      const value = specString.readNBits(1) === 1;
+      return (card: typeof Card) => setValue(card, value);
+    },
+    toString: (card: typeof Card) => SpecString.boolToBit(getValue(card)),
+  };
 }

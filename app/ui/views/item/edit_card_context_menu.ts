@@ -7,6 +7,7 @@ const SDK = require('app/sdk');
 const Template = require('app/ui/templates/item/edit_card_context_menu.hbs');
 const UtilsEngine = require('app/common/utils/utils_engine');
 const UtilsPointer = require('app/common/utils/utils_pointer');
+import getCustomModifiers from '../../../sdk/challenges/puzzleSpec/getCustomModifiers';
 import AddKeywordModal from './add_keyword_modal';
 import AddModifierModal from './add_modifier_modal';
 import SetDurabilityModal from './set_durability_modal';
@@ -23,6 +24,7 @@ export default Marionette.ItemView.extend({
     $addKeywordItem: '.add-keyword-item',
     $addModifierItem: '.add-modifier-item',
     $manaTileItem: '.mana-tile-item',
+    $customModifierItem: '.custom-modifier-item',
     $deleteMinionItem: '.delete-minion-item',
     $deleteTileItem: '.delete-tile-item',
     $deleteArtifactItem: '.delete-artifact-item',
@@ -34,6 +36,7 @@ export default Marionette.ItemView.extend({
     'click @ui.$addKeywordItem': 'onAddKeyword',
     'click @ui.$addModifierItem': 'onAddModifier',
     'click @ui.$manaTileItem': 'onToggleManaSpring',
+    'click @ui.$customModifierItem': 'onSetCustomModifier',
     'click @ui.$deleteMinionItem': 'onDeleteMinion',
     'click @ui.$deleteTileItem': 'onDeleteTile',
     'click @ui.$deleteArtifactItem': 'onDeleteArtifact',
@@ -64,6 +67,20 @@ export default Marionette.ItemView.extend({
       setStats: isUnit,
       setDurability: isArtifact,
     };
+    const customModifier = getCustomModifiers(card.getId())[0];
+    if (customModifier !== undefined) {
+      const value = customModifier.getValue(card);
+      const description = customModifier.getDescription(value);
+      Object.assign(this.templateHelpers, {
+        hasCustomModifier: true,
+        customModifierDescription: description,
+      });
+      this.customModifier = {
+        opensModal: customModifier.opensModal,
+        value,
+        setValue: (value: boolean) => customModifier.setValue(card, value),
+      };
+    }
   },
 
   onShow: function () {
@@ -114,6 +131,14 @@ export default Marionette.ItemView.extend({
     } else {
       const modifier = this.card.getActiveModifierByType(modifierClass.type);
       modifier.onDepleted();
+    }
+    this.trigger('close');
+  },
+
+  onSetCustomModifier: function () {
+    const { opensModal, value, setValue } = this.customModifier;
+    if (!opensModal) {
+      setValue(!value);
     }
     this.trigger('close');
   },

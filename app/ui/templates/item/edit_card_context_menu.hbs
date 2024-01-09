@@ -35,6 +35,13 @@
       </a>
     </li>
     {{/if}}
+    {{#if hasCustomModifier}}
+    <li>
+      <a class="custom-modifier-item">
+        {{customModifierDescription}}
+      </a>
+    </li>
+    {{/if}}
     {{#if deleteMinion}}
     <li>
       <a class="delete-minion-item">
