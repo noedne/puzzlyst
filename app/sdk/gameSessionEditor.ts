@@ -204,12 +204,12 @@ export function applyModifierContextObjectToCard(
   count: number = 1,
 ) {
   const indices = Array.from(Array(count)).map(_ => this.generateIndex());
-  syncState(this, () =>
+  this.simulateAction(() => {
     indices.forEach(index => this.getGameSession().applyCardModifier(card, {
       ...contextObject,
       index,
-    })),
-  );
+    }));
+  });
   pushUndo(this);
   pushEvent(this, {
     showModifiers: {
@@ -236,9 +236,10 @@ export function removeCardFromBoardWhileEditing(
   this: typeof GameSession,
   card: typeof Card,
 ) {
-  syncState(this, () => this.getGameSession()
-    .removeCardFromBoard(card, card.getPositionX(), card.getPositionY()),
-  );
+  this.simulateAction(() => {
+    this.getGameSession()
+      .removeCardFromBoard(card, card.getPositionX(), card.getPositionY());
+  });
   pushUndo(this);
   pushEvent(this, {
     destroyNodeForSdkCard: card,
@@ -249,11 +250,11 @@ export function removeArtifact(
   this: typeof GameSession,
   artifact: typeof Artifact,
 ) {
-  syncState(this, () => artifact.getArtifactModifiers().forEach(
-    (modifier: typeof Modifier) =>
-      this.getGameSession().removeModifier(modifier),
-    ),
-  );
+  this.simulateAction(() => {
+    artifact.getArtifactModifiers().forEach((modifier: typeof Modifier) => {
+      this.getGameSession().removeModifier(modifier);
+    });
+  });
   pushUndo(this);
   pushEvent(this, {
     removeArtifact: artifact,
@@ -350,14 +351,14 @@ export function applyBenchCardToBoard(
     ? this.getBoard().getUnitAtPosition(position).getOwnerId()
     : benchCard.getOwnerId();
   const card = this.createCardForIdentifier(benchCard.getId());
-  syncState(this, () =>
+  this.simulateAction(() => {
     this.getGameSession().getChallenge().applyCardToBoard(
       card,
       boardX,
       boardY,
       playerId,
-    ),
-  );
+    );
+  });
   pushUndo(this);
   pushEvent(this, { addNodeForSdkCard: { card, position }});
 }
@@ -368,7 +369,7 @@ export function moveEntity(
   position: { x: number, y: number },
 ) {
   card.setPosition(position);
-  syncState(this);
+  this.simulateAction();
 }
 
 export function getCachedCardsByType(
@@ -495,16 +496,16 @@ export function setupPuzzleForString(this: typeof GameSession, string: string) {
   pushUndo(this);
 }
 
-function syncState(gameSession: typeof GameSession, executeFn?: Function) {
-  gameSession.getEditingBench().forEach(
+export function simulateAction(this: typeof GameSession, executeFn?: Function) {
+  this.getEditingBench().forEach(
     (card: typeof Card) => card.flushCachedValidTargetPositions(),
   );
-  const action = new Action(gameSession);
+  const action = new Action(this);
   if (executeFn !== undefined) {
     action._execute = executeFn;
   }
   action.setIsAutomatic(true);
-  gameSession.executeAction(action);
+  this.executeAction(action);
 }
 
 function pushEvent(
