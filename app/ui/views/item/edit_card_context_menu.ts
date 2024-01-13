@@ -70,16 +70,16 @@ export default Marionette.ItemView.extend({
     };
     const customModifier = getCustomModifiers(card.getId())[0];
     if (customModifier !== undefined) {
-      const value = customModifier.getValue(card);
-      const description = customModifier.getDescription(value);
+      const { description, value } = customModifier.getData(card);
       Object.assign(this.templateHelpers, {
         hasCustomModifier: true,
         customModifierDescription: description,
       });
       this.customModifier = {
-        opensModal: customModifier.opensModal,
+        description,
         value,
-        setValue: (value: boolean) => customModifier.setValue(card, value),
+        setValue: (value: boolean | number) =>
+          customModifier.setValue(card, value),
       };
     }
   },
@@ -145,11 +145,20 @@ export default Marionette.ItemView.extend({
   },
 
   onSetCustomModifier: function () {
-    const { opensModal, value, setValue } = this.customModifier;
-    if (!opensModal) {
+    const { description, value, setValue } = this.customModifier;
+    if (typeof value === 'boolean') {
       setValue(!value);
+      this.trigger('close');
+      return;
     }
-    this.trigger('close');
+    this.onOpenModal(SetValueModal, {
+      initial: value,
+      label: description,
+      max: CONFIG.INFINITY,
+      min: 0,
+      placeholder: 0,
+      onSubmit: setValue,
+    });
   },
 
   onDeleteMinion: function () {

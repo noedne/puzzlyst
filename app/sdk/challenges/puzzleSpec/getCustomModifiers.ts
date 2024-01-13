@@ -2,7 +2,10 @@ import SpecString from "./SpecString";
 
 const Card = require('app/sdk/cards/card');
 const Cards = require('app/sdk/cards/cardsLookupComplete');
+const Modifier = require('app/sdk/modifiers/modifier');
 const ModifierAbsorbDamageOnce = require('app/sdk/modifiers/modifierAbsorbDamageOnce');
+const ModifierDeathWatchBuffSelf = require('app/sdk/modifiers/modifierDeathWatchBuffSelf');
+const ModifierMyMinionOrGeneralDamagedWatchBuffSelf = require('app/sdk/modifiers/modifierMyMinionOrGeneralDamagedWatchBuffSelf');
 
 export default function getCustomModifiers(cardId: number) {
   switch (cardId) {
@@ -20,9 +23,59 @@ export default function getCustomModifiers(cardId: number) {
         }),
       ];
     }
+    case Cards.Artifact.SoulGrimwar:
+      return getModifierForArtifactWithWatchBuff({
+        description: 'Set death procs',
+        modifierType: ModifierDeathWatchBuffSelf.type,
+        triggerWatchBuff: modifier => modifier.onDeathWatch(),
+      });
+    case Cards.Artifact.TwinFang:
+      return getModifierForArtifactWithWatchBuff({
+        description: 'Set damage procs',
+        modifierType: ModifierMyMinionOrGeneralDamagedWatchBuffSelf.type,
+        triggerWatchBuff: modifier => modifier.onDamageDealtToMinionOrGeneral(),
+      });
     default:
       return [];
   }
+}
+
+function getModifierForArtifactWithWatchBuff({
+  description,
+  modifierType,
+  triggerWatchBuff,
+}: {
+  description: string,
+  modifierType: string,
+  triggerWatchBuff: (modifier: typeof Modifier) => void,
+}) {
+  const getProcs = (card: typeof Card) =>
+    card.getArtifactModifierByType(modifierType).getSubModifierIndices().length;
+  const setProcs = (card: typeof Card, procs: number) => {
+    const parentModifier = card.getArtifactModifierByType(modifierType);
+    const subModifiers = parentModifier.getSubModifiers();
+    if (procs === subModifiers.length) {
+      return;
+    }
+    const gameSession = card.getGameSession();
+    if (procs < subModifiers.length) {
+      subModifiers.slice(procs).forEach((modifier: typeof Modifier) => {
+        gameSession.removeModifier(modifier);
+      });
+    } else {
+      for (let i = subModifiers.length; i < procs; i++) {
+        triggerWatchBuff(parentModifier);
+      }
+    };
+    gameSession.simulateAction();
+  };
+  return [
+    getNumberModifier({
+      description,
+      getValue: getProcs,
+      setValue: setProcs,
+    }),
+  ];
 }
 
 function getBooleanModifier({
@@ -35,18 +88,53 @@ function getBooleanModifier({
   turnOnDescription: string,
   getValue: (card: typeof Card) => boolean,
   setValue: (card: typeof Card, value: boolean) => void,
-}) {
+}): CustomModifier<boolean> {
   return {
-    opensModal: false,
-    getDescription: (value: boolean) => value
-      ? turnOffDescription
-      : turnOnDescription,
-    getValue,
-    setValue,
-    fromSpecString: (specString: SpecString) => {
-      const value = specString.readNBits(1) === 1;
-      return (card: typeof Card) => setValue(card, value);
+    getData: card => {
+      const value = getValue(card);
+      const description = value ? turnOffDescription : turnOnDescription;
+      return { description, value };
     },
-    toString: (card: typeof Card) => SpecString.boolToBit(getValue(card)),
+    setValue: (card, value) => {
+      if (typeof value === 'boolean') {
+        setValue(card, value);
+      }
+    },
+    fromSpecString: specString => {
+      const value = specString.readNBits(1) === 1;
+      return card => setValue(card, value);
+    },
+    toString: card => SpecString.boolToBit(getValue(card)),
   };
 }
+
+function getNumberModifier({
+  description,
+  getValue,
+  setValue,
+}: {
+  description: string,
+  getValue: (card: typeof Card) => number,
+  setValue: (card: typeof Card, value: number) => void,
+}): CustomModifier<number> {
+  return {
+    getData: card => ({ description, value: getValue(card) }),
+    setValue: (card, value) => {
+      if (typeof value === 'number') {
+        setValue(card, value);
+      }
+    },
+    fromSpecString: specString => {
+      const value = specString.countZeroes() ?? 0;
+      return card => setValue(card, value);
+    },
+    toString: card => SpecString.writeNZeroes(getValue(card)),
+  };
+}
+
+type CustomModifier<T> = {
+  getData: (card: typeof Card) => { description: string, value: T },
+  setValue: (card: typeof Card, value: boolean | number) => void,
+  fromSpecString: (specString: SpecString) => (card: typeof Card) => void,
+  toString: (card: typeof Card) => string,
+};
