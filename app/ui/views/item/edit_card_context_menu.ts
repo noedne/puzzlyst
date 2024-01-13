@@ -1,6 +1,7 @@
 const Card = require('app/sdk/cards/card');
 const Cards = require('app/sdk/cards/cardsLookupComplete');
 const CardType = require('app/sdk/cards/cardType');
+const CONFIG = require('app/common/config');
 const FormPromptModalItemView = require('./form_prompt_modal');
 const NavigationManager = require('app/ui/managers/navigation_manager');
 const SDK = require('app/sdk');
@@ -10,8 +11,8 @@ const UtilsPointer = require('app/common/utils/utils_pointer');
 import getCustomModifiers from '../../../sdk/challenges/puzzleSpec/getCustomModifiers';
 import AddKeywordModal from './add_keyword_modal';
 import AddModifierModal from './add_modifier_modal';
-import SetDurabilityModal from './set_durability_modal';
 import SetStatsModal from './set_stats_modal';
+import SetValueModal from './set_value_modal';
 
 export default Marionette.ItemView.extend({
   id: 'app-edit-card-context-menu',
@@ -108,7 +109,15 @@ export default Marionette.ItemView.extend({
   },
 
   onSetDurability: function () {
-    this.onOpenModal(SetDurabilityModal);
+    this.onOpenModal(SetValueModal, {
+      initial: this.card.durability,
+      label: 'Set durability',
+      max: CONFIG.MAX_ARTIFACT_DURABILITY,
+      min: 1,
+      placeholder: CONFIG.MAX_ARTIFACT_DURABILITY,
+      onSubmit: (durability: number) => this.card.getGameSession()
+        .setArtifactDurability(this.card, durability),
+    });
   },
 
   onAddKeyword: function () {
@@ -158,8 +167,11 @@ export default Marionette.ItemView.extend({
     this.trigger('close');
   },
 
-  onOpenModal: function (Modal: typeof FormPromptModalItemView) {
-    const modal = new Modal({ card: this.card });
+  onOpenModal: function (
+    Modal: typeof FormPromptModalItemView,
+    options?: Object,
+  ) {
+    const modal = new Modal(options ?? { card: this.card });
     NavigationManager.current().showModalView(modal);
     this.listenToOnce(modal, 'submit', () => this.trigger('close'));
   },

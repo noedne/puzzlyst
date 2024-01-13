@@ -1,20 +1,13 @@
 import NumberInput from "./number_input";
 
-const Artifact = require('app/sdk/artifacts/artifact');
-const CONFIG = require('app/common/config');
 const FormPromptModalItemView = require('./form_prompt_modal');
 const NavigationManager = require('app/ui/managers/navigation_manager');
-const SDK = require('app/sdk');
 const Template = require('app/ui/templates/item/set_value_modal.hbs');
 
 export default FormPromptModalItemView.extend({
   className: FormPromptModalItemView.prototype.className + ' number-input-view',
-  id: 'app-set-durability',
+  id: 'app-set-value',
   template: Template,
-
-  templateHelpers: {
-    label: 'durability',
-  },
 
   ui: {
     $form: '.prompt-form',
@@ -27,25 +20,38 @@ export default FormPromptModalItemView.extend({
     'click .prompt-cancel': 'onCancel',
   },
 
-  initialize: function (options: { card: typeof Artifact }) {
-    this.artifact = options.card;
+  initialize: function (options: {
+    initial: number,
+    label: string,
+    max: number,
+    min: number,
+    placeholder: number,
+    onSubmit: Function,
+  }) {
+    this.initial = options.initial;
+    this.max = options.max;
+    this.min = options.min;
+    this.placeholder = options.placeholder;
+    this.onSubmitValue = options.onSubmit;
+    this.templateHelpers = {
+      label: options.label,
+    };
   },
 
   onShow: function () {
     FormPromptModalItemView.prototype.onShow.apply(this);
     this.numberInput = new NumberInput({
       $groupElement: this.ui.$numberInputGroup,
-      initial: this.artifact.durability,
-      max: CONFIG.MAX_ARTIFACT_DURABILITY,
-      min: 1,
-      placeholder: CONFIG.MAX_ARTIFACT_DURABILITY,
+      initial: this.initial,
+      max: this.max,
+      min: this.min,
+      placeholder: this.placeholder,
       select: true,
     });
   },
 
   onSubmit: function () {
-    const durability = this.numberInput.getValue();
-    SDK.GameSession.current().setArtifactDurability(this.artifact, durability);
+    this.onSubmitValue(this.numberInput.getValue());
     NavigationManager.getInstance().destroyModalView();
     this.trigger('submit');
   },
