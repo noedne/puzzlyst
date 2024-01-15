@@ -1,7 +1,11 @@
+import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
+import CodingData from "./arithmeticCoding/CodingData";
+import { getExponentialNumberCoding, getUniformNumberCoding, getWeightedBooleanCoding } from "./arithmeticCoding/utils";
 import SpecString from "./SpecString";
 
 const Card = require('app/sdk/cards/card');
 const Cards = require('app/sdk/cards/cardsLookupComplete');
+const CONFIG = require('app/common/config');
 const Modifier = require('app/sdk/modifiers/modifier');
 const ModifierAbsorbDamageOnce = require('app/sdk/modifiers/modifierAbsorbDamageOnce');
 const ModifierDeathWatchBuffSelf = require('app/sdk/modifiers/modifierDeathWatchBuffSelf');
@@ -20,6 +24,7 @@ export default function getCustomModifiers(cardId: number) {
           setValue: (card: typeof Card, isDamaged: boolean) => {
             card.getArtifactModifierByType(type).canAbsorb = !isDamaged;
           },
+          trueWeight: 1/1024,
         }),
       ];
     }
@@ -83,11 +88,13 @@ function getBooleanModifier({
   turnOnDescription,
   getValue,
   setValue,
+  trueWeight,
 }: {
   turnOffDescription: string,
   turnOnDescription: string,
   getValue: (card: typeof Card) => boolean,
   setValue: (card: typeof Card, value: boolean) => void,
+  trueWeight: number,
 }): CustomModifier<boolean> {
   return {
     getData: card => {
@@ -102,6 +109,12 @@ function getBooleanModifier({
       setValue(card, value);
     },
     fromSpecString: specString => specString.readNBits(1) === 1,
+    updateCoder: (coder, value) => {
+      if (value !== undefined && typeof value !== 'boolean') {
+        throw Error('invalid');
+      }
+      return getWeightedBooleanCoding(trueWeight).updateCoder(coder, value);
+    },
     toString: value => {
       if (typeof value !== 'boolean') {
         throw Error('invalid');
@@ -129,6 +142,20 @@ function getNumberModifier({
       setValue(card, value);
     },
     fromSpecString: specString => specString.countZeroes() ?? 0,
+    updateCoder: (coder, value) => {
+      if (value !== undefined && typeof value !== 'number') {
+        throw Error('invalid');
+      }
+      const maxSmall = 43;
+      const minLarge = maxSmall + 1;
+      const isSmall = CodingData.isLessThan(value, minLarge);
+      if (getWeightedBooleanCoding(1023/1024).updateCoder(coder, isSmall)) {
+        return getExponentialNumberCoding(1/2, maxSmall)
+          .updateCoder(coder, value);
+      }
+      return getUniformNumberCoding(CONFIG.INFINITY - maxSmall, minLarge)
+        .updateCoder(coder, value);
+    },
     toString: value => {
       if (typeof value !== 'number') {
         throw Error('invalid');
@@ -142,6 +169,10 @@ type CustomModifier<T> = {
   getData: (card: typeof Card) => { description: string, value: T },
   setValue: (card: typeof Card, value: CustomModifierValue) => void,
   fromSpecString: (specString: SpecString) => T,
+  updateCoder: (
+    coder: ArithmeticCoder,
+    value: CustomModifierValue | undefined,
+  ) => CustomModifierValue,
   toString: (value: CustomModifierValue) => string,
 };
 

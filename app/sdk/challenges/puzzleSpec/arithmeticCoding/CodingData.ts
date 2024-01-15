@@ -10,6 +10,10 @@ export default class CodingData {
   public static isNonnegative(data: Number): Boolean {
     return data === undefined ? undefined : data >= 0;
   }
+  
+  public static isLessThan(data: Number, n: number): Boolean {
+    return data === undefined ? undefined : data < n;
+  }
 }
 
 type Boolean = boolean | undefined;

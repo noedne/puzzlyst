@@ -50,7 +50,11 @@ export default class Artifact {
       coder,
       artifact?.durability,
     );
-    return artifact ?? new Artifact(baseCard, durability, []);
+    const customModifierValues = getCustomModifiers(baseCard.cardId).map(
+      ({ updateCoder }, i) =>
+        updateCoder(coder, artifact?.customModifierValues[i]),
+    );
+    return artifact ?? new Artifact(baseCard, durability, customModifierValues);
   }
 
   public toString(): string {
