@@ -12,6 +12,7 @@ import { base64StringToBinary } from './puzzleSpec/base64';
 import { getContextObjectDataForEditing } from './puzzleSpec/getContextObjectData';
 import { TileState } from './puzzleSpec/StartingManaTiles';
 import type Keywords from './puzzleSpec/Keywords';
+import getCustomModifiers from './puzzleSpec/getCustomModifiers';
 
 export default class Puzzle extends Challenge {
 
@@ -201,13 +202,18 @@ export default class Puzzle extends Challenge {
   private setupArtifacts(playerId: string, player: Player) {
     player.artifacts.list.forEach(artifact => {
       const {
-        baseCard: { card },
-        customModifiers,
+        baseCard: { card, cardId },
+        customModifierValues,
         durability,
       } = artifact;
       card.durability = durability;
       this.applyCardToBoard(card, 0, 0, playerId);
-      customModifiers.forEach((modifier: CustomModifier) => modifier(card));
+      getCustomModifiers(cardId).forEach(({ setValue }, i) => {
+        const value = customModifierValues[i];
+        if (value !== undefined) {
+          setValue(card, value);
+        }
+      });
     });
   }
 
@@ -273,6 +279,5 @@ export default class Puzzle extends Challenge {
 }
 
 type Card = any;
-type CustomModifier = any;
 type DeckData = { index: number }[];
 type GameSession = any;

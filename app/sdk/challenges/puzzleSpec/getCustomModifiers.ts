@@ -96,15 +96,18 @@ function getBooleanModifier({
       return { description, value };
     },
     setValue: (card, value) => {
-      if (typeof value === 'boolean') {
-        setValue(card, value);
+      if (typeof value !== 'boolean') {
+        throw Error('invalid');
       }
+      setValue(card, value);
     },
-    fromSpecString: specString => {
-      const value = specString.readNBits(1) === 1;
-      return card => setValue(card, value);
+    fromSpecString: specString => specString.readNBits(1) === 1,
+    toString: value => {
+      if (typeof value !== 'boolean') {
+        throw Error('invalid');
+      }
+      return SpecString.boolToBit(value);
     },
-    toString: card => SpecString.boolToBit(getValue(card)),
   };
 }
 
@@ -120,21 +123,26 @@ function getNumberModifier({
   return {
     getData: card => ({ description, value: getValue(card) }),
     setValue: (card, value) => {
-      if (typeof value === 'number') {
-        setValue(card, value);
+      if (typeof value !== 'number') {
+        throw Error('invalid');
       }
+      setValue(card, value);
     },
-    fromSpecString: specString => {
-      const value = specString.countZeroes() ?? 0;
-      return card => setValue(card, value);
+    fromSpecString: specString => specString.countZeroes() ?? 0,
+    toString: value => {
+      if (typeof value !== 'number') {
+        throw Error('invalid');
+      }
+      return SpecString.writeNZeroes(value);
     },
-    toString: card => SpecString.writeNZeroes(getValue(card)),
   };
 }
 
 type CustomModifier<T> = {
   getData: (card: typeof Card) => { description: string, value: T },
-  setValue: (card: typeof Card, value: boolean | number) => void,
-  fromSpecString: (specString: SpecString) => (card: typeof Card) => void,
-  toString: (card: typeof Card) => string,
+  setValue: (card: typeof Card, value: CustomModifierValue) => void,
+  fromSpecString: (specString: SpecString) => T,
+  toString: (value: CustomModifierValue) => string,
 };
+
+export type CustomModifierValue = boolean | number;

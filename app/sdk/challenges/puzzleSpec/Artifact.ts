@@ -1,4 +1,3 @@
-const Card = require('app/sdk/cards/card');
 const CONFIG = require('app/common/config');
 const SDKArtifact = require('app/sdk/artifacts/artifact');
 
@@ -6,13 +5,13 @@ import BaseCard from "./BaseCard";
 import SpecString from "./SpecString";
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import { getWeightedNumberCoding } from "./arithmeticCoding/utils";
-import getCustomModifiers from "./getCustomModifiers";
+import getCustomModifiers, { CustomModifierValue } from "./getCustomModifiers";
 
 export default class Artifact {
   private constructor(
     public baseCard: BaseCard,
     public durability: number,
-    public customModifiers: ((card: typeof Card) => void)[] = [],
+    public customModifierValues: CustomModifierValue[],
   ) {}
 
   public static fromSpecString(specString: SpecString): Artifact | null {
@@ -29,14 +28,17 @@ export default class Artifact {
       return null;
     }
     const durability = CONFIG.MAX_ARTIFACT_DURABILITY - damage;
-    const customModifiers = getCustomModifiers(cardId).map(
-      ({ fromSpecString }) => fromSpecString(specString));
-    return new Artifact(baseCard, durability, customModifiers);
+    const customModifierValues = getCustomModifiers(cardId).map(
+      ({ fromSpecString }) => fromSpecString(specString),
+    );
+    return new Artifact(baseCard, durability, customModifierValues);
   }
 
   public static fromCard(artifact: typeof SDKArtifact): Artifact {
     const baseCard = BaseCard.fromCard(artifact);
-    return new Artifact(baseCard, artifact.durability);
+    const customModifierValues = getCustomModifiers(baseCard.cardId)
+      .map(({ getData }) => getData(artifact).value);
+    return new Artifact(baseCard, artifact.durability, customModifierValues);
   }
 
   public static updateCoder(
@@ -55,9 +57,15 @@ export default class Artifact {
     const durability = SpecString.writeNZeroes(
       CONFIG.MAX_ARTIFACT_DURABILITY - this.durability,
     );
-    const { card, cardId } = this.baseCard;
-    const customModifiers = getCustomModifiers(cardId)
-      .map(({ toString }) => toString(card)).join('');
-    return `${this.baseCard}${durability}${customModifiers}`;
+    const customModifierValues = getCustomModifiers(this.baseCard.cardId)
+      .map(({ toString }, i) => {
+        const value = this.customModifierValues[i];
+        if (value === undefined) {
+          throw Error('invalid');
+        }
+        return toString(value);
+      })
+      .join('');
+    return `${this.baseCard}${durability}${customModifierValues}`;
   }
 }
