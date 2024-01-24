@@ -3592,13 +3592,6 @@ App.on "start", (options) ->
   # create a defered promise object for the loading and login process... sort of an anti-pattern but best for this use case
   App.managersReadyDeferred = new Promise.defer()
 
-  # immediately connect the server status manager so we can get notified of any changes during the load process / on the login screen
-  ServerStatusManager.getInstance().connect()
-
-  # push a telemetry signal that a client is loading
-  TelemetryManager.getInstance().setSignal("lifecycle","loading")
-  TelemetryManager.getInstance().setSignal("session","not-logged-in")
-
   # authenticate defered, the isAuthed check must stay here so we can
   # clear the token in the event it is stale / isAuthed fails
   # the App._authenticationPromise below does not fire if there's no loading
