@@ -13,6 +13,7 @@ import { getContextObjectDataForEditing } from './puzzleSpec/getContextObjectDat
 import { TileState } from './puzzleSpec/StartingManaTiles';
 import type Keywords from './puzzleSpec/Keywords';
 import getCustomModifiers from './puzzleSpec/getCustomModifiers';
+import type List from './puzzleSpec/List';
 
 export default class Puzzle extends Challenge {
 
@@ -217,7 +218,7 @@ export default class Puzzle extends Challenge {
     const { generalCard: { stats, modifiers, position: [x, y] } } = player;
     general.setPosition({ x, y });
     gameSession.setCardStats(general, stats.getCardStats(general));
-    this.applyModifiers(gameSession, general, modifiers.list);
+    this.applyModifiers(gameSession, general, modifiers);
   }
 
   private setupPlayer(
@@ -264,7 +265,7 @@ export default class Puzzle extends Challenge {
       this.applyCardToBoard(card, x, y, playerId);
       gameSession.setCardStats(card, stats.getCardStats(card));
       this.applyKeywords(card, keywords);
-      this.applyModifiers(gameSession, card, modifiers.list);
+      this.applyModifiers(gameSession, card, modifiers);
     });
   }
 
@@ -288,9 +289,9 @@ export default class Puzzle extends Challenge {
   private applyModifiers(
     gameSession: GameSession,
     card: Card,
-    modifiers: Modifier[],
+    modifiers: List<Modifier>,
   ) {
-    modifiers.forEach(({
+    modifiers.list.forEach(({
       baseCard: { cardId },
       indexOfContextObject,
       multiplicity,

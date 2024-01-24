@@ -66,7 +66,7 @@ export default class GeneralCard {
       unit.getId(),
       getPositionFromCard(unit),
       stats,
-      new List(Modifier.fromCard(unit)),
+      Modifier.fromCard(unit),
       faction ?? Faction.Faction1,
       general,
     );

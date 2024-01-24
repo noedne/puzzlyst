@@ -38,8 +38,8 @@ export default class Modifier {
     return new Modifier(baseCard, index, multiplicity);
   }
 
-  public static fromCard(card: typeof Card): Modifier[] {
-    return card.getModifiers().reduce(
+  public static fromCard(card: typeof Card): List<Modifier> {
+    const modifiers = card.getModifiers().reduce(
       (acc: Modifier[], { contextObject }: any) => {
         const last = acc.at(-1);
         if (
@@ -58,6 +58,7 @@ export default class Modifier {
       },
       [],
     );
+    return new List(modifiers);
   }
 
   public static updateCoder(

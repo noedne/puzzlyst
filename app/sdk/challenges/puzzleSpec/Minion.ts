@@ -54,7 +54,7 @@ export default class Minion {
     const position = getPositionFromCard(minion);
     const stats = Stats.fromCard(minion);
     const keywords = Keywords.fromCard(minion);
-    const modifiers = new List(Modifier.fromCard(minion));
+    const modifiers = Modifier.fromCard(minion);
     return new Minion(baseCard, position, stats, keywords, modifiers);
   }
 
