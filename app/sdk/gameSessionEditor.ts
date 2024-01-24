@@ -1,6 +1,4 @@
-import Puzzle from "./challenges/Puzzle";
-import SpecPuzzle from "./challenges/puzzleSpec/SpecPuzzle";
-import { binaryToBase64String } from "./challenges/puzzleSpec/base64";
+import Puzzle, { Params } from "./challenges/Puzzle";
 import type { ContextObject } from "./challenges/puzzleSpec/getContextObjectData";
 
 const Action = require('app/sdk/actions/action');
@@ -478,11 +476,7 @@ export function undo(this: typeof GameSession) {
 
 export function flipPlayers(this: typeof GameSession) {
   this.getPlayers().reverse();
-  const state = getState(this);
-  if (state === null) {
-    return;
-  }
-  updateFromBase64(this, state);
+  updateFromBase64(this, getState(this));
   pushUndo(this);
 }
 
@@ -491,8 +485,8 @@ function updateFromBase64(gameSession: typeof GameSession, base64: string) {
   gameSession.pushRollbackEvent();
 }
 
-export function setupPuzzleForString(this: typeof GameSession, string: string) {
-  Puzzle.fromBase64(string).setupSession(this);
+export function setupPuzzleForParams(this: typeof GameSession, params: Params) {
+  Puzzle.fromParams(params).setupSession(this);
   pushUndo(this);
 }
 
@@ -561,18 +555,10 @@ function pushEvent(
   });
 }
 
-function getState(gameSession: typeof GameSession): string | null {
-  const specPuzzle = SpecPuzzle.fromGameSession(gameSession);
-  const base64 = binaryToBase64String(specPuzzle.toString());
-  if (base64 === null) {
-    return null;
-  }
-  return base64;
+function getState(gameSession: typeof GameSession): string {
+  return gameSession.getChallenge().getState(gameSession);
 }
 
 function pushUndo(gameSession: typeof GameSession) {
-  const state = getState(gameSession);
-  if (state !== null) {
-    pushHistory(gameSession, state);
-  }
+  pushHistory(gameSession, getState(gameSession));
 }

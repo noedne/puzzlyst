@@ -376,7 +376,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   redo,
   undo,
   flipPlayers,
-  setupPuzzleForString,
+  setupPuzzleForParams,
   simulateAction,
 } = require('./gameSessionEditor')
 
@@ -419,7 +419,7 @@ class _GameSession extends SDKObject
   redo: redo
   undo: undo
   flipPlayers: flipPlayers
-  setupPuzzleForString: setupPuzzleForString
+  setupPuzzleForParams: setupPuzzleForParams
   simulateAction: simulateAction
 
   aiDifficulty: null

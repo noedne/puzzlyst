@@ -8,7 +8,7 @@ import type Modifier from './puzzleSpec/Modifier';
 import type Player from './puzzleSpec/Player';
 import SpecPuzzle from './puzzleSpec/SpecPuzzle';
 import SpecString from './puzzleSpec/SpecString';
-import { base64StringToBinary } from './puzzleSpec/base64';
+import { base64StringToBinary, binaryToBase64String } from './puzzleSpec/base64';
 import { getContextObjectDataForEditing } from './puzzleSpec/getContextObjectData';
 import { TileState } from './puzzleSpec/StartingManaTiles';
 import type Keywords from './puzzleSpec/Keywords';
@@ -44,7 +44,7 @@ export default class Puzzle extends Challenge {
 
   snapshot = null;
 
-  constructor(public puzzle: SpecPuzzle) {
+  constructor(public puzzle: SpecPuzzle, private useArithmetic: boolean) {
     super();
   }
 
@@ -57,26 +57,57 @@ export default class Puzzle extends Challenge {
       : Math.min(startingManaPlayer, CONFIG.MAX_MANA);
   }
 
-  static fromBase64(base64: string): Puzzle {
-    return new Puzzle(this.base64ToSpecPuzzle(base64));
+  static fromParams(params: Params): Puzzle {
+    if ('a' in params) {
+      return this.fromBase64(params.a, true);
+    }
+    return this.fromBase64(params.p, false);
+  }
+
+  private static fromBase64(base64: string, useArithmetic: boolean): Puzzle {
+    return new Puzzle(
+      this.base64ToSpecPuzzle(base64, useArithmetic),
+      useArithmetic,
+    );
   }
 
   updateFromBase64(base64: string): Puzzle {
-    this.puzzle = Puzzle.base64ToSpecPuzzle(base64);
+    this.puzzle = Puzzle.base64ToSpecPuzzle(base64, this.useArithmetic);
     return this;
   }
 
-  private static base64ToSpecPuzzle(base64: string): SpecPuzzle {
+  private static base64ToSpecPuzzle(
+    base64: string,
+    useArithmetic: boolean,
+  ): SpecPuzzle {
     const binary = base64StringToBinary(base64);
     if (binary === null) {
       throw Error('invalid');
     }
-    const specString = new SpecString(binary);
-    const puzzle = SpecPuzzle.fromSpecString(specString);
+    const puzzle = useArithmetic
+      ? SpecPuzzle.decode(binary)
+      : SpecPuzzle.fromSpecString(new SpecString(binary));
     if (puzzle === null) {
       throw Error('invalid');
     }
     return puzzle;
+  }
+
+  getState(gameSession: GameSession): string {
+    return Puzzle.getState(gameSession, this.useArithmetic);
+  }
+
+  private static getState(
+    gameSession: GameSession,
+    useArithmetic: boolean,
+  ): string {
+    const specPuzzle = SpecPuzzle.fromGameSession(gameSession);
+    const encoded = useArithmetic ? specPuzzle.encode() : specPuzzle.toString();
+    const base64 = binaryToBase64String(encoded);
+    if (base64 === null) {
+      throw Error('invalid');
+    }
+    return base64;
   }
 
   setupSession(gameSession: GameSession): GameSession {
@@ -281,3 +312,4 @@ export default class Puzzle extends Challenge {
 type Card = any;
 type DeckData = { index: number }[];
 type GameSession = any;
+export type Params = { a: string } | { p: string };

@@ -2016,7 +2016,7 @@ App._startGameWithChallenge = () ->
   ChatManager.getInstance().setStatus(ChatManager.STATUS_CHALLENGE)
 
   # challenge handles setting up game session
-  SDK.GameSession.current().setupPuzzleForString(App._queryStringParams['p'])
+  SDK.GameSession.current().setupPuzzleForParams(App._queryStringParams)
 
   # get ui promise
   if CONFIG.LOAD_ALL_AT_START
