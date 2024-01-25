@@ -90,7 +90,11 @@ export default class GeneralCard {
     const baseCard = BaseCard.fromCardId(cardId);
     const probs = { hasNoBuffsProb: 1023/1024, hasBaseStatsProb: 8191/8192 };
     const stats = Stats.updateCoder(coder, baseCard, probs, generalCard?.stats);
-    const modifiers = Modifier.updateListCoder(coder, generalCard?.modifiers);
+    const modifiers = Modifier.updateListCoder(
+      coder,
+      generalCard?.modifiers,
+      true,
+    );
     return generalCard ?? new GeneralCard(
       cardId,
       position,

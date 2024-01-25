@@ -11,6 +11,7 @@ const ModifierDyingWishSpawnEntity = require('app/sdk/modifiers/modifierDyingWis
 const ModifierGrow = require('app/sdk/modifiers/modifierGrow');
 const ModifierImmuneToDamage = require('app/sdk/modifiers/modifierImmuneToDamage');
 const ModifierImmuneToSpellDamage = require('app/sdk/modifiers/modifierImmuneToSpellDamage');
+const PlayerModifierMechazorBuildProgress = require('app/sdk/playerModifiers/playerModifierMechazorBuildProgress');
 
 export type ContextObject = {
   allowMultiple: boolean,
@@ -117,6 +118,13 @@ function getContextObjectDataBase(cardId: number, isPlaying: boolean) {
           contextObject,
         },
       ];
+    case Cards.Neutral.Mechaz0rHelm:
+      return [
+        {
+          allowMultiple: true,
+          contextObject: PlayerModifierMechazorBuildProgress.createContextObject(),
+        },
+      ];
     default:
       return [];
   }
@@ -148,7 +156,7 @@ export function getContextObjectDataForEditing(
   return getContextObjectDataWithIndex(cardId, false);
 }
 
-export const contextObjectCardIds: number[] = [
+const contextObjectCardIds: number[] = [
   Cards.Spell.LionheartBlessing,
   Cards.Spell.DeathstrikeSeal,
   Cards.Spell.DrainMorale,
@@ -156,11 +164,22 @@ export const contextObjectCardIds: number[] = [
   Cards.Spell.DeathfireCrescendo,
   Cards.Spell.DampeningWave,
   Cards.Spell.Amplification,
-  Cards.Artifact.Winterblade,
   Cards.Spell.MarkOfSolitude,
   Cards.Faction6.AncientGrove,
   Cards.Neutral.ProphetWhitePalm,
 ];
+
+const generalSpecificContextObjectCardIds: number[] = [
+  Cards.Artifact.Winterblade,
+  Cards.Neutral.Mechaz0rHelm,
+];
+
+const generalContextObjectCardIds: number[] =
+  contextObjectCardIds.concat(generalSpecificContextObjectCardIds);
+
+export function getContextObjectCardIds(isGeneral: boolean): number[] {
+  return isGeneral ? generalContextObjectCardIds : contextObjectCardIds;
+}
 
 export function getDescription({ contextObject }: ContextObject): string {
   let description = GameSession.current()

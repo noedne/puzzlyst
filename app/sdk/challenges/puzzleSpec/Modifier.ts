@@ -3,7 +3,7 @@ import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import BaseCard from "./BaseCard";
 import { getUniformBooleanCoding, getUniformNumberCoding } from "./arithmeticCoding/utils";
 import SpecString from "./SpecString";
-import getContextObjectData, { contextObjectCardIds } from "./getContextObjectData";
+import getContextObjectData, { getContextObjectCardIds } from "./getContextObjectData";
 import CodingData from "./arithmeticCoding/CodingData";
 import List from "./List";
 
@@ -81,12 +81,13 @@ export default class Modifier {
 
   public static updateListCoder(
     coder: ArithmeticCoder,
-    modifiers?: List<Modifier>,
+    modifiers: List<Modifier> | undefined,
+    isGeneral: boolean,
   ): List<Modifier> {
     return List.updateUniqueCoder(
       Modifier,
       coder,
-      contextObjectCardIds,
+      getContextObjectCardIds(isGeneral),
       1023/1024,
       modifiers,
     );

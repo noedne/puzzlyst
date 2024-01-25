@@ -76,7 +76,7 @@ export default class Minion {
     };
     const stats = Stats.updateCoder(coder, baseCard, probs, minion?.stats);
     const keywords = Keywords.updateCoder(coder, minion?.keywords);
-    const modifiers = Modifier.updateListCoder(coder, minion?.modifiers);
+    const modifiers = Modifier.updateListCoder(coder, minion?.modifiers, false);
     return minion ?? new Minion(baseCard, position, stats, keywords, modifiers);
   }
 

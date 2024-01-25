@@ -13,7 +13,7 @@ class PlayerModifierMechazorBuildProgress extends PlayerModifier
   @keywordDefinition: i18next.t("modifiers.mechaz0r_def")
 
   @modifierName:i18next.t("modifiers.mechaz0r_name")
-  #@description: "Progresses MECHAZ0R build by +%X%"
+  @description: "Progress your Mechaz0r build by %X%"
 
   @isHiddenToUI: true
 
@@ -25,6 +25,12 @@ class PlayerModifierMechazorBuildProgress extends PlayerModifier
     contextObject = super(options)
     contextObject.progressContribution = progressContribution
     return contextObject
+
+  @getDescription: (modifierContextObject) ->
+    if modifierContextObject
+      percent = @percentPerProgress * modifierContextObject.progressContribution
+      return @description.replace /%X/, percent
+    return @description
 
   onApplyToCardBeforeSyncState: () ->
     # apply a mechaz0r counter to the General when first mechaz0r progress is added
