@@ -14,12 +14,12 @@ class ModifierOpeningGambitRetrieveRandomSpell extends ModifierOpeningGambit
     super()
 
     if @getGameSession().getIsRunningAsAuthoritative()
-      spellsPlayedToBoard = @getGameSession().getSpellsPlayed()
+      ownerId = @getOwnerId()
+      spellsPlayedToBoard = @getGameSession().getSpellsPlayed(ownerId)
       if spellsPlayedToBoard.length > 0
-        ownerId = @getCard().getOwnerId()
         spellsPlayedByOwner = []
         for spell in spellsPlayedToBoard
-          if !spell.getIsFollowup() and spell.getOwnerId() == ownerId
+          if !spell.getIsFollowup()
             spellsPlayedByOwner.push(spell)
 
         if spellsPlayedByOwner.length > 0

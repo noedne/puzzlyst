@@ -6,12 +6,11 @@ Cards = require 'app/sdk/cards/cardsLookupComplete'
 class SpellDejaVu extends Spell
 
   onApplyOneEffectToBoard: (board,x,y,sourceAction) ->
-
-    spellsPlayedToBoard = @getGameSession().getSpellsPlayed()
     ownerId = @getOwnerId()
+    spellsPlayedToBoard = @getGameSession().getSpellsPlayed(ownerId)
     if spellsPlayedToBoard.length > 0
       for spell in spellsPlayedToBoard by -1
-        if !spell.getIsFollowup() and spell.getOwnerId() == ownerId and !(spell is this)
+        if !spell.getIsFollowup() and !(spell is this)
           spellToCopy = spell
           break
 
