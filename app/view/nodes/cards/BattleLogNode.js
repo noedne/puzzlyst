@@ -162,6 +162,8 @@ const BattleLogNode = SdkNode.extend({
           sdkCard = action.getSource();
         } else if (action instanceof SDK.AttackAction) {
           sdkCard = action.getSource();
+        } else if (action instanceof SDK.ShowCardInBattleLogAction) {
+          sdkCard = action.getSource();
         }
         this.setSdkCard(sdkCard);
       }
@@ -245,7 +247,11 @@ const BattleLogNode = SdkNode.extend({
         const action = this.step.getAction();
 
         // show by type
-        if (action instanceof SDK.PlayCardFromHandAction || action instanceof SDK.PlaySignatureCardAction) {
+        if (
+          action instanceof SDK.PlayCardFromHandAction
+          || action instanceof SDK.PlaySignatureCardAction
+          || action instanceof SDK.ShowCardInBattleLogAction
+        ) {
           // show inspect
           const sdkCard = this.getSdkCard();
           if (sdkCard != null) {

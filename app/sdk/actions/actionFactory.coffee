@@ -62,6 +62,7 @@ RemoveManaCoreAction = require './removeManaCoreAction'
 ForcedAttackAction = require './forcedAttackAction'
 RestoreChargeToAllArtifactsAction = require './restoreChargeToAllArtifactsAction'
 BurnCardAction = require './burnCardAction'
+ShowCardInBattleLogAction = require './showCardInBattleLogAction'
 
 Colors = require 'colors' # used for console message coloring
 
@@ -194,6 +195,8 @@ class ActionFactory
       return new RestoreChargeToAllArtifactsAction(gameSession)
     if (actionType == BurnCardAction.type)
       return new BurnCardAction(gameSession)
+    if (actionType == ShowCardInBattleLogAction.type)
+      return new ShowCardInBattleLogAction(gameSession)
 
     Logger.module("SDK").debug("[G:#{gameSession.gameId}]", "Error: ActionFactory:actionForType - Unknown Action Type: " + actionType)
     console.error "ActionFactory:actionForType - Unknown Action Type: #{actionType}".red
