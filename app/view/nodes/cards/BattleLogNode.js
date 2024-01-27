@@ -69,7 +69,7 @@ const BattleLogNode = SdkNode.extend({
   },
 
   setSdkCard(sdkCard, cardFadeDuration) {
-    if (this.step != null && this.sdkCard !== sdkCard) {
+    if (this.sdkCard !== sdkCard) {
       // destroy previous card
       if (this.sdkCard != null) {
         if (this.cardSprite != null) {
