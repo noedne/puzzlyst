@@ -367,6 +367,7 @@ const BattleLog = BaseLayer.extend({
       if (nextBattleLogNode != null) {
         nextBattleLogNode.setStep(step);
         nextBattleLogNode.setVisible(true);
+        nextBattleLogNode.setOpacity(255);
       }
     }
   },
