@@ -428,7 +428,10 @@ const BattleLog = BaseLayer.extend({
             if (this._expanded) {
               for (let i = 0, il = this._battleLogNodes.length; i < il; i++) {
                 const battleLogNode = this._battleLogNodes[i];
-                if (UtilsEngine.getNodeUnderMouse(battleLogNode, location.x, location.y)) {
+                if (
+                  !battleLogNode.getIsEmpty()
+                  && UtilsEngine.getNodeUnderMouse(battleLogNode, location.x, location.y)
+                ) {
                   mouseOverBattleLogNode = battleLogNode;
                   event.stopPropagation();
                   break;
