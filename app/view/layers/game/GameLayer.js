@@ -63,6 +63,7 @@ const Player2Layer = require('./Player2Layer');
 const Player1Layer = require('./Player1Layer');
 const BottomDeckLayer = require('./BottomDeckLayer');
 const TileLayer = require('./TileLayer');
+const { EditType } = require('app/ui/views/item/edit_card_context_menu');
 
 // custom UI modules
 // var TimeMaelstromUIModule = require('app/view/ui_modules/TimeMaelstromUIModule');
@@ -5372,9 +5373,10 @@ var GameLayer = FXCompositeLayer.extend({
     }
   },
 
-  showEditCard(sdkCard) {
+  showEditCard(type, sdkCard) {
     this.getEventBus().trigger(EVENTS.edit_card_start, {
       type: EVENTS.edit_card_start,
+      nodeType: type,
       card: sdkCard,
     });
     this._isEditingCard = true;
@@ -6336,16 +6338,18 @@ var GameLayer = FXCompositeLayer.extend({
       if (SDK.GameSession.getInstance().getIsMyFollowupActiveAndCancellable() || !!(this._player.getSelectedCard() || this._player.getSelectedEntityNode())) {
         NavigationManager.getInstance().requestUserTriggeredCancel();
       }
-      const mouseOverSdkEntity = this._player.getMouseOverSdkEntity();
-      const mouseOverSdkArtifact = this._player.getMouseOverSdkArtifact();
-      const mouseOverSdkCard = mouseOverSdkEntity != null
-        ? mouseOverSdkEntity
-        : mouseOverSdkArtifact;
-      if (
-        SDK.GameSession.current().getIsEditing()
-        && mouseOverSdkCard != null
-      ) {
-        this.showEditCard(mouseOverSdkCard);
+      if (SDK.GameSession.current().getIsEditing()) {
+        if (this._player.getMouseOverEntityNode() != null) {
+          this.showEditCard(
+            EditType.Entity,
+            this._player.getMouseOverSdkEntity(),
+          );
+        } else if (this._player.getMouseOverArtifactNode() != null) {
+          this.showEditCard(
+            EditType.Artifact,
+            this._player.getMouseOverSdkArtifact(),
+          );
+        }
       }
     } else if (this.getIsChooseHand()) {
       // toggle cards to be mulliganed from starting hand

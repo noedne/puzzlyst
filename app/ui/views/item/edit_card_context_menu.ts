@@ -45,7 +45,7 @@ export default Marionette.ItemView.extend({
     'mousedown @ui.$dropdown': 'onMouseDown',
   },
 
-  initialize: function (options: { card: typeof Card }) {
+  initialize: function (options: { type: EditType, card: typeof Card }) {
     const card = options.card;
     this.card = card;
     const type = card.getType();
@@ -194,3 +194,8 @@ export default Marionette.ItemView.extend({
   },
 
 });
+
+export enum EditType {
+  Artifact,
+  Entity,
+}
