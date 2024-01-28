@@ -362,6 +362,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   applyBenchCardToBoard,
   moveEntity,
   addCardToBattleLog,
+  flipCardInBattleLog,
   removeCardFromBattleLog,
   getCachedCardsByType,
   setCachedCardsByType,
@@ -407,6 +408,7 @@ class _GameSession extends SDKObject
   applyBenchCardToBoard: applyBenchCardToBoard
   moveEntity: moveEntity
   addCardToBattleLog: addCardToBattleLog
+  flipCardInBattleLog: flipCardInBattleLog
   removeCardFromBattleLog: removeCardFromBattleLog
   getCachedCardsByType: getCachedCardsByType
   setCachedCardsByType: setCachedCardsByType

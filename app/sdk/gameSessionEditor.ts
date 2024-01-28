@@ -383,19 +383,39 @@ export function addCardToBattleLog(
   executeAction(this, action);
 }
 
+export function flipCardInBattleLog(
+  this: typeof GameSession,
+  card: typeof Card,
+) {
+  const newOwnerId = this.getOpponentPlayerIdOfPlayerId(card.getOwnerId());
+  card.setOwnerId(newOwnerId);
+  const step = getSteps(this).find(getStepPredicateForBattleLogCard(card));
+  if (step !== undefined) {
+    step.playerId = newOwnerId;
+    pushEvent(this, { battleLog: true });
+  }
+}
+
 export function removeCardFromBattleLog(
   this: typeof GameSession,
   card: typeof Card,
 ) {
-  const steps = this.getCurrentTurn().getSteps();
-  const index = steps.findIndex((step: typeof Step) =>
-    step.getAction().getType() === ShowCardInBattleLogAction.type
-    && step.getAction().getSource() === card
-  );
+  const steps = getSteps(this);
+  const index = steps.findIndex(getStepPredicateForBattleLogCard(card));
   if (index > -1) {
     steps.splice(index, 1);
     pushEvent(this, { battleLog: true });
   }
+}
+
+function getSteps(gameSession: typeof GameSession) {
+  return gameSession.getCurrentTurn().getSteps();
+}
+
+function getStepPredicateForBattleLogCard(card: typeof Card) {
+  return (step: typeof Step) =>
+    step.getAction().getType() === ShowCardInBattleLogAction.type
+    && step.getAction().getSource() === card;
 }
 
 export function getCachedCardsByType(

@@ -29,6 +29,7 @@ export default Marionette.ItemView.extend({
     $deleteMinionItem: '.delete-minion-item',
     $deleteTileItem: '.delete-tile-item',
     $deleteArtifactItem: '.delete-artifact-item',
+    $flipBattleLogItem: '.flip-battle-log-item',
     $deleteBattleLogItem: '.delete-battle-log-item',
   },
 
@@ -42,6 +43,7 @@ export default Marionette.ItemView.extend({
     'click @ui.$deleteMinionItem': 'onDeleteMinion',
     'click @ui.$deleteTileItem': 'onDeleteTile',
     'click @ui.$deleteArtifactItem': 'onDeleteArtifact',
+    'click @ui.$flipBattleLogItem': 'onFlipBattleLog',
     'click @ui.$deleteBattleLogItem': 'onDeleteBattleLog',
     'contextmenu @ui.$dropdown': 'onRightClick',
     'mousedown @ui.$dropdown': 'onMouseDown',
@@ -53,6 +55,7 @@ export default Marionette.ItemView.extend({
     if (options.type === EditType.BattleLog) {
       this.templateHelpers = {
         deleteBattleLog: true,
+        flipBattleLog: true,
       };
       return;
     }
@@ -181,6 +184,11 @@ export default Marionette.ItemView.extend({
 
   onDeleteArtifact: function () {
     SDK.GameSession.current().removeArtifact(this.card);
+    this.trigger('close');
+  },
+
+  onFlipBattleLog: function () {
+    SDK.GameSession.current().flipCardInBattleLog(this.card);
     this.trigger('close');
   },
 
