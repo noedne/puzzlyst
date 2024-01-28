@@ -13,6 +13,7 @@ const Modifier = require('app/sdk/modifiers/modifier');
 const ModifierBuff = require('app/sdk/modifiers/modifierBuff');
 const ModifierKeeper = require('app/sdk/modifiers/modifierKeeper');
 const RSX = require('app/data/resources');
+const ShowCardInBattleLogAction = require('./actions/showCardInBattleLogAction');
 
 const enum Mode {
   Edit,
@@ -370,6 +371,17 @@ export function moveEntity(
   this.simulateAction();
 }
 
+export function addCardToBattleLog(
+  this: typeof GameSession,
+  card: typeof Card,
+) {
+  const action = new ShowCardInBattleLogAction(this);
+  action.setSourceIndex(card.getIndex());
+  card.setOwnerId(action.getOwnerId());
+  card.setIsPlayed(true);
+  executeAction(this, action);
+}
+
 export function getCachedCardsByType(
   this: typeof GameSession,
   type: typeof CardType,
@@ -498,8 +510,12 @@ export function simulateAction(this: typeof GameSession, executeFn?: Function) {
   if (executeFn !== undefined) {
     action._execute = executeFn;
   }
+  executeAction(this, action);
+}
+
+function executeAction(gameSession: typeof GameSession, action: typeof Action) {
   action.setIsAutomatic(true);
-  this.executeAction(action);
+  gameSession.executeAction(action);
 }
 
 function pushEvent(

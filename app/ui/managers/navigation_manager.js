@@ -171,6 +171,19 @@ var NavigationManager = Manager.extend({
               );
             }
             break;
+          case cc.KEY.b:
+            if (gameSession.getIsEditing()) {
+              const modal = new AddCardModal({
+                title: 'Add a Card to the Battle Log',
+              });
+              this.showModalView(modal);
+              this.listenToOnce(
+                modal,
+                'submit',
+                card => gameSession.addCardToBattleLog(card),
+              );
+            }
+            break;
           case cc.KEY.e:
             if (gameSession.getIsEditing()) {
               gameSession.setIsPlaying();
