@@ -394,6 +394,7 @@ export function removeCardFromBattleLog(
   );
   if (index > -1) {
     steps.splice(index, 1);
+    pushEvent(this, { battleLog: true });
   }
 }
 
@@ -540,6 +541,7 @@ function pushEvent(
       card: typeof Card,
       position: { x: number, y: number },
     },
+    battleLog?: boolean,
     bindHand?: boolean,
     bindReplace?: boolean,
     bindSubmitTurn?: boolean,
@@ -569,6 +571,7 @@ function pushEvent(
     type: EVENTS.editing_event,
     options: {
       addNodeForSdkCard: options.addNodeForSdkCard ?? null,
+      battleLog: options.battleLog ?? false,
       bindHand: options.bindHand ?? false,
       bindReplace: options.bindReplace ?? false,
       bindSubmitTurn: options.bindSubmitTurn ?? false,
