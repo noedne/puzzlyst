@@ -11,6 +11,7 @@ const audio_engine = require('../../../audio/audio_engine');
 const BaseLayer = require('../BaseLayer');
 const BaseSprite = require('../../nodes/BaseSprite');
 const BattleLogNode = require('../../nodes/cards/BattleLogNode');
+const { EditType } = require('app/ui/views/item/edit_card_context_menu');
 
 /** **************************************************************************
  BattleLog
@@ -491,7 +492,17 @@ const BattleLog = BaseLayer.extend({
         const scene = this.getScene();
         const gameLayer = scene != null && scene.getGameLayer();
         const myPlayer = gameLayer != null && gameLayer.getMyPlayer();
-        if (myPlayer != null && !myPlayer.getIsTakingSelectionAction()) {
+        if (
+          event.getButton() === cc.EventMouse.BUTTON_RIGHT
+          && SDK.GameSession.current().getIsEditing()
+          && this.getMouseOverBattleLogNode() != null
+        ) {
+          gameLayer.showEditCard(
+            EditType.BattleLog,
+            this.getMouseOverBattleLogNode().getSdkCard(),
+          );
+          event.stopPropagation();
+        } else if (myPlayer != null && !myPlayer.getIsTakingSelectionAction()) {
           // clear current mouse over
           this.setMouseOverBattleLogNode(null);
 

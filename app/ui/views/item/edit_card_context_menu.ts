@@ -29,6 +29,7 @@ export default Marionette.ItemView.extend({
     $deleteMinionItem: '.delete-minion-item',
     $deleteTileItem: '.delete-tile-item',
     $deleteArtifactItem: '.delete-artifact-item',
+    $deleteBattleLogItem: '.delete-battle-log-item',
   },
 
   events: {
@@ -41,6 +42,7 @@ export default Marionette.ItemView.extend({
     'click @ui.$deleteMinionItem': 'onDeleteMinion',
     'click @ui.$deleteTileItem': 'onDeleteTile',
     'click @ui.$deleteArtifactItem': 'onDeleteArtifact',
+    'click @ui.$deleteBattleLogItem': 'onDeleteBattleLog',
     'contextmenu @ui.$dropdown': 'onRightClick',
     'mousedown @ui.$dropdown': 'onMouseDown',
   },
@@ -48,6 +50,12 @@ export default Marionette.ItemView.extend({
   initialize: function (options: { type: EditType, card: typeof Card }) {
     const card = options.card;
     this.card = card;
+    if (options.type === EditType.BattleLog) {
+      this.templateHelpers = {
+        deleteBattleLog: true,
+      };
+      return;
+    }
     const type = card.getType();
     this.tile = SDK.GameSession.current().getBoard().getTileAtPosition(
       card.getPosition(),
@@ -176,6 +184,11 @@ export default Marionette.ItemView.extend({
     this.trigger('close');
   },
 
+  onDeleteBattleLog: function () {
+    SDK.GameSession.current().removeCardFromBattleLog(this.card);
+    this.trigger('close');
+  },
+
   onOpenModal: function (
     Modal: typeof FormPromptModalItemView,
     options?: Object,
@@ -197,5 +210,6 @@ export default Marionette.ItemView.extend({
 
 export enum EditType {
   Artifact,
+  BattleLog,
   Entity,
 }

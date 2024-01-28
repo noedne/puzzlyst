@@ -14,6 +14,7 @@ const ModifierBuff = require('app/sdk/modifiers/modifierBuff');
 const ModifierKeeper = require('app/sdk/modifiers/modifierKeeper');
 const RSX = require('app/data/resources');
 const ShowCardInBattleLogAction = require('./actions/showCardInBattleLogAction');
+const Step = require('./step');
 
 const enum Mode {
   Edit,
@@ -380,6 +381,20 @@ export function addCardToBattleLog(
   card.setOwnerId(action.getOwnerId());
   card.setIsPlayed(true);
   executeAction(this, action);
+}
+
+export function removeCardFromBattleLog(
+  this: typeof GameSession,
+  card: typeof Card,
+) {
+  const steps = this.getCurrentTurn().getSteps();
+  const index = steps.findIndex((step: typeof Step) =>
+    step.getAction().getType() === ShowCardInBattleLogAction.type
+    && step.getAction().getSource() === card
+  );
+  if (index > -1) {
+    steps.splice(index, 1);
+  }
 }
 
 export function getCachedCardsByType(
