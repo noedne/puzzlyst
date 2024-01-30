@@ -3190,6 +3190,8 @@ App.onUserTriggeredSkip = () ->
       audio_engine.current().play_effect_for_interaction(RSX.sfx_ui_cancel.audio, CONFIG.CANCEL_SFX_PRIORITY)
       # stop showing played card
       gameLayer.skipShowActionCardSequence()
+    else
+      gameLayer.bindToGameSession()
 
   return Promise.resolve()
 
