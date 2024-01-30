@@ -69,6 +69,7 @@ export function copyCard(
 }
 
 export function resetUnit(this: typeof GameSession, card: typeof Card) {
+  const wasDispelled = card.hasModifierType(ModifierSilence.type);
   this.simulateAction(() => {
     this.setCardStats(card, getDefaultCardStats(card));
     card.getModifiers().forEach((modifier: typeof Modifier) => {
@@ -76,6 +77,12 @@ export function resetUnit(this: typeof GameSession, card: typeof Card) {
         this.removeModifier(modifier);
       }
     });
+    if (wasDispelled) {
+      card.getInherentModifiersContextObjects()
+        .forEach((contextObject: Object) => {
+          this.applyModifierContextObject(contextObject, card);
+        });
+    }
   });
 }
 
