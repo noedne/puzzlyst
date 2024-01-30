@@ -12,6 +12,7 @@ const GameSession = require('./gameSession');
 const Modifier = require('app/sdk/modifiers/modifier');
 const ModifierBuff = require('app/sdk/modifiers/modifierBuff');
 const ModifierKeeper = require('app/sdk/modifiers/modifierKeeper');
+const ModifierSilence = require('app/sdk/modifiers/modifierSilence');
 const RSX = require('app/data/resources');
 const ShowCardInBattleLogAction = require('./actions/showCardInBattleLogAction');
 const Step = require('./step');
@@ -76,6 +77,13 @@ export function resetUnit(this: typeof GameSession, card: typeof Card) {
       }
     });
   });
+}
+
+export function dispelUnit(this: typeof GameSession, card: typeof Card) {
+  this.applyModifierContextObjectToCard(
+    card,
+    ModifierSilence.createContextObject(),
+  );
 }
 
 export type CardStats = {

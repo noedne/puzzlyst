@@ -346,6 +346,7 @@ ValidatorScheduledForRemoval = require './validators/validatorScheduledForRemova
   createCard,
   copyCard,
   resetUnit,
+  dispelUnit,
   getCardStats,
   setCardStats,
   changeCardStats,
@@ -393,6 +394,7 @@ class _GameSession extends SDKObject
   createCard: createCard
   copyCard: copyCard
   resetUnit: resetUnit
+  dispelUnit: dispelUnit
   getCardStats: getCardStats
   setCardStats: setCardStats
   changeCardStats: changeCardStats
