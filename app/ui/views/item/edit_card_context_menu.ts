@@ -20,6 +20,7 @@ export default Marionette.ItemView.extend({
 
   ui: {
     $dropdown: '.dropdown-menu',
+    $resetUnitItem: '.reset-unit-item',
     $setStatsItem: '.set-stats-item',
     $setDurabilityItem: '.set-durability-item',
     $addKeywordItem: '.add-keyword-item',
@@ -34,6 +35,7 @@ export default Marionette.ItemView.extend({
   },
 
   events: {
+    'click @ui.$resetUnitItem': 'onResetUnit',
     'click @ui.$setStatsItem': 'onSetStats',
     'click @ui.$setDurabilityItem': 'onSetDurability',
     'click @ui.$addKeywordItem': 'onAddKeyword',
@@ -76,6 +78,7 @@ export default Marionette.ItemView.extend({
       deleteTile: this.tile != null,
       isManaTile,
       isManaTileDepleted: this.isManaTileDepleted,
+      resetUnit: isUnit,
       setStats: isUnit,
       setDurability: isArtifact,
     };
@@ -113,6 +116,11 @@ export default Marionette.ItemView.extend({
       top,
       left
     });
+  },
+
+  onResetUnit: function () {
+    SDK.GameSession.current().resetUnit(this.card);
+    this.trigger('close');
   },
 
   onSetStats: function () {

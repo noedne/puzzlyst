@@ -67,6 +67,17 @@ export function copyCard(
   return this.createCard(oldCard.getId(), isKeeper);
 }
 
+export function resetUnit(this: typeof GameSession, card: typeof Card) {
+  this.simulateAction(() => {
+    this.setCardStats(card, getDefaultCardStats(card));
+    card.getModifiers().forEach((modifier: typeof Modifier) => {
+      if (!modifier.getIsInherent()) {
+        this.removeModifier(modifier);
+      }
+    });
+  });
+}
+
 export type CardStats = {
   damage: number,
   attackBase: number,
@@ -75,18 +86,29 @@ export type CardStats = {
   healthBuff: number,
 };
 
+function getDefaultCardStats(card: typeof Card) {
+  return {
+    damage: 0,
+    attackBase: card.atk,
+    attackBuff: 0,
+    healthBase: card.maxHP,
+    healthBuff: 0,
+  };
+}
+
 export function getCardStats(
   this: typeof GameSession,
   card: typeof Card,
 ): CardStats {
   const rebaseModifier = getStatModifier(card, true)?.attributeBuffs;
   const buffModifier = getStatModifier(card, false)?.attributeBuffs;
+  const defaultStats = getDefaultCardStats(card);
   return {
     damage: card.getDamage(),
-    attackBase: rebaseModifier?.atk ?? card.atk,
-    attackBuff: buffModifier?.atk ?? 0,
-    healthBase: rebaseModifier?.maxHP ?? card.maxHP,
-    healthBuff: buffModifier?.maxHP ?? 0,
+    attackBase: rebaseModifier?.atk ?? defaultStats.attackBase,
+    attackBuff: buffModifier?.atk ?? defaultStats.attackBuff,
+    healthBase: rebaseModifier?.maxHP ?? defaultStats.healthBase,
+    healthBuff: buffModifier?.maxHP ?? defaultStats.healthBuff,
   };
 }
 
