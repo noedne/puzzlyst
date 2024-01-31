@@ -1,13 +1,19 @@
+import { getArtifactIds, getMinionIds, getSpellIds } from '../../gameVersion';
 import type ArithmeticCoder from './arithmeticCoding/ArithmeticCoder';
 import ArithmeticDecoder from "./arithmeticCoding/ArithmeticDecoder";
 import ArithmeticEncoder from "./arithmeticCoding/ArithmeticEncoder";
-import { getUniformBooleanCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
+import { getExponentialNumberCoding, getUniformBooleanCoding, getWeightedArrayCoding } from "./arithmeticCoding/utils";
+import BattleLogCard from './BattleLogCard';
+import List from './List';
 import Player from './Player';
 import PositionCoder from "./PositionCoder";
 import SpecString from './SpecString';
 import StartingManaTiles from './StartingManaTiles';
 
+const CONFIG = require('app/common/config');
 const GameSession = require('app/sdk/gameSession');
+const ShowCardInBattleLogAction = require('app/sdk/actions/showCardInBattleLogAction');
+const Step = require('app/sdk/step');
 const getPlayerModifiers = require('app/sdk/challenges/puzzleSpec/getPlayerModifiers');
 
 export default class SpecPuzzle {
@@ -20,6 +26,7 @@ export default class SpecPuzzle {
     public playerModifiers: any,
     public you: Player,
     public opponent: Player,
+    public battleLogCards: List<BattleLogCard>,
   ) {}
 
   public static fromSpecString(specString: SpecString): SpecPuzzle | null {
@@ -45,6 +52,10 @@ export default class SpecPuzzle {
     if (opponent === null) {
       return null;
     }
+    const battleLogCards = List.fromSpecString(BattleLogCard, specString);
+    if (battleLogCards === null) {
+      return null;
+    }
     return new SpecPuzzle(
       isPlayer1,
       mana,
@@ -52,6 +63,7 @@ export default class SpecPuzzle {
       playerModifiers,
       you,
       opponent,
+      battleLogCards,
     );
   }
 
@@ -69,6 +81,14 @@ export default class SpecPuzzle {
     const startingManaTiles = StartingManaTiles.fromBoard(
       gameSession.getBoard(),
     );
+    const battleLogCards = gameSession.getCurrentTurn().getSteps()
+      .reduce((acc: BattleLogCard[], step: typeof Step) => {
+        if (step.getAction().getType() === ShowCardInBattleLogAction.type) {
+          acc.push(BattleLogCard.fromCard(step.getAction().getSource()));
+        }
+        return acc;
+      }, [])
+      .slice(-CONFIG.MAX_BATTLELOG_ENTRIES);
     return new SpecPuzzle(
       gameSession.getMyPlayerId() === gameSession.getPlayer1Id(),
       myPlayer.getRemainingMana(),
@@ -76,6 +96,7 @@ export default class SpecPuzzle {
       [],
       you,
       opponent,
+      new List(battleLogCards),
     )
   }
 
@@ -101,6 +122,7 @@ ${manaIndex}\
 ${this.startingManaTiles}\
 ${this.you}\
 ${this.opponent}\
+${this.battleLogCards}\
 `;
   }
 
@@ -121,6 +143,13 @@ ${this.opponent}\
     const you = Player.updateCoder(coder, specPuzzle?.you, true, positionCoder);
     const opponent =
       Player.updateCoder(coder, specPuzzle?.opponent, false, positionCoder);
+    const battleLogCards = List.updateAdaptiveCoder(
+      BattleLogCard,
+      coder,
+      getArtifactIds().concat(getMinionIds(), getSpellIds()),
+      getExponentialNumberCoding(1/16, CONFIG.MAX_BATTLELOG_ENTRIES),
+      specPuzzle?.battleLogCards,
+    );
     return specPuzzle ?? new SpecPuzzle(
       isPlayer1,
       mana,
@@ -128,6 +157,7 @@ ${this.opponent}\
       [],
       you,
       opponent,
+      battleLogCards,
     );
   }
 

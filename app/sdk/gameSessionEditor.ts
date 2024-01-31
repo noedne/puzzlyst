@@ -412,9 +412,14 @@ export function moveEntity(
 export function addCardToBattleLog(
   this: typeof GameSession,
   card: typeof Card,
+  ownerId?: string,
 ) {
   const action = new ShowCardInBattleLogAction(this);
-  action.setSourceIndex(card.getIndex());
+  if (ownerId != null) {
+    action.setOwnerId(ownerId);
+  }
+  const index = this._indexCardAsNeeded(card);
+  action.setSourceIndex(index);
   card.setOwnerId(action.getOwnerId());
   card.setIsPlayed(true);
   executeAction(this, action);

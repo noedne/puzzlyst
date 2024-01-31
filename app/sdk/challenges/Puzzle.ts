@@ -146,6 +146,12 @@ export default class Puzzle extends Challenge {
     this.setupStartingManaTiles();
     this.setupGenerals(gameSession);
     this.setupPlayers(gameSession);
+    this.puzzle.battleLogCards.list.forEach(battleLogCard => {
+      const ownerId = battleLogCard.isMine
+        ? gameSession.getMyPlayerId()
+        : gameSession.getOpponentPlayerId();
+      gameSession.addCardToBattleLog(battleLogCard.baseCard.card, ownerId);
+    });
   }
 
   setupOpponentAgent() {}
