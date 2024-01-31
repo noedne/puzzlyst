@@ -1,4 +1,3 @@
-const Card = require('app/sdk/cards/card');
 const CONFIG = require('app/common/config');
 const Modifier = require('app/sdk/modifiers/modifier');
 const SDKArtifact = require('app/sdk/artifacts/artifact');
@@ -206,15 +205,11 @@ function getMinionLengthWeights(maxLength: number): number[] {
   });
 }
 
-interface CardClass<T> {
-  fromCard: (card: typeof Card) => T | null;
-}
-
-function cardsToList<T>(Class: CardClass<T>, cards: (typeof Card)[]): List<T> {
-  const list = cards
-    .map(card => Class.fromCard(card))
-    .reduce<T[]>((acc, val) => val === null ? acc : acc.concat([val]), []);
-  return new List(list);
+function cardsToList<Card, T>(
+  Class: { fromCard: (card: Card) => T },
+  cards: Card[],
+): List<T> {
+  return new List(cards.map(card => Class.fromCard(card)));
 }
 
 function getArtifacts(general: typeof Unit): (typeof SDKArtifact)[] {
