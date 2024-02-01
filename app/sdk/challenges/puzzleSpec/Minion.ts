@@ -1,3 +1,4 @@
+const ModifierSilence = require('app/sdk/modifiers/modifierSilence');
 const Unit = require('app/sdk/entities/unit');
 
 import BaseCard from "./BaseCard";
@@ -10,16 +11,18 @@ import {
 } from "./Position";
 import type PositionCoder from "./PositionCoder";
 import PositionableType from "./PositionableType";
-import type SpecString from "./SpecString";
+import SpecString from "./SpecString";
 import type ArithmeticCoder from "./arithmeticCoding/ArithmeticCoder";
 import Stats from "./Stats";
 import Keywords from "./Keywords";
 import List from "./List";
+import { getWeightedBooleanCoding } from "./arithmeticCoding/utils";
 
 export default class Minion {
   private constructor(
     public baseCard: BaseCard,
     public position: Position,
+    public isDispelled: boolean,
     public stats: Stats,
     public keywords: Keywords,
     public modifiers: List<Modifier>,
@@ -34,6 +37,7 @@ export default class Minion {
     if (position === null) {
       return null;
     }
+    const isDispelled = specString.readNBits(1) === 1;
     const stats = Stats.fromSpecString(specString);
     if (stats === null) {
       return null;
@@ -46,16 +50,19 @@ export default class Minion {
     if (modifiers === null) {
       return null;
     }
-    return new Minion(baseCard, position, stats, keywords, modifiers);
+    return new
+      Minion(baseCard, position, isDispelled, stats, keywords, modifiers);
   }
 
   public static fromCard(minion: typeof Unit): Minion {
     const baseCard = BaseCard.fromCard(minion);
     const position = getPositionFromCard(minion);
+    const isDispelled = minion.hasModifierType(ModifierSilence.type);
     const stats = Stats.fromCard(minion);
     const keywords = Keywords.fromCard(minion);
     const modifiers = Modifier.fromCard(minion);
-    return new Minion(baseCard, position, stats, keywords, modifiers);
+    return new
+      Minion(baseCard, position, isDispelled, stats, keywords, modifiers);
   }
 
   public static updateCoder(
@@ -74,10 +81,13 @@ export default class Minion {
       hasNoBuffsProb: 127/128,
       hasBaseStatsProb: 1023/1024,
     };
+    const isDispelled = getWeightedBooleanCoding(1/256)
+      .updateCoder(coder, minion?.isDispelled);
     const stats = Stats.updateCoder(coder, baseCard, probs, minion?.stats);
     const keywords = Keywords.updateCoder(coder, minion?.keywords);
     const modifiers = Modifier.updateListCoder(coder, minion?.modifiers, false);
-    return minion ?? new Minion(baseCard, position, stats, keywords, modifiers);
+    return minion ?? new
+      Minion(baseCard, position, isDispelled, stats, keywords, modifiers);
   }
 
   public toString(): string {
@@ -85,6 +95,7 @@ export default class Minion {
     return `\
 ${this.baseCard}\
 ${position}\
+${SpecString.boolToBit(this.isDispelled)}\
 ${this.stats}\
 ${this.keywords}\
 ${this.modifiers}\

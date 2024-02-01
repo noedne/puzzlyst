@@ -3,6 +3,7 @@ const Challenge = require('app/sdk/challenges/challenge');
 const ChallengeCategory = require('app/sdk/challenges/challengeCategory');
 const CONFIG = require('app/common/config');
 const ModifierCollectableBonusMana = require('app/sdk/modifiers/modifierCollectableBonusMana');
+const ModifierSilence = require('app/sdk/modifiers/modifierSilence');
 const RSX = require('app/data/resources');
 import type Modifier from './puzzleSpec/Modifier';
 import type Player from './puzzleSpec/Player';
@@ -264,11 +265,18 @@ export default class Puzzle extends Challenge {
       const {
         baseCard: { card },
         position: [x, y],
+        isDispelled,
         stats,
         keywords,
         modifiers,
       } = minion;
       this.applyCardToBoard(card, x, y, playerId);
+      if (isDispelled) {
+        gameSession.applyModifierContextObject(
+          ModifierSilence.createContextObject(),
+          card,
+        );
+      }
       gameSession.setCardStats(card, stats.getCardStats(card));
       this.applyKeywords(card, keywords);
       this.applyModifiers(gameSession, card, modifiers);
