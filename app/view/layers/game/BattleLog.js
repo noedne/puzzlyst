@@ -83,8 +83,11 @@ const BattleLog = BaseLayer.extend({
       this._battleLogEntriesContainer.addChild(this._battleLogNodes[i]);
     }
 
-    // start collapsed
-    this.collapse();
+    if (CONFIG.showBattleLog) {
+      this.expand();
+    } else {
+      this.collapse();
+    }
   },
 
   /* endregion INITIALIZE */
