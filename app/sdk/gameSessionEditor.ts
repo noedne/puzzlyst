@@ -576,7 +576,7 @@ function updateFromBase64(gameSession: typeof GameSession, base64: string) {
 }
 
 export function setupPuzzleForParams(this: typeof GameSession, params: Params) {
-  Puzzle.fromParams(params).setupSession(this);
+  Puzzle.fromParams(this, params).setupSession(this);
   pushUndo(this);
 }
 

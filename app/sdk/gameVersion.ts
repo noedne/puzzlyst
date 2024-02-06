@@ -1,4 +1,5 @@
 const Cards = require('app/sdk/cards/cardsLookup');
+const GameSession = require('./gameSession');
 const ModifierFactory = require('./modifiers/modifierFactory');
 const ModifierStunnedVanar = require('app/sdk/modifiers/modifierStunnedVanar');
 
@@ -11,9 +12,17 @@ import {
 } from "./cards/baseCardSet";
 
 export function getCardVersion(identifier: number): number {
+  const gameVersion = getVersion();
+  let matchesGameVersion = false;
   for (const patch of patches) {
+    if (patch.version === gameVersion) {
+      matchesGameVersion = true;
+    }
+    if (!matchesGameVersion) {
+      continue;
+    }
     const cardVersion = patch.changes[identifier];
-    if (patch.version <= currentVersion && cardVersion != null) {
+    if (cardVersion != null) {
       return cardVersion;
     }
   }
@@ -60,25 +69,27 @@ export function getKeywordData(): {
 }
 
 export function getIsHurtingDamageTrueDamage(): boolean {
-  return currentVersion < Version.Patch__0_2_7;
+  return getVersion() < Version.Patch__0_2_7;
 }
 
-const currentVersion = Version.Latest;
+function getVersion(): Version {
+  return GameSession.current().version;
+}
 
-const enum Version {
-  Launch,
-  Patch__0_2_3,
-  Patch__0_2_5,
-  Patch__0_2_6,
-  Patch__0_2_7,
-  Patch__0_2_8,
-  Patch__0_2_9,
-  Patch__0_2_12,
-  Patch__0_2_14,
-  Patch__0_2_15,
-  Patch__0_2_16,
-  Patch__0_2_18,
-  Latest,
+export enum Version {
+  Launch = 'Launch',
+  Patch__0_2_3 = '0.2.3',
+  Patch__0_2_5 = '0.2.5',
+  Patch__0_2_6 = '0.2.6',
+  Patch__0_2_7 = '0.2.7',
+  Patch__0_2_8 = '0.2.8',
+  Patch__0_2_9 = '0.2.9',
+  Patch__0_2_12 = '0.2.12',
+  Patch__0_2_14 = '0.2.14',
+  Patch__0_2_15 = '0.2.15',
+  Patch__0_2_16 = '0.2.16',
+  Patch__0_2_18 = '0.2.18',
+  Latest = 'Latest',
 }
 
 const patches = [

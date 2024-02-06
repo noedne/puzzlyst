@@ -15,6 +15,7 @@ import { TileState } from './puzzleSpec/StartingManaTiles';
 import type Keywords from './puzzleSpec/Keywords';
 import getCustomModifiers from './puzzleSpec/getCustomModifiers';
 import type List from './puzzleSpec/List';
+import { Version } from '../gameVersion';
 
 export default class Puzzle extends Challenge {
 
@@ -59,11 +60,15 @@ export default class Puzzle extends Challenge {
       : Math.min(startingManaPlayer, CONFIG.MAX_MANA);
   }
 
-  static fromParams(params: Params): Puzzle {
-    if ('a' in params) {
-      return this.fromBase64(params.a, true);
+  static fromParams(gameSession: GameSession, params: Params): Puzzle {
+    gameSession.version =
+      params.v != null && Object.values<string>(Version).includes(params.v)
+        ? params.v
+        : Version.Latest;
+    if (params.p != null) {
+      return this.fromBase64(params.p, false);
     }
-    return this.fromBase64(params.p, false);
+    return this.fromBase64(params.a ?? '', true);
   }
 
   private static fromBase64(base64: string, useArithmetic: boolean): Puzzle {
@@ -327,4 +332,4 @@ export default class Puzzle extends Challenge {
 type Card = any;
 type DeckData = { index: number }[];
 type GameSession = any;
-export type Params = { a: string } | { p: string };
+export type Params = { a?: string, p?: string, v?: string };
