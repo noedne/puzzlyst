@@ -52,7 +52,7 @@ class ReplaceCardFromHandAction extends PutCardInHandAction
               indexOfCardInDeck = index
 
         # default to top of deck
-        indexOfCardInDeck ?= drawPile.length - 1
+        indexOfCardInDeck ?= 0
 
         # get the id of the card replacing
         @cardDataOrIndex = drawPile[indexOfCardInDeck]
